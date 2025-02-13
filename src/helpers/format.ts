@@ -1,0 +1,286 @@
+import { BN, BnConfigLike, BnFormatConfig, BnLike, time, TimeDate } from '@distributedlab/tools'
+// Date
+export function formatDateMY(date: TimeDate) {
+  return time(date).format('MM / YYYY')
+}
+
+export function formatDateDMY(date: TimeDate) {
+  return time(date).format('DD MMM, YYYY')
+}
+
+export function formatDateTime(date: TimeDate) {
+  return time(date).format('DD MMM, YYYY, HH:mm')
+}
+
+export function formatDateDM(date: TimeDate) {
+  return time(date).format('D MMM')
+}
+export function formatTimeFromNow(date: TimeDate, config: { suffix: boolean } = { suffix: false }) {
+  /*
+   * In our library, there is no built-in support for formatting relative time like in Day.js.
+   * For reference, check Day.js documentation:
+   * https://day.js.org/docs/en/plugin/relative-time
+   *
+   * Example usage in Day.js:
+   * dayjs().from(dayjs("1990-01-01")); // "in 31 years"
+   * dayjs().from(dayjs("1990-01-01"), true); // "31 years"
+   */
+  const dateWithSuffix = time(date).fromNow
+  return config.suffix ? dateWithSuffix : dateWithSuffix.replace(/^in\s/, '')
+}
+
+export const formatDateHM = (date: TimeDate) => {
+  return time(date).format('HH:mm')
+}
+
+export const formatPercentAmount = (value?: BnLike | null) => {
+  const percentBn = BN.fromBigInt(value ?? '0').mul(BN.fromRaw(100))
+  return `${formatAmount(percentBn, 18, { decimals: 2 })}%`
+}
+
+// number
+const defaultBnFormatConfig: BnFormatConfig = {
+  decimals: 2,
+  groupSeparator: ',',
+  decimalSeparator: '.',
+  fractionGroupSeparator: '',
+  fractionGroupSize: 3,
+}
+
+/**
+ * Format human amount without trailing zeros
+ * @param amount
+ */
+function removeTrailingZeros(amount: string) {
+  const [integer, fraction] = amount.split('.')
+
+  if (!fraction) return integer
+
+  let result = integer
+
+  for (let i = fraction.length - 1; i >= 0; i--) {
+    if (fraction[i] !== '0') {
+      result += `.${fraction.slice(0, i + 1)}`
+      break
+    }
+  }
+
+  return result
+}
+
+/**
+ * Format human amount with prefix
+ * @param value
+ */
+function convertNumberWithPrefix(value: string) {
+  const M_PREFIX_AMOUNT = 1_000_000
+  const B_PREFIX_AMOUNT = 1_000_000_000
+  const T_PREFIX_AMOUNT = 1_000_000_000_000
+
+  const getPrefix = (value: number): 'M' | 'B' | 'T' | '' => {
+    if (value >= T_PREFIX_AMOUNT) return 'T'
+    if (value >= B_PREFIX_AMOUNT) return 'B'
+    if (value >= M_PREFIX_AMOUNT) return 'M'
+
+    return ''
+  }
+
+  const prefix = getPrefix(+value)
+
+  const divider = {
+    M: M_PREFIX_AMOUNT,
+    B: B_PREFIX_AMOUNT,
+    T: T_PREFIX_AMOUNT,
+    '': 1,
+  }[prefix]
+
+  const finalAmount = BN.fromRaw(Number(value) / divider, 3).format({
+    decimals: 3,
+    groupSeparator: '',
+    decimalSeparator: '.',
+  })
+
+  return `${removeTrailingZeros(finalAmount)}${prefix}`
+}
+
+export function formatNumber(value: string | number, formatConfig?: BnFormatConfig) {
+  try {
+    const formatCfg = formatConfig || {
+      ...defaultBnFormatConfig,
+    }
+
+    return removeTrailingZeros(BN.fromRaw(value).format(formatCfg))
+  } catch {
+    return '0'
+  }
+}
+
+export function formatNullifier(value: string) {
+  return value.slice(0, 4) + '...' + value.slice(-4)
+}
+
+export function formatAmount(
+  amount: BnLike,
+  decimalsOrConfig?: BnConfigLike,
+  formatConfig: BnFormatConfig = { decimals: 0 },
+) {
+  try {
+    const decimals =
+      typeof decimalsOrConfig === 'number' ? decimalsOrConfig : decimalsOrConfig?.decimals
+
+    const formatCfg = {
+      ...defaultBnFormatConfig,
+      ...(decimals && { decimals }),
+      ...formatConfig,
+    }
+
+    return removeTrailingZeros(BN.fromBigInt(amount, decimalsOrConfig).format(formatCfg))
+  } catch {
+    return '0'
+  }
+}
+
+export function formatBalance(
+  amount: BnLike,
+  decimalsOrConfig?: BnConfigLike,
+  formatConfig?: BnFormatConfig,
+) {
+  try {
+    const decimals =
+      typeof decimalsOrConfig === 'number' ? decimalsOrConfig : decimalsOrConfig?.decimals
+
+    const formatCfg = formatConfig || {
+      ...defaultBnFormatConfig,
+      ...(decimals && { decimals }),
+    }
+
+    return convertNumberWithPrefix(formatAmount(amount, decimalsOrConfig, formatCfg))
+  } catch {
+    return '0'
+  }
+}
+
+export function formatAmountShort(value: BnLike): string {
+  const numericValue = Number(value)
+
+  if (Number.isNaN(numericValue)) {
+    console.warn("The value can't be converted to a number properly")
+    return '–'
+  }
+
+  const bigIntValue = BN.fromBigInt(value)
+
+  // 1,234,000,000 => "1.23B"
+  if (bigIntValue.gte(BN.fromRaw(1_000_000_000))) {
+    const billions = bigIntValue.div(BN.fromRaw(1_000_000_000))
+    return formatAmount(billions, 18, { decimals: 2, suffix: 'B' })
+  }
+
+  // 1,234,000 => "1.2M"
+  if (bigIntValue.gte(BN.fromRaw(1_000_000))) {
+    const millions = bigIntValue.div(BN.fromRaw(1_000_000))
+    return formatAmount(millions, 18, { decimals: 1, suffix: 'M' })
+  }
+
+  // 1,000-9,999 => "5.4K"
+  // 10,000+ => "56K"
+  if (bigIntValue.gte(BN.fromRaw(1_000))) {
+    const thousands = bigIntValue.div(BN.fromRaw(1_000))
+    const decimals = bigIntValue.lte(BN.fromRaw(10_000)) ? 1 : 0
+    return formatAmount(thousands, 18, { decimals, suffix: 'K' })
+  }
+
+  // 0-999 => "123"
+  return formatAmount(bigIntValue, 18)
+}
+
+export function formatAddress(address?: string) {
+  return address ? `${address.slice(0, 8)}...${address.slice(-8)}` : '–'
+}
+
+type Labels = {
+  hours: string
+  minutes: string
+  seconds: string
+}
+
+type FormatTimeLeftArgs = {
+  days?: number
+  hours?: number
+  minutes?: number
+  seconds?: number
+  labels?: Labels
+}
+
+export const formatTimeLeft = ({
+  days = 0,
+  hours = 0,
+  minutes = 0,
+  seconds = 0,
+  labels = { hours: 'h', minutes: 'm', seconds: 's' },
+}: FormatTimeLeftArgs): string => {
+  const totalHours = hours + days * 24
+
+  const timeUnits = [
+    { value: totalHours, label: labels.hours, hidden: totalHours === 0 },
+    {
+      value: minutes,
+      label: labels.minutes,
+      hidden: totalHours === 0 && minutes === 0,
+    },
+    {
+      value: seconds,
+      label: labels.seconds,
+      hidden: totalHours > 0,
+    },
+  ]
+
+  return timeUnits
+    .filter(item => !item.hidden)
+    .map(({ value, label }) => `${value}${label}`)
+    .join(' ')
+}
+
+export const formatTimeLeftNumeric = ({
+  hours = 0,
+  minutes = 0,
+  seconds = 0,
+}: FormatTimeLeftArgs): string => {
+  const formatWithZeros = (unit: number) => String(unit).padStart(2, '0')
+
+  return `${formatWithZeros(hours)}:${formatWithZeros(minutes)}:${formatWithZeros(seconds)}`
+}
+
+export function formatNumberShort(value: BnLike): string {
+  const numericValue = Number(value)
+
+  if (Number.isNaN(numericValue)) {
+    console.warn("The value can't be converted to a number properly")
+    return '–'
+  }
+
+  const bigIntValue = BN.fromBigInt(value)
+
+  // 1,234,000,000 => "1.23B"
+  if (bigIntValue.gte(BN.fromRaw(1_000_000_000))) {
+    const billions = bigIntValue.div(BN.fromRaw(1_000_000_000))
+    return formatAmount(billions, 18, { decimals: 2, suffix: 'B' })
+  }
+
+  // 1,234,000 => "1.2M"
+  if (bigIntValue.gte(BN.fromRaw(1_000_000))) {
+    const millions = bigIntValue.div(BN.fromRaw(1_000_000))
+    return formatAmount(millions, 18, { decimals: 1, suffix: 'M' })
+  }
+
+  // 1,000-9,999 => "5.4K"
+  // 10,000+ => "56K"
+  if (bigIntValue.gte(BN.fromRaw(1_000))) {
+    const thousands = bigIntValue.div(BN.fromRaw(1_000))
+    const decimals = bigIntValue.lte(BN.fromRaw(10_000)) ? 1 : 0
+    return formatAmount(thousands, 18, { decimals, suffix: 'K' })
+  }
+
+  // 0-999 => "123"
+  return formatAmount(bigIntValue, 18)
+}

@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "useDefineForClassFields": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "composite": true,
+    "types": [
+      "node",
+      "vite/client",
+    ],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+      "ScriptHost",
+    ],
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "index.d.ts",
+    "package.json",
+    "src/**/*.json"
+  ]
+}

@@ -1,0 +1,37 @@
+.app__init {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f7f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app__init {
+    background-color: #131313;
+  }
+}
+
+.app__init-logo {
+  width: 100px;
+  height: 100px;
+  animation: spin 2s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

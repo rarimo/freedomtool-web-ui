@@ -1,0 +1,47 @@
+{
+  "validations": {
+    "field-error-required": "Please fill out this field",
+    "field-error-min-length": "{{field}} must contain minimum {{min}} symbols",
+    "field-error-max-length": "{{field}} must contain maximum {{max}} symbols",
+    "field-error-number-type-mismatch": "This field must be a number",
+    "field-error-type-mismatch": "This field must be a {{type}}",
+    "field-error-more-than": "This field must be greater than {{more}}",
+    "field-error-single-word": "This field must contain only one word"
+  },
+  "error-boundary": {
+    "title": "Oops",
+    "description": "Something went wrong... :(",
+    "button-lbl": "Reload page"
+  },
+  "formats": {
+    "percent": "{{value}}%"
+  },
+  "errors": {
+    "no-provider-address": "No provider address",
+    "eip-712-extensions-not-supported": "EIP-712 extensions are not supported",
+    "contract-instance-absent": "Contract instance is absent",
+    "network-error": "Something wrong with network request, please try again later",
+    "unknown-error": "Oops, something went wrong, please try again later",
+    "bad-request": "Your request does not pass our server validation, please check your input",
+    "unauthorized": "Seems like you are not authorized to perform this action",
+    "forbidden": "Seems like you are not allowed to do this",
+    "not-found": "Our service cannot find the resource you are looking for",
+    "conflict": "It seems like there is a conflict with the current state of the resource",
+    "too-many-requests": "Wow-wow, slow down, you are making too many requests",
+    "internal-server-error": "Ahh, something went wrong on our side, please try again later",
+    "service-unavailable": "Oh, it seems like our service is not available right now, please try again later",
+    "user-rejected-request": "Oh, seems like you rejected the request",
+    "resource-unavailable": "Hmm, check out your wallet, seems like the request is pending",
+    "no-signed-order": "There is no signed order"
+  },
+  "notifications": {
+    "default-title-success": "Success",
+    "default-title-error": "Error",
+    "default-title-warning": "Warning",
+    "default-title-info": "Info",
+    "default-message-success": "Action successful",
+    "default-message-error": "Something went wrong",
+    "default-message-warning": "Something you are doing is not recommended",
+    "default-message-info": "Something is happening. Just want you to know that"
+  }
+}
