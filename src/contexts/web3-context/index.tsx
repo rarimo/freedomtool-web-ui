@@ -1,6 +1,12 @@
 import { AppKitNetwork } from '@reown/appkit/networks'
 import { useAppKitAccount, useAppKitEvents, useAppKitNetwork } from '@reown/appkit/react'
-import { JsonRpcProvider, JsonRpcSigner, TransactionReceipt, TransactionRequest } from 'ethers'
+import {
+  JsonRpcProvider,
+  JsonRpcSigner,
+  Network,
+  TransactionReceipt,
+  TransactionRequest,
+} from 'ethers'
 import {
   createContext,
   PropsWithChildren,
@@ -131,8 +137,19 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     return walletClient as Client<Transport, Chain, Account>
   }, [walletClient])
 
+  // const contractConnector = useMemo(() => {
+  //   if (!client) return null
+  //   return clientToProvider(client)
+  // }, [client])
+
   const contractConnector = useMemo(() => {
-    if (!client) return null
+    if (!client) {
+      const networkConfig = networkConfigsMap[NETWORK_NAME]
+      const network = new Network(networkConfig.name, networkConfig.chainId)
+      return new JsonRpcProvider(networkConfig.rpcUrl, network, {
+        staticNetwork: true,
+      })
+    }
     return clientToProvider(client)
   }, [client])
 

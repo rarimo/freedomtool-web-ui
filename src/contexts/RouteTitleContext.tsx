@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import { matchPath, useLocation } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
@@ -23,14 +24,16 @@ const RouteTitleContext = createContext<RouteTitleContextType>({
 
 export function RouteTitleContextProvider({ children }: PropsWithChildren) {
   const [title, setTitle] = useState<ReactNode>('')
+  const { t } = useTranslation()
 
   const { pathname } = useLocation()
 
   const routePathToTitle: Partial<Record<RoutePaths, ReactNode>> = useMemo(
     () => ({
-      [RoutePaths.Vote]: 'Title',
+      [RoutePaths.Votes]: t('routes.vote'),
+      [RoutePaths.Vote]: t('routes.create-new-proposal'),
     }),
-    [],
+    [t],
   )
 
   const defaultTitle = useMemo(() => {

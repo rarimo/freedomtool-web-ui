@@ -1,4 +1,5 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom'
+import { lazy } from 'react'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
 
@@ -6,6 +7,8 @@ import { ErrorBoundaryFallback } from './common'
 import MainLayout from './layouts/MainLayout'
 
 export const createRouter = () => {
+  const Votes = lazy(() => import('@/pages/Votes'))
+
   return createBrowserRouter([
     {
       path: RoutePaths.Home,
@@ -18,11 +21,11 @@ export const createRouter = () => {
       children: [
         {
           index: true,
-          element: <p>Home</p>,
+          element: <Navigate to={RoutePaths.Votes} replace />,
         },
         {
           path: RoutePaths.Votes,
-          element: <p>Votes list</p>,
+          element: <Votes />,
         },
         {
           path: RoutePaths.VotesNew,

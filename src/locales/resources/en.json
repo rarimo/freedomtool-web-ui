@@ -8,6 +8,10 @@
     "field-error-more-than": "This field must be greater than {{more}}",
     "field-error-single-word": "This field must contain only one word"
   },
+  "theme-switcher": {
+    "theme-option-light": "Light",
+    "theme-option-dark": "Dark"
+  },
   "error-boundary": {
     "title": "Oops",
     "description": "Something went wrong... :(",
@@ -43,5 +47,9 @@
     "default-message-error": "Something went wrong",
     "default-message-warning": "Something you are doing is not recommended",
     "default-message-info": "Something is happening. Just want you to know that"
+  },
+  "routes": {
+    "vote": "Votes",
+    "create-new-proposal": "Create new proposal"
   }
 }
