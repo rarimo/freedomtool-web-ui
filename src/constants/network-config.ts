@@ -16,6 +16,8 @@ export interface NetworkConfig {
 const rarimoAppKitChain: AppKitNetwork = {
   id: 42,
   name: 'dev Rarimo',
+  caipNetworkId: 'eip155:42',
+  chainNamespace: 'eip155',
   nativeCurrency: {
     decimals: 18,
     name: 'RMO',

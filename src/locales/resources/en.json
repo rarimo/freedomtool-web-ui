@@ -8,6 +8,14 @@
     "field-error-more-than": "This field must be greater than {{more}}",
     "field-error-single-word": "This field must contain only one word"
   },
+  "app-navbar": {
+    "logout-lbl": "Log out"
+  },
+  "network-warning-modal": {
+    "title": "Where are you?",
+    "description": "Don’t get lost! Please switch to {{chainName}} so we can make it rain ions & get back to winning",
+    "submit-lbl": "Switch"
+  },
   "theme-switcher": {
     "theme-option-light": "Light",
     "theme-option-dark": "Dark"
@@ -51,5 +59,10 @@
   "routes": {
     "vote": "Votes",
     "create-new-proposal": "Create new proposal"
+  },
+  "auth-block": {
+    "title": " Connect your wallet",
+    "description": "To create a vote, you need to authenticate using a wallet.",
+    "auth-btn": "Connect wallet"
   }
 }

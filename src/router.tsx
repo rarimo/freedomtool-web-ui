@@ -1,10 +1,11 @@
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
 
 import { ErrorBoundaryFallback } from './common'
 import MainLayout from './layouts/MainLayout'
+import CreateVote from './pages/CreateVote'
 
 export const createRouter = () => {
   const Votes = lazy(() => import('@/pages/Votes'))
@@ -29,7 +30,11 @@ export const createRouter = () => {
         },
         {
           path: RoutePaths.VotesNew,
-          element: <p>Create vote</p>,
+          element: (
+            <Suspense fallback={<p>Loading...</p>}>
+              <CreateVote />
+            </Suspense>
+          ),
         },
         {
           path: RoutePaths.Vote,

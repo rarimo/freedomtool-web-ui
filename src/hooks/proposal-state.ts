@@ -35,15 +35,20 @@ export const useProposalState = (limit = 10) => {
   const fetchProposals = useCallback(async () => {
     if (!contract || lastProposalId === null) return
     setIsLoading(true)
+
     try {
-      const startIndex = (currentPage - 1) * limit + 1
-      const endIndex = startIndex + limit - 1
+      const startIndex = Math.max((currentPage - 1) * limit, 0)
+      const endIndex = Math.min(startIndex + limit - 1, lastProposalId)
+
+      if (startIndex > lastProposalId) {
+        setProposals([])
+        return
+      }
 
       const ids = Array.from(
-        { length: Math.min(endIndex, lastProposalId) - startIndex + 1 },
+        { length: Math.max(endIndex - startIndex + 1, 0) },
         (_, i) => startIndex + i,
       )
-
       const proposalsData = await Promise.all(
         ids.map(id => contract.contractInstance.getProposalInfo(id)),
       )
@@ -73,9 +78,12 @@ export const useProposalState = (limit = 10) => {
     const fetchLastProposalId = async () => {
       try {
         const id = await contract.contractInstance.lastProposalId()
-        setLastProposalId(Number(id))
+        const parsedId = Number(id)
+
+        setLastProposalId(parsedId >= 0 ? parsedId : 0)
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
+        setLastProposalId(0)
       }
     }
 

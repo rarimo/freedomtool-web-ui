@@ -119,7 +119,9 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   // Disconnect any social login
   useEffect(() => {
     const disconnectIdAuth = async () => {
-      const idAuthConnection = connections.find(connection => connection.connector.id === 'ID_AUTH')
+      const idAuthConnection = connections.find(connection => {
+        return connection.connector.id === 'ID_AUTH'
+      })
       if (!idAuthConnection) return
       await idAuthConnection.connector?.disconnect()
       window.location.reload()
@@ -130,17 +132,12 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   const { data: walletClient } = useConnectorClient({ config: wagmiAdapter.wagmiConfig })
   if (walletClient) {
     // TODO: take a look if it works
-    walletClient.pollingInterval = 10000
+    walletClient.pollingInterval = 10_000
   }
 
   const client = useMemo(() => {
     return walletClient as Client<Transport, Chain, Account>
   }, [walletClient])
-
-  // const contractConnector = useMemo(() => {
-  //   if (!client) return null
-  //   return clientToProvider(client)
-  // }, [client])
 
   const contractConnector = useMemo(() => {
     if (!client) {
@@ -194,37 +191,10 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [client?.chain?.id])
 
   useEffect(() => {
-    if (appKitEvent?.data.event === 'MODAL_CREATED' || appKitEvent?.data.event === 'INITIALIZE') {
+    if (appKitEvent?.data.event === 'INITIALIZE') {
       setIsInitialized(true)
     }
   }, [appKitEvent, status])
-
-  useEffect(() => {
-    // On wallet change
-    const changeConnector = async () => {
-      if (connections.length > 1) {
-        for (const connector of connectManager.connectors) {
-          await connector?.disconnect?.()
-        }
-      }
-    }
-
-    changeConnector()
-  }, [address, connectManager, connections])
-
-  useEffect(() => {
-    // Changing account within one wallet
-    if (address !== address && connections.length === 1) {
-      window.location.reload()
-    }
-  }, [address, connections])
-
-  // TODO: Recheck with wallet connector
-  // useEffect(() => {
-  //   if (!isConnected && isInitialized) {
-  //     window.location.reload()
-  //   }
-  // }, [isConnected, isInitialized])
 
   return (
     <web3ProviderContext.Provider
