@@ -47,6 +47,7 @@ export default function CreateVoteForm() {
   })
 
   const submit = (data: typeof defaultValues) => {
+    // eslint-disable-next-line no-console
     console.log('data', data)
   }
 
