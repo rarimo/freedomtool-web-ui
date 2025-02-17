@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useClickOutside } from '@reactuses/core'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Control,
   Controller,
@@ -97,7 +97,7 @@ export default function CreateVoteForm() {
   // eslint-disable-next-line no-console
   const submit = (data: ICreateVote) => console.log('data', data)
 
-  const addQuestion = () => {
+  const addQuestion = useCallback(() => {
     append({
       id: uuidv4(),
       text: '',
@@ -106,17 +106,17 @@ export default function CreateVoteForm() {
         { id: uuidv4(), text: '' },
       ],
     })
-  }
+    trigger(['questions'])
+  }, [append, trigger])
 
-  useClickOutside(questionContainerRef, () => {
+  const collapseQuestions = useCallback(() => {
     setEditQuestionIndex(-1)
-  })
+  }, [])
+
+  useClickOutside(questionContainerRef, collapseQuestions)
 
   useEffect(() => {
     setEditQuestionIndex(questionFields.length - 1)
-    if (questionFields.length > 1) {
-      trigger(['questions'])
-    }
   }, [questionFields.length, trigger])
 
   return (
@@ -258,7 +258,7 @@ function QuestionForm(props: IQuestionForm) {
           )}
         />
         {canDelete && (
-          <IconButton onClick={onDelete} disabled={!canDelete} color='error'>
+          <IconButton color='error' onClick={onDelete}>
             <UiIcon name={Icons.DeleteBin6Line} size={4} />
           </IconButton>
         )}
