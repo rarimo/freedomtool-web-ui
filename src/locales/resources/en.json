@@ -65,5 +65,15 @@
     "title": " Connect your wallet",
     "description": "To create a vote, you need to authenticate using a wallet.",
     "auth-btn": "Connect wallet"
+  },
+  "create-vote": {
+    "form": {
+      "end-date-error": "End Date must be after Start Date",
+      "start-date-lbl": "Start Date (UTC)",
+      "end-date-lbl": "End Date (UTC)",
+      "add-question-btn": "Add a question",
+      "submit-btn": "Submit",
+      "add-option-lbl": "Add an option"
+    }
   }
 }
