@@ -32,6 +32,9 @@ import { ICreateVote } from '../types'
 
 const minDate = time().utc()
 
+const MAX_OPTIONS_PER_QUESTION = 8
+const MAX_QUESTIONS = 12
+
 const defaultValues: ICreateVote = {
   startDate: '',
   endDate: '',
@@ -156,6 +159,7 @@ export default function CreateVoteForm() {
             sx={{ mr: 'auto' }}
             size='medium'
             variant='text'
+            disabled={questionFields.length === MAX_QUESTIONS}
             startIcon={<UiIcon name={Icons.Plus} size={4} />}
             onClick={addQuestion}
           >
@@ -314,6 +318,7 @@ function OptionsForm({
         variant='text'
         sx={{ mr: 'auto', pl: 0, mt: 3 }}
         startIcon={<UiIcon name={Icons.Plus} size={4} />}
+        disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}
       >
         {t('create-vote.form.add-option-lbl')}
