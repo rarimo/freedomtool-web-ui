@@ -5,6 +5,7 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker'
 import { DateTimePicker, DateTimePickerProps } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { forwardRef, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 
 const UiDatePicker = forwardRef<HTMLInputElement, Props>(
   ({ errorMessage, label, hasTime = false, ...rest }: Props, ref) => {
+    const { t } = useTranslation()
     const { palette } = useTheme()
     const fieldId = useMemo(() => `ui-date-picker-${uuidv4()}`, [])
     const [internalErrorMessage, setInternalErrorMessage] = useState<string | null>(null)
@@ -33,11 +35,18 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
       [rest],
     )
 
-    const handleError = useCallback((reason: string | null) => {
-      setInternalErrorMessage(
-        reason === 'invalidDate' ? 'Invalid date format' : reason ? 'Invalid date' : null,
-      )
-    }, [])
+    const handleError = useCallback(
+      (reason: string | null) => {
+        setInternalErrorMessage(
+          reason === 'invalidDate'
+            ? t('ui-date-picker.invalid-format-error')
+            : reason
+              ? t('ui-date-picker.invalid-date-error')
+              : null,
+        )
+      },
+      [t],
+    )
 
     const pickerProps = {
       ...rest,

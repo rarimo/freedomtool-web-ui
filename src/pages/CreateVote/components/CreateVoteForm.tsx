@@ -122,7 +122,7 @@ export default function CreateVoteForm() {
   return (
     <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
       <Stack ref={questionContainerRef} spacing={5} width='100%'>
-        <Stack direction={{ md: 'row' }} justifyContent='space-between' spacing={5}>
+        <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
           <Controller
             name='startDate'
             control={control}
@@ -239,6 +239,7 @@ function QuestionCard(props: IQuestionCard) {
 
 function QuestionForm(props: IQuestionForm) {
   const { question, index, canDelete, control, onDelete } = props
+  const { t } = useTranslation()
 
   return (
     <Stack key={question.id} spacing={2} p={2} borderRadius={2}>
@@ -249,7 +250,7 @@ function QuestionForm(props: IQuestionForm) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={`Question #${index + 1}`}
+              label={t('create-vote.form.question-lbl', { order: index + 1 })}
               variant='standard'
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message}
@@ -294,7 +295,7 @@ function OptionsForm({
                 {...field}
                 variant='standard'
                 size='small'
-                label={`Option ${index + 1}`}
+                label={t('create-vote.form.option-lbl', { order: index + 1 })}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
                 fullWidth

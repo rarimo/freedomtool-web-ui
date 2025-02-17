@@ -14,7 +14,7 @@
   },
   "network-warning-modal": {
     "title": "Where are you?",
-    "description": "Don’t get lost! Please switch to {{chainName}} so we can make it rain ions & get back to winning",
+    "description": "Don’t get lost! Please switch to {{chainName}} to continue",
     "submit-lbl": "Switch"
   },
   "theme-switcher": {
@@ -73,7 +73,13 @@
       "end-date-lbl": "End Date (UTC)",
       "add-question-btn": "Add a question",
       "submit-btn": "Submit",
-      "add-option-lbl": "Add an option"
+      "add-option-lbl": "Add an option",
+      "question-lbl": "Question #{{order}}",
+      "option-lbl": "Option #{{order}}"
     }
+  },
+  "ui-date-picker": {
+    "invalid-format-error": "Invalid date format",
+    "invalid-date-error": "Invalid date"
   }
 }

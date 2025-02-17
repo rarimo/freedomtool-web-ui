@@ -32,6 +32,7 @@ export const useProposalState = (limit = 10) => {
     }
   }, [location])
 
+  // TODO: Use infinite load
   const fetchProposals = useCallback(async () => {
     if (!contract || lastProposalId === null) return
     setIsLoading(true)

@@ -119,13 +119,12 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   // Disconnect any social login
   useEffect(() => {
     const disconnectIdAuth = async () => {
-      const idAuthConnection = connections.find(connection => {
-        return connection.connector.id === 'ID_AUTH'
-      })
+      const idAuthConnection = connections.find(connection => connection.connector.id === 'ID_AUTH')
       if (!idAuthConnection) return
       await idAuthConnection.connector?.disconnect()
       window.location.reload()
     }
+
     disconnectIdAuth()
   }, [connections])
 
@@ -195,6 +194,18 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
       setIsInitialized(true)
     }
   }, [appKitEvent, status])
+
+  useEffect(() => {
+    const changeConnector = async () => {
+      if (connections.length > 1) {
+        for (const connector of connectManager.connectors) {
+          await connector?.disconnect?.()
+        }
+      }
+    }
+
+    changeConnector()
+  }, [address, connectManager, connections])
 
   return (
     <web3ProviderContext.Provider
