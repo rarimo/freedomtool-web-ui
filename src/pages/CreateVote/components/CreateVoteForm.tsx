@@ -1,22 +1,33 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Stack } from '@mui/material'
-import { Controller, useForm } from 'react-hook-form'
+import { Delete } from '@mui/icons-material'
+import { Button, Divider, IconButton, Stack, TextField } from '@mui/material'
+import { Control, Controller, useFieldArray, useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
 import UiDatePicker from '@/common/UiDatePicker'
+import { Icons } from '@/enums'
+import { UiIcon } from '@/ui'
 
-interface ICreateVote {
-  startDate: string
-  endDate: string
-}
+import { ICreateVote } from '../types'
+
+const minDate = time().utc()
 
 const defaultValues: ICreateVote = {
   startDate: '',
   endDate: '',
+  questions: [
+    {
+      id: uuidv4(),
+      text: '',
+      options: [
+        { id: uuidv4(), text: '' },
+        { id: uuidv4(), text: '' },
+      ],
+    },
+  ],
 }
-
-const minDate = time().utc()
 
 export default function CreateVoteForm() {
   const { control, handleSubmit } = useForm<ICreateVote>({
@@ -24,41 +35,45 @@ export default function CreateVoteForm() {
     mode: 'onChange',
     resolver: yupResolver<ICreateVote>(
       Yup.object({
-        startDate: Yup.string()
-          .required()
-          .test('minDate', 'Date cannot be earlier than today', function (value) {
-            const currentTimestamp = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000)
-            const inputTimestamp = Math.floor(
-              new Date(isNaN(Number(value)) ? value : Number(value) * 1000).getTime() / 1000,
-            )
-
-            return inputTimestamp !== null && inputTimestamp >= currentTimestamp
-          }),
+        startDate: Yup.string().required('Required'),
         endDate: Yup.string()
-          .required()
+          .required('Required')
           .test('isAfterStartDate', 'End Date must be after Start Date', function (value) {
-            const startTimestamp = Math.floor(
-              new Date(
-                isNaN(Number(this.parent.startDate))
-                  ? this.parent.startDate
-                  : Number(this.parent.startDate) * 1000,
-              ).getTime() / 1000,
-            )
-
-            const endTimestamp = Math.floor(
-              new Date(isNaN(Number(value)) ? value : Number(value) * 1000).getTime() / 1000,
-            )
-
-            return startTimestamp !== null && endTimestamp !== null && endTimestamp > startTimestamp
+            return time(value).timestamp > time(this.parent.startDate).timestamp
           }),
+        questions: Yup.array()
+          .of(
+            Yup.object({
+              id: Yup.string().required(),
+              text: Yup.string().required('Question is required'),
+              options: Yup.array()
+                .of(
+                  Yup.object({
+                    id: Yup.string().required(),
+                    text: Yup.string().required('Option is required'),
+                  }),
+                )
+                .min(2, 'At least two options required')
+                .required(),
+            }),
+          )
+          .min(1, 'At least one question required')
+          .required(),
       }),
     ),
   })
 
-  const submit = (data: typeof defaultValues) => {
-    // eslint-disable-next-line no-console
-    console.log('data', data)
-  }
+  const {
+    fields: questionFields,
+    append,
+    remove,
+  } = useFieldArray({
+    control,
+    name: 'questions',
+  })
+
+  // eslint-disable-next-line no-console
+  const submit = (data: ICreateVote) => console.log('data', data)
 
   return (
     <Stack onSubmit={handleSubmit(submit)} component='form' minWidth={{ md: 600 }}>
@@ -91,8 +106,106 @@ export default function CreateVoteForm() {
             )}
           />
         </Stack>
+
+        <Stack spacing={3} divider={<Divider flexItem />}>
+          {questionFields.map((question, index) => (
+            <Stack key={question.id} spacing={2} p={2} borderRadius={2}>
+              <Stack direction='row' alignItems='center' justifyContent='space-between'>
+                <Controller
+                  name={`questions.${index}.text`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      label={`Question #${index + 1}`}
+                      variant='standard'
+                      error={Boolean(fieldState.error)}
+                      helperText={fieldState.error?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+                {questionFields.length > 1 && (
+                  <IconButton onClick={() => remove(index)} disabled={questionFields.length === 1}>
+                    <Delete color='error' />
+                  </IconButton>
+                )}
+              </Stack>
+
+              <OptionsFieldArray control={control} questionIndex={index} />
+            </Stack>
+          ))}
+        </Stack>
+
+        <Button
+          variant='text'
+          onClick={() =>
+            append({
+              id: uuidv4(),
+              text: '',
+              options: [
+                { id: uuidv4(), text: '' },
+                { id: uuidv4(), text: '' },
+              ],
+            })
+          }
+        >
+          Add Question
+        </Button>
+
         <Button type='submit'>Submit</Button>
       </Stack>
+    </Stack>
+  )
+}
+
+function OptionsFieldArray({
+  control,
+  questionIndex,
+}: {
+  control: Control<ICreateVote, unknown>
+  questionIndex: number
+}) {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `questions.${questionIndex}.options`,
+  })
+
+  return (
+    <Stack spacing={2}>
+      {fields.map((option, index) => (
+        <Stack key={option.id} direction='row' alignItems='center' spacing={2}>
+          <Controller
+            name={`questions.${questionIndex}.options.${index}.text`}
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                variant='standard'
+                size='small'
+                label={`Option ${index + 1}`}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+                fullWidth
+              />
+            )}
+          />
+          {fields.length > 2 && (
+            <IconButton onClick={() => remove(index)}>
+              <Delete color='error' />
+            </IconButton>
+          )}
+        </Stack>
+      ))}
+      <Button
+        size='small'
+        variant='text'
+        sx={{ mr: 'auto' }}
+        startIcon={<UiIcon name={Icons.Plus} size={4} />}
+        onClick={() => append({ id: uuidv4(), text: '' })}
+      >
+        Add Option
+      </Button>
     </Stack>
   )
 }
