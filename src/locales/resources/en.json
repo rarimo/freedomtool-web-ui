@@ -9,7 +9,8 @@
     "field-error-single-word": "This field must contain only one word"
   },
   "app-navbar": {
-    "logout-lbl": "Log out"
+    "logout-lbl": "Log out",
+    "settings-tooltip": "Settings"
   },
   "network-warning-modal": {
     "title": "Where are you?",
