@@ -60,7 +60,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
     const PickerComponent = hasTime ? DateTimePicker : DatePicker
 
     return (
-      <Stack spacing={2}>
+      <Stack spacing={2} flex={1}>
         {label && <FormLabel htmlFor={fieldId}>{label}</FormLabel>}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <PickerComponent

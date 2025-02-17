@@ -2,27 +2,23 @@ import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 
 import UiDatePicker from '@/common/UiDatePicker'
-import { UiTextField } from '@/ui'
 
 interface ICreateVote {
   startDate: string
-  description: string
+  endDate: string
 }
 
 const defaultValues: ICreateVote = {
   startDate: '',
-  description: '',
+  endDate: '',
 }
 
 const minDate = time().utc()
 
 export default function CreateVoteForm() {
-  const { t } = useTranslation()
-
   const { control, handleSubmit } = useForm<ICreateVote>({
     defaultValues,
     mode: 'onChange',
@@ -38,10 +34,23 @@ export default function CreateVoteForm() {
 
             return inputTimestamp !== null && inputTimestamp >= currentTimestamp
           }),
-        description: Yup.string()
-          .trim()
-          .required(t('create-vote.form.description-required-error'))
-          .max(350),
+        endDate: Yup.string()
+          .required()
+          .test('isAfterStartDate', 'End Date must be after Start Date', function (value) {
+            const startTimestamp = Math.floor(
+              new Date(
+                isNaN(Number(this.parent.startDate))
+                  ? this.parent.startDate
+                  : Number(this.parent.startDate) * 1000,
+              ).getTime() / 1000,
+            )
+
+            const endTimestamp = Math.floor(
+              new Date(isNaN(Number(value)) ? value : Number(value) * 1000).getTime() / 1000,
+            )
+
+            return startTimestamp !== null && endTimestamp !== null && endTimestamp > startTimestamp
+          }),
       }),
     ),
   })
@@ -54,38 +63,34 @@ export default function CreateVoteForm() {
   return (
     <Stack onSubmit={handleSubmit(submit)} component='form' minWidth={{ md: 600 }}>
       <Stack spacing={5} width='100%'>
-        <Controller
-          name='startDate'
-          control={control}
-          render={({ field, fieldState }) => (
-            <UiDatePicker
-              {...field}
-              hasTime
-              minDate={minDate}
-              errorMessage={fieldState.error?.message}
-              label='Start Date (UTC)'
-            />
-          )}
-        />
-        <Controller
-          name='description'
-          control={control}
-          render={({ field, fieldState }) => (
-            <UiTextField
-              {...field}
-              multiline
-              rows={5}
-              errorMessage={fieldState.error?.message}
-              placeholder={t('create-vote.form.description-plh')}
-              sx={{
-                background: 'transparent',
-                '& .MuiInputBase-root': {
-                  height: 'unset',
-                },
-              }}
-            />
-          )}
-        />
+        <Stack direction='row' justifyContent='space-between' spacing={5}>
+          <Controller
+            name='startDate'
+            control={control}
+            render={({ field, fieldState }) => (
+              <UiDatePicker
+                {...field}
+                hasTime
+                minDate={minDate}
+                errorMessage={fieldState.error?.message}
+                label='Start Date (UTC)'
+              />
+            )}
+          />
+          <Controller
+            name='endDate'
+            control={control}
+            render={({ field, fieldState }) => (
+              <UiDatePicker
+                {...field}
+                hasTime
+                minDate={minDate}
+                errorMessage={fieldState.error?.message}
+                label='End Date (UTC)'
+              />
+            )}
+          />
+        </Stack>
         <Button type='submit'>Submit</Button>
       </Stack>
     </Stack>
