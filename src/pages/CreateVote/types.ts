@@ -10,7 +10,26 @@ export interface IQuestion {
 }
 
 export interface ICreateVote {
+  title: string
+  description: string
   startDate: string
   endDate: string
   questions: IQuestion[]
+}
+
+export interface IQuestionIpfs {
+  title: string
+  variants: string[]
+}
+
+export interface IVoteIpfs {
+  title: string
+  description: string
+  acceptedOptions: IQuestionIpfs[]
+}
+
+export interface IUploadData {
+  id: string
+  type: string
+  hash: string
 }

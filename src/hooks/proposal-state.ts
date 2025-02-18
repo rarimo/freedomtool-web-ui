@@ -1,5 +1,5 @@
+import { BigNumberish, randomBytes } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
@@ -7,30 +7,44 @@ import { createContract, ErrorHandler } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-export const useProposalState = (limit = 10) => {
+export const useProposalState = () => {
   const { contractConnector } = useWeb3Context()
   const [lastProposalId, setLastProposalId] = useState<number | null>(null)
   const [proposals, setProposals] = useState<ProposalsState.ProposalInfoStructOutput[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [searchParams] = useSearchParams()
-
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) ?? 1)
-
-  const location = useLocation()
-  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(true)
 
   const contract = useMemo(() => {
     if (!contractConnector) return null
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const page = searchParams.get('page')
-    if (page) {
-      setCurrentPage(Number(page))
-    }
-  }, [location])
+  const createProposal = useCallback(
+    async (
+      proposalConfig: Omit<
+        ProposalsState.ProposalConfigStruct,
+        'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
+      > & { amount: BigNumberish },
+    ) => {
+      if (!contract) return
+      const tx = await contract.contractInstance.createProposal(
+        {
+          description: proposalConfig.description,
+          acceptedOptions: proposalConfig.acceptedOptions,
+          startTimestamp: BigInt(proposalConfig.startTimestamp),
+          duration: BigInt(proposalConfig.duration),
+          multichoice: BigInt(0),
+          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+          votingWhitelistData: [randomBytes(32)],
+        },
+        {
+          value: proposalConfig.amount,
+        },
+      )
+
+      await tx.wait()
+    },
+    [contract],
+  )
 
   // TODO: Use infinite load
   const fetchProposals = useCallback(async () => {
@@ -38,18 +52,11 @@ export const useProposalState = (limit = 10) => {
     setIsLoading(true)
 
     try {
-      const startIndex = Math.max((currentPage - 1) * limit, 0)
-      const endIndex = Math.min(startIndex + limit - 1, lastProposalId)
-
-      if (startIndex > lastProposalId) {
-        setProposals([])
-        return
+      const ids = []
+      for (let id = lastProposalId; id > 0; id--) {
+        ids.push(id)
       }
 
-      const ids = Array.from(
-        { length: Math.max(endIndex - startIndex + 1, 0) },
-        (_, i) => startIndex + i,
-      )
       const proposalsData = await Promise.all(
         ids.map(id => contract.contractInstance.getProposalInfo(id)),
       )
@@ -60,14 +67,7 @@ export const useProposalState = (limit = 10) => {
     } finally {
       setIsLoading(false)
     }
-  }, [contract, lastProposalId, limit, currentPage])
-
-  const changePage = (page: number) => {
-    setCurrentPage(page)
-    const searchParams = new URLSearchParams(location.search)
-    searchParams.set('page', String(page))
-    navigate({ search: searchParams.toString() })
-  }
+  }, [contract, lastProposalId])
 
   useEffect(() => {
     fetchProposals()
@@ -94,8 +94,7 @@ export const useProposalState = (limit = 10) => {
   return {
     proposals,
     isLoading,
-    currentPage,
-    changePage,
     lastProposalId,
+    createProposal,
   }
 }

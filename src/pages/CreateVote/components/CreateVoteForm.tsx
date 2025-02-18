@@ -1,41 +1,33 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  Button,
-  Divider,
-  IconButton,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material'
-import { useClickOutside } from '@reactuses/core'
+import { Button, Stack, TextField } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  Control,
-  Controller,
-  FieldArrayWithId,
-  useFieldArray,
-  useForm,
-  useWatch,
-} from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
+import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
-import { Icons } from '@/enums'
+import { BusEvents, Icons } from '@/enums'
+import { bus, ErrorHandler } from '@/helpers'
+import { useProposalState } from '@/hooks'
 import { UiIcon } from '@/ui'
 
+import { MAX_QUESTIONS } from '../constants'
+import {
+  prepareAcceptedOptionsToContract,
+  prepareAcceptedOptionsToIpfs,
+  uploadToIpfs,
+} from '../helpers'
 import { ICreateVote } from '../types'
+import QuestionCard from './QuestionCard'
 
 const minDate = time().utc()
 
-const MAX_OPTIONS_PER_QUESTION = 8
-const MAX_QUESTIONS = 12
-
 const defaultValues: ICreateVote = {
+  title: '',
+  description: '',
   startDate: '',
   endDate: '',
   questions: [
@@ -52,11 +44,21 @@ const defaultValues: ICreateVote = {
 
 export default function CreateVoteForm() {
   const { t } = useTranslation()
-  const { control, handleSubmit, trigger } = useForm<ICreateVote>({
+  const { createProposal } = useProposalState()
+
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<ICreateVote>({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver<ICreateVote>(
       Yup.object({
+        title: Yup.string().required().max(50),
+        description: Yup.string().required().max(200),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()
@@ -75,7 +77,6 @@ export default function CreateVoteForm() {
                     text: Yup.string().required(),
                   }),
                 )
-                .min(2)
                 .required(),
             }),
           )
@@ -94,11 +95,48 @@ export default function CreateVoteForm() {
     name: 'questions',
   })
 
+  const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
   const questionContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // eslint-disable-next-line no-console
-  const submit = (data: ICreateVote) => console.log('data', data)
+  const submit = async (formData: ICreateVote) => {
+    const { endDate, startDate, questions, title, description } = formData
+    try {
+      const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
+      const response = await uploadToIpfs({
+        title,
+        description,
+        acceptedOptions: acceptedOptionsIpfs,
+      })
+      const cid = response.data.hash
+
+      const acceptedOptions = prepareAcceptedOptionsToContract(questions)
+
+      const startTimestamp = time(startDate).timestamp
+      const endTimestamp = time(endDate).timestamp
+      const duration = endTimestamp - startTimestamp
+
+      setIsConfirmationModalShown(true)
+
+      await createProposal({
+        acceptedOptions,
+        description: cid,
+        startTimestamp: time(startDate).timestamp,
+        duration,
+        // TODO: Replace when BE is ready
+        amount: 1, // 1 wei
+      })
+
+      bus.emit(BusEvents.success, {
+        message: t('create-vote.success-msg'),
+      })
+      reset()
+    } catch (error) {
+      ErrorHandler.process(error)
+    } finally {
+      setIsConfirmationModalShown(false)
+    }
+  }
 
   const addQuestion = useCallback(() => {
     append({
@@ -112,217 +150,112 @@ export default function CreateVoteForm() {
     trigger(['questions'])
   }, [append, trigger])
 
-  const collapseQuestions = useCallback(() => {
-    setEditQuestionIndex(-1)
-  }, [])
-
-  useClickOutside(questionContainerRef, collapseQuestions)
-
   useEffect(() => {
     setEditQuestionIndex(questionFields.length - 1)
   }, [questionFields.length, trigger])
 
   return (
-    <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-      <Stack ref={questionContainerRef} spacing={5} width='100%'>
-        <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
+    <>
+      <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
+        <Stack ref={questionContainerRef} spacing={5} width='100%'>
           <Controller
-            name='startDate'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiDatePicker
-                {...field}
-                hasTime
-                minDate={minDate}
-                errorMessage={fieldState.error?.message}
-                label={t('create-vote.form.start-date-lbl')}
-              />
-            )}
-          />
-          <Controller
-            name='endDate'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiDatePicker
-                {...field}
-                hasTime
-                minDate={minDate}
-                errorMessage={fieldState.error?.message}
-                label={t('create-vote.form.end-date-lbl')}
-              />
-            )}
-          />
-        </Stack>
-
-        <Stack spacing={3}>
-          <Button
-            sx={{ mr: 'auto' }}
-            size='medium'
-            variant='text'
-            disabled={questionFields.length === MAX_QUESTIONS}
-            startIcon={<UiIcon name={Icons.Plus} size={4} />}
-            onClick={addQuestion}
-          >
-            {t('create-vote.form.add-question-btn')}
-          </Button>
-          {questionFields.map((question, index) => {
-            return (
-              <QuestionCard
-                key={question.id}
-                question={question}
-                index={index}
-                control={control}
-                canDelete={questionFields.length > 1}
-                isEditing={editQuestionIndex === index}
-                onDelete={() => remove(index)}
-                onEdit={() => setEditQuestionIndex(index)}
-              />
-            )
-          })}
-        </Stack>
-        <Button type='submit' sx={{ mt: 3 }}>
-          {t('create-vote.form.submit-btn')}
-        </Button>
-      </Stack>
-    </Stack>
-  )
-}
-
-interface IQuestionForm {
-  question: FieldArrayWithId<ICreateVote, 'questions', 'id'>
-  control: Control<ICreateVote, unknown>
-  index: number
-  canDelete: boolean
-  onDelete: () => void
-}
-
-interface IQuestionCard extends IQuestionForm {
-  isEditing: boolean
-  onEdit: () => void
-}
-
-function QuestionCard(props: IQuestionCard) {
-  const { palette } = useTheme()
-  const { index, isEditing, onEdit, control } = props
-
-  const questionText = useWatch({
-    control,
-    name: `questions.${index}.text`,
-  })
-
-  if (isEditing)
-    return (
-      <Stack spacing={3}>
-        <Divider />
-        <QuestionForm {...props} />
-        <Divider />
-      </Stack>
-    )
-
-  const { invalid } = control.getFieldState(`questions.${index}`)
-
-  return (
-    <Stack
-      onClick={onEdit}
-      component={Paper}
-      py={4}
-      sx={{ border: invalid ? `1px solid ${palette.error.main}` : '' }}
-    >
-      <Typography
-        title={questionText}
-        maxWidth={{ xs: 300, md: 450 }}
-        noWrap
-        textOverflow='ellipsis'
-        variant='buttonMedium'
-      >
-        {questionText || `Question #${index + 1}`}
-      </Typography>
-    </Stack>
-  )
-}
-
-function QuestionForm(props: IQuestionForm) {
-  const { question, index, canDelete, control, onDelete } = props
-  const { t } = useTranslation()
-
-  return (
-    <Stack key={question.id} spacing={2} p={2} borderRadius={2}>
-      <Stack direction='row' alignItems='center' justifyContent='space-between'>
-        <Controller
-          name={`questions.${index}.text`}
-          control={control}
-          render={({ field, fieldState }) => (
-            <TextField
-              {...field}
-              label={t('create-vote.form.question-lbl', { order: index + 1 })}
-              variant='standard'
-              error={Boolean(fieldState.error)}
-              helperText={fieldState.error?.message}
-              fullWidth
-            />
-          )}
-        />
-        {canDelete && (
-          <IconButton color='error' onClick={onDelete}>
-            <UiIcon name={Icons.DeleteBin6Line} size={4} />
-          </IconButton>
-        )}
-      </Stack>
-
-      <OptionsForm control={control} questionIndex={index} />
-    </Stack>
-  )
-}
-
-function OptionsForm({
-  control,
-  questionIndex,
-}: {
-  control: Control<ICreateVote, unknown>
-  questionIndex: number
-}) {
-  const { t } = useTranslation()
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `questions.${questionIndex}.options`,
-  })
-
-  return (
-    <Stack spacing={2}>
-      {fields.map((option, index) => (
-        <Stack key={option.id} direction='row' alignItems='center' spacing={2}>
-          <Controller
-            name={`questions.${questionIndex}.options.${index}.text`}
+            name='title'
             control={control}
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                variant='standard'
-                size='small'
-                label={t('create-vote.form.option-lbl', { order: index + 1 })}
+                disabled={isSubmitting}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
-                fullWidth
+                label={t('create-vote.form.proposal-title-lbl')}
               />
             )}
           />
-          {fields.length > 2 && (
-            <IconButton onClick={() => remove(index)} color='error'>
-              <UiIcon name={Icons.DeleteBin6Line} size={4} />
-            </IconButton>
-          )}
+          <Controller
+            name='description'
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                multiline
+                rows={5}
+                disabled={isSubmitting}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+                label={t('create-vote.form.proposal-description-lbl')}
+                sx={{
+                  background: 'transparent',
+                  '& .MuiInputBase-root': {
+                    height: 'unset',
+                  },
+                }}
+              />
+            )}
+          />
+          <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
+            <Controller
+              name='startDate'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiDatePicker
+                  {...field}
+                  hasTime
+                  minDate={minDate}
+                  disabled={isSubmitting}
+                  errorMessage={fieldState.error?.message}
+                  label={t('create-vote.form.start-date-lbl')}
+                />
+              )}
+            />
+            <Controller
+              name='endDate'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiDatePicker
+                  {...field}
+                  hasTime
+                  minDate={minDate}
+                  disabled={isSubmitting}
+                  errorMessage={fieldState.error?.message}
+                  label={t('create-vote.form.end-date-lbl')}
+                />
+              )}
+            />
+          </Stack>
+
+          <Stack spacing={3}>
+            <Button
+              sx={{ mr: 'auto' }}
+              size='medium'
+              variant='text'
+              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
+              startIcon={<UiIcon name={Icons.Plus} size={4} />}
+              onClick={addQuestion}
+            >
+              {t('create-vote.form.add-question-btn')}
+            </Button>
+            {questionFields.map((question, index) => {
+              return (
+                <QuestionCard
+                  key={question.id}
+                  question={question}
+                  index={index}
+                  control={control}
+                  isDisabled={isSubmitting}
+                  canDelete={questionFields.length > 1}
+                  isEditing={editQuestionIndex === index}
+                  onDelete={() => remove(index)}
+                  onEdit={() => setEditQuestionIndex(index)}
+                />
+              )
+            })}
+          </Stack>
+          <Button disabled={isSubmitting} type='submit' sx={{ mt: 3 }}>
+            {t('create-vote.form.submit-btn')}
+          </Button>
         </Stack>
-      ))}
-      <Button
-        size='small'
-        variant='text'
-        sx={{ mr: 'auto', pl: 0, mt: 3 }}
-        startIcon={<UiIcon name={Icons.Plus} size={4} />}
-        disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
-        onClick={() => append({ id: uuidv4(), text: '' })}
-      >
-        {t('create-vote.form.add-option-lbl')}
-      </Button>
-    </Stack>
+      </Stack>
+      <SignatureConfirmationModal open={isConfirmationModalShown} />
+    </>
   )
 }

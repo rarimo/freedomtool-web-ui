@@ -1,6 +1,7 @@
 export * from './copy-to-clipboard'
 export * from './countdown'
 export * from './form'
+export * from './ipfs'
 export * from './loading'
 export * from './multi-page-loading'
 export * from './multi-page-loading-v2'
