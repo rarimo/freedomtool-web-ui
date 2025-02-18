@@ -626,7 +626,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         border: 0,
         borderRadius: theme.spacing(4),
         backgroundColor: theme.palette.background.light,
-        '&:last-of-type': {
+        '&:first-of-type, &:last-of-type': {
           borderRadius: theme.spacing(4),
         },
       }),

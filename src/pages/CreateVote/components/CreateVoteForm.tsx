@@ -1,16 +1,17 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Button,
   Divider,
   IconButton,
-  Paper,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from '@mui/material'
-import { useClickOutside } from '@reactuses/core'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Control,
@@ -75,7 +76,6 @@ export default function CreateVoteForm() {
                     text: Yup.string().required(),
                   }),
                 )
-                .min(2)
                 .required(),
             }),
           )
@@ -111,12 +111,6 @@ export default function CreateVoteForm() {
     })
     trigger(['questions'])
   }, [append, trigger])
-
-  const collapseQuestions = useCallback(() => {
-    setEditQuestionIndex(-1)
-  }, [])
-
-  useClickOutside(questionContainerRef, collapseQuestions)
 
   useEffect(() => {
     setEditQuestionIndex(questionFields.length - 1)
@@ -202,42 +196,48 @@ interface IQuestionCard extends IQuestionForm {
 }
 
 function QuestionCard(props: IQuestionCard) {
+  const { t } = useTranslation()
   const { palette } = useTheme()
-  const { index, isEditing, onEdit, control } = props
+  const { index, control } = props
+  const [isExpanded, setIxExpanded] = useState(true)
 
   const questionText = useWatch({
     control,
     name: `questions.${index}.text`,
   })
 
-  if (isEditing)
-    return (
-      <Stack spacing={3}>
-        <Divider />
-        <QuestionForm {...props} />
-        <Divider />
-      </Stack>
-    )
-
   const { invalid } = control.getFieldState(`questions.${index}`)
 
+  const toggleAccordion = () => {
+    setIxExpanded(prev => !prev)
+  }
+
   return (
-    <Stack
-      onClick={onEdit}
-      component={Paper}
-      py={4}
+    <Accordion
+      expanded={isExpanded}
+      onChange={toggleAccordion}
       sx={{ border: invalid ? `1px solid ${palette.error.main}` : '' }}
     >
-      <Typography
-        title={questionText}
-        maxWidth={{ xs: 300, md: 450 }}
-        noWrap
-        textOverflow='ellipsis'
-        variant='buttonMedium'
-      >
-        {questionText || `Question #${index + 1}`}
-      </Typography>
-    </Stack>
+      <AccordionSummary>
+        <Typography
+          title={questionText}
+          maxWidth={{ xs: 300, md: 450 }}
+          noWrap
+          sx={{
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+          }}
+          variant='buttonMedium'
+        >
+          {questionText || t('create-vote.form.question-lbl', { order: index + 1 })}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Divider sx={{ mb: 2 }} />
+        <QuestionForm {...props} />
+      </AccordionDetails>
+    </Accordion>
   )
 }
 
