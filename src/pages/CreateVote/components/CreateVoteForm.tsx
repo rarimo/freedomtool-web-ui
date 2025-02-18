@@ -1,6 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, TextField } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +26,8 @@ import QuestionCard from './QuestionCard'
 const minDate = time().utc()
 
 const defaultValues: ICreateVote = {
+  title: '',
+  description: '',
   startDate: '',
   endDate: '',
   questions: [
@@ -55,6 +57,8 @@ export default function CreateVoteForm() {
     mode: 'onChange',
     resolver: yupResolver<ICreateVote>(
       Yup.object({
+        title: Yup.string().required().max(50),
+        description: Yup.string().required().max(200),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()
@@ -96,12 +100,12 @@ export default function CreateVoteForm() {
   const questionContainerRef = useRef<HTMLDivElement | null>(null)
 
   const submit = async (formData: ICreateVote) => {
-    const { endDate, startDate, questions } = formData
+    const { endDate, startDate, questions, title, description } = formData
     try {
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
       const response = await uploadToIpfs({
-        title: 'Newbalance',
-        description: 'descriptionskibidi',
+        title,
+        description,
         acceptedOptions: acceptedOptionsIpfs,
       })
       const cid = response.data.hash
@@ -154,6 +158,40 @@ export default function CreateVoteForm() {
     <>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
         <Stack ref={questionContainerRef} spacing={5} width='100%'>
+          <Controller
+            name='title'
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                disabled={isSubmitting}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+                label={t('create-vote.form.proposal-title-lbl')}
+              />
+            )}
+          />
+          <Controller
+            name='description'
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                multiline
+                rows={5}
+                disabled={isSubmitting}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+                label={t('create-vote.form.proposal-description-lbl')}
+                sx={{
+                  background: 'transparent',
+                  '& .MuiInputBase-root': {
+                    height: 'unset',
+                  },
+                }}
+              />
+            )}
+          />
           <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
             <Controller
               name='startDate'

@@ -26,26 +26,22 @@ export const useProposalState = () => {
       > & { amount: BigNumberish },
     ) => {
       if (!contract) return
-      try {
-        const tx = await contract.contractInstance.createProposal(
-          {
-            description: proposalConfig.description,
-            acceptedOptions: proposalConfig.acceptedOptions,
-            startTimestamp: BigInt(proposalConfig.startTimestamp),
-            duration: BigInt(proposalConfig.duration),
-            multichoice: BigInt(0),
-            votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-            votingWhitelistData: [randomBytes(32)],
-          },
-          {
-            value: proposalConfig.amount,
-          },
-        )
+      const tx = await contract.contractInstance.createProposal(
+        {
+          description: proposalConfig.description,
+          acceptedOptions: proposalConfig.acceptedOptions,
+          startTimestamp: BigInt(proposalConfig.startTimestamp),
+          duration: BigInt(proposalConfig.duration),
+          multichoice: BigInt(0),
+          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+          votingWhitelistData: [randomBytes(32)],
+        },
+        {
+          value: proposalConfig.amount,
+        },
+      )
 
-        await tx.wait()
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-      }
+      await tx.wait()
     },
     [contract],
   )

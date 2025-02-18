@@ -40,8 +40,16 @@ export default function VoteItem({
     <Paper sx={{ p: 4, mb: 2 }}>
       <Stack spacing={1.5}>
         <Stack spacing={1}>
-          <Typography variant='subtitle3'>{data?.title || t('vote-item.no-title')}</Typography>
-          <Typography variant='body3' color={palette.text.secondary}>
+          <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
+            {data?.title || t('vote-item.no-title')}
+          </Typography>
+          <Typography
+            maxWidth={200}
+            noWrap
+            textOverflow='ellipsis'
+            variant='body3'
+            color={palette.text.secondary}
+          >
             {data?.description || t('vote-item.no-description')}
           </Typography>
         </Stack>

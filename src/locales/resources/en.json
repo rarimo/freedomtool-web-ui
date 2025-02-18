@@ -75,7 +75,9 @@
       "submit-btn": "Submit",
       "add-option-lbl": "Add an option",
       "question-lbl": "Question #{{order}}",
-      "option-lbl": "Option #{{order}}"
+      "option-lbl": "Option #{{order}}",
+      "proposal-title-lbl": "Proposal title",
+      "proposal-description-lbl": "Proposal description"
     },
     "success-msg": "Proposal created successfully!"
   },
