@@ -38,9 +38,9 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           id='main-content'
           flex={1}
           overflow='hidden auto'
-          pt={{ xs: 15, md: 20 }}
-          px={{ xs: 0, md: 20, lg: 0 }}
           sx={{
+            pt: { xs: 15, md: 20 },
+            px: { xs: 0, md: 20, lg: 0 },
             transition: Transitions.Default,
           }}
         >

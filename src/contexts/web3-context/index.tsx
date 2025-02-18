@@ -1,6 +1,12 @@
 import { AppKitNetwork } from '@reown/appkit/networks'
 import { useAppKitAccount, useAppKitEvents, useAppKitNetwork } from '@reown/appkit/react'
-import { JsonRpcProvider, JsonRpcSigner, TransactionReceipt, TransactionRequest } from 'ethers'
+import {
+  JsonRpcProvider,
+  JsonRpcSigner,
+  Network,
+  TransactionReceipt,
+  TransactionRequest,
+} from 'ethers'
 import {
   createContext,
   PropsWithChildren,
@@ -118,13 +124,14 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
       await idAuthConnection.connector?.disconnect()
       window.location.reload()
     }
+
     disconnectIdAuth()
   }, [connections])
 
   const { data: walletClient } = useConnectorClient({ config: wagmiAdapter.wagmiConfig })
   if (walletClient) {
     // TODO: take a look if it works
-    walletClient.pollingInterval = 10000
+    walletClient.pollingInterval = 10_000
   }
 
   const client = useMemo(() => {
@@ -132,7 +139,13 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [walletClient])
 
   const contractConnector = useMemo(() => {
-    if (!client) return null
+    if (!client) {
+      const networkConfig = networkConfigsMap[NETWORK_NAME]
+      const network = new Network(networkConfig.name, networkConfig.chainId)
+      return new JsonRpcProvider(networkConfig.rpcUrl, network, {
+        staticNetwork: true,
+      })
+    }
     return clientToProvider(client)
   }, [client])
 
@@ -177,13 +190,12 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [client?.chain?.id])
 
   useEffect(() => {
-    if (appKitEvent?.data.event === 'MODAL_CREATED' || appKitEvent?.data.event === 'INITIALIZE') {
+    if (appKitEvent?.data.event === 'INITIALIZE') {
       setIsInitialized(true)
     }
   }, [appKitEvent, status])
 
   useEffect(() => {
-    // On wallet change
     const changeConnector = async () => {
       if (connections.length > 1) {
         for (const connector of connectManager.connectors) {
@@ -194,20 +206,6 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
 
     changeConnector()
   }, [address, connectManager, connections])
-
-  useEffect(() => {
-    // Changing account within one wallet
-    if (address !== address && connections.length === 1) {
-      window.location.reload()
-    }
-  }, [address, connections])
-
-  // TODO: Recheck with wallet connector
-  // useEffect(() => {
-  //   if (!isConnected && isInitialized) {
-  //     window.location.reload()
-  //   }
-  // }, [isConnected, isInitialized])
 
   return (
     <web3ProviderContext.Provider

@@ -1,4 +1,5 @@
 import { Button, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { useAppKit } from '@reown/appkit/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,14 +10,14 @@ import { UiIcon } from '@/ui'
 export default function AuthBlock() {
   const { palette } = useTheme()
   const { t } = useTranslation()
+  const { open } = useAppKit()
 
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      // eslint-disable-next-line no-console
-      console.log('signin in...')
+      await open()
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }

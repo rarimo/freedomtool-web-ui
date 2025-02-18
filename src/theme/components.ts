@@ -1,10 +1,10 @@
 import { AlertColor, alpha, Components, Theme } from '@mui/material'
+import type {} from '@mui/x-date-pickers/themeAugmentation'
 
 import { Transitions } from './constants'
 import { vh } from './helpers'
 import { typography } from './typography'
 
-// TODO: integrate mui charts v7 into create theme
 export const components: Components<Omit<Theme, 'components'>> = {
   MuiCssBaseline: {
     styleOverrides: theme => `
@@ -23,17 +23,12 @@ export const components: Components<Omit<Theme, 'components'>> = {
         display: flex;
         flex: 1;
         flex-direction: column;
-        background-color: ${theme.palette.background.default};
         color: ${theme.palette.text.primary};
       }
 
       a {
         outline: none;
         text-decoration: none;
-      }
-
-      input:is(:-webkit-autofill, :-webkit-autofill:focus) {
-        transition: background-color 600000s 0s, color 600000s 0s;
       }
     `,
   },
@@ -140,13 +135,18 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
       }),
       containedSuccess: ({ theme }) => ({
-        color: theme.palette.common.white,
-        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.success.main,
+        backgroundColor: theme.palette.success.lighter,
         '&:hover, &:focus': {
-          backgroundColor: theme.palette.primary.dark,
+          backgroundColor: theme.palette.success.light,
         },
         '&:active': {
-          backgroundColor: theme.palette.primary.darker,
+          color: theme.palette.common.white,
+          backgroundColor: theme.palette.success.main,
+        },
+        '&.Mui-disabled': {
+          backgroundColor: theme.palette.action.disabled,
+          color: theme.palette.text.disabled,
         },
       }),
       containedError: ({ theme }) => ({
@@ -200,11 +200,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       disableRipple: true,
       disableTouchRipple: true,
     },
-    styleOverrides: {
-      root: {
-        fontFamily: 'inherit',
-      },
-    },
   },
   MuiFormControl: {
     defaultProps: {
@@ -238,32 +233,26 @@ export const components: Components<Omit<Theme, 'components'>> = {
         '& .MuiInputBase-root, & .MuiInputBase-sizeSmall, & .MuiInputBase-sizeMedium':
           typography.body3,
         '& .MuiInputBase-root': {
-          minHeight: theme.spacing(12),
-          height: theme.spacing(12),
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            backgroundColor: 'transparent',
+          '&:not(.MuiInputBase-multiline)': {
+            minHeight: theme.spacing(12),
+            height: theme.spacing(12),
           },
           '&.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.action.focus,
             borderWidth: 1,
           },
-          '&:hover:not(.Mui-error):not(.Mui-focused) .MuiOutlinedInput-notchedOutline': {
+          '&:hover:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.action.hover,
           },
         },
-        '& .MuiInputBase-sizeSmall': {
+        '& .MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)': {
           height: theme.spacing(8),
           minHeight: theme.spacing(8),
         },
         '& .MuiOutlinedInput-notchedOutline': {
           transition: Transitions.Default,
           borderRadius: theme.spacing(2),
-          backgroundColor: theme.palette.action.active,
-          borderColor: 'transparent',
-        },
-        '& .MuiOutlinedInput-input::-webkit-input-placeholder': {
-          color: theme.palette.text.secondary,
-          opacity: 1,
+          borderColor: theme.palette.action.active,
         },
         '& .MuiInputBase-input': {
           height: 'auto',
@@ -374,9 +363,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       rounded: ({ theme }) => ({
         borderRadius: theme.spacing(6),
       }),
-      circular: () => ({
-        borderRadius: '100%',
-      }),
     },
   },
   MuiSwitch: {
@@ -395,7 +381,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
             color: theme.palette.common.white,
             transform: `translateX(${theme.spacing(4)})`,
             '& + .MuiSwitch-track': {
-              backgroundColor: theme.palette.action.active,
+              backgroundColor: theme.palette.primary.main,
               boxShadow: 'none',
               opacity: 1,
               border: 0,
@@ -416,7 +402,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
           boxShadow: '0 1px 1px 0 rgba(0, 0, 0, 0.08)',
           width: theme.spacing(5),
           height: theme.spacing(5),
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.common.white,
         },
         '& .MuiSwitch-track': {
           borderRadius: theme.spacing(10),
@@ -434,6 +420,15 @@ export const components: Components<Omit<Theme, 'components'>> = {
           variant: 'subtitle4',
         },
       },
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        margin: 0,
+        '& .MuiButtonBase-root': {
+          padding: 0,
+          marginRight: theme.spacing(2),
+        },
+      }),
     },
   },
   MuiTypography: {
@@ -473,7 +468,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.paper,
         overflow: 'hidden',
         [theme.breakpoints.down('md')]: {
-          padding: theme.spacing(2),
+          padding: 0,
         },
       }),
       list: {
@@ -501,8 +496,9 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         '& .MuiButtonBase-root': {
-          ...typography.subtitle4,
-          color: theme.palette.text.secondary,
+          ...typography.buttonSmall,
+          padding: theme.spacing(2.5, 4),
+          height: theme.spacing(8),
         },
       }),
     },
@@ -542,10 +538,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.paper,
         color: alpha(theme.palette.text.primary, 0.7),
         boxShadow: '0px 8px 16px 0px rgba(0, 0, 0, 0.04)',
-        padding: theme.spacing(1.5, 4),
-        [theme.breakpoints.down('md')]: {
-          padding: theme.spacing(1.5, 4),
-        },
       }),
       icon: ({ ownerState, theme }) => {
         const severityToBgColor: Record<AlertColor, string> = {
@@ -603,16 +595,8 @@ export const components: Components<Omit<Theme, 'components'>> = {
         border: 0,
         [theme.breakpoints.down('md')]: {
           padding: 0,
-          margin: theme.spacing(4),
         },
       }),
-    },
-  },
-  MuiDialogTitle: {
-    styleOverrides: {
-      root: {
-        padding: 0,
-      },
     },
   },
   MuiCircularProgress: {
@@ -633,26 +617,42 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiAccordion: {
+    defaultProps: {
+      disableGutters: true,
+    },
     styleOverrides: {
       root: ({ theme }) => ({
-        padding: 0,
+        padding: theme.spacing(2, 4),
         border: 0,
-        borderRadius: 16,
-        backgroundColor: theme.palette.background.paper,
+        borderRadius: theme.spacing(4),
+        backgroundColor: theme.palette.background.light,
+        '&:last-of-type': {
+          borderRadius: theme.spacing(4),
+        },
       }),
     },
   },
   MuiAccordionSummary: {
     styleOverrides: {
-      root: () => ({
+      root: ({ theme }) => ({
         minHeight: 0,
         margin: 0,
-        padding: 0,
+        padding: theme.spacing(2, 0),
+        '&.Mui-focusVisible': {
+          backgroundColor: 'transparent',
+        },
       }),
       content: {
         padding: 0,
         margin: 0,
       },
+    },
+  },
+  MuiAccordionDetails: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(2, 0, 2, 0),
+      }),
     },
   },
   MuiTabs: {
@@ -662,20 +662,97 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
     },
   },
-  MuiBadge: {
+  MuiYearCalendar: {
+    styleOverrides: {
+      root: {
+        width: '100%',
+      },
+    },
+  },
+  MuiPickersYear: {
+    styleOverrides: {
+      yearButton: ({ theme }) => ({
+        ...typography.buttonSmall,
+        width: theme.spacing(16),
+        borderRadius: theme.spacing(2),
+        '& .Mui-selected': {
+          color: theme.palette.common.white,
+        },
+      }),
+    },
+  },
+  MuiPickersArrowSwitcher: {
+    styleOverrides: {
+      root: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 20px 1fr',
+      },
+    },
+  },
+  MuiPickersToolbar: {
+    styleOverrides: {
+      root: {
+        display: 'none',
+      },
+    },
+  },
+  MuiPickersLayout: {
     styleOverrides: {
       root: ({ theme }) => ({
-        borderRadius: theme.spacing(100),
-        padding: 4,
+        '& .MuiPickersLayout-actionBar': {
+          gap: 8,
+        },
+        '& .MuiButton-root': {
+          ...typography.buttonSmall,
+          padding: theme.spacing(2.5, 4),
+          height: theme.spacing(8),
+          width: 'fit-content',
+        },
       }),
-      badge: ({ theme }) => ({
-        ...typography.overline3,
-
-        background: theme.palette.inverted.dark,
-        color: theme.palette.inverted.light,
-        minWidth: theme.spacing(4),
-        width: theme.spacing(4),
-        height: theme.spacing(4),
+    },
+  },
+  MuiPickersPopper: {
+    styleOverrides: {
+      paper: ({ theme }) => ({
+        padding: theme.spacing(4),
+        paddingBottom: 0,
+        borderRadius: theme.spacing(4),
+        [theme.breakpoints.down('md')]: {
+          padding: theme.spacing(4),
+        },
+        '& .MuiPickersCalendarHeader-root': {
+          padding: 0,
+          margin: 0,
+        },
+        '& .MuiPickersCalendarHeader-label': {
+          ...typography.subtitle3,
+        },
+        '& .MuiYearCalendar-root': {
+          width: '100%',
+        },
+        '& .MuiPickersYear-yearButton': {
+          ...typography.buttonSmall,
+          width: '56px',
+          borderRadius: theme.spacing(2),
+          '&.Mui-selected': {
+            color: theme.palette.common.white,
+          },
+        },
+        '& .MuiDayCalendar-weekContainer': {
+          '& .Mui-selected': {
+            color: theme.palette.common.white,
+          },
+        },
+        '& .MuiDateCalendar-root': {
+          width: '280px',
+          maxHeight: '260px',
+        },
+        '& .MuiMultiSectionDigitalClockSection-item': {
+          ...typography.buttonSmall,
+          '&.Mui-selected': {
+            color: theme.palette.common.white,
+          },
+        },
       }),
     },
   },

@@ -1,5 +1,4 @@
 import { AppKitNetwork } from '@reown/appkit/networks'
-import { base } from 'viem/chains'
 
 import { config } from '@/config'
 
@@ -14,22 +13,42 @@ export interface NetworkConfig {
   appKitChain: AppKitNetwork
 }
 
+const rarimoAppKitChain: AppKitNetwork = {
+  id: 42,
+  name: 'dev Rarimo',
+  caipNetworkId: 'eip155:42',
+  chainNamespace: 'eip155',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'RMO',
+    symbol: 'RMO',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.evm.node2.mainnet-beta.rarimo.com/'],
+    },
+  },
+  contracts: {
+    // Add the contracts here
+  },
+}
+
 export const networkConfigsMap: Record<NetworkName, NetworkConfig> = {
   mainnet: {
-    chainId: base.id,
-    name: 'Base Mainnet',
+    chainId: 42,
+    name: 'dev Rarimo',
     networkName: 'mainnet',
-    rpcUrl: 'https://mainnet.base.org',
-    explorerUrl: 'https://basescan.org',
-    appKitChain: base,
+    rpcUrl: 'https://rpc.evm.node2.mainnet-beta.rarimo.com/',
+    explorerUrl: 'https://newevmscan.mainnet-beta.rarimo.com/',
+    appKitChain: rarimoAppKitChain,
   },
   testnet: {
-    chainId: base.id,
-    name: 'Base Mainnet',
-    networkName: 'testnet',
-    rpcUrl: 'https://mainnet.base.org',
-    explorerUrl: 'https://basescan.org',
-    appKitChain: base,
+    chainId: 42,
+    name: 'dev Rarimo',
+    networkName: 'mainnet',
+    rpcUrl: 'https://rpc.evm.node2.mainnet-beta.rarimo.com/',
+    explorerUrl: 'https://newevmscan.mainnet-beta.rarimo.com/',
+    appKitChain: rarimoAppKitChain,
   },
 }
 

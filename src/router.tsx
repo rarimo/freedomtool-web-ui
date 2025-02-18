@@ -1,9 +1,11 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
 
 import { ErrorBoundaryFallback } from './common'
 import MainLayout from './layouts/MainLayout'
+import CreateVote from './pages/CreateVote'
+import Votes from './pages/Votes'
 
 export const createRouter = () => {
   return createBrowserRouter([
@@ -18,15 +20,15 @@ export const createRouter = () => {
       children: [
         {
           index: true,
-          element: <p>Home</p>,
+          element: <Navigate to={RoutePaths.Votes} replace />,
         },
         {
           path: RoutePaths.Votes,
-          element: <p>Votes list</p>,
+          element: <Votes />,
         },
         {
           path: RoutePaths.VotesNew,
-          element: <p>Create vote</p>,
+          element: <CreateVote />,
         },
         {
           path: RoutePaths.Vote,

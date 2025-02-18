@@ -7,6 +7,8 @@ export type Config = {
   API_URL: string
   APP_HOST_URL: string
 
+  PROPOSAL_STATE_CONTRACT: string
+
   REOWN_ID: string
 }
 
@@ -16,6 +18,8 @@ export const config: Config = {
 
   APP_HOST_URL: import.meta.env.VITE_APP_HOST_URL,
   API_URL: import.meta.env.VITE_API_URL,
+
+  PROPOSAL_STATE_CONTRACT: import.meta.env.VITE_PROPOSAL_STATE_CONTRACT,
 
   REOWN_ID: import.meta.env.VITE_REOWN_ID,
 }

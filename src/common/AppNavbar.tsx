@@ -1,6 +1,7 @@
 import { Stack, StackProps, Tooltip, useMediaQuery, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { matchPath, NavLink, useLocation } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
@@ -11,6 +12,7 @@ import SettingsMenu from './SettingsMenu'
 
 const AppNavbar = ({ ...rest }: StackProps) => {
   const { palette, breakpoints } = useTheme()
+  const { t } = useTranslation()
 
   const isMdDown = useMediaQuery(() => breakpoints.down('md'))
 
@@ -19,12 +21,19 @@ const AppNavbar = ({ ...rest }: StackProps) => {
       {
         routesList: [RoutePaths.Votes],
         to: RoutePaths.Votes,
-        title: 'Vote',
-        icon: Icons.User3Line,
-        activeIcon: Icons.User3Fill,
+        title: t('routes.vote'),
+        icon: Icons.ChartBar,
+        activeIcon: Icons.ChartBarFill,
+      },
+      {
+        routesList: [RoutePaths.VotesNew],
+        to: RoutePaths.VotesNew,
+        title: t('routes.create-new-proposal'),
+        icon: Icons.Plus,
+        activeIcon: Icons.Plus,
       },
     ],
-    [],
+    [t],
   )
 
   return (

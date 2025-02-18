@@ -23,8 +23,8 @@ const activeNetwork = defineChain({
   name: network.name,
   nativeCurrency: {
     decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
+    name: 'RMO',
+    symbol: 'RMO',
   },
   rpcUrls: {
     default: {
@@ -37,6 +37,7 @@ const activeNetwork = defineChain({
 })
 
 const projectId = config.REOWN_ID
+
 const networks: [AppKitNetwork] = [activeNetwork]
 export const wagmiAdapter = new WagmiAdapter({
   networks,
@@ -55,7 +56,6 @@ createAppKit({
   },
   allowUnsupportedChain: false,
   enableEIP6963: false,
-  coinbasePreference: 'eoaOnly',
   features: {
     // TODO: find out how to disable Smart Accounts
     smartSessions: false,
