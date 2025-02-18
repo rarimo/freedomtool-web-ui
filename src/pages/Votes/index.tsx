@@ -1,26 +1,32 @@
-import { Stack } from '@mui/material'
+import { Grid } from '@mui/material'
 
 import { useProposalState } from '@/hooks'
 import { UiContainer } from '@/ui'
 
-import VoteItem from './componennts/VoteItem'
+import VoteItem, { VoteItemSkeleton } from './componennts/VoteItem'
 
 export default function Votes() {
   const { isLoading, proposals } = useProposalState()
 
   return (
-    <UiContainer sx={{ maxWidth: 700 }}>
-      <Stack spacing={4}>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <Stack spacing={2}>
-            {proposals.map((proposal, index) => (
-              <VoteItem cid={proposal[2][4]} key={index} />
-            ))}
-          </Stack>
-        )}
-      </Stack>
+    <UiContainer>
+      {isLoading ? (
+        <Grid container spacing={2}>
+          {Array.from({ length: 12 }).map((_, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <VoteItemSkeleton />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Grid container spacing={2}>
+          {proposals.map((proposal, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <VoteItem proposal={proposal} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </UiContainer>
   )
 }

@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Control, Controller, FieldArrayWithId, useFieldArray, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -26,6 +26,7 @@ interface IQuestionForm {
   control: Control<ICreateVote, unknown>
   index: number
   canDelete: boolean
+  isDisabled: boolean
   onDelete: () => void
 }
 
@@ -37,7 +38,7 @@ interface IQuestionCard extends IQuestionForm {
 export default function QuestionCard(props: IQuestionCard) {
   const { t } = useTranslation()
   const { palette } = useTheme()
-  const { index, control } = props
+  const { index, control, isDisabled } = props
   const [isExpanded, setIxExpanded] = useState(true)
 
   const questionText = useWatch({
@@ -51,8 +52,13 @@ export default function QuestionCard(props: IQuestionCard) {
     setIxExpanded(prev => !prev)
   }
 
+  useEffect(() => {
+    if (isDisabled) setIxExpanded(false)
+  }, [isDisabled])
+
   return (
     <Accordion
+      disabled={isDisabled}
       expanded={isExpanded}
       onChange={toggleAccordion}
       sx={{ border: invalid ? `1px solid ${palette.error.main}` : '' }}

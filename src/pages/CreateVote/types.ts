@@ -20,6 +20,12 @@ export interface IQuestionIpfs {
   variants: string[]
 }
 
+export interface IVoteIpfs {
+  title: string
+  description: string
+  acceptedOptions: IQuestionIpfs[]
+}
+
 export interface IUploadData {
   id: string
   type: string

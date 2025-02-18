@@ -76,10 +76,23 @@
       "add-option-lbl": "Add an option",
       "question-lbl": "Question #{{order}}",
       "option-lbl": "Option #{{order}}"
-    }
+    },
+    "success-msg": "Proposal created successfully!"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
     "invalid-date-error": "Invalid date"
+  },
+  "vote-item": {
+    "no-title": "No title",
+    "no-description": "No description",
+    "status-lbl": "Status:",
+    "start-lbl": "Start:",
+    "end-lbl": "End:",
+    "view-more-btn": "View more"
+  },
+  "signature-confirmation-modal": {
+    "title": "Signature Confirmation",
+    "description": "Please confirm your signature to complete the operation. This is required to ensure the security of the transaction."
   }
 }

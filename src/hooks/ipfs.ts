@@ -5,7 +5,7 @@ import { ErrorHandler } from '@/helpers'
 
 export const useIpfsLoading = <T>(cid: string | null) => {
   const [data, setData] = useState<T | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {

@@ -1,11 +1,9 @@
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
 
-import { ICreateVote, IQuestionIpfs, IUploadData } from './types'
+import { ICreateVote, IUploadData, IVoteIpfs } from './types'
 
-export const prepareAcceptedOptionsToIpfs = (
-  questions: ICreateVote['questions'],
-): IQuestionIpfs[] =>
+export const prepareAcceptedOptionsToIpfs = (questions: ICreateVote['questions']) =>
   questions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
@@ -21,13 +19,13 @@ export const prepareAcceptedOptionsToContract = (questions: ICreateVote['questio
   })
 }
 
-export const uploadToIpfs = (questions: IQuestionIpfs[]) => {
+export const uploadToIpfs = (vote: IVoteIpfs) => {
   return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
     body: {
       data: {
         type: 'upload_json',
         attributes: {
-          metadata: questions,
+          metadata: vote,
         },
       },
     },

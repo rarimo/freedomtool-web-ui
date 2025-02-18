@@ -3,8 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { BusEvents } from '@/enums'
-import { bus, createContract, ErrorHandler } from '@/helpers'
+import { createContract, ErrorHandler } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
@@ -44,9 +43,6 @@ export const useProposalState = () => {
         )
 
         await tx.wait()
-        bus.emit(BusEvents.success, {
-          message: 'Proposal created successfully!',
-        })
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
       }
