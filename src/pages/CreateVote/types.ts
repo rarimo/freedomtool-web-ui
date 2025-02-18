@@ -14,3 +14,14 @@ export interface ICreateVote {
   endDate: string
   questions: IQuestion[]
 }
+
+export interface IQuestionIpfs {
+  title: string
+  variants: string[]
+}
+
+export interface IUploadData {
+  id: string
+  type: string
+  hash: string
+}

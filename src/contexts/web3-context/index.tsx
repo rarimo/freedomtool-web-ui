@@ -31,7 +31,7 @@ import { getNetworkByChainId, NETWORK_NAME, NetworkConfig, networkConfigsMap } f
 import { wagmiAdapter } from '@/main'
 import QueryProvider from '@/query'
 
-import { clientToProvider, clientToSigner } from './helpers/providers'
+import { clientToSigner } from './helpers/providers'
 
 export type Web3ProviderContext<A extends Account | undefined = Account | undefined> = {
   connectManager: UseConnectReturnType
@@ -44,7 +44,7 @@ export type Web3ProviderContext<A extends Account | undefined = Account | undefi
   isInitialized: boolean
 
   isCorrectNetwork: boolean
-  contractConnector: JsonRpcProvider | null
+  contractConnector: JsonRpcProvider | JsonRpcSigner | null
   rawProviderSigner: JsonRpcSigner | null
   connect: (connector: Connector) => Promise<void>
   disconnect: () => Promise<void>
@@ -139,15 +139,15 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [walletClient])
 
   const contractConnector = useMemo(() => {
-    if (!client) {
+    if (!rawProviderSigner) {
       const networkConfig = networkConfigsMap[NETWORK_NAME]
       const network = new Network(networkConfig.name, networkConfig.chainId)
       return new JsonRpcProvider(networkConfig.rpcUrl, network, {
         staticNetwork: true,
       })
     }
-    return clientToProvider(client)
-  }, [client])
+    return rawProviderSigner
+  }, [rawProviderSigner])
 
   useEffect(() => {
     const setSigner = async () => {

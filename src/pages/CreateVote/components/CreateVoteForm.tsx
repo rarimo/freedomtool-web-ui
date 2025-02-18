@@ -9,9 +9,16 @@ import * as Yup from 'yup'
 
 import UiDatePicker from '@/common/UiDatePicker'
 import { Icons } from '@/enums'
+import { ErrorHandler } from '@/helpers'
+import { useProposalState } from '@/hooks'
 import { UiIcon } from '@/ui'
 
 import { MAX_QUESTIONS } from '../constants'
+import {
+  prepareAcceptedOptionsToContract,
+  prepareAcceptedOptionsToIpfs,
+  uploadToIpfs,
+} from '../helpers'
 import { ICreateVote } from '../types'
 import QuestionCard from './QuestionCard'
 
@@ -34,6 +41,8 @@ const defaultValues: ICreateVote = {
 
 export default function CreateVoteForm() {
   const { t } = useTranslation()
+  const { createProposal } = useProposalState()
+
   const { control, handleSubmit, trigger } = useForm<ICreateVote>({
     defaultValues,
     mode: 'onChange',
@@ -78,8 +87,30 @@ export default function CreateVoteForm() {
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
   const questionContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // eslint-disable-next-line no-console
-  const submit = (data: ICreateVote) => console.log('data', data)
+  const submit = async (formData: ICreateVote) => {
+    const { endDate, startDate, questions } = formData
+    try {
+      const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
+      const response = await uploadToIpfs(acceptedOptionsIpfs)
+      const cid = response.data.hash
+
+      const acceptedOptions = prepareAcceptedOptionsToContract(questions)
+
+      const startTimestamp = time(startDate).timestamp
+      const endTimestamp = time(endDate).timestamp
+      const duration = endTimestamp - startTimestamp
+
+      await createProposal({
+        acceptedOptions,
+        description: cid,
+        startTimestamp: time(startDate).timestamp,
+        duration,
+        amount: 1,
+      })
+    } catch (error) {
+      ErrorHandler.process(error)
+    }
+  }
 
   const addQuestion = useCallback(() => {
     append({
