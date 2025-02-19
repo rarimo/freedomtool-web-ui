@@ -86,8 +86,6 @@ export default function Vote() {
   const { duration, startTimestamp, status } = proposal
   const { acceptedOptions, title, description } = proposalMetadata
 
-  console.log(!!Number(amount))
-
   return (
     <Box
       sx={{
