@@ -5,6 +5,7 @@ import { RoutePaths } from '@/enums'
 import { ErrorBoundaryFallback } from './common'
 import MainLayout from './layouts/MainLayout'
 import CreateVote from './pages/CreateVote'
+import Vote from './pages/Vote'
 import Votes from './pages/Votes'
 
 export const createRouter = () => {
@@ -32,7 +33,7 @@ export const createRouter = () => {
         },
         {
           path: RoutePaths.Vote,
-          element: <p>Vote page</p>,
+          element: <Vote />,
         },
       ],
     },

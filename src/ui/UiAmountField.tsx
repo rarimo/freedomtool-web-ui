@@ -186,7 +186,7 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
           </Stack>
         </Stack>
 
-        {snapPoints?.length && (
+        {Boolean(snapPoints?.length) && (
           <Stack direction='row' spacing={2} alignItems='center'>
             {snapPoints.map((el, idx) => (
               <IconButton

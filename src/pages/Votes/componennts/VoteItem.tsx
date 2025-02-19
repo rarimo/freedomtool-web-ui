@@ -1,26 +1,28 @@
 import { Button, Divider, Paper, Skeleton, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { generatePath, Link } from 'react-router-dom'
 
+import { RoutePaths } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
 import { formatDateTime } from '@/helpers'
 import { useIpfsLoading } from '@/hooks'
+import { parseProposalFromContract } from '@/pages/CreateVote/helpers'
 import { IVoteIpfs } from '@/pages/CreateVote/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 import { UiTypographySkeleton } from '@/ui'
 
 export default function VoteItem({
   proposal,
+  id,
 }: {
+  id: number
   proposal: ProposalsState.ProposalInfoStructOutput
 }) {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
-  const cid = proposal[2][4]
-  const status = Number(proposal[1])
-  const startTimestamp = Number(proposal[2].startTimestamp)
-  const duration = Number(proposal[2].duration)
+  const { cid, duration, startTimestamp, status } = parseProposalFromContract(proposal)
 
   const { data, isLoading, isError } = useIpfsLoading<IVoteIpfs>(cid)
 
@@ -59,15 +61,19 @@ export default function VoteItem({
         <Stack mt={2} spacing={1.5}>
           {items.map((item, index) => (
             <Stack direction='row' justifyContent='space-between' key={index}>
-              <Typography variant='body4' color='text.secondary'>
-                {item.label}
-              </Typography>
+              <Typography variant='body4'>{item.label}</Typography>
               <Typography variant='body4'>{item.value}</Typography>
             </Stack>
           ))}
         </Stack>
 
-        <Button size='small' variant='outlined' sx={{ mt: 3 }}>
+        <Button
+          component={Link}
+          to={generatePath(RoutePaths.Vote, { id: String(id) })}
+          size='small'
+          variant='outlined'
+          sx={{ mt: 3 }}
+        >
           {t('vote-item.view-more-btn')}
         </Button>
       </Stack>

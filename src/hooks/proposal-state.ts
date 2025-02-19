@@ -4,14 +4,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { createContract, ErrorHandler } from '@/helpers'
+import { IProposalWithId } from '@/pages/CreateVote/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-export const useProposalState = () => {
+const SKIPPED_PROPOSAL_ID = 13 // Constant for skipped proposal ID due to issue in the contract
+
+interface UseProposalStateOptions {
+  shouldFetchProposals?: boolean
+}
+
+export const useProposalState = ({ shouldFetchProposals = true }: UseProposalStateOptions) => {
   const { contractConnector } = useWeb3Context()
   const [lastProposalId, setLastProposalId] = useState<number | null>(null)
-  const [proposals, setProposals] = useState<ProposalsState.ProposalInfoStructOutput[]>([])
+  const [proposals, setProposals] = useState<IProposalWithId[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isError, setIsError] = useState(false)
 
   const contract = useMemo(() => {
     if (!contractConnector) return null
@@ -46,19 +54,53 @@ export const useProposalState = () => {
     [contract],
   )
 
+  const getProposalInfo = useCallback(
+    async (id: number) => {
+      if (!contract) return
+      setIsError(false)
+      setIsLoading(true)
+      try {
+        const proposal = await contract.contractInstance.getProposalInfo(id)
+        return proposal
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+        setIsError(true)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [contract],
+  )
+
+  const addFundsToProposal = useCallback(
+    async (proposalId: BigNumberish, amount: BigNumberish) => {
+      if (!contract) return
+      const tx = await contract?.contractInstance.addFundsToProposal(proposalId, {
+        value: amount,
+      })
+      await tx.wait()
+    },
+    [contract],
+  )
+
   // TODO: Use infinite load
   const fetchProposals = useCallback(async () => {
-    if (!contract || lastProposalId === null) return
+    if (!contract || lastProposalId === null || !shouldFetchProposals) return
     setIsLoading(true)
 
     try {
       const ids = []
       for (let id = lastProposalId; id > 0; id--) {
+        // Skip proposal with ID 13 due to an issue with the contract
+        if (id === SKIPPED_PROPOSAL_ID) continue
         ids.push(id)
       }
 
       const proposalsData = await Promise.all(
-        ids.map(id => contract.contractInstance.getProposalInfo(id)),
+        ids.map(async id => {
+          const proposal = await contract.contractInstance.getProposalInfo(id)
+          return { id, proposal: { ...proposal } }
+        }),
       )
 
       setProposals(proposalsData)
@@ -67,7 +109,7 @@ export const useProposalState = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [contract, lastProposalId])
+  }, [contract, lastProposalId, shouldFetchProposals])
 
   useEffect(() => {
     fetchProposals()
@@ -96,5 +138,8 @@ export const useProposalState = () => {
     isLoading,
     lastProposalId,
     createProposal,
+    addFundsToProposal,
+    getProposalInfo,
+    isError,
   }
 }

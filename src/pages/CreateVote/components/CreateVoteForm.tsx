@@ -44,7 +44,8 @@ const defaultValues: ICreateVote = {
 
 export default function CreateVoteForm() {
   const { t } = useTranslation()
-  const { createProposal } = useProposalState()
+
+  const { createProposal } = useProposalState({ shouldFetchProposals: false })
 
   const {
     control,

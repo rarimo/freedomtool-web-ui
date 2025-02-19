@@ -58,7 +58,7 @@
     "default-message-info": "Something is happening. Just want you to know that"
   },
   "routes": {
-    "vote": "Votes",
+    "vote": "Proposals",
     "create-new-proposal": "Create new proposal"
   },
   "auth-block": {
@@ -96,5 +96,14 @@
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
     "description": "Please confirm your signature to complete the operation. This is required to ensure the security of the transaction."
+  },
+  "vote": {
+    "status": "Status:",
+    "start-date": "Start date:",
+    "end-date": "End date:",
+    "accepted-options-title": "Accepted options",
+    "qr-code-subtitle": "Scan to participate",
+    "amount-btn": "Top up balance",
+    "amount-lbl": "Amount"
   }
 }

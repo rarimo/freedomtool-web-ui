@@ -1,7 +1,8 @@
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
+import { ProposalsState } from '@/types/contracts/ProposalState'
 
-import { ICreateVote, IUploadData, IVoteIpfs } from './types'
+import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from './types'
 
 export const prepareAcceptedOptionsToIpfs = (questions: ICreateVote['questions']) =>
   questions.map(question => ({
@@ -31,3 +32,12 @@ export const uploadToIpfs = (vote: IVoteIpfs) => {
     },
   })
 }
+
+export const parseProposalFromContract = (
+  proposal: ProposalsState.ProposalInfoStructOutput,
+): IParsedProposal => ({
+  cid: proposal[2][4],
+  status: Number(proposal[1]),
+  startTimestamp: Number(proposal[2].startTimestamp),
+  duration: Number(proposal[2].duration),
+})

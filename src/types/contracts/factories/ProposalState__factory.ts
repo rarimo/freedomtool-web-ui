@@ -55,6 +55,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "MinFundingAmountSet",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "previousOwner",
@@ -119,12 +132,106 @@ const _abi = [
       },
       {
         indexed: false,
+        internalType: "uint256",
+        name: "fundAmount",
+        type: "uint256",
+      },
+    ],
+    name: "ProposalFunded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
         internalType: "bool",
         name: "hide",
         type: "bool",
       },
     ],
     name: "ProposalHidden",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "previousAdminRole",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "newAdminRole",
+        type: "bytes32",
+      },
+    ],
+    name: "RoleAdminChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "RoleGranted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "RoleRevoked",
     type: "event",
   },
   {
@@ -167,12 +274,38 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "MAGIC_ID",
+    name: "CONTRACT_MANAGER_ROLE",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "bytes32",
         name: "",
-        type: "uint8",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "DEFAULT_ADMIN_ROLE",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "FUNDS_MANAGER_ROLE",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
       },
     ],
     stateMutability: "view",
@@ -206,12 +339,12 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "P",
+    name: "PROPOSAL_MANAGER_ROLE",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bytes32",
         name: "",
-        type: "uint256",
+        type: "bytes32",
       },
     ],
     stateMutability: "view",
@@ -221,16 +354,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "signer_",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "chainName_",
-        type: "string",
-      },
-      {
-        internalType: "address",
         name: "proposalSMTImpl_",
         type: "address",
       },
@@ -238,6 +361,19 @@ const _abi = [
     name: "__ProposalsState_init",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId_",
+        type: "uint256",
+      },
+    ],
+    name: "addFundsToProposal",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -256,19 +392,6 @@ const _abi = [
     name: "addVoting",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "chainName",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -329,17 +452,17 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes",
-        name: "newSignerPubKey_",
-        type: "bytes",
+        internalType: "uint256",
+        name: "proposalId_",
+        type: "uint256",
       },
       {
-        internalType: "bytes",
-        name: "signature_",
-        type: "bytes",
+        internalType: "uint64",
+        name: "newDuration_",
+        type: "uint64",
       },
     ],
-    name: "changeSigner",
+    name: "changeProposalDuration",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -392,25 +515,6 @@ const _abi = [
     name: "createProposal",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "methodId_",
-        type: "uint8",
-      },
-    ],
-    name: "getNonce",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -588,6 +692,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+    ],
+    name: "getRoleAdmin",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "string",
         name: "key_",
         type: "string",
@@ -625,6 +748,48 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "grantRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "hasRole",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "proposalId_",
         type: "uint256",
@@ -633,6 +798,19 @@ const _abi = [
         internalType: "bool",
         name: "hide_",
         type: "bool",
+      },
+    ],
+    name: "hideProposal",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "proposalId_",
+        type: "uint256",
       },
     ],
     name: "hideProposal",
@@ -675,6 +853,19 @@ const _abi = [
   {
     inputs: [],
     name: "lastProposalId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "minFundingAmount",
     outputs: [
       {
         internalType: "uint256",
@@ -745,13 +936,68 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "signer",
-    outputs: [
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
       {
         internalType: "address",
-        name: "",
+        name: "account",
         type: "address",
+      },
+    ],
+    name: "renounceRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "role",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "revokeRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amount_",
+        type: "uint256",
+      },
+    ],
+    name: "setMinFundingAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -799,47 +1045,6 @@ const _abi = [
     name: "upgradeToAndCall",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newImplementation_",
-        type: "address",
-      },
-      {
-        internalType: "bytes",
-        name: "proof_",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "data_",
-        type: "bytes",
-      },
-    ],
-    name: "upgradeToAndCallWithProof",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newImplementation_",
-        type: "address",
-      },
-      {
-        internalType: "bytes",
-        name: "proof_",
-        type: "bytes",
-      },
-    ],
-    name: "upgradeToWithProof",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
