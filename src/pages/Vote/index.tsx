@@ -19,15 +19,15 @@ import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
-import { DotDivider } from '@/common'
+import { DotDivider, DotsLoader } from '@/common'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
 import { bus, ErrorHandler, formatDateTime } from '@/helpers'
-import { useIpfsLoading, useProposalState } from '@/hooks'
+import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { UiAmountField } from '@/ui'
 
-import { parseProposalFromContract } from '../CreateVote/helpers'
+import { getPredictedVotesCount, parseProposalFromContract } from '../CreateVote/helpers'
 import { IParsedProposal, IVoteIpfs } from '../CreateVote/types'
 
 export default function Vote() {
@@ -66,6 +66,22 @@ export default function Vote() {
     isLoading: metadataLoading,
     isError: metadataError,
   } = useIpfsLoading<IVoteIpfs>(cid)
+
+  const {
+    data: voteCount,
+    reload: reloadVoteCount,
+    isLoading: isVoteCountLoading,
+  } = useLoading(
+    null,
+    async () => {
+      if (!id) return
+      const response = await getPredictedVotesCount(id)
+      return response.data.vote_count || 0
+    },
+    { silentError: true },
+  )
+
+  setInterval(() => reloadVoteCount, 60_000)
 
   const topUpVoteContract = async () => {
     setIsSubmitting(true)
@@ -134,6 +150,16 @@ export default function Vote() {
           </Stack>
 
           <Stack spacing={3}>
+            <Stack direction='row' justifyContent='space-between'>
+              <Typography variant='body2' color={palette.text.secondary}>
+                {t('vote.remaining-votes')}
+              </Typography>
+              {isVoteCountLoading ? (
+                <DotsLoader />
+              ) : (
+                <Typography variant='body2'>{voteCount}</Typography>
+              )}
+            </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography variant='body2' color={palette.text.secondary}>
                 {t('vote.status')}

@@ -33,6 +33,12 @@ export const uploadToIpfs = (vote: IVoteIpfs) => {
   })
 }
 
+export const getPredictedVotesCount = (id: string) => {
+  return api.get<{ vote_count: number }>(
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/count-remaining-votes/${id}`,
+  )
+}
+
 export const parseProposalFromContract = (
   proposal: ProposalsState.ProposalInfoStructOutput,
 ): IParsedProposal => ({
