@@ -8,8 +8,6 @@ import { IProposalWithId } from '@/pages/CreateVote/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-const SKIPPED_PROPOSAL_ID = 13 // Constant for skipped proposal ID due to issue in the contract
-
 interface UseProposalStateOptions {
   shouldFetchProposals?: boolean
 }
@@ -91,19 +89,22 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     try {
       const ids = []
       for (let id = lastProposalId; id > 0; id--) {
-        // Skip proposal with ID 13 due to an issue with the contract
-        if (id === SKIPPED_PROPOSAL_ID) continue
         ids.push(id)
       }
 
       const proposalsData = await Promise.all(
         ids.map(async id => {
-          const proposal = await contract.contractInstance.getProposalInfo(id)
-          return { id, proposal: { ...proposal } }
+          try {
+            const proposal = await contract.contractInstance.getProposalInfo(id)
+            return { id, proposal: { ...proposal } }
+          } catch (error) {
+            ErrorHandler.processWithoutFeedback(error)
+            return null
+          }
         }),
       )
 
-      setProposals(proposalsData)
+      setProposals(proposalsData.filter(proposal => proposal !== null))
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     } finally {

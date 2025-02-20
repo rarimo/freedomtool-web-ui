@@ -162,7 +162,7 @@ export interface ProposalStateInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "__ProposalsState_init",
-    values: [AddressLike]
+    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "addFundsToProposal",
@@ -707,7 +707,7 @@ export interface ProposalState extends BaseContract {
   PROPOSAL_MANAGER_ROLE: TypedContractMethod<[], [string], "view">;
 
   __ProposalsState_init: TypedContractMethod<
-    [proposalSMTImpl_: AddressLike],
+    [proposalSMTImpl_: AddressLike, minFundingAmount_: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -907,7 +907,11 @@ export interface ProposalState extends BaseContract {
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "__ProposalsState_init"
-  ): TypedContractMethod<[proposalSMTImpl_: AddressLike], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [proposalSMTImpl_: AddressLike, minFundingAmount_: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "addFundsToProposal"
   ): TypedContractMethod<[proposalId_: BigNumberish], [void], "payable">;

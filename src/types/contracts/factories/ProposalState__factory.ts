@@ -357,6 +357,11 @@ const _abi = [
         name: "proposalSMTImpl_",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "minFundingAmount_",
+        type: "uint256",
+      },
     ],
     name: "__ProposalsState_init",
     outputs: [],
