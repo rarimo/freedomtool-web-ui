@@ -104,6 +104,7 @@
     "accepted-options-title": "Accepted options",
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
-    "amount-lbl": "Amount"
+    "amount-lbl": "Amount",
+    "success-msg": "You have successfully added funds to your voting contract"
   }
 }

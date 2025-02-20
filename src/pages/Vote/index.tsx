@@ -1,3 +1,4 @@
+import { BN } from '@distributedlab/tools'
 import {
   Accordion,
   AccordionDetails,
@@ -7,17 +8,22 @@ import {
   CircularProgress,
   Divider,
   Paper,
+  Skeleton,
   Stack,
   Typography,
   useTheme,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { formatEther, parseUnits } from 'ethers'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { DotDivider } from '@/common'
+import { useWeb3Context } from '@/contexts/web3-context'
+import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
-import { formatDateTime } from '@/helpers'
+import { bus, ErrorHandler, formatDateTime } from '@/helpers'
 import { useIpfsLoading, useProposalState } from '@/hooks'
 import { UiAmountField } from '@/ui'
 
@@ -35,8 +41,10 @@ export default function Vote() {
   const [proposal, setProposal] = useState<IParsedProposal | null>(null)
   const [cid, setCid] = useState<string | null>(null)
   const [amount, setAmount] = useState<string>('0')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { t } = useTranslation()
   const { palette } = useTheme()
+  const { balance } = useWeb3Context()
 
   useEffect(() => {
     const fetchProposal = async () => {
@@ -60,9 +68,31 @@ export default function Vote() {
   } = useIpfsLoading<IVoteIpfs>(cid)
 
   const topUpVoteContract = async () => {
-    if (!id) return
-    await addFundsToProposal(BigInt(id), amount)
+    setIsSubmitting(true)
+    try {
+      if (!id) return
+      await addFundsToProposal(BigInt(id), parseUnits(amount, 18))
+      bus.emit(BusEvents.success, {
+        message: t('vote.success-msg'),
+      })
+    } catch (error) {
+      ErrorHandler.process(error)
+    } finally {
+      setIsSubmitting(false)
+      setAmount('0')
+    }
   }
+
+  const isEnoughBalance = useMemo(() => {
+    if (!amount || isNaN(Number(amount))) return false
+
+    try {
+      const amountBn = BN.fromRaw(amount)
+      return amountBn.lte(BN.fromBigInt(balance || 0n))
+    } catch {
+      return false
+    }
+  }, [amount, balance])
 
   if (contractLoading || metadataLoading || !proposal || !proposalMetadata) {
     return (
@@ -154,13 +184,33 @@ export default function Vote() {
         <Stack sx={{ padding: 2 }}>
           <Stack spacing={3}>
             <Stack spacing={2} sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3 }}>
-              <Box sx={{ width: 160, height: 160, backgroundColor: 'gray' }}></Box>
+              {cid ? (
+                <Stack
+                  sx={{
+                    width: 160,
+                    height: 160,
+                    backgroundColor: palette.common.white,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 4,
+                    border: `1px solid ${palette.action.active}`,
+                  }}
+                >
+                  <QRCode value={cid} size={130} />
+                </Stack>
+              ) : (
+                <Skeleton />
+              )}
               <Typography variant='body2' color='textSecondary' sx={{ marginTop: 1 }}>
                 {t('vote.qr-code-subtitle')}
               </Typography>
             </Stack>
             <UiAmountField
-              value={amount}
+              value={amount ?? 0}
+              minRows={0}
+              minValue='0'
+              disabled={isSubmitting}
+              maxValue={formatEther(balance)}
               snapPoints={[5, 15, 30]}
               onChange={value => setAmount(value)}
             />
@@ -169,7 +219,7 @@ export default function Vote() {
               variant='contained'
               color='primary'
               fullWidth
-              disabled={!Number(amount)}
+              disabled={!Number(amount) || !isEnoughBalance || isSubmitting}
               sx={{ padding: '12px', fontSize: '16px' }}
               onClick={topUpVoteContract}
             >

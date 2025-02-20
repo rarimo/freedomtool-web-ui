@@ -1,6 +1,7 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack, TextField } from '@mui/material'
+import { parseUnits } from 'ethers'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -125,7 +126,7 @@ export default function CreateVoteForm() {
         startTimestamp: time(startDate).timestamp,
         duration,
         // TODO: Replace when BE is ready
-        amount: 1, // 1 wei
+        amount: parseUnits(String(1), 18), // 1 eth
       })
 
       bus.emit(BusEvents.success, {

@@ -28,6 +28,7 @@ import {
 } from 'wagmi'
 
 import { getNetworkByChainId, NETWORK_NAME, NetworkConfig, networkConfigsMap } from '@/constants'
+import { ErrorHandler } from '@/helpers'
 import { wagmiAdapter } from '@/main'
 import QueryProvider from '@/query'
 
@@ -181,6 +182,18 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     [client],
   )
 
+  const fetchBalance = useCallback(async () => {
+    if (!rawProviderSigner || !address) return
+
+    try {
+      const balance = await rawProviderSigner.provider.getBalance(address)
+      setBalance(balance.toString())
+    } catch (error) {
+      ErrorHandler.processWithoutFeedback(error)
+      setBalance('0')
+    }
+  }, [rawProviderSigner, address])
+
   const getNetworkConfig = useCallback(() => {
     if (!client?.chain.id) return networkConfigsMap[NETWORK_NAME]
 
@@ -206,6 +219,10 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
 
     changeConnector()
   }, [address, connectManager, connections])
+
+  useEffect(() => {
+    fetchBalance()
+  }, [rawProviderSigner, address, fetchBalance])
 
   return (
     <web3ProviderContext.Provider
