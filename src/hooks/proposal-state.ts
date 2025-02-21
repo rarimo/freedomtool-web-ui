@@ -42,7 +42,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
 
   const {
     data: proposals,
-    reload: fetchNextPage,
+    reload: _fetchNextPage,
     isLoading: isProposalsLoading,
     isLoadingError: isProposalsLoadingError,
   } = useLoading<IProposalWithId[] | null>(
@@ -129,7 +129,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     proposals,
     fetchNextPage: () => {
       setCurrentPage(prev => prev + 1)
-      fetchNextPage()
+      _fetchNextPage()
     },
     isLoading: isLastProposalIdLoading || isProposalsLoading,
     isError: isProposalsLoadingError || isLastProposalIdLoadingError,

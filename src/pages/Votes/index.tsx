@@ -1,11 +1,16 @@
 import { Box } from '@mui/material'
 
+import { ErrorView } from '@/common'
 import { useProposalState } from '@/hooks'
 
 import VoteItem, { VoteItemSkeleton } from './componennts/VoteItem'
 
 export default function Votes() {
-  const { isLoading, proposals } = useProposalState({ shouldFetchProposals: true })
+  const { isLoading, proposals, isError } = useProposalState({
+    shouldFetchProposals: true,
+  })
+
+  if (isError) return <ErrorView />
 
   if (isLoading)
     return (

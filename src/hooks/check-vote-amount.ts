@@ -51,6 +51,7 @@ export const useCheckVoteAmount = () => {
         return true
       } catch (error) {
         ErrorHandler.process(error)
+        setAmount(0n)
         return false
       } finally {
         setIsCalculating(false)
