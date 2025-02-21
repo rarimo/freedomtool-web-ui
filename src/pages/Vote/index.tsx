@@ -14,7 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { formatEther, parseUnits } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
@@ -28,7 +28,7 @@ import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { UiAmountField } from '@/ui'
 
 import { getPredictedVotesCount, parseProposalFromContract } from '../CreateVote/helpers'
-import { IParsedProposal, IVoteIpfs } from '../CreateVote/types'
+import { IVoteIpfs } from '../CreateVote/types'
 
 export default function Vote() {
   const { id } = useParams()
@@ -36,36 +36,27 @@ export default function Vote() {
     addFundsToProposal,
     getProposalInfo,
     isError: contractError,
-    isLoading: contractLoading,
   } = useProposalState({ shouldFetchProposals: false })
-  const [proposal, setProposal] = useState<IParsedProposal | null>(null)
-  const [cid, setCid] = useState<string | null>(null)
   const [amount, setAmount] = useState<string>('0')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { t } = useTranslation()
   const { palette } = useTheme()
   const { balance } = useWeb3Context()
 
-  useEffect(() => {
-    const fetchProposal = async () => {
-      if (!id) return
-
-      const proposalFromContract = await getProposalInfo(Number(id))
-      if (proposalFromContract) {
-        const proposal = parseProposalFromContract(proposalFromContract)
-        setProposal(proposal)
-        setCid(proposal.cid)
-      }
+  const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
+    if (!id) return null
+    const proposalFromContract = await getProposalInfo(Number(id))
+    if (proposalFromContract) {
+      return parseProposalFromContract(proposalFromContract)
     }
-
-    fetchProposal()
-  }, [getProposalInfo, id])
+    return null
+  })
 
   const {
     data: proposalMetadata,
     isLoading: metadataLoading,
-    isError: metadataError,
-  } = useIpfsLoading<IVoteIpfs>(cid)
+    isLoadingError: metadataError,
+  } = useIpfsLoading<IVoteIpfs>(proposal?.cid as string)
 
   const {
     data: voteCount,
@@ -110,7 +101,7 @@ export default function Vote() {
     }
   }, [amount, balance])
 
-  if (contractLoading || metadataLoading || !proposal || !proposalMetadata) {
+  if (isProposalLoading || metadataLoading || !proposal || !proposalMetadata) {
     return (
       <Stack direction='row' justifyContent='center' alignItems='center' sx={{ height: '100vh' }}>
         <CircularProgress />
@@ -129,7 +120,7 @@ export default function Vote() {
     )
   }
 
-  const { duration, startTimestamp, status, voteResults } = proposal
+  const { duration, startTimestamp, status, voteResults, cid } = proposal
   const { acceptedOptions, title, description } = proposalMetadata
 
   return (

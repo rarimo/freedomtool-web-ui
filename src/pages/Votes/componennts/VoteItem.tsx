@@ -23,8 +23,7 @@ export default function VoteItem({
   const { t } = useTranslation()
 
   const { cid, duration, startTimestamp, status } = parseProposalFromContract(proposal)
-
-  const { data, isLoading, isError } = useIpfsLoading<IVoteIpfs>(cid)
+  const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
 
   const items = useMemo(
     () => [
