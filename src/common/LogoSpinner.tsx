@@ -13,7 +13,7 @@ export default function LogoSpinner({ ...rest }: Props) {
         fontWeight: 700,
         color: palette.text.primary,
         opacity: 0,
-        animation: 'fadeInUp 1s ease forwards, pulse 2s ease infinite',
+        animation: 'pulse 2s ease infinite',
         ...rest.sx,
       }}
       {...rest}
