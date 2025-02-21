@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } fr
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { getVoteAmount } from '@/pages/CreateVote/helpers'
+import { predictVoteAmount } from '@/pages/CreateVote/helpers'
 
 export interface UseCheckVoteAmount {
   isCalculating: boolean
@@ -37,7 +37,7 @@ export const useCheckVoteAmount = () => {
 
         const {
           data: { amount },
-        } = await getVoteAmount(votesCount)
+        } = await predictVoteAmount(votesCount)
 
         const isEnoughBalance = BN.fromBigInt(amount).lte(BN.fromBigInt(balance))
 
