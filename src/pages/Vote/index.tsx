@@ -5,10 +5,8 @@ import {
   AccordionSummary,
   Box,
   Button,
-  CircularProgress,
   Divider,
   Paper,
-  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -19,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
-import { DotDivider, DotsLoader } from '@/common'
+import { DotDivider } from '@/common'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
@@ -29,6 +27,7 @@ import { UiAmountField } from '@/ui'
 
 import { getPredictedVotesCount, parseProposalFromContract } from '../CreateVote/helpers'
 import { IVoteIpfs } from '../CreateVote/types'
+import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
   const { id } = useParams()
@@ -36,6 +35,7 @@ export default function Vote() {
     addFundsToProposal,
     getProposalInfo,
     isError: contractError,
+    isLoading: isContractLoading,
   } = useProposalState({ shouldFetchProposals: false })
 
   const [amount, setAmount] = useState<string>('0')
@@ -61,8 +61,8 @@ export default function Vote() {
 
   const {
     data: voteCount,
-    reload: reloadVoteCount,
     isLoading: isVoteCountLoading,
+    isLoadingError: isCountLoadingError,
   } = useLoading(
     null,
     async () => {
@@ -72,8 +72,6 @@ export default function Vote() {
     },
     { silentError: true },
   )
-
-  setInterval(() => reloadVoteCount, 60_000)
 
   const topUpVoteContract = async () => {
     setIsSubmitting(true)
@@ -102,16 +100,19 @@ export default function Vote() {
     }
   }, [amount, balance])
 
-  if (isProposalLoading || metadataLoading || !proposal || !proposalMetadata) {
-    return (
-      <Stack direction='row' justifyContent='center' alignItems='center' sx={{ height: '100vh' }}>
-        <CircularProgress />
-      </Stack>
-    )
+  if (
+    isProposalLoading ||
+    metadataLoading ||
+    isContractLoading ||
+    !proposal ||
+    !proposalMetadata ||
+    isVoteCountLoading
+  ) {
+    return <VoteSkeleton />
   }
 
   // TODO: Add error block
-  if (contractError || metadataError) {
+  if (contractError || metadataError || isCountLoadingError) {
     return (
       <Stack direction='row' justifyContent='center' alignItems='center' sx={{ height: '100vh' }}>
         <Typography variant='h6' color='error'>
@@ -146,11 +147,7 @@ export default function Vote() {
               <Typography variant='body2' color={palette.text.secondary}>
                 {t('vote.remaining-votes')}
               </Typography>
-              {isVoteCountLoading ? (
-                <DotsLoader />
-              ) : (
-                <Typography variant='body2'>{voteCount}</Typography>
-              )}
+              <Typography variant='body2'>{voteCount}</Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography variant='body2' color={palette.text.secondary}>
@@ -208,23 +205,19 @@ export default function Vote() {
         <Stack sx={{ padding: 2 }}>
           <Stack spacing={3}>
             <Stack spacing={2} sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3 }}>
-              {cid ? (
-                <Stack
-                  sx={{
-                    width: 160,
-                    height: 160,
-                    backgroundColor: palette.common.white,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 4,
-                    border: `1px solid ${palette.action.active}`,
-                  }}
-                >
-                  <QRCode value={cid} size={130} />
-                </Stack>
-              ) : (
-                <Skeleton />
-              )}
+              <Stack
+                sx={{
+                  width: 160,
+                  height: 160,
+                  backgroundColor: palette.common.white,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 4,
+                  border: `1px solid ${palette.action.active}`,
+                }}
+              >
+                <QRCode value={cid} size={130} />
+              </Stack>
               <Typography variant='body2' color='textSecondary' sx={{ marginTop: 1 }}>
                 {t('vote.qr-code-subtitle')}
               </Typography>
