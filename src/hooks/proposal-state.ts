@@ -25,7 +25,11 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
 
-  const { data: lastProposalId, isLoading: isLastProposalIdLoading } = useLoading(
+  const {
+    data: lastProposalId,
+    isLoading: isLastProposalIdLoading,
+    isLoadingError: isLastProposalIdLoadingError,
+  } = useLoading(
     null,
     async () => {
       const id = await contract?.contractInstance.lastProposalId()
@@ -40,7 +44,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     data: proposals,
     reload: fetchNextPage,
     isLoading: isProposalsLoading,
-    isLoadingError: isError,
+    isLoadingError: isProposalsLoadingError,
   } = useLoading<IProposalWithId[] | null>(
     [],
     async () => {
@@ -128,10 +132,10 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
       fetchNextPage()
     },
     isLoading: isLastProposalIdLoading || isProposalsLoading,
+    isError: isProposalsLoadingError || isLastProposalIdLoadingError,
     lastProposalId,
     createProposal,
     addFundsToProposal,
     getProposalInfo,
-    isError,
   }
 }
