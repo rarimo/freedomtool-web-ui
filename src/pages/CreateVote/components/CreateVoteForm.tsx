@@ -107,8 +107,8 @@ export default function CreateVoteForm() {
     const isVoteAmountValid = await checkVoteAmount(getValues('votesCount'))
     if (!isVoteAmountValid) return
 
-    const { endDate, startDate, questions, title, description } = formData
     try {
+      const { endDate, startDate, questions, title, description } = formData
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
       const response = await uploadToIpfs({
         title,
@@ -130,7 +130,7 @@ export default function CreateVoteForm() {
         description: cid,
         startTimestamp: time(startDate).timestamp,
         duration,
-        amount: amountRef.current,
+        amount: amountRef.current ?? 0,
       })
 
       bus.emit(BusEvents.success, {
