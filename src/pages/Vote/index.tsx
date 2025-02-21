@@ -37,6 +37,7 @@ export default function Vote() {
     getProposalInfo,
     isError: contractError,
   } = useProposalState({ shouldFetchProposals: false })
+
   const [amount, setAmount] = useState<string>('0')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { t } = useTranslation()

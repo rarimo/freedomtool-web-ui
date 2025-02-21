@@ -1,5 +1,5 @@
 import { BigNumberish, randomBytes } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
@@ -8,21 +8,70 @@ import { IProposalWithId } from '@/pages/CreateVote/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
+import { useLoading } from './loading'
+
 interface UseProposalStateOptions {
   shouldFetchProposals?: boolean
 }
 
+const PAGE_SIZE = 10
+
 export const useProposalState = ({ shouldFetchProposals = true }: UseProposalStateOptions) => {
   const { contractConnector } = useWeb3Context()
-  const [lastProposalId, setLastProposalId] = useState<number | null>(null)
-  const [proposals, setProposals] = useState<IProposalWithId[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isError, setIsError] = useState(false)
+  const [currentPage, setCurrentPage] = useState(0)
 
   const contract = useMemo(() => {
     if (!contractConnector) return null
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
+
+  const { data: lastProposalId, isLoading: isLastProposalIdLoading } = useLoading(
+    null,
+    async () => {
+      const id = await contract?.contractInstance.lastProposalId()
+      const parsedId = Number(id)
+
+      return parsedId >= 0 ? parsedId : 0
+    },
+    { silentError: true, loadOnMount: true },
+  )
+
+  const {
+    data: proposals,
+    reload: fetchNextPage,
+    isLoading: isProposalsLoading,
+    isLoadingError: isError,
+  } = useLoading<IProposalWithId[] | null>(
+    [],
+    async () => {
+      if (!lastProposalId) return []
+      const startId = lastProposalId - currentPage * PAGE_SIZE
+      const endId = Math.max(startId - PAGE_SIZE + 1, 1)
+
+      const ids = []
+      for (let id = startId; id >= endId; id--) {
+        ids.push(id)
+      }
+
+      const proposalsData = await Promise.all(
+        ids.map(async id => {
+          try {
+            const proposal = await contract?.contractInstance.getProposalInfo(id)
+            return { id, proposal: { ...proposal } }
+          } catch (error) {
+            ErrorHandler.processWithoutFeedback(error)
+            return null
+          }
+        }),
+      )
+
+      return proposalsData.filter((proposal): proposal is IProposalWithId => proposal !== null)
+    },
+    {
+      loadArgs: [shouldFetchProposals, lastProposalId],
+      loadOnMount: Boolean(shouldFetchProposals && contract),
+    },
+  )
 
   const createProposal = useCallback(
     async (
@@ -55,17 +104,8 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
   const getProposalInfo = useCallback(
     async (id: number) => {
       if (!contract) return
-      setIsError(false)
-      setIsLoading(true)
-      try {
-        const proposal = await contract.contractInstance.getProposalInfo(id)
-        return proposal
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        setIsError(true)
-      } finally {
-        setIsLoading(false)
-      }
+      const proposal = await contract.contractInstance.getProposalInfo(id)
+      return proposal
     },
     [contract],
   )
@@ -81,62 +121,13 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     [contract],
   )
 
-  // TODO: Use infinite load
-  const fetchProposals = useCallback(async () => {
-    if (!contract || lastProposalId === null || !shouldFetchProposals) return
-    setIsLoading(true)
-
-    try {
-      const ids = []
-      for (let id = lastProposalId; id > 0; id--) {
-        ids.push(id)
-      }
-
-      const proposalsData = await Promise.all(
-        ids.map(async id => {
-          try {
-            const proposal = await contract.contractInstance.getProposalInfo(id)
-            return { id, proposal: { ...proposal } }
-          } catch (error) {
-            ErrorHandler.processWithoutFeedback(error)
-            return null
-          }
-        }),
-      )
-
-      setProposals(proposalsData.filter(proposal => proposal !== null))
-    } catch (error) {
-      ErrorHandler.processWithoutFeedback(error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [contract, lastProposalId, shouldFetchProposals])
-
-  useEffect(() => {
-    fetchProposals()
-  }, [fetchProposals])
-
-  useEffect(() => {
-    if (!contract) return
-
-    const fetchLastProposalId = async () => {
-      try {
-        const id = await contract.contractInstance.lastProposalId()
-        const parsedId = Number(id)
-
-        setLastProposalId(parsedId >= 0 ? parsedId : 0)
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        setLastProposalId(0)
-      }
-    }
-
-    fetchLastProposalId()
-  }, [contract])
-
   return {
     proposals,
-    isLoading,
+    fetchNextPage: () => {
+      setCurrentPage(prev => prev + 1)
+      fetchNextPage()
+    },
+    isLoading: isLastProposalIdLoading || isProposalsLoading,
     lastProposalId,
     createProposal,
     addFundsToProposal,
