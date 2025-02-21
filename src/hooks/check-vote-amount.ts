@@ -69,7 +69,6 @@ export const useCheckVoteAmount = () => {
     checkVoteAmount,
     isCalculating,
     setAmount,
-    amount,
     amountRef,
   }
 }
