@@ -21,7 +21,7 @@ export const useCheckVoteAmount = () => {
   const { balance } = useWeb3Context()
 
   // `amountRef` stores the latest vote amount to avoid using outdated values in async operations.
-  const amountRef = useRef(amount)
+  const amountRef = useRef<string>(BN.fromBigInt(amount).value)
 
   const checkVoteAmount = useCallback(
     async (votesCount: number) => {
@@ -38,6 +38,7 @@ export const useCheckVoteAmount = () => {
         const {
           data: { amount },
         } = await getVoteAmount(votesCount)
+
         const isEnoughBalance = BN.fromBigInt(amount).lte(BN.fromBigInt(balance))
 
         if (!isEnoughBalance) {
@@ -61,7 +62,7 @@ export const useCheckVoteAmount = () => {
   )
 
   useEffect(() => {
-    amountRef.current = amount
+    amountRef.current = BN.fromBigInt(amount).value
   }, [amount])
 
   return {

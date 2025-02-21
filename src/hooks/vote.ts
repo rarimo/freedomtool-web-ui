@@ -1,4 +1,3 @@
-import { BN } from '@distributedlab/tools'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -52,7 +51,7 @@ export function useVote(id?: string) {
   const topUpVoteContract = useCallback(async () => {
     try {
       if (!id) return
-      await addFundsToProposal(id, BN.fromBigInt(amountRef.current).value)
+      await addFundsToProposal(id, amountRef.current)
       bus.emit(BusEvents.success, { message: t('vote.success-msg') })
     } catch (error) {
       ErrorHandler.process(error)

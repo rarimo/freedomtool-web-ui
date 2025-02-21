@@ -101,7 +101,7 @@ export default function CreateVoteForm() {
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
-  const { checkVoteAmount, isCalculating, amountRef } = useCheckVoteAmount()
+  const { amountRef, checkVoteAmount, isCalculating } = useCheckVoteAmount()
 
   const submit = async (formData: ICreateVote) => {
     const isVoteAmountValid = await checkVoteAmount(getValues('votesCount'))
