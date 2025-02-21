@@ -5,7 +5,7 @@ import LogoSpinner from './LogoSpinner'
 export default function AppLoader() {
   return (
     <Stack alignItems='center' justifyContent='center' minHeight='100vh' width='100%'>
-      <LogoSpinner size={25} />
+      <LogoSpinner />
     </Stack>
   )
 }

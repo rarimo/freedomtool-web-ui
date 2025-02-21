@@ -1,8 +1,7 @@
-import { Stack, StackProps, useTheme } from '@mui/material'
+import { Stack, StackProps, Typography, useTheme } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 
-import { Icons, RoutePaths } from '@/enums'
-import { UiIcon } from '@/ui'
+import { RoutePaths } from '@/enums'
 
 export default function AppLogo(props: StackProps) {
   const { palette, typography } = useTheme()
@@ -21,16 +20,17 @@ export default function AppLogo(props: StackProps) {
         ...props.sx,
       }}
     >
-      <UiIcon
-        name={Icons.App}
+      <Typography
         sx={{
+          fontSize: '3rem',
+          fontWeight: 700,
           color: palette.text.primary,
-          width: '130px',
-          height: '34px',
-          maxHeight: 'none',
-          maxWidth: 'none',
+          opacity: 0,
+          animation: 'fadeInUp 1s ease forwards, spin 2s ease infinite',
         }}
-      />
+      >
+        Freedom tool 2.0
+      </Typography>
     </Stack>
   )
 }

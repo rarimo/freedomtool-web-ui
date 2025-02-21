@@ -1,21 +1,24 @@
-import { useTheme } from '@mui/material'
+import { Typography, useTheme } from '@mui/material'
 import { ComponentProps } from 'react'
 
-import { Icons } from '@/enums'
-import { UiIcon } from '@/ui'
+interface Props extends ComponentProps<typeof Typography> {}
 
-interface Props extends Omit<ComponentProps<typeof UiIcon>, 'name'> {}
-
-export default function LogoSpinner({ size = 10, ...rest }: Props) {
+export default function LogoSpinner({ ...rest }: Props) {
   const { palette } = useTheme()
 
   return (
-    <UiIcon
-      name={Icons.App}
-      size={size}
-      color={palette.text.primary}
+    <Typography
+      sx={{
+        fontSize: '3rem',
+        fontWeight: 700,
+        color: palette.text.primary,
+        opacity: 0,
+        animation: 'fadeInUp 1s ease forwards, pulse 2s ease infinite',
+        ...rest.sx,
+      }}
       {...rest}
-      sx={{ animation: 'spin 2s ease infinite', ...rest.sx }}
-    />
+    >
+      Freedom tool 2.0
+    </Typography>
   )
 }

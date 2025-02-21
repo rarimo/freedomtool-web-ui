@@ -39,7 +39,7 @@ export default function InfiniteList<D>({
         {loadingState === LoadingStates.NextLoading ? (
           (slots?.nextLoading ?? (
             <Stack alignItems='center'>
-              <LogoSpinner size={6} />
+              <LogoSpinner />
             </Stack>
           ))
         ) : loadingState === LoadingStates.Error ? (

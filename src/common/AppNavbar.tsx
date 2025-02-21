@@ -1,4 +1,4 @@
-import { Stack, StackProps, Tooltip, useMediaQuery, useTheme } from '@mui/material'
+import { Stack, StackProps, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -62,17 +62,9 @@ const AppNavbar = ({ ...rest }: StackProps) => {
       {!isMdDown && (
         <Stack spacing={0.5} alignItems='center'>
           <Stack component={NavLink} to={RoutePaths.Home} alignItems='center'>
-            <UiIcon
-              name={Icons.App}
-              size={10}
-              color={palette.text.primary}
-              sx={{
-                transition: 'transform 500ms ease-out',
-                '&:hover': {
-                  transform: 'rotate(540deg)',
-                },
-              }}
-            />
+            <Typography variant='buttonLarge' color={palette.text.secondary}>
+              FT v2.0
+            </Typography>
           </Stack>
         </Stack>
       )}

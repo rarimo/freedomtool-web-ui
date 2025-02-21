@@ -5,9 +5,8 @@ import { NavLink } from 'react-router-dom'
 import SettingsMenu from '@/common/SettingsMenu'
 import { MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useRouteTitleContext } from '@/contexts'
-import { Icons, RoutePaths } from '@/enums'
+import { RoutePaths } from '@/enums'
 import { Transitions } from '@/theme/constants'
-import { UiIcon } from '@/ui'
 
 interface Props {
   compact?: boolean
@@ -54,7 +53,9 @@ export default function AppHeader({ compact = false }: Props) {
             },
           }}
         >
-          <UiIcon name={Icons.App} size={10} color={palette.text.primary} />
+          <Typography variant='buttonMedium' color={palette.text.primary}>
+            FT v2.0
+          </Typography>
         </Stack>
       )}
       <Typography
