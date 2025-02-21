@@ -106,7 +106,6 @@ export default function CreateVoteForm() {
   const submit = async (formData: ICreateVote) => {
     const isVoteAmountValid = await checkVoteAmount(getValues('votesCount'))
     if (!isVoteAmountValid) return
-
     try {
       const { endDate, startDate, questions, title, description } = formData
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)

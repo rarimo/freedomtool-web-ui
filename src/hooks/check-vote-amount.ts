@@ -50,7 +50,7 @@ export const useCheckVoteAmount = () => {
         setAmount(parseUnits(String(amount), 18))
         return true
       } catch (error) {
-        ErrorHandler.process(error)
+        ErrorHandler.processWithoutFeedback(error)
         setAmount(0n)
         return false
       } finally {
