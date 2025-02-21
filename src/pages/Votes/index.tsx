@@ -1,7 +1,6 @@
 import { Box, Grid } from '@mui/material'
 
 import { useProposalState } from '@/hooks'
-import { UiContainer } from '@/ui'
 
 import VoteItem, { VoteItemSkeleton } from './componennts/VoteItem'
 
@@ -9,7 +8,7 @@ export default function Votes() {
   const { isLoading, proposals } = useProposalState({ shouldFetchProposals: true })
 
   return (
-    <UiContainer>
+    <>
       {isLoading ? (
         <Grid container spacing={2}>
           {Array.from({ length: 12 }).map((_, index) => (
@@ -32,6 +31,6 @@ export default function Votes() {
           ))}
         </Box>
       )}
-    </UiContainer>
+    </>
   )
 }

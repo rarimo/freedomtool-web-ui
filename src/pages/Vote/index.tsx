@@ -129,7 +129,7 @@ export default function Vote() {
     )
   }
 
-  const { duration, startTimestamp, status } = proposal
+  const { duration, startTimestamp, status, voteResults } = proposal
   const { acceptedOptions, title, description } = proposalMetadata
 
   return (
@@ -183,18 +183,24 @@ export default function Vote() {
           <Stack spacing={6}>
             <Typography variant='subtitle3'>{t('vote.accepted-options-title')}</Typography>
             <Stack spacing={3}>
-              {acceptedOptions?.map(({ title, variants }, key) => (
-                <Accordion key={key}>
+              {acceptedOptions?.map(({ title, variants }, oIndex) => (
+                <Accordion key={oIndex}>
                   <AccordionSummary>
                     <Typography variant='h6'>{title}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Divider sx={{ mb: 4 }} />
                     <Stack spacing={1}>
-                      {variants.map((variant, index) => (
-                        <Stack alignItems='center' spacing={3} direction='row' key={index}>
+                      {variants.map((variant, vIndex) => (
+                        <Stack alignItems='center' spacing={3} direction='row' key={vIndex}>
                           <DotDivider />
+
                           <Typography>{variant}</Typography>
+                          <Typography variant='body4' color={palette.text.secondary}>
+                            {t('vote.votes-count', {
+                              count: Number(voteResults[oIndex][vIndex]),
+                            })}
+                          </Typography>
                         </Stack>
                       ))}
                     </Stack>

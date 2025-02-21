@@ -77,7 +77,9 @@
       "question-lbl": "Question #{{order}}",
       "option-lbl": "Option #{{order}}",
       "proposal-title-lbl": "Proposal title",
-      "proposal-description-lbl": "Proposal description"
+      "proposal-description-lbl": "Proposal description",
+      "votes-count-lbl": "Votes count",
+      "calculate-eth-btn": "Calculate"
     },
     "success-msg": "Proposal created successfully!"
   },
@@ -106,6 +108,8 @@
     "amount-btn": "Top up balance",
     "amount-lbl": "Amount",
     "success-msg": "You have successfully added funds to your voting contract",
-    "remaining-votes": "Remaining votes:"
+    "remaining-votes": "Remaining votes:",
+    "votes-count_one": "{{count}} vote",
+    "votes-count_other": "{{count}} votes"
   }
 }

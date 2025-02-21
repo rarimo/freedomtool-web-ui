@@ -31,6 +31,7 @@ const defaultValues: ICreateVote = {
   description: '',
   startDate: '',
   endDate: '',
+  votesCount: 0,
   questions: [
     {
       id: uuidv4(),
@@ -61,6 +62,7 @@ export default function CreateVoteForm() {
       Yup.object({
         title: Yup.string().required().max(50),
         description: Yup.string().required().max(200),
+        votesCount: Yup.number().required().min(1).max(1_000_000),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()
@@ -251,6 +253,37 @@ export default function CreateVoteForm() {
                 />
               )
             })}
+          </Stack>
+          <Stack>
+            <Controller
+              name='votesCount'
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  type='number'
+                  disabled={isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  label={t('create-vote.form.votes-count-lbl')}
+                  InputProps={{
+                    sx: {
+                      '& input[type=number]': {
+                        MozAppearance: 'textfield',
+                      },
+                      '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
+                        {
+                          WebkitAppearance: 'none',
+                          margin: 0,
+                        },
+                    },
+                    endAdornment: (
+                      <Button size='small'>{t('create-vote.form.calculate-eth-btn')}</Button>
+                    ),
+                  }}
+                />
+              )}
+            />
           </Stack>
           <Button disabled={isSubmitting} type='submit' sx={{ mt: 3 }}>
             {t('create-vote.form.submit-btn')}

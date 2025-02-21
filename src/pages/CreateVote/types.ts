@@ -17,6 +17,7 @@ export interface ICreateVote {
   description: string
   startDate: string
   endDate: string
+  votesCount: number
   questions: IQuestion[]
 }
 
@@ -47,4 +48,5 @@ export interface IParsedProposal {
   status: ProposalStatus
   startTimestamp: number
   duration: number
+  voteResults: bigint[][]
 }

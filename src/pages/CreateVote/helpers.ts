@@ -39,6 +39,20 @@ export const getPredictedVotesCount = (id: string) => {
   )
 }
 
+export const getVoteAmount = (votesCount: number, proposalId?: string) => {
+  return api.get(`${ApiServicePaths.ProofVerificationRelayer}/v2/predict`, {
+    body: {
+      data: {
+        type: 'vote_predict_amount',
+        attributes: {
+          count_tx: votesCount,
+          voting_id: proposalId,
+        },
+      },
+    },
+  })
+}
+
 export const parseProposalFromContract = (
   proposal: ProposalsState.ProposalInfoStructOutput,
 ): IParsedProposal => ({
@@ -46,4 +60,5 @@ export const parseProposalFromContract = (
   status: Number(proposal[1]),
   startTimestamp: Number(proposal[2].startTimestamp),
   duration: Number(proposal[2].duration),
+  voteResults: proposal[3],
 })
