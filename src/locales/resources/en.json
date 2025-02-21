@@ -45,7 +45,9 @@
     "service-unavailable": "Oh, it seems like our service is not available right now, please try again later",
     "user-rejected-request": "Oh, seems like you rejected the request",
     "resource-unavailable": "Hmm, check out your wallet, seems like the request is pending",
-    "no-signed-order": "There is no signed order"
+    "no-signed-order": "There is no signed order",
+    "not-enough-for-proposal": "You don't have enough balance to allocate the required number of votes for this proposal",
+    "invalid-vote-count": "Invalid vote count"
   },
   "notifications": {
     "default-title-success": "Success",

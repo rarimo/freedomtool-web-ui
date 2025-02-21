@@ -33,20 +33,21 @@ export const uploadToIpfs = (vote: IVoteIpfs) => {
   })
 }
 
-export const getPredictedVotesCount = (id: string) => {
+export const getVotesCount = (id: string) => {
   return api.get<{ vote_count: number }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/count-remaining-votes/${id}`,
   )
 }
 
 export const getVoteAmount = (votesCount: number, proposalId?: string) => {
-  return api.get(`${ApiServicePaths.ProofVerificationRelayer}/v2/predict`, {
+  return api.post<{ amount: string }>(`${ApiServicePaths.ProofVerificationRelayer}/v2/predict`, {
     body: {
       data: {
         type: 'vote_predict_amount',
         attributes: {
           count_tx: votesCount,
           voting_id: proposalId,
+          ...(proposalId && { voting_id: proposalId }),
         },
       },
     },

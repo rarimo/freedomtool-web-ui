@@ -8,7 +8,7 @@ import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
 import { bus, ErrorHandler, formatDateTime } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { getPredictedVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
+import { getVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
 import { IVoteIpfs } from '@/pages/CreateVote/types'
 
 export function useVote(id?: string) {
@@ -47,7 +47,7 @@ export function useVote(id?: string) {
     null,
     async () => {
       if (!id) return
-      const response = await getPredictedVotesCount(id)
+      const response = await getVotesCount(id)
       return response.data.vote_count || 0
     },
     { silentError: true },

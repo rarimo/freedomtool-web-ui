@@ -1,8 +1,7 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack, TextField } from '@mui/material'
-import { parseUnits } from 'ethers'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,7 +11,7 @@ import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useProposalState } from '@/hooks'
+import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import { UiIcon } from '@/ui'
 
 import { MAX_QUESTIONS } from '../constants'
@@ -54,6 +53,7 @@ export default function CreateVoteForm() {
     handleSubmit,
     trigger,
     reset,
+    getValues,
     formState: { isSubmitting },
   } = useForm<ICreateVote>({
     defaultValues,
@@ -101,9 +101,12 @@ export default function CreateVoteForm() {
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
-  const questionContainerRef = useRef<HTMLDivElement | null>(null)
+  const { amount, checkVoteAmount, isCalculating } = useCheckVoteAmount()
 
   const submit = async (formData: ICreateVote) => {
+    const isVoteAmountValid = await checkVoteAmount(getValues('votesCount'))
+    if (!isVoteAmountValid) return
+
     const { endDate, startDate, questions, title, description } = formData
     try {
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
@@ -127,8 +130,7 @@ export default function CreateVoteForm() {
         description: cid,
         startTimestamp: time(startDate).timestamp,
         duration,
-        // TODO: Replace when BE is ready
-        amount: parseUnits(String(1), 18), // 1 eth
+        amount,
       })
 
       bus.emit(BusEvents.success, {
@@ -161,7 +163,7 @@ export default function CreateVoteForm() {
   return (
     <>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-        <Stack ref={questionContainerRef} spacing={5} width='100%'>
+        <Stack spacing={5} width='100%'>
           <Controller
             name='title'
             control={control}
@@ -278,7 +280,13 @@ export default function CreateVoteForm() {
                         },
                     },
                     endAdornment: (
-                      <Button size='small'>{t('create-vote.form.calculate-eth-btn')}</Button>
+                      <Button
+                        size='small'
+                        disabled={isCalculating}
+                        onClick={() => checkVoteAmount(getValues('votesCount'))}
+                      >
+                        {t('create-vote.form.calculate-eth-btn')}
+                      </Button>
                     ),
                   }}
                 />
