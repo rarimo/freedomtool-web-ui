@@ -1,29 +1,40 @@
 import { BN } from '@distributedlab/tools'
 import { parseUnits } from 'ethers'
 import { t } from 'i18next'
-import { useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { getVoteAmount } from '@/pages/CreateVote/helpers'
 
+export interface UseCheckVoteAmount {
+  isCalculating: boolean
+  amount: bigint
+  setAmount: Dispatch<SetStateAction<bigint>>
+  checkVoteAmount: (votesCount: number) => Promise<boolean>
+}
+
 export const useCheckVoteAmount = () => {
   const [isCalculating, setIsCalculating] = useState(false)
   const [amount, setAmount] = useState<bigint>(0n)
   const { balance } = useWeb3Context()
 
+  // `amountRef` stores the latest vote amount to avoid using outdated values in async operations.
+  const amountRef = useRef(amount)
+
   const checkVoteAmount = useCallback(
     async (votesCount: number) => {
-      if (votesCount <= 0) {
-        bus.emit(BusEvents.error, {
-          message: t('errors.invalid-vote-count'),
-        })
-        throw new Error(t('errors.invalid-vote-count'))
-      }
-
       setIsCalculating(true)
+
       try {
+        if (votesCount <= 0) {
+          bus.emit(BusEvents.error, {
+            message: t('errors.invalid-vote-count'),
+          })
+          throw new Error(t('errors.invalid-vote-count'))
+        }
+
         const {
           data: { amount },
         } = await getVoteAmount(votesCount)
@@ -36,7 +47,7 @@ export const useCheckVoteAmount = () => {
           throw new Error(t('errors.not-enough-for-proposal'))
         }
 
-        setAmount(parseUnits(String(1), 18))
+        setAmount(parseUnits(String(amount), 18))
         return true
       } catch (error) {
         ErrorHandler.process(error)
@@ -48,9 +59,15 @@ export const useCheckVoteAmount = () => {
     [balance],
   )
 
+  useEffect(() => {
+    amountRef.current = amount
+  }, [amount])
+
   return {
     checkVoteAmount,
     isCalculating,
+    setAmount,
     amount,
+    amountRef,
   }
 }

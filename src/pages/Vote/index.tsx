@@ -1,35 +1,31 @@
-import { Box, Button, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
-import { formatEther } from 'ethers'
+import { Box, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { ErrorView } from '@/common'
-import { useWeb3Context } from '@/contexts/web3-context'
 import { useVote } from '@/hooks/vote'
-import { UiAmountField } from '@/ui'
 
 import VoteDetails from './components/IVoteDetails'
 import QuestionList from './components/QuestionList'
+import TopUpForm from './components/TopUpForm'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { palette } = useTheme()
-  const { balance } = useWeb3Context()
 
   const {
     isLoading,
     isError,
     voteDetails,
-    isSubmitting,
-    topUpVoteContract,
-    setAmount,
-    amount,
-    isEnoughBalance,
     proposal,
     proposalMetadata,
+    // top up hook
+    topUpVoteContract,
+    checkVoteAmount,
+    isCalculating,
   } = useVote(id)
 
   if (isLoading) return <VoteSkeleton />
@@ -78,26 +74,12 @@ export default function Vote() {
                 {t('vote.qr-code-subtitle')}
               </Typography>
             </Stack>
-            <UiAmountField
-              value={amount ?? 0}
-              minRows={0}
-              minValue='0'
-              disabled={isSubmitting}
-              maxValue={formatEther(balance)}
-              snapPoints={[5, 15, 30]}
-              onChange={value => setAmount(value)}
-            />
 
-            <Button
-              variant='contained'
-              color='primary'
-              fullWidth
-              disabled={!Number(amount) || !isEnoughBalance || isSubmitting}
-              sx={{ padding: '12px', fontSize: '16px' }}
-              onClick={topUpVoteContract}
-            >
-              {t('vote.amount-btn')}
-            </Button>
+            <TopUpForm
+              isCalculating={isCalculating}
+              checkVoteAmount={checkVoteAmount}
+              onSubmit={topUpVoteContract}
+            />
           </Stack>
         </Stack>
       </Paper>

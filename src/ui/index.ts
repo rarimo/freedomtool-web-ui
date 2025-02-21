@@ -1,5 +1,6 @@
 export { default as UiAmountField } from './UiAmountField'
 export { default as UiCheckbox } from './UiCheckbox'
+export { default as UiCheckVoteInput } from './UiCheckVoteInput'
 export { default as UiCircledBadge } from './UiCircledBadge'
 export { default as UiContainer } from './UiContainer'
 export { default as UiCopyField } from './UiCopyField'

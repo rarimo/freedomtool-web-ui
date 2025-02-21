@@ -12,7 +12,7 @@ import UiDatePicker from '@/common/UiDatePicker'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
-import { UiIcon } from '@/ui'
+import { UiCheckVoteInput, UiIcon } from '@/ui'
 
 import { MAX_QUESTIONS } from '../constants'
 import {
@@ -101,7 +101,7 @@ export default function CreateVoteForm() {
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
-  const { amount, checkVoteAmount, isCalculating } = useCheckVoteAmount()
+  const { checkVoteAmount, isCalculating, amountRef } = useCheckVoteAmount()
 
   const submit = async (formData: ICreateVote) => {
     const isVoteAmountValid = await checkVoteAmount(getValues('votesCount'))
@@ -130,7 +130,7 @@ export default function CreateVoteForm() {
         description: cid,
         startTimestamp: time(startDate).timestamp,
         duration,
-        amount,
+        amount: amountRef.current,
       })
 
       bus.emit(BusEvents.success, {
@@ -256,43 +256,20 @@ export default function CreateVoteForm() {
               )
             })}
           </Stack>
-          <Stack>
-            <Controller
-              name='votesCount'
-              control={control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  type='number'
-                  disabled={isSubmitting}
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                  label={t('create-vote.form.votes-count-lbl')}
-                  InputProps={{
-                    sx: {
-                      '& input[type=number]': {
-                        MozAppearance: 'textfield',
-                      },
-                      '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
-                        {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                    },
-                    endAdornment: (
-                      <Button
-                        size='small'
-                        disabled={isCalculating}
-                        onClick={() => checkVoteAmount(getValues('votesCount'))}
-                      >
-                        {t('create-vote.form.calculate-eth-btn')}
-                      </Button>
-                    ),
-                  }}
-                />
-              )}
-            />
-          </Stack>
+          <Controller
+            name='votesCount'
+            control={control}
+            render={({ field, fieldState }) => (
+              <UiCheckVoteInput
+                {...field}
+                disabled={isSubmitting || isCalculating}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+                label={t('create-vote.form.votes-count-lbl')}
+                onCheck={() => checkVoteAmount(getValues('votesCount'))}
+              />
+            )}
+          />
           <Button disabled={isSubmitting} type='submit' sx={{ mt: 3 }}>
             {t('create-vote.form.submit-btn')}
           </Button>

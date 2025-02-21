@@ -1,19 +1,16 @@
 import { BN } from '@distributedlab/tools'
-import { parseUnits } from 'ethers'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
 import { bus, ErrorHandler, formatDateTime } from '@/helpers'
-import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
+import { useCheckVoteAmount, useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { getVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
 import { IVoteIpfs } from '@/pages/CreateVote/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()
-  const { balance } = useWeb3Context()
   const {
     addFundsToProposal,
     getProposalInfo,
@@ -21,8 +18,7 @@ export function useVote(id?: string) {
     isLoading: isContractLoading,
   } = useProposalState({ shouldFetchProposals: false })
 
-  const [amount, setAmount] = useState<string>('0')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { checkVoteAmount, isCalculating, setAmount, amountRef } = useCheckVoteAmount()
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -53,29 +49,17 @@ export function useVote(id?: string) {
     { silentError: true },
   )
 
-  const topUpVoteContract = async () => {
-    setIsSubmitting(true)
+  const topUpVoteContract = useCallback(async () => {
     try {
       if (!id) return
-      await addFundsToProposal(BigInt(id), parseUnits(amount, 18))
+      await addFundsToProposal(id, BN.fromBigInt(amountRef.current).value)
       bus.emit(BusEvents.success, { message: t('vote.success-msg') })
     } catch (error) {
       ErrorHandler.process(error)
     } finally {
-      setIsSubmitting(false)
-      setAmount('0')
+      setAmount(0n)
     }
-  }
-
-  const isEnoughBalance = useMemo(() => {
-    if (!amount || isNaN(Number(amount))) return false
-    try {
-      const amountBn = BN.fromRaw(amount)
-      return amountBn.lte(BN.fromBigInt(balance || 0n))
-    } catch {
-      return false
-    }
-  }, [amount, balance])
+  }, [addFundsToProposal, amountRef, id, setAmount, t])
 
   const voteDetails = useMemo(() => {
     if (!proposal) return []
@@ -114,12 +98,10 @@ export function useVote(id?: string) {
     isLoading,
     isError,
     voteDetails,
-    isSubmitting,
     topUpVoteContract,
-    setAmount,
-    amount,
-    isEnoughBalance,
     proposal,
     proposalMetadata,
+    checkVoteAmount,
+    isCalculating,
   }
 }

@@ -112,6 +112,7 @@
     "success-msg": "You have successfully added funds to your voting contract",
     "remaining-votes": "Remaining votes:",
     "votes-count_one": "{{count}} vote",
-    "votes-count_other": "{{count}} votes"
+    "votes-count_other": "{{count}} votes",
+    "top-up-button": "Top up"
   }
 }
