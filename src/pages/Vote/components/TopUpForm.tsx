@@ -62,7 +62,7 @@ export default function TopUpForm(props: ITopUpFormProps) {
         render={({ field, fieldState }) => (
           <UiCheckVoteInput
             {...field}
-            disabled={isDisabled}
+            disabled={field.disabled || isDisabled}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message}
             label={t('create-vote.form.votes-count-lbl')}
@@ -70,7 +70,9 @@ export default function TopUpForm(props: ITopUpFormProps) {
           />
         )}
       />
-      <Button type='submit'>{t('vote.top-up-button')}</Button>
+      <Button disabled={isSubmitting} type='submit'>
+        {t('vote.top-up-button')}
+      </Button>
     </Stack>
   )
 }
