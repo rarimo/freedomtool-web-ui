@@ -1,7 +1,7 @@
 import { BN } from '@distributedlab/tools'
 import { BigNumberish, parseUnits } from 'ethers'
 import { t } from 'i18next'
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react'
+import { MutableRefObject, useCallback, useRef, useState } from 'react'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
@@ -10,12 +10,11 @@ import { predictVoteAmount } from '@/pages/CreateVote/helpers'
 
 export interface UseCheckVoteAmount {
   isCalculating: boolean
-  amount: bigint
-  setAmount: Dispatch<SetStateAction<bigint>>
+  amountRef: MutableRefObject<BigNumberish>
   checkVoteAmount: (votesCount: number) => Promise<boolean>
 }
 
-export const useCheckVoteAmount = () => {
+export const useCheckVoteAmount = (): UseCheckVoteAmount => {
   const [isCalculating, setIsCalculating] = useState(false)
   const { balance } = useWeb3Context()
   // `amountRef` stores the latest vote amount to avoid using outdated values in async operations.
