@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack } from '@mui/material'
+import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
@@ -38,7 +39,7 @@ export default function TopUpForm(props: ITopUpFormProps) {
     ),
   })
 
-  const submit = async () => {
+  const submit = useCallback(async () => {
     const isVoteAmountValid = await checkVoteAmount?.(getValues('votesCount'))
     if (!isVoteAmountValid) return
 
@@ -49,7 +50,7 @@ export default function TopUpForm(props: ITopUpFormProps) {
     } finally {
       reset()
     }
-  }
+  }, [checkVoteAmount, getValues, onSubmit, reset])
 
   const isDisabled = isSubmitting || isCalculating
 
@@ -69,9 +70,7 @@ export default function TopUpForm(props: ITopUpFormProps) {
           />
         )}
       />
-      <Button disabled={isDisabled} type='submit'>
-        {t('vote.top-up-button')}
-      </Button>
+      <Button type='submit'>{t('vote.top-up-button')}</Button>
     </Stack>
   )
 }

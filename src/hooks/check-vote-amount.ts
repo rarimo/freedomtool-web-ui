@@ -1,7 +1,7 @@
 import { BN } from '@distributedlab/tools'
-import { parseUnits } from 'ethers'
+import { BigNumberish, parseUnits } from 'ethers'
 import { t } from 'i18next'
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
@@ -17,11 +17,9 @@ export interface UseCheckVoteAmount {
 
 export const useCheckVoteAmount = () => {
   const [isCalculating, setIsCalculating] = useState(false)
-  const [amount, setAmount] = useState<bigint>(0n)
   const { balance } = useWeb3Context()
-
   // `amountRef` stores the latest vote amount to avoid using outdated values in async operations.
-  const amountRef = useRef<string>(BN.fromBigInt(amount).value)
+  const amountRef = useRef<BigNumberish>(BN.fromBigInt(0).value)
 
   const checkVoteAmount = useCallback(
     async (votesCount: number) => {
@@ -48,11 +46,11 @@ export const useCheckVoteAmount = () => {
           throw new Error(t('errors.not-enough-for-proposal'))
         }
 
-        setAmount(parseUnits(String(amount), 18))
+        amountRef.current = parseUnits(String(amount), 18)
         return true
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
-        setAmount(0n)
+        amountRef.current = 0
         return false
       } finally {
         setIsCalculating(false)
@@ -61,14 +59,9 @@ export const useCheckVoteAmount = () => {
     [balance],
   )
 
-  useEffect(() => {
-    amountRef.current = BN.fromBigInt(amount).value
-  }, [amount])
-
   return {
     checkVoteAmount,
     isCalculating,
-    setAmount,
     amountRef,
   }
 }

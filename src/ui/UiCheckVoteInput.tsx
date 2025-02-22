@@ -32,7 +32,7 @@ const UiCheckVoteInput = forwardRef<HTMLInputElement, VoteCountInputProps>(
             <Button
               variant='text'
               size='small'
-              disabled={textFieldProps.disabled}
+              disabled={textFieldProps.disabled || Number(textFieldProps.value) <= 0}
               onClick={onCheck}
             >
               {t('create-vote.form.calculate-eth-btn')}

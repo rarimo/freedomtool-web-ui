@@ -17,7 +17,7 @@ export function useVote(id?: string) {
     isLoading: isContractLoading,
   } = useProposalState({ shouldFetchProposals: false })
 
-  const { checkVoteAmount, isCalculating, setAmount, amountRef } = useCheckVoteAmount()
+  const { checkVoteAmount, isCalculating, amountRef } = useCheckVoteAmount()
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -56,9 +56,9 @@ export function useVote(id?: string) {
     } catch (error) {
       ErrorHandler.process(error)
     } finally {
-      setAmount(0n)
+      amountRef.current = 0
     }
-  }, [addFundsToProposal, amountRef, id, setAmount, t])
+  }, [addFundsToProposal, amountRef, id, t])
 
   const voteDetails = useMemo(() => {
     if (!proposal) return []
