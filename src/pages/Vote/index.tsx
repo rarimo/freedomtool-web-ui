@@ -1,22 +1,31 @@
 import { Box, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { ErrorView } from '@/common'
+import { useRouteTitleContext } from '@/contexts'
+import { useWeb3Context } from '@/contexts/web3-context'
 import { useVote } from '@/hooks/vote'
 
-import VoteDetails from './components/IVoteDetails'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
+import VoteDetails from './components/VoteDetails'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { palette } = useTheme()
+  const { setTitle } = useRouteTitleContext()
 
   const { isLoading, isError, voteDetails, proposal, proposalMetadata } = useVote(id)
+  const { address } = useWeb3Context()
+
+  useEffect(() => {
+    setTitle(proposalMetadata?.title ?? '')
+  }, [proposalMetadata?.title, setTitle])
 
   if (isLoading) return <VoteSkeleton />
   if (isError) return <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
@@ -32,7 +41,9 @@ export default function Vote() {
       <Paper>
         <Stack sx={{ padding: 2 }} spacing={5} divider={<Divider />}>
           <Stack spacing={2}>
-            <Typography variant='h3'>{proposalMetadata?.title}</Typography>
+            <Typography variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
+              {proposalMetadata?.title}
+            </Typography>
             <Typography variant='body2' color={palette.text.secondary}>
               {proposalMetadata?.description}
             </Typography>
@@ -43,32 +54,36 @@ export default function Vote() {
         </Stack>
       </Paper>
 
-      <Paper sx={{ height: 'fit-content' }}>
-        <Stack sx={{ padding: 2 }}>
-          <Stack spacing={3}>
-            <Stack spacing={2} sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3 }}>
-              <Stack
-                sx={{
-                  width: 160,
-                  height: 160,
-                  backgroundColor: palette.common.white,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 4,
-                  border: `1px solid ${palette.action.active}`,
-                }}
-              >
-                <QRCode value={proposal?.cid || ''} size={130} />
-              </Stack>
-              <Typography variant='body2' color='textSecondary' sx={{ marginTop: 1 }}>
-                {t('vote.qr-code-subtitle')}
-              </Typography>
-            </Stack>
-
-            <TopUpForm />
-          </Stack>
+      <Stack
+        component={Paper}
+        spacing={2}
+        sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3, height: 'fit-content' }}
+      >
+        <Stack
+          sx={{
+            width: 160,
+            height: 160,
+            backgroundColor: palette.common.white,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 4,
+            border: `1px solid ${palette.action.active}`,
+          }}
+        >
+          <QRCode value={proposal?.cid || ''} size={130} />
         </Stack>
-      </Paper>
+        <Typography
+          variant='body2'
+          typography={{ xs: 'body3', md: 'body2' }}
+          color='textSecondary'
+          mb={{ xs: 8 }}
+          mt={1}
+        >
+          {t('vote.qr-code-subtitle')}
+        </Typography>
+
+        {address && <TopUpForm />}
+      </Stack>
     </Box>
   )
 }

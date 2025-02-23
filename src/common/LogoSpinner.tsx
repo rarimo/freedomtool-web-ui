@@ -1,10 +1,12 @@
 import { Typography, useTheme } from '@mui/material'
 import { ComponentProps } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Props extends ComponentProps<typeof Typography> {}
 
 export default function LogoSpinner({ ...rest }: Props) {
   const { palette } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Typography
@@ -18,7 +20,7 @@ export default function LogoSpinner({ ...rest }: Props) {
       }}
       {...rest}
     >
-      Freedom tool 2.0
+      {t('logo-spinner.title')}
     </Typography>
   )
 }

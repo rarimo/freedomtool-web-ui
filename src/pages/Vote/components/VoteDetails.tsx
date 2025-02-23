@@ -10,13 +10,13 @@ export default function VoteDetails({ list }: { list: IVoteDetails[] }) {
   const { palette } = useTheme()
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={2}>
       {list.map(({ title, description }, index) => (
         <Stack direction='row' justifyContent='space-between' key={index}>
-          <Typography variant='body2' color={palette.text.secondary}>
+          <Typography variant='body3' color={palette.text.secondary}>
             {title}
           </Typography>
-          <Typography variant='body2'>{description}</Typography>
+          <Typography variant='body3'>{description}</Typography>
         </Stack>
       ))}
     </Stack>

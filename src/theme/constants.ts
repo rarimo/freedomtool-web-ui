@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 
-export const FONT_FAMILY = "'SharpGrotesk', sans-serif"
+export const FONT_FAMILY = "'Poppins', sans-serif"
 
 export enum FontWeight {
   Regular = 400,
@@ -55,7 +55,7 @@ export const rippleAnimation = keyframes`
     transform: scale(1);
     opacity: 0.8;
   }
-    
+
   100% {
     transform: scale(1.4);
     opacity: 0;

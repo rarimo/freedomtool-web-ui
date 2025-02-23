@@ -24,14 +24,30 @@ export default function QuestionList({
 
   if (!proposal) return null
 
+  const getTotalVotesPerQuestion = (questionIndex: number) =>
+    proposal.voteResults[questionIndex]?.reduce((acc, count) => acc + count, 0n) || 0n
+
   return (
     <Stack spacing={6}>
       <Typography variant='subtitle3'>{t('vote.accepted-options-title')}</Typography>
       <Stack spacing={3}>
-        {questions?.map(({ title, variants }, oIndex) => (
-          <Accordion key={oIndex}>
+        {questions?.map(({ title, variants }, qIndex) => (
+          <Accordion key={qIndex}>
             <AccordionSummary>
-              <Typography variant='h6'>{title}</Typography>
+              <Stack
+                direction='row'
+                width={1}
+                alignItems='center'
+                justifyContent='space-between'
+                spacing={2}
+              >
+                <Typography variant='h6'>{title}</Typography>
+                <Typography variant='body3' color={palette.text.secondary}>
+                  {t('vote.votes-count', {
+                    count: Number(getTotalVotesPerQuestion(qIndex)),
+                  })}
+                </Typography>
+              </Stack>
             </AccordionSummary>
             <AccordionDetails>
               <Divider sx={{ mb: 4 }} />
@@ -39,11 +55,11 @@ export default function QuestionList({
                 {variants.map((variant, vIndex) => (
                   <Stack alignItems='center' spacing={3} direction='row' key={vIndex}>
                     <DotDivider />
-
                     <Typography>{variant}</Typography>
-                    <Typography variant='body4' color={palette.text.secondary}>
+
+                    <Typography ml='auto' variant='body4' color={palette.text.secondary}>
                       {t('vote.votes-count', {
-                        count: Number(proposal?.voteResults[oIndex][vIndex]),
+                        count: Number(proposal?.voteResults[qIndex][vIndex]),
                       })}
                     </Typography>
                   </Stack>

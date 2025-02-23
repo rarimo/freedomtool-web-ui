@@ -23,13 +23,7 @@ export default function Votes() {
     <InfiniteList
       items={proposals}
       slots={{
-        loading: (
-          <Box sx={listSx}>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <VoteItemSkeleton key={index} />
-            ))}
-          </Box>
-        ),
+        loading: <VotesSkeleton />,
       }}
       loadingState={proposalsLoadingState}
       onRetry={reloadProposals}
@@ -41,5 +35,15 @@ export default function Votes() {
         ))}
       </Box>
     </InfiniteList>
+  )
+}
+
+export function VotesSkeleton() {
+  return (
+    <Box sx={listSx}>
+      {Array.from({ length: 12 }).map((_, index) => (
+        <VoteItemSkeleton key={index} />
+      ))}
+    </Box>
   )
 }

@@ -1,10 +1,12 @@
 import { Stack, StackProps, Typography, useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
 
 export default function AppLogo(props: StackProps) {
   const { palette, typography } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Stack
@@ -29,7 +31,7 @@ export default function AppLogo(props: StackProps) {
           animation: 'fadeInUp 1s ease forwards, spin 2s ease infinite',
         }}
       >
-        Freedom tool 2.0
+        {t('app-logo.title')}
       </Typography>
     </Stack>
   )

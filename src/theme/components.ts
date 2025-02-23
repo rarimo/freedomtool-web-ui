@@ -468,11 +468,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.paper,
         overflow: 'hidden',
         [theme.breakpoints.down('md')]: {
-          padding: 0,
+          padding: 8,
         },
       }),
       list: {
-        padding: 0,
+        padding: 4,
       },
     },
   },
@@ -622,12 +622,14 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        padding: theme.spacing(2, 4),
         border: 0,
         borderRadius: theme.spacing(4),
         backgroundColor: theme.palette.background.light,
         '&:first-of-type, &:last-of-type': {
           borderRadius: theme.spacing(4),
+        },
+        '&.MuiAccordion-root': {
+          padding: theme.spacing(2, 4),
         },
       }),
     },

@@ -124,5 +124,11 @@
       "success-msg": "Voting successfully topped up!",
       "top-up-button": "Top up"
     }
+  },
+  "app-logo": {
+    "title": "Freedom tool 2.0"
+  },
+  "logo-spinner": {
+    "title": "Freedom tool 2.0"
   }
 }
