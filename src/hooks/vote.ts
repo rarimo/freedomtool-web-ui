@@ -1,23 +1,19 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BusEvents } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
-import { bus, ErrorHandler, formatDateTime } from '@/helpers'
-import { useCheckVoteAmount, useIpfsLoading, useLoading, useProposalState } from '@/hooks'
+import { formatDateTime } from '@/helpers'
+import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { getVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
 import { IVoteIpfs } from '@/pages/CreateVote/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()
   const {
-    addFundsToProposal,
     getProposalInfo,
     isError: contractError,
     isLoading: isContractLoading,
   } = useProposalState({ shouldFetchProposals: false })
-
-  const { checkVoteAmount, isCalculating, amountRef } = useCheckVoteAmount()
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -47,18 +43,6 @@ export function useVote(id?: string) {
     },
     { silentError: true },
   )
-
-  const topUpVoteContract = useCallback(async () => {
-    try {
-      if (!id) return
-      await addFundsToProposal(id, amountRef.current)
-      bus.emit(BusEvents.success, { message: t('vote.success-msg') })
-    } catch (error) {
-      ErrorHandler.process(error)
-    } finally {
-      amountRef.current = 0
-    }
-  }, [addFundsToProposal, amountRef, id, t])
 
   const voteDetails = useMemo(() => {
     if (!proposal) return []
@@ -97,10 +81,7 @@ export function useVote(id?: string) {
     isLoading,
     isError,
     voteDetails,
-    topUpVoteContract,
     proposal,
     proposalMetadata,
-    checkVoteAmount,
-    isCalculating,
   }
 }

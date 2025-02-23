@@ -1,66 +1,92 @@
 import { BN } from '@distributedlab/tools'
-import { BigNumberish, parseUnits } from 'ethers'
+import { BigNumberish, formatEther } from 'ethers'
 import { t } from 'i18next'
-import { MutableRefObject, useCallback, useRef, useState } from 'react'
+import { useState } from 'react'
 
+import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { predictVoteAmount } from '@/pages/CreateVote/helpers'
 
-export interface UseCheckVoteAmount {
-  isCalculating: boolean
-  amountRef: MutableRefObject<BigNumberish>
-  checkVoteAmount: (votesCount: number) => Promise<boolean>
+interface CheckVoteAmountConfig {
+  shouldUpdateHelperText?: boolean
 }
 
-export const useCheckVoteAmount = (): UseCheckVoteAmount => {
+export const useCheckVoteAmount = () => {
   const [isCalculating, setIsCalculating] = useState(false)
+  const [helperText, setHelperText] = useState<string>('')
   const { balance } = useWeb3Context()
-  // `amountRef` stores the latest vote amount to avoid using outdated values in async operations.
-  const amountRef = useRef<BigNumberish>(BN.fromBigInt(0).value)
 
-  const checkVoteAmount = useCallback(
-    async (votesCount: number) => {
-      setIsCalculating(true)
+  const getVoteAmountDetails = async (
+    votesCount: number,
+    config: CheckVoteAmountConfig = { shouldUpdateHelperText: true },
+  ) => {
+    setIsCalculating(true)
+    try {
+      const votesAmount = await getVoteAmount(votesCount)
+      const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
-      try {
-        if (votesCount <= 0) {
-          bus.emit(BusEvents.error, {
-            message: t('errors.invalid-vote-count'),
-          })
-          throw new Error(t('errors.invalid-vote-count'))
-        }
-
-        const {
-          data: { amount },
-        } = await predictVoteAmount(votesCount)
-
-        const isEnoughBalance = BN.fromBigInt(amount).lte(BN.fromBigInt(balance))
-
-        if (!isEnoughBalance) {
-          bus.emit(BusEvents.error, {
-            message: t('errors.not-enough-for-proposal'),
-          })
-          throw new Error(t('errors.not-enough-for-proposal'))
-        }
-
-        amountRef.current = parseUnits(String(amount), 18)
-        return true
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        amountRef.current = 0
-        return false
-      } finally {
-        setIsCalculating(false)
+      if (config.shouldUpdateHelperText) {
+        updateHelperText(votesCount, votesAmount)
       }
-    },
-    [balance],
-  )
+
+      return { isEnoughBalance, votesAmount }
+    } catch (error) {
+      ErrorHandler.process(error)
+      return { isEnoughBalance: false, votesAmount: 0 }
+    } finally {
+      setIsCalculating(false)
+    }
+  }
+
+  const getVoteAmount = async (votesCount: number): Promise<BigNumberish> => {
+    if (votesCount <= 0) {
+      bus.emit(BusEvents.error, {
+        message: t('errors.invalid-vote-count'),
+      })
+      throw new Error(t('errors.invalid-vote-count'))
+    }
+
+    const {
+      data: { amount },
+    } = await predictVoteAmount(votesCount)
+
+    return amount
+  }
+
+  const checkBalanceSufficiency = (amount: BigNumberish) => {
+    try {
+      const isEnoughBalance = BN.fromBigInt(amount).lte(BN.fromBigInt(balance))
+
+      if (!isEnoughBalance) {
+        bus.emit(BusEvents.error, {
+          message: t('errors.not-enough-for-proposal'),
+        })
+        throw new Error(t('errors.not-enough-for-proposal'))
+      }
+      return true
+    } catch (error) {
+      ErrorHandler.processWithoutFeedback(error)
+      return false
+    }
+  }
+
+  const updateHelperText = (count: number, amount: BigNumberish) => {
+    setHelperText(`You need ${formatEther(amount)} ${NATIVE_CURRENCY} to cast ${count} votes.`)
+  }
+
+  const resetHelperText = () => setHelperText('')
 
   return {
-    checkVoteAmount,
     isCalculating,
-    amountRef,
+    getVoteAmountDetails,
+
+    helperText,
+    updateHelperText,
+    resetHelperText,
+
+    getVoteAmount,
+    checkBalanceSufficiency,
   }
 }

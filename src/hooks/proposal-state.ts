@@ -3,7 +3,8 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { createContract, ErrorHandler } from '@/helpers'
+import { createContract } from '@/helpers'
+import { ZERO_PROPOSAL_SMT } from '@/pages/CreateVote/constants'
 import { IProposalWithId } from '@/pages/CreateVote/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
@@ -57,19 +58,25 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
         ids.push(id)
       }
 
-      const proposalsData = await Promise.all(
+      // If the proposal contains invalid data, `getProposalInfo` will throw an error.
+      // However, if the proposal with the given ID doesn't exist,
+      // it will return a valid but empty proposal.
+      const proposalsData = await Promise.allSettled(
         ids.map(async id => {
-          try {
-            const proposal = await contract?.contractInstance.getProposalInfo(id)
-            return { id, proposal: { ...proposal } }
-          } catch (error) {
-            ErrorHandler.processWithoutFeedback(error)
-            return null
-          }
+          const proposal = await contract?.contractInstance.getProposalInfo(id)
+          return { id, proposal }
         }),
       )
 
-      return proposalsData.filter((proposal): proposal is IProposalWithId => proposal !== null)
+      const successfulProposals = proposalsData
+        .filter(
+          (result): result is PromiseFulfilledResult<IProposalWithId> =>
+            // Filtering out `rejected` values and empty proposals (with empty SMT)
+            result.status === 'fulfilled' && result.value.proposal?.[0] !== ZERO_PROPOSAL_SMT,
+        )
+        .map(result => result.value)
+
+      return successfulProposals
     },
     {
       loadArgs: [shouldFetchProposals, lastProposalId],

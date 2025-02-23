@@ -75,7 +75,7 @@ export default function QuestionCard(props: IQuestionCard) {
           }}
           variant='buttonMedium'
         >
-          {questionText || t('create-vote.form.question-lbl', { order: index + 1 })}
+          {questionText || t('create-vote.question-lbl', { order: index + 1 })}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -99,7 +99,7 @@ function QuestionForm(props: IQuestionForm) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={t('create-vote.form.question-lbl', { order: index + 1 })}
+              label={t('create-vote.question-lbl', { order: index + 1 })}
               variant='standard'
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message}
@@ -144,7 +144,7 @@ function OptionsForm({
                 {...field}
                 variant='standard'
                 size='small'
-                label={t('create-vote.form.option-lbl', { order: index + 1 })}
+                label={t('create-vote.option-lbl', { order: index + 1 })}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
                 fullWidth
@@ -166,7 +166,7 @@ function OptionsForm({
         disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}
       >
-        {t('create-vote.form.add-option-lbl')}
+        {t('create-vote.add-option-lbl')}
       </Button>
     </Stack>
   )

@@ -8,6 +8,9 @@
     "field-error-more-than": "This field must be greater than {{more}}",
     "field-error-single-word": "This field must contain only one word"
   },
+  "check-vote-input": {
+    "calculate-eth-btn": "Calculate"
+  },
   "app-navbar": {
     "logout-lbl": "Log out",
     "settings-tooltip": "Settings"
@@ -69,21 +72,17 @@
     "auth-btn": "Connect wallet"
   },
   "create-vote": {
-    "form": {
-      "end-date-error": "End Date must be after Start Date",
-      "start-date-lbl": "Start Date (UTC)",
-      "end-date-lbl": "End Date (UTC)",
-      "add-question-btn": "Add a question",
-      "submit-btn": "Submit",
-      "add-option-lbl": "Add an option",
-      "question-lbl": "Question #{{order}}",
-      "option-lbl": "Option #{{order}}",
-      "proposal-title-lbl": "Proposal title",
-      "proposal-description-lbl": "Proposal description",
-      "votes-count-lbl": "Votes count",
-      "calculate-eth-btn": "Calculate"
-    },
-    "success-msg": "Proposal created successfully!"
+    "end-date-error": "End Date must be after Start Date",
+    "start-date-lbl": "Start Date (UTC)",
+    "end-date-lbl": "End Date (UTC)",
+    "add-question-btn": "Add a question",
+    "submit-btn": "Submit",
+    "add-option-lbl": "Add an option",
+    "question-lbl": "Question #{{order}}",
+    "option-lbl": "Option #{{order}}",
+    "proposal-title-lbl": "Proposal title",
+    "proposal-description-lbl": "Proposal description",
+    "votes-count-lbl": "Votes count"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -113,6 +112,10 @@
     "remaining-votes": "Remaining votes:",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
-    "top-up-button": "Top up"
+    "form": {
+      "votes-count-lbl": "Votes count",
+      "success-msg": "Voting successfully topped up!",
+      "top-up-button": "Top up"
+    }
   }
 }

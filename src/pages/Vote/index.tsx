@@ -16,17 +16,7 @@ export default function Vote() {
   const { id } = useParams()
   const { palette } = useTheme()
 
-  const {
-    isLoading,
-    isError,
-    voteDetails,
-    proposal,
-    proposalMetadata,
-    // top up hook
-    topUpVoteContract,
-    checkVoteAmount,
-    isCalculating,
-  } = useVote(id)
+  const { isLoading, isError, voteDetails, proposal, proposalMetadata } = useVote(id)
 
   if (isLoading) return <VoteSkeleton />
   if (isError) return <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
@@ -75,11 +65,7 @@ export default function Vote() {
               </Typography>
             </Stack>
 
-            <TopUpForm
-              isCalculating={isCalculating}
-              checkVoteAmount={checkVoteAmount}
-              onSubmit={topUpVoteContract}
-            />
+            <TopUpForm />
           </Stack>
         </Stack>
       </Paper>

@@ -3,25 +3,26 @@ import { Button, Stack } from '@mui/material'
 import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { ErrorHandler } from '@/helpers'
-import { UseCheckVoteAmount } from '@/hooks'
+import { BusEvents } from '@/enums'
+import { bus, ErrorHandler } from '@/helpers'
+import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import { UiCheckVoteInput } from '@/ui'
 
 interface ITopUpForm {
   votesCount: number
 }
 
-interface ITopUpFormProps extends Partial<UseCheckVoteAmount> {
-  onSubmit: () => Promise<void>
-}
-
 const defaultValues = { votesCount: 0 }
 
-export default function TopUpForm(props: ITopUpFormProps) {
+export default function TopUpForm() {
   const { t } = useTranslation()
-  const { checkVoteAmount, isCalculating, onSubmit } = props
+  const { id } = useParams()
+  const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
+
+  const { addFundsToProposal } = useProposalState({ shouldFetchProposals: false })
 
   const {
     control,
@@ -40,17 +41,18 @@ export default function TopUpForm(props: ITopUpFormProps) {
   })
 
   const submit = useCallback(async () => {
-    const isVoteAmountValid = await checkVoteAmount?.(getValues('votesCount'))
-    if (!isVoteAmountValid) return
-
     try {
-      onSubmit?.()
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(getValues('votesCount'))
+      if (!isEnoughBalance || !id) return
+      await addFundsToProposal(id, votesAmount)
+      bus.emit(BusEvents.success, { message: t('vote.form.success-msg') })
     } catch (error) {
       ErrorHandler.process(error)
     } finally {
       reset()
+      resetHelperText?.()
     }
-  }, [checkVoteAmount, getValues, onSubmit, reset])
+  }, [addFundsToProposal, getValues, getVoteAmountDetails, id, reset, resetHelperText, t])
 
   const isDisabled = isSubmitting || isCalculating
 
@@ -64,14 +66,18 @@ export default function TopUpForm(props: ITopUpFormProps) {
             {...field}
             disabled={field.disabled || isDisabled}
             error={Boolean(fieldState.error)}
-            helperText={fieldState.error?.message}
-            label={t('create-vote.form.votes-count-lbl')}
-            onCheck={() => checkVoteAmount?.(getValues('votesCount'))}
+            helperText={fieldState.error?.message || helperText}
+            label={t('create-vote.votes-count-lbl')}
+            onCheck={() => getVoteAmountDetails(getValues('votesCount'))}
+            onChange={e => {
+              field.onChange(e)
+              resetHelperText?.()
+            }}
           />
         )}
       />
       <Button disabled={isSubmitting} type='submit'>
-        {t('vote.top-up-button')}
+        {t('vote.form.top-up-button')}
       </Button>
     </Stack>
   )

@@ -32,7 +32,7 @@ const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
             disabled={textFieldProps.disabled || Number(textFieldProps.value) <= 0}
             onClick={onCheck}
           >
-            {useTranslation().t('create-vote.form.calculate-eth-btn')}
+            {useTranslation().t('check-vote-input.calculate-eth-btn')}
           </Button>
         ),
       }}

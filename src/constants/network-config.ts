@@ -57,3 +57,4 @@ export const getNetworkByChainId = (chainId: number): NetworkConfig | undefined 
 }
 
 export const NETWORK_NAME: NetworkName = config.ENV === 'development' ? 'testnet' : 'mainnet'
+export const NATIVE_CURRENCY = qAppKitChain.nativeCurrency.name
