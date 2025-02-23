@@ -71,6 +71,12 @@
     "description": "To create a vote, you need to authenticate using a wallet.",
     "auth-btn": "Connect wallet"
   },
+  "infinite-list": {
+    "load-more-btn": "Load more",
+    "error-title": "Could not load data",
+    "retry-btn": "Retry",
+    "no-data-title": "No data"
+  },
   "create-vote": {
     "end-date-error": "End Date must be after Start Date",
     "start-date-lbl": "Start Date (UTC)",
@@ -82,7 +88,8 @@
     "option-lbl": "Option #{{order}}",
     "proposal-title-lbl": "Proposal title",
     "proposal-description-lbl": "Proposal description",
-    "votes-count-lbl": "Votes count"
+    "votes-count-lbl": "Votes count",
+    "success-msg": "You have successfully created a proposal!"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

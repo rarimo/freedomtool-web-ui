@@ -9,11 +9,7 @@ import { IVoteIpfs } from '@/pages/CreateVote/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()
-  const {
-    getProposalInfo,
-    isError: contractError,
-    isLoading: isContractLoading,
-  } = useProposalState({ shouldFetchProposals: false })
+  const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -69,13 +65,8 @@ export function useVote(id?: string) {
   }, [t, voteCount, proposal])
 
   const isLoading =
-    isProposalLoading ||
-    metadataLoading ||
-    isContractLoading ||
-    !proposal ||
-    !proposalMetadata ||
-    isVoteCountLoading
-  const isError = contractError || metadataError || isCountLoadingError
+    isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
+  const isError = metadataError || isCountLoadingError
 
   return {
     isLoading,

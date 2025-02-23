@@ -1,45 +1,45 @@
 import { Box } from '@mui/material'
 
-import { ErrorView } from '@/common'
+import { InfiniteList } from '@/common'
 import { useProposalState } from '@/hooks'
 
 import VoteItem, { VoteItemSkeleton } from './componennts/VoteItem'
 
+const listSx = {
+  display: 'grid',
+  alignItems: 'center',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+  gap: 2,
+}
+
 export default function Votes() {
-  const { isLoading, proposals, isError } = useProposalState({
-    shouldFetchProposals: true,
-  })
-
-  if (isError) return <ErrorView />
-
-  if (isLoading)
-    return (
-      <Box
-        sx={{
-          display: 'grid',
-          alignItems: 'center',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-          gap: 2,
-        }}
-      >
-        {Array.from({ length: 12 }).map((_, index) => (
-          <VoteItemSkeleton key={index} />
-        ))}
-      </Box>
-    )
+  const { proposals, proposalsLoadingState, loadNextProposals, reloadProposals } = useProposalState(
+    {
+      shouldFetchProposals: true,
+    },
+  )
 
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        alignItems: 'center',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-        gap: 2,
+    <InfiniteList
+      items={proposals}
+      slots={{
+        loading: (
+          <Box sx={listSx}>
+            {Array.from({ length: 12 }).map((_, index) => (
+              <VoteItemSkeleton key={index} />
+            ))}
+          </Box>
+        ),
       }}
+      loadingState={proposalsLoadingState}
+      onRetry={reloadProposals}
+      onLoadNext={loadNextProposals}
     >
-      {proposals?.map(({ id, proposal }, index) => (
-        <VoteItem proposal={proposal} id={id} key={index} />
-      ))}
-    </Box>
+      <Box sx={listSx}>
+        {proposals?.map(({ id, proposal }, index) => (
+          <VoteItem proposal={proposal} id={id} key={index} />
+        ))}
+      </Box>
+    </InfiniteList>
   )
 }
