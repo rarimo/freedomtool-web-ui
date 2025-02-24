@@ -186,17 +186,17 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     [client],
   )
 
-  const fetchBalance = useCallback(async () => {
+  const fetchUserBalance = useCallback(async () => {
     if (!rawProviderSigner || !address) return
 
     try {
-      const balance = await rawProviderSigner.provider.getBalance(address)
+      const balance = await contractConnector.provider.getBalance(address)
       setBalance(balance.toString())
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       setBalance('0')
     }
-  }, [rawProviderSigner, address])
+  }, [rawProviderSigner, address, contractConnector.provider])
 
   const getNetworkConfig = useCallback(() => {
     if (!client?.chain.id) return networkConfigsMap[NETWORK_NAME]
@@ -225,8 +225,8 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [address, connectManager, connections])
 
   useEffect(() => {
-    fetchBalance()
-  }, [rawProviderSigner, address, fetchBalance])
+    fetchUserBalance()
+  }, [rawProviderSigner, address, fetchUserBalance])
 
   return (
     <web3ProviderContext.Provider

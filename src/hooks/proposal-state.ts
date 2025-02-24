@@ -135,10 +135,9 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
   )
 
   const getProposalInfo = useCallback(
-    async (id: number) => {
+    (id: number) => {
       if (!contract) return
-      const proposal = await contract.contractInstance.getProposalInfo(id)
-      return proposal
+      return contract.contractInstance.getProposalInfo(id)
     },
     [contract],
   )

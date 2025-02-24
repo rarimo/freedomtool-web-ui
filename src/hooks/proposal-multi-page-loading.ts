@@ -5,7 +5,7 @@ import { LoadingStates } from '@/enums'
 import { ErrorHandler } from '@/helpers'
 
 export const useProposalMultiPageLoading = <D>(
-  loadFn: (page: number, pageLimit: number, lastProposalId: number) => Promise<D[]>,
+  loadFn: (page: number, pageLimit: number) => Promise<D[]>,
   opts?: {
     loadOnMount?: boolean
     pageLimit: number
@@ -68,32 +68,32 @@ export const useProposalMultiPageLoading = <D>(
   const load = useCallback(async () => {
     setLoadingState(LoadingStates.Loading)
     try {
-      const newData = await loadFn(1, optsWithDefaults.pageLimit, lastProposalId ?? 0)
+      const newData = await loadFn(1, optsWithDefaults.pageLimit)
       handleResponse(newData, newData.length)
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
       setLoadingState(LoadingStates.Error)
       handleError(error)
     }
-  }, [handleError, handleResponse, loadFn, optsWithDefaults.pageLimit, lastProposalId])
+  }, [handleError, handleResponse, loadFn, optsWithDefaults.pageLimit])
 
   const update = useCallback(async () => {
     try {
-      const newData = await loadFn(currentPage, optsWithDefaults.pageLimit, lastProposalId ?? 0)
+      const newData = await loadFn(currentPage, optsWithDefaults.pageLimit)
       handleResponse(newData, newData.length)
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
       setLoadingState(LoadingStates.Error)
       handleError(error)
     }
-  }, [handleError, handleResponse, loadFn, currentPage, optsWithDefaults.pageLimit, lastProposalId])
+  }, [handleError, handleResponse, loadFn, currentPage, optsWithDefaults.pageLimit])
 
   const loadNext = useCallback(async () => {
     if (!hasNext || loadingState === LoadingStates.NextLoading || lastProposalId === null) return
 
     setLoadingState(LoadingStates.NextLoading)
     try {
-      const newData = await loadFn(currentPage + 1, optsWithDefaults.pageLimit, lastProposalId ?? 0)
+      const newData = await loadFn(currentPage + 1, optsWithDefaults.pageLimit)
       setCurrentPage(prevPage => prevPage + 1)
       handleResponse(newData, totalItems ?? 0)
       setLoadingState(LoadingStates.Loaded)

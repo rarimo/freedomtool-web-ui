@@ -1,7 +1,5 @@
 import { Box, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
 import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { ErrorView } from '@/common'
@@ -9,13 +7,14 @@ import { useRouteTitleContext } from '@/contexts'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { useVote } from '@/hooks/vote'
 
+import { VOTE_QR_BASE_URL } from '../CreateVote/constants'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
 import VoteDetails from './components/VoteDetails'
+import VoteQrCode from './components/VoteQrCode'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
-  const { t } = useTranslation()
   const { id } = useParams()
   const { palette } = useTheme()
   const { setTitle } = useRouteTitleContext()
@@ -59,29 +58,13 @@ export default function Vote() {
         spacing={2}
         sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3, height: 'fit-content' }}
       >
-        <Stack
-          sx={{
-            width: 160,
-            height: 160,
-            backgroundColor: palette.common.white,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 4,
-            border: `1px solid ${palette.action.active}`,
+        <VoteQrCode
+          baseUrl={VOTE_QR_BASE_URL}
+          queryParams={{
+            type: 'voting',
+            proposal_id: id ?? '',
           }}
-        >
-          {/* TODO: Add a valid QR-code value */}
-          <QRCode value={proposal?.cid || ''} size={130} />
-        </Stack>
-        <Typography
-          variant='body2'
-          typography={{ xs: 'body3', md: 'body2' }}
-          color='textSecondary'
-          mb={{ xs: 8 }}
-          mt={1}
-        >
-          {t('vote.qr-code-subtitle')}
-        </Typography>
+        />
 
         {address && <TopUpForm />}
       </Stack>

@@ -61,14 +61,13 @@ export const useCheckVoteAmount = () => {
       const isEnoughBalance = BN.fromBigInt(amount).lte(BN.fromBigInt(balance))
 
       if (!isEnoughBalance) {
-        bus.emit(BusEvents.error, {
-          message: t('errors.not-enough-for-proposal'),
-        })
         throw new Error(t('errors.not-enough-for-proposal'))
       }
       return true
-    } catch (error) {
-      ErrorHandler.processWithoutFeedback(error)
+    } catch {
+      bus.emit(BusEvents.error, {
+        message: t('errors.not-enough-for-proposal'),
+      })
       return false
     }
   }
