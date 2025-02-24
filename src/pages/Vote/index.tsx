@@ -70,6 +70,7 @@ export default function Vote() {
             border: `1px solid ${palette.action.active}`,
           }}
         >
+          {/* TODO: Add a valid QR-code value */}
           <QRCode value={proposal?.cid || ''} size={130} />
         </Stack>
         <Typography
