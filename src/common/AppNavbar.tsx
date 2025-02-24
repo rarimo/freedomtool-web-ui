@@ -63,7 +63,7 @@ const AppNavbar = ({ ...rest }: StackProps) => {
         <Stack spacing={0.5} alignItems='center'>
           <Stack component={NavLink} to={RoutePaths.Home} alignItems='center'>
             <Typography variant='buttonLarge' color={palette.text.secondary}>
-              FT v2.0
+              {t('app-navbar.title')}
             </Typography>
           </Stack>
         </Stack>

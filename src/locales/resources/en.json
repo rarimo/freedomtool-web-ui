@@ -13,7 +13,8 @@
   },
   "app-navbar": {
     "logout-lbl": "Log out",
-    "settings-tooltip": "Settings"
+    "settings-tooltip": "Settings",
+    "title": "FT v2.0"
   },
   "network-warning-modal": {
     "title": "Where are you?",
@@ -130,5 +131,12 @@
   },
   "logo-spinner": {
     "title": "Freedom tool 2.0"
+  },
+  "app-header": {
+    "title": "FT v2.0"
+  },
+  "check-vote": {
+    "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",
+    "helper-text_other": "You need {{currencyAmount}} {{currency}} to cast {{count}} votes."
   }
 }

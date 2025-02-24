@@ -19,16 +19,16 @@ export const useCheckVoteAmount = () => {
   const { balance } = useWeb3Context()
 
   const getVoteAmountDetails = async (
-    votesCount: number,
+    votesCount: string | number,
     config: CheckVoteAmountConfig = { shouldUpdateHelperText: true },
   ) => {
     setIsCalculating(true)
     try {
-      const votesAmount = await getVoteAmount(votesCount)
+      const votesAmount = await getVoteAmount(Number(votesCount))
       const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
       if (config.shouldUpdateHelperText) {
-        updateHelperText(votesCount, votesAmount)
+        updateHelperText(Number(votesCount), votesAmount)
       }
 
       return { isEnoughBalance, votesAmount }
@@ -73,7 +73,13 @@ export const useCheckVoteAmount = () => {
   }
 
   const updateHelperText = (count: number, amount: BigNumberish) => {
-    setHelperText(`You need ${formatEther(amount)} ${NATIVE_CURRENCY} to cast ${count} votes.`)
+    setHelperText(
+      t('check-vote.helper-text', {
+        currency: NATIVE_CURRENCY,
+        currencyAmount: formatEther(amount),
+        count,
+      }),
+    )
   }
 
   const resetHelperText = () => setHelperText('')

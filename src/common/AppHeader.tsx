@@ -1,5 +1,6 @@
 import { alpha, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
 import SettingsMenu from '@/common/SettingsMenu'
@@ -14,6 +15,7 @@ interface Props {
 
 export default function AppHeader({ compact = false }: Props) {
   const { title } = useRouteTitleContext()
+  const { t } = useTranslation()
   const { palette, breakpoints, spacing } = useTheme()
 
   const isMdDown = useMediaQuery(() => breakpoints.down('md'))
@@ -54,7 +56,7 @@ export default function AppHeader({ compact = false }: Props) {
           }}
         >
           <Typography variant='buttonMedium' color={palette.text.primary}>
-            FT v2.0
+            {t('app-header.title')}
           </Typography>
         </Stack>
       )}

@@ -42,8 +42,10 @@ export default function TopUpForm() {
 
   const submit = useCallback(async () => {
     try {
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(getValues('votesCount'))
+      const votesCount = getValues('votesCount')
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
       if (!isEnoughBalance || !id) return
+
       await addFundsToProposal(id, votesAmount)
       bus.emit(BusEvents.success, { message: t('vote.form.success-msg') })
     } catch (error) {

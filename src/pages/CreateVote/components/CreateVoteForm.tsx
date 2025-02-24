@@ -105,7 +105,8 @@ export default function CreateVoteForm() {
 
   const submit = async (formData: ICreateVote) => {
     try {
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(getValues('votesCount'))
+      const votesCount = getValues('votesCount')
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
       if (!isEnoughBalance) return
 
       const { endDate, startDate, questions, title, description } = formData
