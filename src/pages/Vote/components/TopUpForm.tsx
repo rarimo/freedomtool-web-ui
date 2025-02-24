@@ -43,7 +43,7 @@ export default function TopUpForm() {
 
   const submit = useCallback(async () => {
     try {
-      const votesCount = getValues('votesCount')
+      const votesCount = String(getValues('votesCount'))
       const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount, id)
       if (!isEnoughBalance || !id) return
 
