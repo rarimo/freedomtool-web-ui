@@ -2,7 +2,7 @@ import { Button, Stack, useTheme } from '@mui/material'
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ErrorView, LogoSpinner, NoDataView } from '@/common'
+import { ErrorView, LogoLoader, NoDataView } from '@/common'
 import { Icons, LoadingStates } from '@/enums'
 import { UiIcon } from '@/ui'
 
@@ -39,7 +39,7 @@ export default function InfiniteList<D>({
         {loadingState === LoadingStates.NextLoading ? (
           (slots?.nextLoading ?? (
             <Stack alignItems='center'>
-              <LogoSpinner />
+              <LogoLoader />
             </Stack>
           ))
         ) : loadingState === LoadingStates.Error ? (
@@ -59,7 +59,7 @@ export default function InfiniteList<D>({
     return (
       slots?.loading ?? (
         <Stack alignItems='center' p={20}>
-          <LogoSpinner />
+          <LogoLoader />
         </Stack>
       )
     )

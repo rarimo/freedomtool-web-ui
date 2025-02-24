@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 interface Props extends ComponentProps<typeof Typography> {}
 
-export default function LogoSpinner({ ...rest }: Props) {
+export default function LogoLoader({ ...rest }: Props) {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
@@ -12,7 +12,7 @@ export default function LogoSpinner({ ...rest }: Props) {
     <Typography
       sx={{
         fontSize: '3rem',
-        fontWeight: 700,
+        fontWeight: 400,
         color: palette.text.primary,
         opacity: 0,
         animation: 'pulse 2s ease infinite',

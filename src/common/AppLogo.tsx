@@ -25,10 +25,10 @@ export default function AppLogo(props: StackProps) {
       <Typography
         sx={{
           fontSize: '3rem',
-          fontWeight: 700,
+          fontWeight: 400,
           color: palette.text.primary,
           opacity: 0,
-          animation: 'fadeInUp 1s ease forwards, spin 2s ease infinite',
+          animation: 'pulse 2s ease infinite',
         }}
       >
         {t('app-logo.title')}
