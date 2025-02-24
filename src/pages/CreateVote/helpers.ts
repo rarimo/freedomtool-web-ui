@@ -40,18 +40,21 @@ export const getVotesCount = (id: string) => {
 }
 
 export const predictVoteAmount = (votesCount: number, proposalId?: string) => {
-  return api.post<{ amount: string }>(`${ApiServicePaths.ProofVerificationRelayer}/v2/predict`, {
-    body: {
-      data: {
-        type: 'vote_predict_amount',
-        attributes: {
-          count_tx: votesCount,
-          voting_id: proposalId,
-          ...(proposalId && { voting_id: proposalId }),
+  return api.post<{ amount_predict: string }>(
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
+    {
+      body: {
+        data: {
+          type: 'vote_predict_amount',
+          attributes: {
+            count_tx: votesCount,
+            voting_id: proposalId,
+            ...(proposalId && { voting_id: proposalId }),
+          },
         },
       },
     },
-  })
+  )
 }
 
 export const parseProposalFromContract = (

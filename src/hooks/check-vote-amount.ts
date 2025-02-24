@@ -50,10 +50,10 @@ export const useCheckVoteAmount = () => {
     }
 
     const {
-      data: { amount },
+      data: { amount_predict },
     } = await predictVoteAmount(votesCount, proposalId)
 
-    return amount
+    return amount_predict
   }
 
   const checkBalanceSufficiency = (amount: BigNumberish) => {
