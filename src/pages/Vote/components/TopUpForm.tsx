@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
+import { MAX_VOTE_COUNT_PER_TX } from '@/pages/CreateVote/constants'
 import { UiCheckVoteInput } from '@/ui'
 
 interface ITopUpForm {
@@ -35,7 +36,7 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: yupResolver<ITopUpForm>(
       Yup.object({
-        votesCount: Yup.number().required().min(1).max(1_000_000),
+        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
       }),
     ),
   })

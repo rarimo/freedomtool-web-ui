@@ -14,7 +14,7 @@ import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 
-import { MAX_QUESTIONS } from '../constants'
+import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '../constants'
 import {
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
@@ -62,7 +62,7 @@ export default function CreateVoteForm() {
       Yup.object({
         title: Yup.string().required().max(50),
         description: Yup.string().required().max(200),
-        votesCount: Yup.number().required().min(1).max(1_000_000),
+        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()

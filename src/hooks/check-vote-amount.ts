@@ -64,10 +64,8 @@ export const useCheckVoteAmount = () => {
         throw new Error(t('errors.not-enough-for-proposal'))
       }
       return true
-    } catch {
-      bus.emit(BusEvents.error, {
-        message: t('errors.not-enough-for-proposal'),
-      })
+    } catch (error) {
+      ErrorHandler.process(error, t('errors.not-enough-for-proposal'))
       return false
     }
   }

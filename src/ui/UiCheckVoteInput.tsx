@@ -2,6 +2,8 @@ import { Button, TextField, TextFieldProps } from '@mui/material'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { MAX_VOTE_COUNT_PER_TX } from '@/pages/CreateVote/constants'
+
 type VoteCountInputProps = {
   onCheck: () => void
 } & TextFieldProps
@@ -9,6 +11,11 @@ type VoteCountInputProps = {
 const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
   ({ onCheck, ...textFieldProps }, ref) => {
     const { t } = useTranslation()
+
+    const isDisabled =
+      textFieldProps.disabled ||
+      Number(textFieldProps.value) <= 0 ||
+      Number(textFieldProps.value) > MAX_VOTE_COUNT_PER_TX
 
     return (
       <TextField
@@ -29,12 +36,7 @@ const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
             ...(textFieldProps.InputProps?.sx || {}),
           },
           endAdornment: (
-            <Button
-              variant='text'
-              size='small'
-              disabled={textFieldProps.disabled || Number(textFieldProps.value) <= 0}
-              onClick={onCheck}
-            >
+            <Button variant='text' size='small' disabled={isDisabled} onClick={onCheck}>
               {t('check-vote-input.calculate-eth-btn')}
             </Button>
           ),
