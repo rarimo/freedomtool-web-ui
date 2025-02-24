@@ -92,7 +92,9 @@
     "votes-count-lbl": "Votes count",
     "success-msg": "You have successfully created a proposal!",
     "proposal-title-plh": "Approve new governance token?",
-    "proposal-description-plh": "Vote to approve a new governance token"
+    "proposal-description-plh": "Vote to approve a new governance token",
+    "start-date-plh": "Select a start date",
+    "end-date-plh": "Select an end date"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

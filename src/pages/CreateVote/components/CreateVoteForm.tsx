@@ -215,6 +215,11 @@ export default function CreateVoteForm() {
                   disabled={isSubmitting}
                   errorMessage={fieldState.error?.message}
                   label={t('create-vote.start-date-lbl')}
+                  slotProps={{
+                    textField: {
+                      placeholder: t('create-vote.start-date-plh'),
+                    },
+                  }}
                 />
               )}
             />
@@ -229,6 +234,11 @@ export default function CreateVoteForm() {
                   disabled={isSubmitting}
                   errorMessage={fieldState.error?.message}
                   label={t('create-vote.end-date-lbl')}
+                  slotProps={{
+                    textField: {
+                      placeholder: t('create-vote.end-date-plh'),
+                    },
+                  }}
                 />
               )}
             />

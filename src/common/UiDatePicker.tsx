@@ -59,6 +59,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
         textField: {
           error: !!errorMessage || !!internalErrorMessage,
           helperText: errorMessage || internalErrorMessage,
+          ...rest?.slotProps?.textField,
         },
       },
       ...(hasTime && { ampm: false, minTime, maxTime }),
