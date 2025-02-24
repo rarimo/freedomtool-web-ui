@@ -43,7 +43,7 @@ export default function TopUpForm() {
   const submit = useCallback(async () => {
     try {
       const votesCount = getValues('votesCount')
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount, id)
       if (!isEnoughBalance || !id) return
 
       await addFundsToProposal(id, votesAmount)
@@ -70,7 +70,7 @@ export default function TopUpForm() {
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
             label={t('create-vote.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(getValues('votesCount'))}
+            onCheck={() => getVoteAmountDetails(getValues('votesCount'), id)}
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()

@@ -20,11 +20,12 @@ export const useCheckVoteAmount = () => {
 
   const getVoteAmountDetails = async (
     votesCount: string | number,
+    proposalId?: string,
     config: CheckVoteAmountConfig = { shouldUpdateHelperText: true },
   ) => {
     setIsCalculating(true)
     try {
-      const votesAmount = await getVoteAmount(Number(votesCount))
+      const votesAmount = await getVoteAmount(Number(votesCount), proposalId)
       const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
       if (config.shouldUpdateHelperText) {
@@ -40,7 +41,7 @@ export const useCheckVoteAmount = () => {
     }
   }
 
-  const getVoteAmount = async (votesCount: number): Promise<BigNumberish> => {
+  const getVoteAmount = async (votesCount: number, proposalId?: string): Promise<BigNumberish> => {
     if (votesCount <= 0) {
       bus.emit(BusEvents.error, {
         message: t('errors.invalid-vote-count'),
@@ -50,7 +51,7 @@ export const useCheckVoteAmount = () => {
 
     const {
       data: { amount },
-    } = await predictVoteAmount(votesCount)
+    } = await predictVoteAmount(votesCount, proposalId)
 
     return amount
   }
