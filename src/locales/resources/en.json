@@ -8,9 +8,13 @@
     "field-error-more-than": "This field must be greater than {{more}}",
     "field-error-single-word": "This field must contain only one word"
   },
+  "check-vote-input": {
+    "calculate-eth-btn": "Calculate"
+  },
   "app-navbar": {
     "logout-lbl": "Log out",
-    "settings-tooltip": "Settings"
+    "settings-tooltip": "Settings",
+    "title": "FT v2.0"
   },
   "network-warning-modal": {
     "title": "Where are you?",
@@ -45,7 +49,9 @@
     "service-unavailable": "Oh, it seems like our service is not available right now, please try again later",
     "user-rejected-request": "Oh, seems like you rejected the request",
     "resource-unavailable": "Hmm, check out your wallet, seems like the request is pending",
-    "no-signed-order": "There is no signed order"
+    "no-signed-order": "There is no signed order",
+    "not-enough-for-proposal": "You don't have enough balance to allocate the required number of votes for this proposal",
+    "invalid-vote-count": "Invalid vote count"
   },
   "notifications": {
     "default-title-success": "Success",
@@ -58,7 +64,7 @@
     "default-message-info": "Something is happening. Just want you to know that"
   },
   "routes": {
-    "vote": "Votes",
+    "vote": "Proposals",
     "create-new-proposal": "Create new proposal"
   },
   "auth-block": {
@@ -66,20 +72,25 @@
     "description": "To create a vote, you need to authenticate using a wallet.",
     "auth-btn": "Connect wallet"
   },
+  "infinite-list": {
+    "load-more-btn": "Load more",
+    "error-title": "Could not load data",
+    "retry-btn": "Retry",
+    "no-data-title": "No data"
+  },
   "create-vote": {
-    "form": {
-      "end-date-error": "End Date must be after Start Date",
-      "start-date-lbl": "Start Date (UTC)",
-      "end-date-lbl": "End Date (UTC)",
-      "add-question-btn": "Add a question",
-      "submit-btn": "Submit",
-      "add-option-lbl": "Add an option",
-      "question-lbl": "Question #{{order}}",
-      "option-lbl": "Option #{{order}}",
-      "proposal-title-lbl": "Proposal title",
-      "proposal-description-lbl": "Proposal description"
-    },
-    "success-msg": "Proposal created successfully!"
+    "end-date-error": "End Date must be after Start Date",
+    "start-date-lbl": "Start Date (UTC)",
+    "end-date-lbl": "End Date (UTC)",
+    "add-question-btn": "Add a question",
+    "submit-btn": "Submit",
+    "add-option-lbl": "Add an option",
+    "question-lbl": "Question #{{order}}",
+    "option-lbl": "Option #{{order}}",
+    "proposal-title-lbl": "Title",
+    "proposal-description-lbl": "Description",
+    "votes-count-lbl": "Votes count",
+    "success-msg": "You have successfully created a proposal!"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -96,5 +107,36 @@
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
     "description": "Please confirm your signature to complete the operation. This is required to ensure the security of the transaction."
+  },
+  "vote": {
+    "status": "Status:",
+    "start-date": "Start date:",
+    "end-date": "End date:",
+    "accepted-options-title": "Accepted options",
+    "qr-code-subtitle": "Scan to participate",
+    "amount-btn": "Top up balance",
+    "amount-lbl": "Amount",
+    "success-msg": "You have successfully added funds to your voting contract",
+    "remaining-votes": "Remaining votes:",
+    "votes-count_one": "{{count}} vote",
+    "votes-count_other": "{{count}} votes",
+    "form": {
+      "votes-count-lbl": "Votes count",
+      "success-msg": "Voting successfully topped up!",
+      "top-up-button": "Top up"
+    }
+  },
+  "app-logo": {
+    "title": "Freedom tool 2.0"
+  },
+  "logo-spinner": {
+    "title": "Freedom tool 2.0"
+  },
+  "app-header": {
+    "title": "FT v2.0"
+  },
+  "check-vote": {
+    "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",
+    "helper-text_other": "You need {{currencyAmount}} {{currency}} to cast {{count}} votes."
   }
 }

@@ -13,19 +13,19 @@ export interface NetworkConfig {
   appKitChain: AppKitNetwork
 }
 
-const rarimoAppKitChain: AppKitNetwork = {
-  id: 42,
-  name: 'dev Rarimo',
-  caipNetworkId: 'eip155:42',
+const qAppKitChain: AppKitNetwork = {
+  id: 35443,
+  name: 'Q Testnet',
+  caipNetworkId: 'eip155:35443',
   chainNamespace: 'eip155',
   nativeCurrency: {
     decimals: 18,
-    name: 'RMO',
-    symbol: 'RMO',
+    name: 'Q',
+    symbol: 'Q',
   },
   rpcUrls: {
     default: {
-      http: ['https://rpc.evm.node2.mainnet-beta.rarimo.com/'],
+      http: ['https://rpc.qtestnet.org/'],
     },
   },
   contracts: {
@@ -35,20 +35,20 @@ const rarimoAppKitChain: AppKitNetwork = {
 
 export const networkConfigsMap: Record<NetworkName, NetworkConfig> = {
   mainnet: {
-    chainId: 42,
-    name: 'dev Rarimo',
-    networkName: 'mainnet',
-    rpcUrl: 'https://rpc.evm.node2.mainnet-beta.rarimo.com/',
-    explorerUrl: 'https://newevmscan.mainnet-beta.rarimo.com/',
-    appKitChain: rarimoAppKitChain,
+    chainId: 35443,
+    name: 'Q Testnet',
+    networkName: 'testnet',
+    rpcUrl: 'https://rpc.qtestnet.org/',
+    explorerUrl: 'https://explorer.qtestnet.org',
+    appKitChain: qAppKitChain,
   },
   testnet: {
-    chainId: 42,
-    name: 'dev Rarimo',
+    chainId: 35443,
+    name: 'Q Testnet',
     networkName: 'mainnet',
-    rpcUrl: 'https://rpc.evm.node2.mainnet-beta.rarimo.com/',
-    explorerUrl: 'https://newevmscan.mainnet-beta.rarimo.com/',
-    appKitChain: rarimoAppKitChain,
+    rpcUrl: 'https://rpc.qtestnet.org/',
+    explorerUrl: 'https://explorer.qtestnet.org',
+    appKitChain: qAppKitChain,
   },
 }
 
@@ -57,3 +57,4 @@ export const getNetworkByChainId = (chainId: number): NetworkConfig | undefined 
 }
 
 export const NETWORK_NAME: NetworkName = config.ENV === 'development' ? 'testnet' : 'mainnet'
+export const NATIVE_CURRENCY = qAppKitChain.nativeCurrency.name

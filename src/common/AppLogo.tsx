@@ -1,11 +1,12 @@
-import { Stack, StackProps, useTheme } from '@mui/material'
+import { Stack, StackProps, Typography, useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { Icons, RoutePaths } from '@/enums'
-import { UiIcon } from '@/ui'
+import { RoutePaths } from '@/enums'
 
 export default function AppLogo(props: StackProps) {
   const { palette, typography } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Stack
@@ -21,16 +22,17 @@ export default function AppLogo(props: StackProps) {
         ...props.sx,
       }}
     >
-      <UiIcon
-        name={Icons.App}
+      <Typography
         sx={{
+          fontSize: '3rem',
+          fontWeight: 400,
           color: palette.text.primary,
-          width: '130px',
-          height: '34px',
-          maxHeight: 'none',
-          maxWidth: 'none',
+          opacity: 0,
+          animation: 'pulse 2s ease infinite',
         }}
-      />
+      >
+        {t('app-logo.title')}
+      </Typography>
     </Stack>
   )
 }

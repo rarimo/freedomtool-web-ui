@@ -1,3 +1,6 @@
+import { ProposalStatus } from '@/enums/proposals'
+import { ProposalsState } from '@/types/contracts/ProposalState'
+
 export interface IOption {
   id: string
   text: string
@@ -14,6 +17,7 @@ export interface ICreateVote {
   description: string
   startDate: string
   endDate: string
+  votesCount: number
   questions: IQuestion[]
 }
 
@@ -32,4 +36,17 @@ export interface IUploadData {
   id: string
   type: string
   hash: string
+}
+
+export interface IProposalWithId {
+  id: number
+  proposal: ProposalsState.ProposalInfoStructOutput
+}
+
+export interface IParsedProposal {
+  cid: string
+  status: ProposalStatus
+  startTimestamp: number
+  duration: number
+  voteResults: bigint[][]
 }

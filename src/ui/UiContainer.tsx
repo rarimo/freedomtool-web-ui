@@ -10,7 +10,7 @@ export default function UiContainer(props: StackProps) {
         maxWidth: 1192,
         width: '100%',
         mx: 'auto',
-        [breakpoints.down('md')]: { px: 4, py: 10 },
+        [breakpoints.down('md')]: { px: 4, pt: 18, pb: 20 },
         ...props.sx,
       }}
     />

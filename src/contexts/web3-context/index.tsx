@@ -28,6 +28,7 @@ import {
 } from 'wagmi'
 
 import { getNetworkByChainId, NETWORK_NAME, NetworkConfig, networkConfigsMap } from '@/constants'
+import { ErrorHandler } from '@/helpers'
 import { wagmiAdapter } from '@/main'
 import QueryProvider from '@/query'
 
@@ -99,7 +100,7 @@ export const Web3ContextProviderWrapper = ({ children }: PropsWithChildren) => {
 
 const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   const [balance, setBalance] = useState<string>('0')
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [_isInitialized, setIsInitialized] = useState(false)
   const [rawProviderSigner, setRawProviderSigner] = useState<JsonRpcSigner | null>(null)
 
   const connectManager = useConnect()
@@ -115,6 +116,10 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     },
     [connectManager],
   )
+
+  const isInitialized = useMemo(() => {
+    return status !== 'connecting' && status !== 'reconnecting' && _isInitialized
+  }, [status, _isInitialized])
 
   // Disconnect any social login
   useEffect(() => {
@@ -181,6 +186,18 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     [client],
   )
 
+  const fetchUserBalance = useCallback(async () => {
+    if (!rawProviderSigner || !address) return
+
+    try {
+      const balance = await rawProviderSigner.provider.getBalance(address)
+      setBalance(balance.toString())
+    } catch (error) {
+      ErrorHandler.processWithoutFeedback(error)
+      setBalance('0')
+    }
+  }, [rawProviderSigner, address])
+
   const getNetworkConfig = useCallback(() => {
     if (!client?.chain.id) return networkConfigsMap[NETWORK_NAME]
 
@@ -206,6 +223,10 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
 
     changeConnector()
   }, [address, connectManager, connections])
+
+  useEffect(() => {
+    fetchUserBalance()
+  }, [rawProviderSigner, address, fetchUserBalance])
 
   return (
     <web3ProviderContext.Provider

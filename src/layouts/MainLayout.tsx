@@ -36,8 +36,6 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         <AppHeader />
         <UiContainer
           id='main-content'
-          flex={1}
-          overflow='hidden auto'
           sx={{
             pt: { xs: 15, md: 20 },
             px: { xs: 0, md: 20, lg: 0 },

@@ -1,7 +1,7 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack, TextField } from '@mui/material'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -11,10 +11,10 @@ import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useProposalState } from '@/hooks'
-import { UiIcon } from '@/ui'
+import { useCheckVoteAmount, useProposalState } from '@/hooks'
+import { UiCheckVoteInput, UiIcon } from '@/ui'
 
-import { MAX_QUESTIONS } from '../constants'
+import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '../constants'
 import {
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
@@ -30,6 +30,7 @@ const defaultValues: ICreateVote = {
   description: '',
   startDate: '',
   endDate: '',
+  votesCount: 0,
   questions: [
     {
       id: uuidv4(),
@@ -44,13 +45,15 @@ const defaultValues: ICreateVote = {
 
 export default function CreateVoteForm() {
   const { t } = useTranslation()
-  const { createProposal } = useProposalState()
+
+  const { createProposal } = useProposalState({ shouldFetchProposals: false })
 
   const {
     control,
     handleSubmit,
     trigger,
     reset,
+    getValues,
     formState: { isSubmitting },
   } = useForm<ICreateVote>({
     defaultValues,
@@ -59,10 +62,11 @@ export default function CreateVoteForm() {
       Yup.object({
         title: Yup.string().required().max(50),
         description: Yup.string().required().max(200),
+        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()
-          .test('isAfterStartDate', t('create-vote.form.end-date-error'), function (value) {
+          .test('isAfterStartDate', t('create-vote.end-date-error'), function (value) {
             return time(value).timestamp > time(this.parent.startDate).timestamp
           }),
         questions: Yup.array()
@@ -97,11 +101,15 @@ export default function CreateVoteForm() {
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
-  const questionContainerRef = useRef<HTMLDivElement | null>(null)
+  const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
 
   const submit = async (formData: ICreateVote) => {
-    const { endDate, startDate, questions, title, description } = formData
     try {
+      const votesCount = getValues('votesCount')
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
+      if (!isEnoughBalance) return
+
+      const { endDate, startDate, questions, title, description } = formData
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
       const response = await uploadToIpfs({
         title,
@@ -121,10 +129,9 @@ export default function CreateVoteForm() {
       await createProposal({
         acceptedOptions,
         description: cid,
+        amount: votesAmount,
         startTimestamp: time(startDate).timestamp,
         duration,
-        // TODO: Replace when BE is ready
-        amount: 1, // 1 wei
       })
 
       bus.emit(BusEvents.success, {
@@ -157,7 +164,7 @@ export default function CreateVoteForm() {
   return (
     <>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-        <Stack ref={questionContainerRef} spacing={5} width='100%'>
+        <Stack spacing={5} width='100%'>
           <Controller
             name='title'
             control={control}
@@ -167,7 +174,7 @@ export default function CreateVoteForm() {
                 disabled={isSubmitting}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
-                label={t('create-vote.form.proposal-title-lbl')}
+                label={t('create-vote.proposal-title-lbl')}
               />
             )}
           />
@@ -182,7 +189,7 @@ export default function CreateVoteForm() {
                 disabled={isSubmitting}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
-                label={t('create-vote.form.proposal-description-lbl')}
+                label={t('create-vote.proposal-description-lbl')}
                 sx={{
                   background: 'transparent',
                   '& .MuiInputBase-root': {
@@ -203,7 +210,7 @@ export default function CreateVoteForm() {
                   minDate={minDate}
                   disabled={isSubmitting}
                   errorMessage={fieldState.error?.message}
-                  label={t('create-vote.form.start-date-lbl')}
+                  label={t('create-vote.start-date-lbl')}
                 />
               )}
             />
@@ -217,7 +224,7 @@ export default function CreateVoteForm() {
                   minDate={minDate}
                   disabled={isSubmitting}
                   errorMessage={fieldState.error?.message}
-                  label={t('create-vote.form.end-date-lbl')}
+                  label={t('create-vote.end-date-lbl')}
                 />
               )}
             />
@@ -232,7 +239,7 @@ export default function CreateVoteForm() {
               startIcon={<UiIcon name={Icons.Plus} size={4} />}
               onClick={addQuestion}
             >
-              {t('create-vote.form.add-question-btn')}
+              {t('create-vote.add-question-btn')}
             </Button>
             {questionFields.map((question, index) => {
               return (
@@ -250,8 +257,26 @@ export default function CreateVoteForm() {
               )
             })}
           </Stack>
+          <Controller
+            name='votesCount'
+            control={control}
+            render={({ field, fieldState }) => (
+              <UiCheckVoteInput
+                {...field}
+                disabled={isSubmitting || isCalculating}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message || helperText}
+                label={t('create-vote.votes-count-lbl')}
+                onCheck={() => getVoteAmountDetails(getValues('votesCount'))}
+                onChange={e => {
+                  field.onChange(e)
+                  resetHelperText?.()
+                }}
+              />
+            )}
+          />
           <Button disabled={isSubmitting} type='submit' sx={{ mt: 3 }}>
-            {t('create-vote.form.submit-btn')}
+            {t('create-vote.submit-btn')}
           </Button>
         </Stack>
       </Stack>

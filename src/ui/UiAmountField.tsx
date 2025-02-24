@@ -1,5 +1,6 @@
 import { isFixedPointString } from '@distributedlab/tools'
 import {
+  Button,
   FormLabel,
   IconButton,
   type IconButtonProps,
@@ -19,10 +20,11 @@ import { UiIcon } from '@/ui'
 
 type Props = {
   value?: string
-  onChange?: (value: string) => void
   errorMessage?: string
+  minValue?: string
   maxValue?: string
   snapPoints?: number[]
+  onChange?: (value: string) => void
 } & Omit<Omit<TextFieldProps, 'value'>, 'onChange'>
 
 const UiAmountField = forwardRef<HTMLInputElement, Props>(
@@ -32,6 +34,7 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
       label,
       value: extValue,
       maxValue,
+      minValue,
       errorMessage,
       onChange,
       disabled,
@@ -45,6 +48,10 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
     const fieldId = useMemo(() => id ?? `form-slider-input-${uuidv4()}`, [id])
     const theme = useTheme()
 
+    const normalizedMinValue = useMemo(
+      () => (isFinite(Number(minValue)) ? Number(minValue) : 0),
+      [minValue],
+    )
     const normalizedMaxValue = useMemo(
       () => (isFinite(Number(maxValue)) ? Number(maxValue) : undefined),
       [maxValue],
@@ -71,17 +78,23 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
     }, [step])
 
     const decreaseValue = () => {
-      if (!localValue || Number(localValue) <= 0) return
+      if (!localValue || Number(localValue) <= normalizedMinValue) return
 
-      const newValue = Number(localValue) - minStep
-
+      const newValue = Math.max(Number(localValue) - minStep, normalizedMinValue)
       setLocalValue(String(newValue))
+      onChange?.(String(newValue))
     }
 
     const increaseValue = () => {
-      const newValue = Number(localValue) + minStep
+      if (normalizedMaxValue !== undefined && Number(localValue) >= normalizedMaxValue) return
+
+      const newValue =
+        normalizedMaxValue !== undefined
+          ? Math.min(Number(localValue) + minStep, normalizedMaxValue)
+          : Number(localValue) + minStep
 
       setLocalValue(String(newValue))
+      onChange?.(String(newValue))
     }
 
     const formatInput = (value: string) => {
@@ -186,11 +199,13 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
           </Stack>
         </Stack>
 
-        {snapPoints?.length && (
+        {Boolean(snapPoints?.length) && (
           <Stack direction='row' spacing={2} alignItems='center'>
             {snapPoints.map((el, idx) => (
-              <IconButton
+              <Button
                 key={idx}
+                variant='outlined'
+                color='inherit'
                 onClick={() => handleOnChange(String(el))}
                 disabled={disabled}
                 sx={theme => ({
@@ -201,7 +216,7 @@ const UiAmountField = forwardRef<HTMLInputElement, Props>(
                 })}
               >
                 <Typography variant='subtitle4'>{el}</Typography>
-              </IconButton>
+              </Button>
             ))}
           </Stack>
         )}

@@ -62,7 +62,7 @@ const App = () => {
               )}
               onReset={() => window.location.reload()}
             >
-              <RouterProvider router={router} />
+              <RouterProvider router={router} future={{ v7_startTransition: true }} />
             </ErrorBoundary>
           ) : (
             <AppLoader />

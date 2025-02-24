@@ -75,38 +75,45 @@ export declare namespace ProposalsState {
 export interface ProposalStateInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "MAGIC_ID"
+      | "CONTRACT_MANAGER_ROLE"
+      | "DEFAULT_ADMIN_ROLE"
+      | "FUNDS_MANAGER_ROLE"
       | "MAXIMUM_CHOICES_PER_OPTION"
       | "MAXIMUM_OPTIONS"
-      | "P"
+      | "PROPOSAL_MANAGER_ROLE"
       | "__ProposalsState_init"
+      | "addFundsToProposal"
       | "addVoting"
-      | "chainName"
       | "changeProposalConfig"
-      | "changeSigner"
+      | "changeProposalDuration"
       | "createProposal"
-      | "getNonce"
       | "getProposalConfig"
       | "getProposalEventId"
       | "getProposalInfo"
       | "getProposalStatus"
+      | "getRoleAdmin"
       | "getVotingByKey"
       | "getVotings"
-      | "hideProposal"
+      | "grantRole"
+      | "hasRole"
+      | "hideProposal(uint256,bool)"
+      | "hideProposal(uint256)"
       | "implementation"
       | "isVoting"
       | "lastProposalId"
+      | "minFundingAmount"
       | "owner"
       | "proposalSMTImpl"
       | "proxiableUUID"
       | "removeVoting"
       | "renounceOwnership"
-      | "signer"
+      | "renounceRole"
+      | "revokeRole"
+      | "setMinFundingAmount"
+      | "supportsInterface"
       | "transferOwnership"
       | "upgradeTo"
       | "upgradeToAndCall"
-      | "upgradeToAndCallWithProof"
-      | "upgradeToWithProof"
       | "vote"
       | "withdrawFunds"
   ): FunctionFragment;
@@ -116,15 +123,31 @@ export interface ProposalStateInterface extends Interface {
       | "AdminChanged"
       | "BeaconUpgraded"
       | "Initialized"
+      | "MinFundingAmountSet"
       | "OwnershipTransferred"
       | "ProposalConfigChanged"
       | "ProposalCreated"
+      | "ProposalFunded"
       | "ProposalHidden"
+      | "RoleAdminChanged"
+      | "RoleGranted"
+      | "RoleRevoked"
       | "Upgraded"
       | "VoteCast"
   ): EventFragment;
 
-  encodeFunctionData(functionFragment: "MAGIC_ID", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "CONTRACT_MANAGER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "FUNDS_MANAGER_ROLE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "MAXIMUM_CHOICES_PER_OPTION",
     values?: undefined
@@ -133,31 +156,33 @@ export interface ProposalStateInterface extends Interface {
     functionFragment: "MAXIMUM_OPTIONS",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "P", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "PROPOSAL_MANAGER_ROLE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "__ProposalsState_init",
-    values: [AddressLike, string, AddressLike]
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addFundsToProposal",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "addVoting",
     values: [string, AddressLike]
   ): string;
-  encodeFunctionData(functionFragment: "chainName", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "changeProposalConfig",
     values: [BigNumberish, ProposalsState.ProposalConfigStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "changeSigner",
-    values: [BytesLike, BytesLike]
+    functionFragment: "changeProposalDuration",
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "createProposal",
     values: [ProposalsState.ProposalConfigStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getNonce",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getProposalConfig",
@@ -176,6 +201,10 @@ export interface ProposalStateInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRoleAdmin",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getVotingByKey",
     values: [string]
   ): string;
@@ -184,8 +213,20 @@ export interface ProposalStateInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "hideProposal",
+    functionFragment: "grantRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hideProposal(uint256,bool)",
     values: [BigNumberish, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hideProposal(uint256)",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "implementation",
@@ -197,6 +238,10 @@ export interface ProposalStateInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "lastProposalId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minFundingAmount",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -216,7 +261,22 @@ export interface ProposalStateInterface extends Interface {
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "signer", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMinFundingAmount",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
@@ -230,14 +290,6 @@ export interface ProposalStateInterface extends Interface {
     values: [AddressLike, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "upgradeToAndCallWithProof",
-    values: [AddressLike, BytesLike, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "upgradeToWithProof",
-    values: [AddressLike, BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "vote",
     values: [BigNumberish, BigNumberish, BigNumberish[]]
   ): string;
@@ -246,7 +298,18 @@ export interface ProposalStateInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "MAGIC_ID", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "CONTRACT_MANAGER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "FUNDS_MANAGER_ROLE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "MAXIMUM_CHOICES_PER_OPTION",
     data: BytesLike
@@ -255,26 +318,31 @@ export interface ProposalStateInterface extends Interface {
     functionFragment: "MAXIMUM_OPTIONS",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "P", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "PROPOSAL_MANAGER_ROLE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "__ProposalsState_init",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "addFundsToProposal",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addVoting", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "chainName", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "changeProposalConfig",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "changeSigner",
+    functionFragment: "changeProposalDuration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "createProposal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getProposalConfig",
     data: BytesLike
@@ -292,12 +360,22 @@ export interface ProposalStateInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getVotingByKey",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getVotings", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "hideProposal",
+    functionFragment: "hideProposal(uint256,bool)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hideProposal(uint256)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -307,6 +385,10 @@ export interface ProposalStateInterface extends Interface {
   decodeFunctionResult(functionFragment: "isVoting", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lastProposalId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "minFundingAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -326,7 +408,19 @@ export interface ProposalStateInterface extends Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "signer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceRole",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMinFundingAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -334,14 +428,6 @@ export interface ProposalStateInterface extends Interface {
   decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "upgradeToAndCall",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "upgradeToAndCallWithProof",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "upgradeToWithProof",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
@@ -381,6 +467,18 @@ export namespace InitializedEvent {
   export type OutputTuple = [version: bigint];
   export interface OutputObject {
     version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MinFundingAmountSetEvent {
+  export type InputTuple = [amount: BigNumberish];
+  export type OutputTuple = [amount: bigint];
+  export interface OutputObject {
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -435,12 +533,83 @@ export namespace ProposalCreatedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace ProposalFundedEvent {
+  export type InputTuple = [proposalId: BigNumberish, fundAmount: BigNumberish];
+  export type OutputTuple = [proposalId: bigint, fundAmount: bigint];
+  export interface OutputObject {
+    proposalId: bigint;
+    fundAmount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace ProposalHiddenEvent {
   export type InputTuple = [proposalId: BigNumberish, hide: boolean];
   export type OutputTuple = [proposalId: bigint, hide: boolean];
   export interface OutputObject {
     proposalId: bigint;
     hide: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RoleAdminChangedEvent {
+  export type InputTuple = [
+    role: BytesLike,
+    previousAdminRole: BytesLike,
+    newAdminRole: BytesLike
+  ];
+  export type OutputTuple = [
+    role: string,
+    previousAdminRole: string,
+    newAdminRole: string
+  ];
+  export interface OutputObject {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RoleGrantedEvent {
+  export type InputTuple = [
+    role: BytesLike,
+    account: AddressLike,
+    sender: AddressLike
+  ];
+  export type OutputTuple = [role: string, account: string, sender: string];
+  export interface OutputObject {
+    role: string;
+    account: string;
+    sender: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RoleRevokedEvent {
+  export type InputTuple = [
+    role: BytesLike,
+    account: AddressLike,
+    sender: AddressLike
+  ];
+  export type OutputTuple = [role: string, account: string, sender: string];
+  export interface OutputObject {
+    role: string;
+    account: string;
+    sender: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -525,18 +694,28 @@ export interface ProposalState extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  MAGIC_ID: TypedContractMethod<[], [bigint], "view">;
+  CONTRACT_MANAGER_ROLE: TypedContractMethod<[], [string], "view">;
+
+  DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
+
+  FUNDS_MANAGER_ROLE: TypedContractMethod<[], [string], "view">;
 
   MAXIMUM_CHOICES_PER_OPTION: TypedContractMethod<[], [bigint], "view">;
 
   MAXIMUM_OPTIONS: TypedContractMethod<[], [bigint], "view">;
 
-  P: TypedContractMethod<[], [bigint], "view">;
+  PROPOSAL_MANAGER_ROLE: TypedContractMethod<[], [string], "view">;
 
   __ProposalsState_init: TypedContractMethod<
-    [signer_: AddressLike, chainName_: string, proposalSMTImpl_: AddressLike],
+    [proposalSMTImpl_: AddressLike, minFundingAmount_: BigNumberish],
     [void],
     "nonpayable"
+  >;
+
+  addFundsToProposal: TypedContractMethod<
+    [proposalId_: BigNumberish],
+    [void],
+    "payable"
   >;
 
   addVoting: TypedContractMethod<
@@ -544,8 +723,6 @@ export interface ProposalState extends BaseContract {
     [void],
     "nonpayable"
   >;
-
-  chainName: TypedContractMethod<[], [string], "view">;
 
   changeProposalConfig: TypedContractMethod<
     [
@@ -556,8 +733,8 @@ export interface ProposalState extends BaseContract {
     "nonpayable"
   >;
 
-  changeSigner: TypedContractMethod<
-    [newSignerPubKey_: BytesLike, signature_: BytesLike],
+  changeProposalDuration: TypedContractMethod<
+    [proposalId_: BigNumberish, newDuration_: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -567,8 +744,6 @@ export interface ProposalState extends BaseContract {
     [void],
     "payable"
   >;
-
-  getNonce: TypedContractMethod<[methodId_: BigNumberish], [bigint], "view">;
 
   getProposalConfig: TypedContractMethod<
     [proposalId_: BigNumberish],
@@ -594,6 +769,8 @@ export interface ProposalState extends BaseContract {
     "view"
   >;
 
+  getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
+
   getVotingByKey: TypedContractMethod<[key_: string], [string], "view">;
 
   getVotings: TypedContractMethod<
@@ -602,8 +779,26 @@ export interface ProposalState extends BaseContract {
     "view"
   >;
 
-  hideProposal: TypedContractMethod<
+  grantRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  hasRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [boolean],
+    "view"
+  >;
+
+  "hideProposal(uint256,bool)": TypedContractMethod<
     [proposalId_: BigNumberish, hide_: boolean],
+    [void],
+    "nonpayable"
+  >;
+
+  "hideProposal(uint256)": TypedContractMethod<
+    [proposalId_: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -613,6 +808,8 @@ export interface ProposalState extends BaseContract {
   isVoting: TypedContractMethod<[voting_: AddressLike], [boolean], "view">;
 
   lastProposalId: TypedContractMethod<[], [bigint], "view">;
+
+  minFundingAmount: TypedContractMethod<[], [bigint], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
 
@@ -627,6 +824,30 @@ export interface ProposalState extends BaseContract {
   >;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
+  renounceRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  revokeRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setMinFundingAmount: TypedContractMethod<
+    [amount_: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  supportsInterface: TypedContractMethod<
+    [interfaceId: BytesLike],
+    [boolean],
+    "view"
+  >;
 
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
@@ -644,18 +865,6 @@ export interface ProposalState extends BaseContract {
     [newImplementation: AddressLike, data: BytesLike],
     [void],
     "payable"
-  >;
-
-  upgradeToAndCallWithProof: TypedContractMethod<
-    [newImplementation_: AddressLike, proof_: BytesLike, data_: BytesLike],
-    [void],
-    "nonpayable"
-  >;
-
-  upgradeToWithProof: TypedContractMethod<
-    [newImplementation_: AddressLike, proof_: BytesLike],
-    [void],
-    "nonpayable"
   >;
 
   vote: TypedContractMethod<
@@ -679,22 +888,33 @@ export interface ProposalState extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "MAGIC_ID"
-  ): TypedContractMethod<[], [bigint], "view">;
+    nameOrSignature: "CONTRACT_MANAGER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "DEFAULT_ADMIN_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "FUNDS_MANAGER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "MAXIMUM_CHOICES_PER_OPTION"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "MAXIMUM_OPTIONS"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(nameOrSignature: "P"): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "PROPOSAL_MANAGER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "__ProposalsState_init"
   ): TypedContractMethod<
-    [signer_: AddressLike, chainName_: string, proposalSMTImpl_: AddressLike],
+    [proposalSMTImpl_: AddressLike, minFundingAmount_: BigNumberish],
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "addFundsToProposal"
+  ): TypedContractMethod<[proposalId_: BigNumberish], [void], "payable">;
   getFunction(
     nameOrSignature: "addVoting"
   ): TypedContractMethod<
@@ -702,9 +922,6 @@ export interface ProposalState extends BaseContract {
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "chainName"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "changeProposalConfig"
   ): TypedContractMethod<
@@ -716,9 +933,9 @@ export interface ProposalState extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "changeSigner"
+    nameOrSignature: "changeProposalDuration"
   ): TypedContractMethod<
-    [newSignerPubKey_: BytesLike, signature_: BytesLike],
+    [proposalId_: BigNumberish, newDuration_: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -729,9 +946,6 @@ export interface ProposalState extends BaseContract {
     [void],
     "payable"
   >;
-  getFunction(
-    nameOrSignature: "getNonce"
-  ): TypedContractMethod<[methodId_: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "getProposalConfig"
   ): TypedContractMethod<
@@ -753,6 +967,9 @@ export interface ProposalState extends BaseContract {
     nameOrSignature: "getProposalStatus"
   ): TypedContractMethod<[proposalId_: BigNumberish], [bigint], "view">;
   getFunction(
+    nameOrSignature: "getRoleAdmin"
+  ): TypedContractMethod<[role: BytesLike], [string], "view">;
+  getFunction(
     nameOrSignature: "getVotingByKey"
   ): TypedContractMethod<[key_: string], [string], "view">;
   getFunction(
@@ -763,12 +980,29 @@ export interface ProposalState extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "hideProposal"
+    nameOrSignature: "grantRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "hasRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "hideProposal(uint256,bool)"
   ): TypedContractMethod<
     [proposalId_: BigNumberish, hide_: boolean],
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "hideProposal(uint256)"
+  ): TypedContractMethod<[proposalId_: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "implementation"
   ): TypedContractMethod<[], [string], "view">;
@@ -777,6 +1011,9 @@ export interface ProposalState extends BaseContract {
   ): TypedContractMethod<[voting_: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "lastProposalId"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "minFundingAmount"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "owner"
@@ -794,8 +1031,25 @@ export interface ProposalState extends BaseContract {
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "signer"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "renounceRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "revokeRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setMinFundingAmount"
+  ): TypedContractMethod<[amount_: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "supportsInterface"
+  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
@@ -812,20 +1066,6 @@ export interface ProposalState extends BaseContract {
     [newImplementation: AddressLike, data: BytesLike],
     [void],
     "payable"
-  >;
-  getFunction(
-    nameOrSignature: "upgradeToAndCallWithProof"
-  ): TypedContractMethod<
-    [newImplementation_: AddressLike, proof_: BytesLike, data_: BytesLike],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "upgradeToWithProof"
-  ): TypedContractMethod<
-    [newImplementation_: AddressLike, proof_: BytesLike],
-    [void],
-    "nonpayable"
   >;
   getFunction(
     nameOrSignature: "vote"
@@ -868,6 +1108,13 @@ export interface ProposalState extends BaseContract {
     InitializedEvent.OutputObject
   >;
   getEvent(
+    key: "MinFundingAmountSet"
+  ): TypedContractEvent<
+    MinFundingAmountSetEvent.InputTuple,
+    MinFundingAmountSetEvent.OutputTuple,
+    MinFundingAmountSetEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
@@ -889,11 +1136,39 @@ export interface ProposalState extends BaseContract {
     ProposalCreatedEvent.OutputObject
   >;
   getEvent(
+    key: "ProposalFunded"
+  ): TypedContractEvent<
+    ProposalFundedEvent.InputTuple,
+    ProposalFundedEvent.OutputTuple,
+    ProposalFundedEvent.OutputObject
+  >;
+  getEvent(
     key: "ProposalHidden"
   ): TypedContractEvent<
     ProposalHiddenEvent.InputTuple,
     ProposalHiddenEvent.OutputTuple,
     ProposalHiddenEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleAdminChanged"
+  ): TypedContractEvent<
+    RoleAdminChangedEvent.InputTuple,
+    RoleAdminChangedEvent.OutputTuple,
+    RoleAdminChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleGranted"
+  ): TypedContractEvent<
+    RoleGrantedEvent.InputTuple,
+    RoleGrantedEvent.OutputTuple,
+    RoleGrantedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleRevoked"
+  ): TypedContractEvent<
+    RoleRevokedEvent.InputTuple,
+    RoleRevokedEvent.OutputTuple,
+    RoleRevokedEvent.OutputObject
   >;
   getEvent(
     key: "Upgraded"
@@ -944,6 +1219,17 @@ export interface ProposalState extends BaseContract {
       InitializedEvent.OutputObject
     >;
 
+    "MinFundingAmountSet(uint256)": TypedContractEvent<
+      MinFundingAmountSetEvent.InputTuple,
+      MinFundingAmountSetEvent.OutputTuple,
+      MinFundingAmountSetEvent.OutputObject
+    >;
+    MinFundingAmountSet: TypedContractEvent<
+      MinFundingAmountSetEvent.InputTuple,
+      MinFundingAmountSetEvent.OutputTuple,
+      MinFundingAmountSetEvent.OutputObject
+    >;
+
     "OwnershipTransferred(address,address)": TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
@@ -977,6 +1263,17 @@ export interface ProposalState extends BaseContract {
       ProposalCreatedEvent.OutputObject
     >;
 
+    "ProposalFunded(uint256,uint256)": TypedContractEvent<
+      ProposalFundedEvent.InputTuple,
+      ProposalFundedEvent.OutputTuple,
+      ProposalFundedEvent.OutputObject
+    >;
+    ProposalFunded: TypedContractEvent<
+      ProposalFundedEvent.InputTuple,
+      ProposalFundedEvent.OutputTuple,
+      ProposalFundedEvent.OutputObject
+    >;
+
     "ProposalHidden(uint256,bool)": TypedContractEvent<
       ProposalHiddenEvent.InputTuple,
       ProposalHiddenEvent.OutputTuple,
@@ -986,6 +1283,39 @@ export interface ProposalState extends BaseContract {
       ProposalHiddenEvent.InputTuple,
       ProposalHiddenEvent.OutputTuple,
       ProposalHiddenEvent.OutputObject
+    >;
+
+    "RoleAdminChanged(bytes32,bytes32,bytes32)": TypedContractEvent<
+      RoleAdminChangedEvent.InputTuple,
+      RoleAdminChangedEvent.OutputTuple,
+      RoleAdminChangedEvent.OutputObject
+    >;
+    RoleAdminChanged: TypedContractEvent<
+      RoleAdminChangedEvent.InputTuple,
+      RoleAdminChangedEvent.OutputTuple,
+      RoleAdminChangedEvent.OutputObject
+    >;
+
+    "RoleGranted(bytes32,address,address)": TypedContractEvent<
+      RoleGrantedEvent.InputTuple,
+      RoleGrantedEvent.OutputTuple,
+      RoleGrantedEvent.OutputObject
+    >;
+    RoleGranted: TypedContractEvent<
+      RoleGrantedEvent.InputTuple,
+      RoleGrantedEvent.OutputTuple,
+      RoleGrantedEvent.OutputObject
+    >;
+
+    "RoleRevoked(bytes32,address,address)": TypedContractEvent<
+      RoleRevokedEvent.InputTuple,
+      RoleRevokedEvent.OutputTuple,
+      RoleRevokedEvent.OutputObject
+    >;
+    RoleRevoked: TypedContractEvent<
+      RoleRevokedEvent.InputTuple,
+      RoleRevokedEvent.OutputTuple,
+      RoleRevokedEvent.OutputObject
     >;
 
     "Upgraded(address)": TypedContractEvent<

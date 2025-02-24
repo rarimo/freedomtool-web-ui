@@ -1,5 +1,5 @@
 import _isEmpty from 'lodash/isEmpty'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { ErrorHandler } from '@/helpers'
 
@@ -12,25 +12,17 @@ export const useLoading = <T>(
     loadOnMount?: boolean
     silentError?: boolean
   },
-): {
-  data: T
-  isLoading: boolean
-  isLoadingError: boolean
-  reload: () => Promise<void>
-  isEmpty: boolean
-  update: () => Promise<void>
-  reset: () => void
-} => {
+) => {
   const { loadArgs, loadOnMount: _loadOnMount } = options ?? {}
   const loadOnMount = useMemo(() => _loadOnMount ?? true, [_loadOnMount])
+
   const [isLoading, setIsLoading] = useState(loadOnMount)
   const [isLoadingError, setIsLoadingError] = useState(false)
   const [data, setData] = useState(initialState)
 
-  const isEmpty = useMemo(() => {
-    if (!data) return true
-    return _isEmpty(data)
-  }, [data])
+  const isIgnoredRef = useRef(false)
+
+  const isEmpty = useMemo(() => _isEmpty(data), [data])
 
   const handleError = (e: unknown) => {
     if (options?.silentError) {
@@ -41,40 +33,59 @@ export const useLoading = <T>(
   }
 
   const load = async () => {
+    isIgnoredRef.current = false
     setIsLoading(true)
     setIsLoadingError(false)
     setData(initialState)
+
     try {
-      setData(await loadFn())
+      const result = await loadFn()
+      if (!isIgnoredRef.current) setData(result)
     } catch (e) {
-      setIsLoadingError(true)
-      handleError(e)
+      if (!isIgnoredRef.current) {
+        setIsLoadingError(true)
+        handleError(e)
+      }
+    } finally {
+      if (!isIgnoredRef.current) setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   useEffect(() => {
-    if (loadOnMount) load()
+    if (loadOnMount) {
+      load()
+    }
+
+    return () => {
+      isIgnoredRef.current = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, loadArgs ?? [])
 
   const reload = async () => {
     await load()
   }
+
   const update = async () => {
+    isIgnoredRef.current = false
     setIsLoadingError(false)
+
     try {
-      setData(await loadFn())
+      const result = await loadFn()
+      if (!isIgnoredRef.current) setData(result)
     } catch (e) {
-      setIsLoadingError(true)
-      handleError(e)
+      if (!isIgnoredRef.current) {
+        setIsLoadingError(true)
+        handleError(e)
+      }
     }
   }
 
   const reset = () => {
+    isIgnoredRef.current = true
     setIsLoading(false)
     setIsLoadingError(false)
-    setData(initialState as T)
+    setData(initialState)
   }
 
   return { data, isLoading, isLoadingError, isEmpty, reload, update, reset }

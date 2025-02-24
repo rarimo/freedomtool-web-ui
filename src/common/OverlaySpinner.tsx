@@ -1,6 +1,6 @@
 import { alpha, Stack, StackProps } from '@mui/material'
 
-import LogoSpinner from './LogoSpinner'
+import LogoLoader from './LogoLoader'
 
 export default function OverlaySpinner(props: StackProps) {
   return (
@@ -20,7 +20,7 @@ export default function OverlaySpinner(props: StackProps) {
       }}
       {...props}
     >
-      <LogoSpinner color='inherit' />
+      <LogoLoader color='inherit' />
     </Stack>
   )
 }
