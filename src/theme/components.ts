@@ -228,10 +228,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiTextField: {
+    defaultProps: { InputLabelProps: { shrink: true } },
     styleOverrides: {
       root: ({ theme }) => ({
-        '& .MuiInputBase-root, & .MuiInputBase-sizeSmall, & .MuiInputBase-sizeMedium':
-          typography.body3,
+        '& .MuiInputBase-root, & .MuiInputBase-sizeMedium': typography.body3,
+        '.MuiInputBase-sizeSmall': typography.body4,
         '& .MuiInputBase-root': {
           '&:not(.MuiInputBase-multiline)': {
             minHeight: theme.spacing(12),
@@ -262,13 +263,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
   },
   MuiFormLabel: {
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
         ...typography.subtitle4,
-        color: 'inherit',
+        color: theme.palette.text.secondary,
         '&.Mui-focused': {
           color: 'inherit',
         },
-      },
+      }),
     },
   },
   MuiFormHelperText: {
@@ -623,10 +624,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         border: 0,
-        borderRadius: theme.spacing(4),
+        borderRadius: theme.spacing(2),
         backgroundColor: theme.palette.background.light,
         '&:first-of-type, &:last-of-type': {
-          borderRadius: theme.spacing(4),
+          borderRadius: theme.spacing(2),
         },
         '&.MuiAccordion-root': {
           padding: theme.spacing(2, 4),

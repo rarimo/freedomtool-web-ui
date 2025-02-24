@@ -19,13 +19,13 @@ export const useCheckVoteAmount = () => {
   const { balance } = useWeb3Context()
 
   const getVoteAmountDetails = async (
-    votesCount: string | number,
+    votesCount: string,
     proposalId?: string,
     config: CheckVoteAmountConfig = { shouldUpdateHelperText: true },
   ) => {
     setIsCalculating(true)
     try {
-      const votesAmount = await getVoteAmount(Number(votesCount), proposalId)
+      const votesAmount = await getVoteAmount(votesCount, Number(proposalId))
       const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
       if (config.shouldUpdateHelperText) {
@@ -41,8 +41,8 @@ export const useCheckVoteAmount = () => {
     }
   }
 
-  const getVoteAmount = async (votesCount: number, proposalId?: string): Promise<BigNumberish> => {
-    if (votesCount <= 0) {
+  const getVoteAmount = async (votesCount: string, proposalId?: number): Promise<BigNumberish> => {
+    if (Number(votesCount) <= 0) {
       bus.emit(BusEvents.error, {
         message: t('errors.invalid-vote-count'),
       })

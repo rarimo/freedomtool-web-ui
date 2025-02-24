@@ -73,7 +73,6 @@ export default function QuestionCard(props: IQuestionCard) {
             overflow: 'hidden',
             whiteSpace: 'nowrap',
           }}
-          variant='buttonMedium'
         >
           {questionText || t('create-vote.question-lbl', { order: index + 1 })}
         </Typography>
@@ -91,7 +90,7 @@ function QuestionForm(props: IQuestionForm) {
   const { t } = useTranslation()
 
   return (
-    <Stack key={question.id} spacing={2} p={2} borderRadius={2}>
+    <Stack key={question.id} spacing={2} borderRadius={2}>
       <Stack direction='row' alignItems='center' justifyContent='space-between'>
         <Controller
           name={`questions.${index}.text`}
@@ -99,19 +98,21 @@ function QuestionForm(props: IQuestionForm) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={t('create-vote.question-lbl', { order: index + 1 })}
-              variant='standard'
+              placeholder={t('create-vote.question-lbl', { order: index + 1 })}
+              size='medium'
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message}
+              InputProps={{
+                endAdornment: canDelete && (
+                  <IconButton color='error' onClick={onDelete}>
+                    <UiIcon name={Icons.DeleteBin6Line} size={4} />
+                  </IconButton>
+                ),
+              }}
               fullWidth
             />
           )}
         />
-        {canDelete && (
-          <IconButton color='error' onClick={onDelete}>
-            <UiIcon name={Icons.DeleteBin6Line} size={4} />
-          </IconButton>
-        )}
       </Stack>
 
       <OptionsForm control={control} questionIndex={index} />
@@ -142,20 +143,22 @@ function OptionsForm({
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                variant='standard'
                 size='small'
-                label={t('create-vote.option-lbl', { order: index + 1 })}
+                variant='outlined'
+                placeholder={t('create-vote.option-lbl', { order: index + 1 })}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
+                InputProps={{
+                  endAdornment: fields.length > 2 && (
+                    <IconButton onClick={() => remove(index)} color='error'>
+                      <UiIcon name={Icons.DeleteBin6Line} size={4} />
+                    </IconButton>
+                  ),
+                }}
                 fullWidth
               />
             )}
           />
-          {fields.length > 2 && (
-            <IconButton onClick={() => remove(index)} color='error'>
-              <UiIcon name={Icons.DeleteBin6Line} size={4} />
-            </IconButton>
-          )}
         </Stack>
       ))}
       <Button

@@ -71,7 +71,7 @@ export default function TopUpForm() {
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
             label={t('create-vote.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(getValues('votesCount'), id)}
+            onCheck={() => getVoteAmountDetails(String(getValues('votesCount')), id)}
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()

@@ -39,7 +39,7 @@ export const getVotesCount = (id: string) => {
   )
 }
 
-export const predictVoteAmount = (votesCount: number, proposalId?: string) => {
+export const predictVoteAmount = (votesCount: string, proposalId?: number) => {
   return api.post<{ amount_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
@@ -47,9 +47,8 @@ export const predictVoteAmount = (votesCount: number, proposalId?: string) => {
         data: {
           type: 'vote_predict_amount',
           attributes: {
-            count_tx: votesCount,
-            voting_id: proposalId,
-            ...(proposalId && { voting_id: proposalId }),
+            count_tx: String(votesCount),
+            ...(proposalId && { voting_id: Number(proposalId) }),
           },
         },
       },

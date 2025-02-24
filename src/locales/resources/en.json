@@ -87,10 +87,12 @@
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Option #{{order}}",
-    "proposal-title-lbl": "Title",
+    "proposal-title-lbl": "Proposal title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
-    "success-msg": "You have successfully created a proposal!"
+    "success-msg": "You have successfully created a proposal!",
+    "proposal-title-plh": "Approve new governance token?",
+    "proposal-description-plh": "Vote to approve a new governance token"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

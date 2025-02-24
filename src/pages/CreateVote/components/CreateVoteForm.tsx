@@ -1,6 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Stack, TextField } from '@mui/material'
+import { Button, Paper, Stack, TextField } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -106,7 +106,7 @@ export default function CreateVoteForm() {
   const submit = async (formData: ICreateVote) => {
     try {
       const votesCount = getValues('votesCount')
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
+      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(String(votesCount))
       if (!isEnoughBalance) return
 
       const { endDate, startDate, questions, title, description } = formData
@@ -162,7 +162,7 @@ export default function CreateVoteForm() {
   }, [questionFields.length, trigger])
 
   return (
-    <>
+    <Stack component={Paper}>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
         <Stack spacing={5} width='100%'>
           <Controller
@@ -174,6 +174,7 @@ export default function CreateVoteForm() {
                 disabled={isSubmitting}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
+                placeholder={t('create-vote.proposal-title-plh')}
                 label={t('create-vote.proposal-title-lbl')}
               />
             )}
@@ -190,6 +191,7 @@ export default function CreateVoteForm() {
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
                 label={t('create-vote.proposal-description-lbl')}
+                placeholder={t('create-vote.proposal-description-plh')}
                 sx={{
                   background: 'transparent',
                   '& .MuiInputBase-root': {
@@ -267,7 +269,7 @@ export default function CreateVoteForm() {
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message || helperText}
                 label={t('create-vote.votes-count-lbl')}
-                onCheck={() => getVoteAmountDetails(getValues('votesCount'))}
+                onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
                 onChange={e => {
                   field.onChange(e)
                   resetHelperText?.()
@@ -275,12 +277,12 @@ export default function CreateVoteForm() {
               />
             )}
           />
-          <Button disabled={isSubmitting} type='submit' sx={{ mt: 3 }}>
+          <Button disabled={isSubmitting} type='submit'>
             {t('create-vote.submit-btn')}
           </Button>
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />
-    </>
+    </Stack>
   )
 }
