@@ -38,7 +38,7 @@ export class ErrorHandler {
         503: t('errors.service-unavailable'),
       }
 
-      return statusToMessage[error.httpStatus] || error.message || t('errors.network-error')
+      return statusToMessage[error.httpStatus] || t('errors.network-error')
     }
 
     switch (error.code) {
