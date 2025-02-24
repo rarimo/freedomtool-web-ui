@@ -60,7 +60,7 @@ export default function TopUpForm() {
   const isDisabled = isSubmitting || isCalculating
 
   return (
-    <Stack spacing={4} component='form' onSubmit={handleSubmit(submit)}>
+    <Stack spacing={4} component='form' width={300} onSubmit={handleSubmit(submit)}>
       <Controller
         name='votesCount'
         control={control}

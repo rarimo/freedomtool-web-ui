@@ -91,8 +91,8 @@
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
     "success-msg": "You have successfully created a proposal!",
-    "proposal-title-plh": "Approve new governance token?",
-    "proposal-description-plh": "Vote to approve a new governance token",
+    "proposal-title-plh": "Approve this change?",
+    "proposal-description-plh": "This proposal outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date"
   },
@@ -103,10 +103,8 @@
   "vote-item": {
     "no-title": "No title",
     "no-description": "No description",
-    "status-lbl": "Status:",
-    "start-lbl": "Start:",
-    "end-lbl": "End:",
-    "view-more-btn": "View more"
+    "start-date": "Start date: {{date}}",
+    "end-date": "End date: {{date}}"
   },
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",

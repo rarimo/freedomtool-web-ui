@@ -1,16 +1,23 @@
-import { Button, Divider, Paper, Skeleton, Stack, Typography, useTheme } from '@mui/material'
-import { useMemo } from 'react'
+import {
+  Divider,
+  IconButton,
+  Paper,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { generatePath, Link } from 'react-router-dom'
 
-import { RoutePaths } from '@/enums'
-import { ProposalStatus } from '@/enums/proposals'
-import { formatDateTime } from '@/helpers'
+import { Icons, RoutePaths } from '@/enums'
+import { formatDateTime, formatTimeFromNow } from '@/helpers'
 import { useIpfsLoading } from '@/hooks'
 import { parseProposalFromContract } from '@/pages/CreateVote/helpers'
 import { IVoteIpfs } from '@/pages/CreateVote/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
-import { UiTypographySkeleton } from '@/ui'
+import { UiIcon, UiTypographySkeleton } from '@/ui'
 
 export default function VoteItem({
   proposal,
@@ -22,92 +29,132 @@ export default function VoteItem({
   const { palette } = useTheme()
   const { t } = useTranslation()
 
-  const { cid, duration, startTimestamp, status } = parseProposalFromContract(proposal)
+  const { cid, duration, startTimestamp } = parseProposalFromContract(proposal)
   const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
 
-  const items = useMemo(
-    () => [
-      { label: t('vote-item.status-lbl'), value: ProposalStatus[status] },
-      { label: t('vote-item.start-lbl'), value: formatDateTime(startTimestamp) },
-      { label: t('vote-item.end-lbl'), value: formatDateTime(startTimestamp + duration) },
-    ],
-    [status, startTimestamp, duration, t],
-  )
+  const colors = {
+    expired: { bgcolor: palette.grey[100], color: palette.text.secondary },
+    almost: { bgcolor: palette.error.lighter, color: palette.error.main },
+    soon: { bgcolor: palette.warning.lighter, color: palette.warning.dark },
+    enough: { bgcolor: palette.success.lighter, color: palette.success.main },
+  }
+
+  const now = Math.floor(Date.now() / 1_000)
+  const endTimestamp = startTimestamp + duration
+  const remainingTime = endTimestamp - now
+
+  let currentColors = colors.enough
+
+  // Already expired
+  if (remainingTime <= 0) {
+    currentColors = colors.expired
+  }
+
+  // Less than 3h
+  if (remainingTime > 0 && remainingTime < 3 * 3_600) {
+    currentColors = colors.almost
+  }
+
+  // Less than 24h
+  if (remainingTime >= 3 * 3_600 && remainingTime < 24 * 3_600) {
+    currentColors = colors.soon
+  }
 
   if (isLoading) return <VoteItemSkeleton />
   if (isError) return null
 
   return (
-    <Paper sx={{ p: 4, mb: 2 }}>
-      <Stack spacing={1.5}>
-        <Stack spacing={1}>
-          <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
-            {data?.title || t('vote-item.no-title')}
-          </Typography>
-          <Typography
-            maxWidth={200}
-            noWrap
-            textOverflow='ellipsis'
-            variant='body3'
-            color={palette.text.secondary}
-          >
-            {data?.description || t('vote-item.no-description')}
-          </Typography>
-        </Stack>
-
-        <Divider />
-
-        <Stack mt={2} spacing={1.5}>
-          {items.map((item, index) => (
-            <Stack direction='row' justifyContent='space-between' key={index}>
-              <Typography variant='body4'>{item.label}</Typography>
-              <Typography variant='body4'>{item.value}</Typography>
-            </Stack>
-          ))}
-        </Stack>
-
-        <Button
-          component={Link}
-          to={generatePath(RoutePaths.Vote, { id: String(id) })}
-          size='small'
-          variant='outlined'
-          sx={{ mt: 3 }}
+    <Stack
+      justifyContent='center'
+      component={Paper}
+      spacing={4}
+      sx={{ p: 4, mb: 2 }}
+      divider={<Divider orientation='horizontal' flexItem />}
+    >
+      <Stack spacing={1}>
+        <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
+          {data?.title || t('vote-item.no-title')}
+        </Typography>
+        <Typography
+          maxWidth={200}
+          noWrap
+          textOverflow='ellipsis'
+          variant='body4'
+          color={palette.text.secondary}
         >
-          {t('vote-item.view-more-btn')}
-        </Button>
+          {data?.description || t('vote-item.no-description')}
+        </Typography>
       </Stack>
-    </Paper>
+
+      <Stack
+        color={palette.text.secondary}
+        justifyContent='space-between'
+        alignItems='center'
+        direction='row'
+      >
+        <Tooltip
+          slotProps={{
+            popper: {
+              sx: { maxWidth: 260 },
+            },
+          }}
+          title={
+            <Stack spacing={1}>
+              <Typography variant='caption2'>
+                {t('vote-item.start-date', {
+                  date: formatDateTime(startTimestamp),
+                })}
+              </Typography>
+              <Typography variant='caption2'>
+                {t('vote-item.end-date', {
+                  date: formatDateTime(startTimestamp + duration),
+                })}
+              </Typography>
+            </Stack>
+          }
+        >
+          <Stack
+            direction='row'
+            spacing={2}
+            px={3}
+            py={1}
+            borderRadius={10}
+            alignItems='center'
+            bgcolor={currentColors.bgcolor}
+            color={currentColors.color}
+          >
+            <UiIcon name={Icons.CalendarBlank} size={4} color='inherit' />
+            <Typography variant='caption3'>
+              {formatTimeFromNow(endTimestamp, { suffix: true })}
+            </Typography>
+          </Stack>
+        </Tooltip>
+        <IconButton component={Link} to={generatePath(RoutePaths.Vote, { id: String(id) })}>
+          <UiIcon name={Icons.ArrowRight} size={5} color={palette.text.secondary} />
+        </IconButton>
+      </Stack>
+    </Stack>
   )
 }
 
 export function VoteItemSkeleton() {
   return (
-    <Paper sx={{ p: 4, mb: 2 }}>
-      <Stack spacing={1.5}>
-        <Stack spacing={1}>
-          <UiTypographySkeleton variant='h6' width='60%' />
-          <UiTypographySkeleton variant='body2' width='80%' />
-        </Stack>
+    <Stack
+      justifyContent='center'
+      component={Paper}
+      spacing={4}
+      sx={{ p: 4, mb: 2 }}
+      divider={<Divider orientation='horizontal' flexItem />}
+    >
+      <Stack spacing={1}>
+        <UiTypographySkeleton width={200} textOverflow='ellipsis' variant='subtitle3' />
 
-        <Divider />
-
-        <Stack mt={2} spacing={1.5}>
-          <SkeletonRow />
-          <SkeletonRow />
-          <SkeletonRow />
-        </Stack>
-
-        <Skeleton width='100%' height={32} sx={{ mt: 3 }} />
+        <UiTypographySkeleton maxWidth={200} variant='body4' />
       </Stack>
-    </Paper>
-  )
-}
 
-function SkeletonRow() {
-  return (
-    <Stack direction='row' justifyContent='space-between'>
-      <UiTypographySkeleton variant='body4' width='20%' />
-      <UiTypographySkeleton variant='body4' width='40%' />
+      <Stack justifyContent='space-between' alignItems='center' direction='row'>
+        <Skeleton height={24} width={88} sx={{ borderRadius: 10 }} />
+      </Stack>
     </Stack>
   )
 }

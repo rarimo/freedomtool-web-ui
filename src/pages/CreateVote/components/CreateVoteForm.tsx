@@ -291,7 +291,7 @@ export default function CreateVoteForm() {
               )}
             />
           </Stack>
-          <Button disabled={isSubmitting} type='submit'>
+          <Button sx={{ ml: 'auto' }} disabled={isSubmitting} type='submit'>
             {t('create-vote.submit-btn')}
           </Button>
         </Stack>

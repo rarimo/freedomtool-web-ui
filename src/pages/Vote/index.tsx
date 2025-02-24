@@ -37,21 +37,24 @@ export default function Vote() {
         gap: 3,
       }}
     >
-      <Paper>
-        <Stack sx={{ padding: 2 }} spacing={5} divider={<Divider />}>
-          <Stack spacing={2}>
-            <Typography variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
-              {proposalMetadata?.title}
-            </Typography>
-            <Typography variant='body2' color={palette.text.secondary}>
-              {proposalMetadata?.description}
-            </Typography>
-          </Stack>
-
-          <VoteDetails list={voteDetails} />
-          <QuestionList proposal={proposal} questions={proposalMetadata?.acceptedOptions ?? []} />
+      <Stack
+        component={Paper}
+        sx={{ padding: 10, height: 'fit-content' }}
+        spacing={5}
+        divider={<Divider />}
+      >
+        <Stack spacing={2}>
+          <Typography variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
+            {proposalMetadata?.title}
+          </Typography>
+          <Typography variant='body2' color={palette.text.secondary}>
+            {proposalMetadata?.description}
+          </Typography>
         </Stack>
-      </Paper>
+
+        <VoteDetails list={voteDetails} />
+        <QuestionList proposal={proposal} questions={proposalMetadata?.acceptedOptions ?? []} />
+      </Stack>
 
       <Stack
         component={Paper}

@@ -11,19 +11,22 @@ export default function SkeletonPage() {
         gap: 3,
       }}
     >
-      <Paper>
-        <Stack sx={{ padding: 2 }} spacing={5} divider={<Divider />}>
-          <Stack spacing={2}>
-            <UiTypographySkeleton variant='h3' width='60%' />
-            <UiTypographySkeleton variant='body2' width='80%' />
-          </Stack>
-          <VoteDetailsSkeleton />
-          <Stack spacing={6}>
-            <UiTypographySkeleton variant='subtitle3' width={160} />
-            <Skeleton variant='rectangular' width='100%' height={50} />
-          </Stack>
+      <Stack
+        component={Paper}
+        sx={{ padding: 10, height: 'fit-content' }}
+        spacing={5}
+        divider={<Divider />}
+      >
+        <Stack spacing={2}>
+          <UiTypographySkeleton variant='h3' width='60%' />
+          <UiTypographySkeleton variant='body2' width='80%' />
         </Stack>
-      </Paper>
+        <VoteDetailsSkeleton />
+        <Stack spacing={6}>
+          <UiTypographySkeleton variant='subtitle3' width={160} />
+          <Skeleton variant='rectangular' width='100%' height={50} />
+        </Stack>
+      </Stack>
 
       <Stack
         component={Paper}
@@ -66,7 +69,7 @@ function VoteDetailsSkeleton() {
 
 function TopUpFormSkeleton() {
   return (
-    <Stack spacing={4} width={262} alignItems='center'>
+    <Stack spacing={4} width={300} alignItems='center'>
       <Skeleton variant='rectangular' width='100%' height={48} sx={{ borderRadius: 2 }} />
       <Skeleton variant='rectangular' width='100%' height={48} sx={{ borderRadius: 12 }} />
     </Stack>

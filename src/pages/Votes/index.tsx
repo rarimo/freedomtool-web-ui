@@ -1,15 +1,25 @@
 import { Box } from '@mui/material'
+import { motion } from 'framer-motion'
 
 import { InfiniteList } from '@/common'
 import { useProposalState } from '@/hooks'
 
-import VoteItem, { VoteItemSkeleton } from './componennts/VoteItem'
+import VoteItem from './componennts/VoteItem'
 
 const listSx = {
   display: 'grid',
   alignItems: 'center',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
   gap: 2,
+}
+
+const itemVariants = {
+  hidden: { scale: 0.9, opacity: 0 },
+  visible: (delay: number) => ({
+    scale: 1,
+    opacity: 1,
+    transition: { delay, duration: 0.25 },
+  }),
 }
 
 export default function Votes() {
@@ -22,28 +32,23 @@ export default function Votes() {
   return (
     <InfiniteList
       items={proposals}
-      slots={{
-        loading: <VotesSkeleton />,
-      }}
       loadingState={proposalsLoadingState}
       onRetry={reloadProposals}
       onLoadNext={loadNextProposals}
     >
       <Box sx={listSx}>
-        {proposals?.map(({ id, proposal }, index) => (
-          <VoteItem proposal={proposal} id={id} key={index} />
+        {proposals?.map(({ id, proposal }) => (
+          <motion.div
+            key={id}
+            initial='hidden'
+            animate='visible'
+            variants={itemVariants}
+            custom={Math.random() * 0.5}
+          >
+            <VoteItem proposal={proposal} id={id} />
+          </motion.div>
         ))}
       </Box>
     </InfiniteList>
-  )
-}
-
-export function VotesSkeleton() {
-  return (
-    <Box sx={listSx}>
-      {Array.from({ length: 12 }).map((_, index) => (
-        <VoteItemSkeleton key={index} />
-      ))}
-    </Box>
   )
 }

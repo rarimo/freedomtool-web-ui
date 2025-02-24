@@ -56,7 +56,7 @@ export const lightPalette: PaletteOptions = {
     lighter: alpha('#3DA7D5', 0.06), //informational/secondary-lighter
   },
   text: {
-    primary: '#112a0a', // text & icons/primary
+    primary: '#2d2d2d', // text & icons/primary
     secondary: alpha('#112a0a', 0.56), // text & icons/secondary
     placeholder: alpha('#112a0a', 0.44), // text & icons/placeholder
     disabled: alpha('#112a0a', 0.28), // text & icons/disabled
@@ -69,7 +69,7 @@ export const lightPalette: PaletteOptions = {
     disabled: alpha('#112a0a', 0.05), // background/component/disabled
   },
   background: {
-    default: '#f7f7f6', // background/bg/primary
+    default: '#F8F9FB', // background/bg/primary
     light: '#ffffff', // background/bg/Container
     paper: '#ffffff', // background/bg/surface1
     surface: '#ffffff', // background/bg/surface2
