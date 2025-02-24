@@ -9,7 +9,7 @@ export default function CreateVote() {
   const { isConnected } = useWeb3Context()
 
   return (
-    <Stack mx={{ md: 'auto' }} minWidth={{ md: 700 }}>
+    <Stack mx={{ md: 'auto' }} minWidth={{ md: 620 }}>
       {isConnected ? (
         <CreateVoteForm />
       ) : (

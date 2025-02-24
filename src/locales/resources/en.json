@@ -1,8 +1,8 @@
 {
   "validations": {
     "field-error-required": "Please fill out this field",
-    "field-error-min-length": "{{field}} must contain minimum {{min}} symbols",
-    "field-error-max-length": "{{field}} must contain maximum {{max}} symbols",
+    "field-error-min-length": "This field must contain minimum {{min}} symbols",
+    "field-error-max-length": "This field must contain maximum {{max}} symbols",
     "field-error-number-type-mismatch": "This field must be a number",
     "field-error-type-mismatch": "This field must be a {{type}}",
     "field-error-more-than": "This field must be greater than {{more}}",
@@ -83,7 +83,7 @@
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
     "add-question-btn": "Add a question",
-    "submit-btn": "Submit",
+    "submit-btn": "Submit proposal",
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Option #{{order}}",

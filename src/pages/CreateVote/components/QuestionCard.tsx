@@ -164,7 +164,7 @@ function OptionsForm({
       <Button
         size='small'
         variant='text'
-        sx={{ mr: 'auto', pl: 0, mt: 3 }}
+        sx={{ mr: 'auto' }}
         startIcon={<UiIcon name={Icons.Plus} size={4} />}
         disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}

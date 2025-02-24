@@ -162,46 +162,48 @@ export default function CreateVoteForm() {
   }, [questionFields.length, trigger])
 
   return (
-    <Stack component={Paper}>
+    <Stack>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-        <Stack spacing={5} width='100%'>
-          <Controller
-            name='title'
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                disabled={isSubmitting}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                placeholder={t('create-vote.proposal-title-plh')}
-                label={t('create-vote.proposal-title-lbl')}
-              />
-            )}
-          />
-          <Controller
-            name='description'
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                multiline
-                rows={5}
-                disabled={isSubmitting}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                label={t('create-vote.proposal-description-lbl')}
-                placeholder={t('create-vote.proposal-description-plh')}
-                sx={{
-                  background: 'transparent',
-                  '& .MuiInputBase-root': {
-                    height: 'unset',
-                  },
-                }}
-              />
-            )}
-          />
-          <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
+        <Stack spacing={2} width='100%' pb={{ md: 10 }}>
+          <Stack sx={{ position: 'relative' }} component={Paper} spacing={5}>
+            <Controller
+              name='title'
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  disabled={isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  placeholder={t('create-vote.proposal-title-plh')}
+                  label={t('create-vote.proposal-title-lbl')}
+                />
+              )}
+            />
+            <Controller
+              name='description'
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  multiline
+                  rows={3}
+                  disabled={isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  label={t('create-vote.proposal-description-lbl')}
+                  placeholder={t('create-vote.proposal-description-plh')}
+                  sx={{
+                    background: 'transparent',
+                    '& .MuiInputBase-root': {
+                      height: 'unset',
+                    },
+                  }}
+                />
+              )}
+            />
+          </Stack>
+          <Stack component={Paper} direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
             <Controller
               name='startDate'
               control={control}
@@ -232,17 +234,7 @@ export default function CreateVoteForm() {
             />
           </Stack>
 
-          <Stack spacing={3}>
-            <Button
-              sx={{ mr: 'auto' }}
-              size='medium'
-              variant='text'
-              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
-              startIcon={<UiIcon name={Icons.Plus} size={4} />}
-              onClick={addQuestion}
-            >
-              {t('create-vote.add-question-btn')}
-            </Button>
+          <Stack component={Paper} spacing={1}>
             {questionFields.map((question, index) => {
               return (
                 <QuestionCard
@@ -258,25 +250,37 @@ export default function CreateVoteForm() {
                 />
               )
             })}
+            <Button
+              sx={{ ml: 'auto', mt: 2, pb: 0 }}
+              size='small'
+              variant='text'
+              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
+              startIcon={<UiIcon name={Icons.Plus} size={4} />}
+              onClick={addQuestion}
+            >
+              {t('create-vote.add-question-btn')}
+            </Button>
           </Stack>
-          <Controller
-            name='votesCount'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiCheckVoteInput
-                {...field}
-                disabled={isSubmitting || isCalculating}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message || helperText}
-                label={t('create-vote.votes-count-lbl')}
-                onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
-                onChange={e => {
-                  field.onChange(e)
-                  resetHelperText?.()
-                }}
-              />
-            )}
-          />
+          <Stack component={Paper}>
+            <Controller
+              name='votesCount'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiCheckVoteInput
+                  {...field}
+                  disabled={isSubmitting || isCalculating}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message || helperText}
+                  label={t('create-vote.votes-count-lbl')}
+                  onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
+                  onChange={e => {
+                    field.onChange(e)
+                    resetHelperText?.()
+                  }}
+                />
+              )}
+            />
+          </Stack>
           <Button disabled={isSubmitting} type='submit'>
             {t('create-vote.submit-btn')}
           </Button>
