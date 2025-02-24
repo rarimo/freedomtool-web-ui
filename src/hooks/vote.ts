@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
 import { formatDateTime } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
@@ -10,6 +11,7 @@ import { IVoteIpfs } from '@/pages/CreateVote/types'
 export function useVote(id?: string) {
   const { t } = useTranslation()
   const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
+  const { address } = useWeb3Context()
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -68,11 +70,16 @@ export function useVote(id?: string) {
     isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
   const isError = metadataError || isCountLoadingError
 
+  const isTopUpAllowed =
+    [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
+    address
+
   return {
     isLoading,
     isError,
     voteDetails,
     proposal,
     proposalMetadata,
+    isTopUpAllowed,
   }
 }

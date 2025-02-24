@@ -62,7 +62,7 @@ export default function CreateVoteForm() {
       Yup.object({
         title: Yup.string().required().max(50),
         description: Yup.string().required().max(200),
-        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
+        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
         startDate: Yup.string().required(),
         endDate: Yup.string()
           .required()

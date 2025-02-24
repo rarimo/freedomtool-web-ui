@@ -36,7 +36,7 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: yupResolver<ITopUpForm>(
       Yup.object({
-        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
+        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
       }),
     ),
   })

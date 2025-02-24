@@ -30,13 +30,7 @@ export default function VoteQrCode({
       >
         <QRCode value={qrCodeUrl} size={130} />
       </Stack>
-      <Typography
-        variant='body2'
-        typography={{ xs: 'body3', md: 'body2' }}
-        color='textSecondary'
-        mb={{ xs: 8 }}
-        mt={1}
-      >
+      <Typography variant='body2' typography={{ xs: 'body3', md: 'body2' }} color='textSecondary'>
         {t('vote.qr-code-subtitle')}
       </Typography>
     </Stack>

@@ -6,7 +6,9 @@
     "field-error-number-type-mismatch": "This field must be a number",
     "field-error-type-mismatch": "This field must be a {{type}}",
     "field-error-more-than": "This field must be greater than {{more}}",
-    "field-error-single-word": "This field must contain only one word"
+    "field-error-single-word": "This field must contain only one word",
+    "field-error-integer": "This field must be an integer",
+    "field-error-max-value": "This field must be less than or equal to {{max}}"
   },
   "check-vote-input": {
     "calculate-eth-btn": "Calculate"
