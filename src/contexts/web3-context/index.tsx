@@ -190,13 +190,13 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     if (!rawProviderSigner || !address) return
 
     try {
-      const balance = await contractConnector.provider.getBalance(address)
+      const balance = await rawProviderSigner.provider.getBalance(address)
       setBalance(balance.toString())
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
       setBalance('0')
     }
-  }, [rawProviderSigner, address, contractConnector.provider])
+  }, [rawProviderSigner, address])
 
   const getNetworkConfig = useCallback(() => {
     if (!client?.chain.id) return networkConfigsMap[NETWORK_NAME]
