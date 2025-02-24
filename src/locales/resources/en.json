@@ -86,8 +86,8 @@
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Option #{{order}}",
-    "proposal-title-lbl": "Proposal title",
-    "proposal-description-lbl": "Proposal description",
+    "proposal-title-lbl": "Title",
+    "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
     "success-msg": "You have successfully created a proposal!"
   },
