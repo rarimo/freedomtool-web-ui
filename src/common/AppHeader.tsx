@@ -55,14 +55,14 @@ export default function AppHeader({ compact = false }: Props) {
             },
           }}
         >
-          <Typography variant='buttonMedium' color={palette.text.primary}>
+          <Typography variant='buttonMedium' color={palette.text.secondary}>
             {t('app-header.title')}
           </Typography>
         </Stack>
       )}
       <Typography
         variant='h5'
-        color={palette.text.primary}
+        color={palette.text.secondary}
         sx={{
           [breakpoints.up('md')]: {
             transition: Transitions.Default,

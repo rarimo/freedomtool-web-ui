@@ -32,7 +32,7 @@ export default function VoteItem({
   const { cid, duration, startTimestamp } = parseProposalFromContract(proposal)
   const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
 
-  const colors = {
+  const dateStyles = {
     expired: { bgcolor: palette.grey[100], color: palette.text.secondary },
     almost: { bgcolor: palette.error.lighter, color: palette.error.main },
     soon: { bgcolor: palette.warning.lighter, color: palette.warning.dark },
@@ -43,21 +43,21 @@ export default function VoteItem({
   const endTimestamp = startTimestamp + duration
   const remainingTime = endTimestamp - now
 
-  let currentColors = colors.enough
+  let currentStyle = dateStyles.enough
 
   // Already expired
   if (remainingTime <= 0) {
-    currentColors = colors.expired
+    currentStyle = dateStyles.expired
   }
 
   // Less than 3h
   if (remainingTime > 0 && remainingTime < 3 * 3_600) {
-    currentColors = colors.almost
+    currentStyle = dateStyles.almost
   }
 
   // Less than 24h
   if (remainingTime >= 3 * 3_600 && remainingTime < 24 * 3_600) {
-    currentColors = colors.soon
+    currentStyle = dateStyles.soon
   }
 
   if (isLoading) return <VoteItemSkeleton />
@@ -120,10 +120,9 @@ export default function VoteItem({
             py={1}
             borderRadius={10}
             alignItems='center'
-            bgcolor={currentColors.bgcolor}
-            color={currentColors.color}
+            {...currentStyle}
           >
-            <UiIcon name={Icons.CalendarBlank} size={4} color='inherit' />
+            <UiIcon name={Icons.CalendarEventFill} size={4} color='inherit' />
             <Typography variant='caption3'>
               {formatTimeFromNow(endTimestamp, { suffix: true })}
             </Typography>

@@ -49,6 +49,7 @@ export enum Icons {
   Flag = 'flag',
   GiftFill = 'gift-fill',
   Gift = 'gift',
+  GearSpinner = 'gear-spinner',
   GroupLine = 'group-line',
   Headset = 'headset',
   History = 'history',

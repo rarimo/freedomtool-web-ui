@@ -112,13 +112,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
       }),
       containedPrimary: ({ theme }) => ({
-        backgroundColor: theme.palette.text.primary,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.inverted.light,
         '&:hover': {
-          background: alpha(theme.palette.text.primary, 0.9),
+          background: alpha(theme.palette.primary.main, 0.9),
         },
         '&:active, &:focus': {
-          background: alpha(theme.palette.inverted.dark, 0.8),
+          background: alpha(theme.palette.primary.main, 0.8),
         },
       }),
       containedSecondary: ({ theme }) => ({

@@ -48,12 +48,12 @@ export function useVote(id?: string) {
 
     return [
       {
-        title: t('vote.remaining-votes'),
-        description: voteCount,
-      },
-      {
         title: t('vote.status'),
         description: ProposalStatus[status],
+      },
+      {
+        title: t('vote.remaining-votes'),
+        description: voteCount,
       },
       {
         title: t('vote.start-date'),

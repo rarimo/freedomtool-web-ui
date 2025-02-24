@@ -15,7 +15,6 @@ export default function LogoLoader({ ...rest }: Props) {
         fontWeight: 400,
         color: palette.text.primary,
         opacity: 0,
-        animation: 'pulse 2s ease infinite',
         ...rest.sx,
       }}
       {...rest}
