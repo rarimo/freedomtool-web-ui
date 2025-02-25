@@ -57,7 +57,7 @@ export default function CreateVoteForm() {
     formState: { isSubmitting },
   } = useForm<ICreateVote>({
     defaultValues,
-    mode: 'onChange',
+    mode: 'onBlur',
     resolver: yupResolver<ICreateVote>(
       Yup.object({
         title: Yup.string().required().max(50),
@@ -73,12 +73,12 @@ export default function CreateVoteForm() {
           .of(
             Yup.object({
               id: Yup.string().required(),
-              text: Yup.string().required().max(30),
+              text: Yup.string().required().min(5).max(30),
               options: Yup.array()
                 .of(
                   Yup.object({
                     id: Yup.string().required(),
-                    text: Yup.string().required(),
+                    text: Yup.string().required().min(2).max(15),
                   }),
                 )
                 .required(),
