@@ -1,15 +1,16 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
-import { formatDateTime } from '@/helpers'
+import { ErrorHandler, formatDateTime, getVotesCount, parseProposalFromContract } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { getVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
-import { IVoteIpfs } from '@/pages/CreateVote/types'
+import { IVoteIpfs } from '@/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()
   const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
+  const { address } = useWeb3Context()
 
   const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
     if (!id) return null
@@ -33,9 +34,14 @@ export function useVote(id?: string) {
   } = useLoading(
     null,
     async () => {
-      if (!id) return
-      const response = await getVotesCount(id)
-      return response.data.vote_count || 0
+      try {
+        if (!id) return
+        const response = await getVotesCount(id)
+        return response.data.vote_count || 0
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+        return '–'
+      }
     },
     { silentError: true },
   )
@@ -46,12 +52,12 @@ export function useVote(id?: string) {
 
     return [
       {
-        title: t('vote.remaining-votes'),
-        description: voteCount,
-      },
-      {
         title: t('vote.status'),
         description: ProposalStatus[status],
+      },
+      {
+        title: t('vote.remaining-votes'),
+        description: voteCount,
       },
       {
         title: t('vote.start-date'),
@@ -68,11 +74,16 @@ export function useVote(id?: string) {
     isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
   const isError = metadataError || isCountLoadingError
 
+  const isTopUpAllowed =
+    [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
+    address
+
   return {
     isLoading,
     isError,
     voteDetails,
     proposal,
     proposalMetadata,
+    isTopUpAllowed,
   }
 }

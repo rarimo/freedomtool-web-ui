@@ -1,4 +1,4 @@
-import { Stack, StackProps, Typography, useTheme } from '@mui/material'
+import { Paper, Stack, StackProps, Typography, useTheme } from '@mui/material'
 import { ReactNode } from 'react'
 
 import { Icons } from '@/enums'
@@ -22,6 +22,7 @@ export default function ErrorView({
 
   return (
     <Stack
+      component={Paper}
       spacing={4}
       alignItems='center'
       width='100%'
@@ -29,8 +30,6 @@ export default function ErrorView({
       p={8}
       border={1}
       borderColor={palette.error.light}
-      borderRadius={2}
-      sx={{ borderStyle: 'dashed', ...rest.sx }}
       {...rest}
     >
       <Stack

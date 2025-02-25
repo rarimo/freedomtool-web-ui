@@ -112,13 +112,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
       }),
       containedPrimary: ({ theme }) => ({
-        backgroundColor: theme.palette.text.primary,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.inverted.light,
         '&:hover': {
-          background: alpha(theme.palette.text.primary, 0.9),
+          background: alpha(theme.palette.primary.main, 0.9),
         },
         '&:active, &:focus': {
-          background: alpha(theme.palette.inverted.dark, 0.8),
+          background: alpha(theme.palette.primary.main, 0.8),
         },
       }),
       containedSecondary: ({ theme }) => ({
@@ -228,10 +228,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiTextField: {
+    defaultProps: { InputLabelProps: { shrink: true } },
     styleOverrides: {
       root: ({ theme }) => ({
-        '& .MuiInputBase-root, & .MuiInputBase-sizeSmall, & .MuiInputBase-sizeMedium':
-          typography.body3,
+        '& .MuiInputBase-root, & .MuiInputBase-sizeMedium': typography.body3,
+        '.MuiInputBase-sizeSmall': typography.body4,
         '& .MuiInputBase-root': {
           '&:not(.MuiInputBase-multiline)': {
             minHeight: theme.spacing(12),
@@ -262,13 +263,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
   },
   MuiFormLabel: {
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
         ...typography.subtitle4,
-        color: 'inherit',
+        color: theme.palette.text.secondary,
         '&.Mui-focused': {
           color: 'inherit',
         },
-      },
+      }),
     },
   },
   MuiFormHelperText: {
@@ -577,12 +578,16 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: 250,
-        height: theme.spacing(2),
+        height: theme.spacing(8),
         backgroundColor: theme.palette.action.active,
       }),
       barColorPrimary: ({ theme }) => ({
         borderRadius: 250,
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.main,
+      }),
+      barColorSecondary: ({ theme }) => ({
+        backgroundColor: theme.palette.primary.lighter,
+        borderRadius: 250,
       }),
     },
   },
@@ -623,10 +628,14 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         border: 0,
-        borderRadius: theme.spacing(4),
+        borderRadius: theme.spacing(2),
+        '&.Mui-disabled': {
+          background: 'transparent',
+          opacity: 0.5,
+        },
         backgroundColor: theme.palette.background.light,
         '&:first-of-type, &:last-of-type': {
-          borderRadius: theme.spacing(4),
+          borderRadius: theme.spacing(2),
         },
         '&.MuiAccordion-root': {
           padding: theme.spacing(2, 4),

@@ -36,14 +36,14 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: yupResolver<ITopUpForm>(
       Yup.object({
-        votesCount: Yup.number().required().min(1).max(MAX_VOTE_COUNT_PER_TX),
+        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
       }),
     ),
   })
 
   const submit = useCallback(async () => {
     try {
-      const votesCount = getValues('votesCount')
+      const votesCount = String(getValues('votesCount'))
       const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount, id)
       if (!isEnoughBalance || !id) return
 
@@ -60,7 +60,7 @@ export default function TopUpForm() {
   const isDisabled = isSubmitting || isCalculating
 
   return (
-    <Stack spacing={4} component='form' onSubmit={handleSubmit(submit)}>
+    <Stack spacing={4} component='form' width={300} onSubmit={handleSubmit(submit)}>
       <Controller
         name='votesCount'
         control={control}
@@ -71,7 +71,7 @@ export default function TopUpForm() {
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
             label={t('create-vote.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(getValues('votesCount'), id)}
+            onCheck={() => getVoteAmountDetails(String(getValues('votesCount')), id)}
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()

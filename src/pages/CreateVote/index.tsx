@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 
 import AuthBlock from '@/common/AuthBlock'
 import { useWeb3Context } from '@/contexts/web3-context'
@@ -9,11 +9,9 @@ export default function CreateVote() {
   const { isConnected } = useWeb3Context()
 
   return (
-    <Stack alignItems={{ md: 'center' }}>
+    <Stack mx={{ md: 'auto' }} minWidth={{ md: 620 }}>
       {isConnected ? (
-        <Stack component={Paper}>
-          <CreateVoteForm />
-        </Stack>
+        <CreateVoteForm />
       ) : (
         <Stack minWidth={350}>
           <AuthBlock />

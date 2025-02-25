@@ -22,6 +22,8 @@ export const useLocalisedYupScheme = () => {
     },
     number: {
       moreThan: ({ more }) => t('validations.field-error-more-than', { more }),
+      integer: t('validations.field-error-integer'),
+      max: ({ max }) => t('validations.field-error-max-value', { max }),
     },
   })
 }

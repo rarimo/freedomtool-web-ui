@@ -28,7 +28,6 @@ export default function AppLogo(props: StackProps) {
           fontWeight: 400,
           color: palette.text.primary,
           opacity: 0,
-          animation: 'pulse 2s ease infinite',
         }}
       >
         {t('app-logo.title')}

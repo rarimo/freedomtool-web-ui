@@ -25,7 +25,14 @@ export default function AuthBlock() {
   }
 
   return (
-    <Stack component={Paper} spacing={4} alignItems='center' textAlign='center'>
+    <Stack
+      component={Paper}
+      spacing={4}
+      width={{ xs: 1, md: 350 }}
+      mx='auto'
+      alignItems='center'
+      textAlign='center'
+    >
       <Stack
         alignItems='center'
         justifyContent='center'

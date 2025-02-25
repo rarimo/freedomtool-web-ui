@@ -55,19 +55,25 @@ export default function AppHeader({ compact = false }: Props) {
             },
           }}
         >
-          <Typography variant='buttonMedium' color={palette.text.primary}>
+          <Typography variant='buttonMedium' color={palette.text.secondary}>
             {t('app-header.title')}
           </Typography>
         </Stack>
       )}
+
       <Typography
-        variant='h5'
-        color={palette.text.primary}
+        variant='h6'
+        textAlign='center'
+        color={palette.text.secondary}
+        textOverflow='ellipsis'
+        noWrap
         sx={{
+          maxWidth: 150,
           [breakpoints.up('md')]: {
             transition: Transitions.Default,
             transform: compact ? 'scale(0.875)' : 'none',
             transformOrigin: 'bottom',
+            maxWidth: 400,
           },
         }}
       >

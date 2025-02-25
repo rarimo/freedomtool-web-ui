@@ -1,8 +1,7 @@
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
+import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
-
-import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from './types'
 
 export const prepareAcceptedOptionsToIpfs = (questions: ICreateVote['questions']) =>
   questions.map(question => ({
@@ -39,7 +38,7 @@ export const getVotesCount = (id: string) => {
   )
 }
 
-export const predictVoteAmount = (votesCount: number, proposalId?: string) => {
+export const predictVoteAmount = (votesCount: string, proposalId?: number) => {
   return api.post<{ amount_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
@@ -47,9 +46,8 @@ export const predictVoteAmount = (votesCount: number, proposalId?: string) => {
         data: {
           type: 'vote_predict_amount',
           attributes: {
-            count_tx: votesCount,
-            voting_id: proposalId,
-            ...(proposalId && { voting_id: proposalId }),
+            count_tx: String(votesCount),
+            ...(proposalId && { voting_id: Number(proposalId) }),
           },
         },
       },
@@ -66,3 +64,9 @@ export const parseProposalFromContract = (
   duration: Number(proposal[2].duration),
   voteResults: proposal[3],
 })
+
+export const getTotalVotesPerQuestion = (proposal: IParsedProposal, questionIndex: number) =>
+  proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0n) || 0n
+
+export const getCountProgress = (totalCount: number, count: number) =>
+  totalCount > 0 ? (count / totalCount) * 100 : 0

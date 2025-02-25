@@ -11,12 +11,12 @@ export const lightPalette: PaletteOptions = {
     baseBackground: alpha('#112a0a', 0.28), // base/base-background
   },
   primary: {
-    darker: '#265517', // primary/primary-darker
-    dark: '#2d601c', // primary/primary-dark
-    main: '#366e24', // primary/primary-base
-    light: alpha('#366e24', 0.12), // primary/primary-light
-    lighter: alpha('#366e24', 0.06), // primary/primary-lighter
-    contrastText: '#000000',
+    darker: '#1A5389', // primary/primary-darker
+    dark: '#1D5E9A', // primary/primary-dark
+    main: '#2168AB', // primary/primary-base
+    light: alpha('#2168AB', 0.12), // primary/primary-light
+    lighter: alpha('#2168AB', 0.06), // primary/primary-lighter
+    contrastText: '#ffffff',
   },
   secondary: {
     darker: '#8f40d0', // secondary/secondary-darker
@@ -69,7 +69,7 @@ export const lightPalette: PaletteOptions = {
     disabled: alpha('#112a0a', 0.05), // background/component/disabled
   },
   background: {
-    default: '#f7f7f6', // background/bg/primary
+    default: '#F8F9FB', // background/bg/primary
     light: '#ffffff', // background/bg/Container
     paper: '#ffffff', // background/bg/surface1
     surface: '#ffffff', // background/bg/surface2
@@ -101,11 +101,11 @@ export const darkPalette: PaletteOptions = {
     baseBackground: alpha('#112a0a', 0.28), // base/base-background
   },
   primary: {
-    darker: '#6cb555', // primary/primary-darker
-    dark: '#60ac48', // primary/primary-dark
-    main: '#4f9c37', // primary/primary-base
-    light: alpha('#4f9c37', 0.12), // primary/primary-light
-    lighter: alpha('#4f9c37', 0.06), // primary/primary-lighter
+    darker: '#4A90E2', // primary/primary-darker
+    dark: '#3F81D0', // primary/primary-dark
+    main: '#3187D8', // primary/primary-base
+    light: alpha('#2168AB', 0.3), // primary/primary-light
+    lighter: alpha('#2168AB', 0.15), // primary/primary-lighter
     contrastText: '#000000',
   },
   secondary: {

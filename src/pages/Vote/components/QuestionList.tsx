@@ -1,16 +1,18 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  Button,
   Divider,
+  LinearProgress,
+  Paper,
   Stack,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DotDivider } from '@/common'
-import { IParsedProposal, IQuestionIpfs } from '@/pages/CreateVote/types'
+import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
+import { IParsedProposal, IQuestionIpfs } from '@/types'
 
 export default function QuestionList({
   proposal,
@@ -20,54 +22,147 @@ export default function QuestionList({
   proposal: IParsedProposal | null
 }) {
   const { t } = useTranslation()
-  const { palette } = useTheme()
 
   if (!proposal) return null
-
-  const getTotalVotesPerQuestion = (questionIndex: number) =>
-    proposal.voteResults[questionIndex]?.reduce((acc, count) => acc + count, 0n) || 0n
 
   return (
     <Stack spacing={6}>
       <Typography variant='subtitle3'>{t('vote.accepted-options-title')}</Typography>
-      <Stack spacing={3}>
+      <Stack spacing={4}>
         {questions?.map(({ title, variants }, qIndex) => (
-          <Accordion key={qIndex}>
-            <AccordionSummary>
-              <Stack
-                direction='row'
-                width={1}
-                alignItems='center'
-                justifyContent='space-between'
-                spacing={2}
-              >
-                <Typography variant='h6'>{title}</Typography>
-                <Typography variant='body3' color={palette.text.secondary}>
-                  {t('vote.votes-count', {
-                    count: Number(getTotalVotesPerQuestion(qIndex)),
-                  })}
-                </Typography>
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Divider sx={{ mb: 4 }} />
-              <Stack spacing={1}>
-                {variants.map((variant, vIndex) => (
-                  <Stack alignItems='center' spacing={3} direction='row' key={vIndex}>
-                    <DotDivider />
-                    <Typography>{variant}</Typography>
-
-                    <Typography ml='auto' variant='body4' color={palette.text.secondary}>
-                      {t('vote.votes-count', {
-                        count: Number(proposal?.voteResults[qIndex][vIndex]),
-                      })}
-                    </Typography>
-                  </Stack>
-                ))}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
+          <QuestionItem
+            key={qIndex}
+            title={title}
+            variants={variants}
+            voteResults={proposal?.voteResults[qIndex]}
+            totalCount={Number(getTotalVotesPerQuestion(proposal, qIndex))}
+          />
         ))}
+      </Stack>
+    </Stack>
+  )
+}
+
+import { motion } from 'framer-motion'
+
+import { hiddenScrollbar } from '@/theme/constants'
+
+function QuestionItem({
+  title,
+  variants,
+  totalCount,
+  voteResults,
+}: {
+  title: string
+  variants: string[]
+  totalCount: number
+  voteResults: bigint[]
+}) {
+  const { palette } = useTheme()
+  const { t } = useTranslation()
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  return (
+    <Stack
+      component={Paper}
+      padding={0}
+      border={`1px solid ${palette.action.active}`}
+      boxShadow='0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)'
+    >
+      <Stack spacing={2} p={{ xs: 1, md: 6 }}>
+        <Typography color={palette.text.secondary} variant='caption3'>
+          {t('vote.question-name')}
+        </Typography>
+        <Typography
+          title={title}
+          width={{ xs: 250, md: 500 }}
+          noWrap
+          textOverflow='ellipsis'
+          variant='h5'
+        >
+          {title}
+        </Typography>
+
+        <Stack
+          component={motion.div}
+          initial={false}
+          justifyContent='flex-start'
+          animate={{ height: isExpanded ? 'auto' : 75 }}
+          transition={{ duration: 0.3 }}
+          sx={{ overflow: 'auto', ...hiddenScrollbar }}
+          spacing={2}
+          mt={3}
+        >
+          {variants.map((variant, oIndex) => (
+            <LinearProgressWithLabel
+              title={variant}
+              progress={getCountProgress(totalCount, Number(voteResults[oIndex] || 0))}
+              key={oIndex}
+            />
+          ))}
+        </Stack>
+      </Stack>
+      <Divider sx={{ my: { xs: 4, md: 0 } }} />
+      <Stack direction='row' justifyContent='space-between' alignItems='center'>
+        <Typography p={{ xs: 1, md: 6 }} variant='buttonSmall'>
+          {t('vote.votes-count', {
+            count: totalCount,
+          })}
+        </Typography>
+        {variants.length > 2 && (
+          <Button
+            size='small'
+            variant='text'
+            sx={{ mr: { xs: 0, md: 3 } }}
+            onClick={() => setIsExpanded(prev => !prev)}
+          >
+            {isExpanded ? t('vote.hide-options-btn') : t('vote.show-all-options-btn')}
+          </Button>
+        )}
+      </Stack>
+    </Stack>
+  )
+}
+
+function LinearProgressWithLabel({ title, progress }: { title: string; progress: number }) {
+  const { palette } = useTheme()
+  const { t } = useTranslation()
+
+  return (
+    <Stack>
+      <Stack sx={{ position: 'relative' }}>
+        <Typography
+          variant='caption1'
+          sx={{
+            position: 'absolute',
+            color: palette.primary.darker,
+            zIndex: 1,
+            right: 10,
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          {t('formats.percent', { value: progress })}
+        </Typography>
+        <Tooltip title={title}>
+          <Typography
+            maxWidth={{ xs: 150, md: 280 }}
+            noWrap
+            textOverflow='ellipsis'
+            variant='buttonSmall'
+            sx={{
+              position: 'absolute',
+              color: palette.primary.darker,
+              zIndex: 1,
+              left: 10,
+              top: '50%',
+              transform: 'translateY(-50%)',
+            }}
+          >
+            {title}
+          </Typography>
+        </Tooltip>
+        <LinearProgress variant='determinate' value={progress} color='secondary' />
       </Stack>
     </Stack>
   )
