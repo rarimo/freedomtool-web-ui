@@ -629,6 +629,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
       root: ({ theme }) => ({
         border: 0,
         borderRadius: theme.spacing(2),
+        '&.Mui-disabled': {
+          background: 'transparent',
+          opacity: 0.5,
+        },
         backgroundColor: theme.palette.background.light,
         '&:first-of-type, &:last-of-type': {
           borderRadius: theme.spacing(2),

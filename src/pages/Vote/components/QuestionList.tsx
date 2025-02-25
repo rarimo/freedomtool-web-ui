@@ -58,17 +58,18 @@ function QuestionItem({
 
   return (
     <Stack
-      elevation={8}
       component={Paper}
       padding={0}
       border={`1px solid ${palette.action.active}`}
       boxShadow='0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)'
     >
-      <Stack spacing={2} p={6}>
+      <Stack spacing={2} p={{ xs: 1, md: 6 }}>
         <Typography color={palette.text.secondary} variant='caption3'>
           {t('vote.question-name')}
         </Typography>
-        <Typography variant='h5'>{title}</Typography>
+        <Typography title={title} maxWidth={280} noWrap textOverflow='ellipsis' variant='h5'>
+          {title}
+        </Typography>
         <Stack spacing={2} mt={3}>
           {variants.map((variant, oIndex) => {
             return (
@@ -81,14 +82,14 @@ function QuestionItem({
           })}
         </Stack>
       </Stack>
-      <Divider />
+      <Divider sx={{ my: { xs: 4, md: 0 } }} />
       <Stack direction='row' justifyContent='space-between' alignItems='center'>
-        <Typography padding={6} variant='buttonSmall'>
+        <Typography p={{ xs: 1, md: 6 }} variant='buttonSmall'>
           {t('vote.votes-count', {
             count: totalCount,
           })}
         </Typography>
-        <Button size='small' variant='text' sx={{ mr: 3 }}>
+        <Button size='small' variant='text' sx={{ mr: { xs: 0, md: 3 } }}>
           {t('vote.show-all-options-btn')}
         </Button>
       </Stack>
@@ -118,6 +119,9 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
             {t('formats.percent', { value: progress })}
           </Typography>
           <Typography
+            maxWidth={280}
+            noWrap
+            textOverflow='ellipsis'
             variant='buttonSmall'
             sx={{
               position: 'absolute',
