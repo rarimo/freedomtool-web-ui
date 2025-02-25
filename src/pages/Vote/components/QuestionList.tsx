@@ -60,7 +60,7 @@ function QuestionItem({
 }) {
   const { palette } = useTheme()
   const { t } = useTranslation()
-  const [showAllVariants, setShowAllVariants] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <Stack
@@ -87,7 +87,7 @@ function QuestionItem({
           component={motion.div}
           initial={false}
           justifyContent='flex-start'
-          animate={{ height: showAllVariants ? 'auto' : 75 }}
+          animate={{ height: isExpanded ? 'auto' : 75 }}
           transition={{ duration: 0.3 }}
           sx={{ overflow: 'auto', ...hiddenScrollbar }}
           spacing={2}
@@ -114,9 +114,9 @@ function QuestionItem({
             size='small'
             variant='text'
             sx={{ mr: { xs: 0, md: 3 } }}
-            onClick={() => setShowAllVariants(prev => !prev)}
+            onClick={() => setIsExpanded(prev => !prev)}
           >
-            {showAllVariants ? t('vote.hide-options-btn') : t('vote.show-all-options-btn')}
+            {isExpanded ? t('vote.hide-options-btn') : t('vote.show-all-options-btn')}
           </Button>
         )}
       </Stack>
