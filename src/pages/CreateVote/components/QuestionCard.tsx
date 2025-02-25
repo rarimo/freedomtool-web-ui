@@ -15,6 +15,7 @@ import { Control, Controller, FieldArrayWithId, useFieldArray, useWatch } from '
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
+import { DotDivider } from '@/common'
 import { Icons } from '@/enums'
 import { ICreateVote } from '@/types'
 import { UiIcon } from '@/ui'
@@ -137,34 +138,37 @@ function OptionsForm({
     <Stack spacing={2}>
       {fields.map((option, index) => (
         <Stack key={option.id} direction='row' alignItems='center' spacing={2}>
-          <Controller
-            name={`questions.${questionIndex}.options.${index}.text`}
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                size='small'
-                variant='outlined'
-                placeholder={t('create-vote.option-lbl', { order: index + 1 })}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                InputProps={{
-                  endAdornment: fields.length > 2 && (
-                    <IconButton onClick={() => remove(index)} color='error'>
-                      <UiIcon name={Icons.DeleteBin6Line} size={4} />
-                    </IconButton>
-                  ),
-                }}
-                fullWidth
-              />
-            )}
-          />
+          <Stack direction='row' ml={2} spacing={2} alignItems='center' width='100%'>
+            <DotDivider />
+            <Controller
+              name={`questions.${questionIndex}.options.${index}.text`}
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  size='small'
+                  variant='outlined'
+                  placeholder={t('create-vote.option-lbl', { order: index + 1 })}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    endAdornment: fields.length > 2 && (
+                      <IconButton onClick={() => remove(index)} color='error'>
+                        <UiIcon name={Icons.DeleteBin6Line} size={4} />
+                      </IconButton>
+                    ),
+                  }}
+                  fullWidth
+                />
+              )}
+            />
+          </Stack>
         </Stack>
       ))}
       <Button
         size='small'
         variant='text'
-        sx={{ mr: 'auto' }}
+        sx={{ mr: 'auto', pl: 1, mt: 1 }}
         startIcon={<UiIcon name={Icons.Plus} size={4} />}
         disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}
