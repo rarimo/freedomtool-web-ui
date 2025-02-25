@@ -578,12 +578,16 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: 250,
-        height: theme.spacing(2),
+        height: theme.spacing(8),
         backgroundColor: theme.palette.action.active,
       }),
       barColorPrimary: ({ theme }) => ({
         borderRadius: 250,
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.main,
+      }),
+      barColorSecondary: ({ theme }) => ({
+        backgroundColor: theme.palette.primary.lighter,
+        borderRadius: 250,
       }),
     },
   },

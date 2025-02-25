@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
-import { formatDateTime } from '@/helpers'
+import { formatDateTime, getVotesCount, parseProposalFromContract } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { getVotesCount, parseProposalFromContract } from '@/pages/CreateVote/helpers'
-import { IVoteIpfs } from '@/pages/CreateVote/types'
+import { IVoteIpfs } from '@/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()

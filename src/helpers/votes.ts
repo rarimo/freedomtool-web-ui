@@ -1,8 +1,7 @@
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
+import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
-
-import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from './types'
 
 export const prepareAcceptedOptionsToIpfs = (questions: ICreateVote['questions']) =>
   questions.map(question => ({
@@ -65,3 +64,9 @@ export const parseProposalFromContract = (
   duration: Number(proposal[2].duration),
   voteResults: proposal[3],
 })
+
+export const getTotalVotesPerQuestion = (proposal: IParsedProposal, questionIndex: number) =>
+  proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0n) || 0n
+
+export const getCountProgress = (totalCount: number, count: number) =>
+  totalCount > 0 ? (count / totalCount) * 100 : 0

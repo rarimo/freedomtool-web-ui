@@ -16,7 +16,7 @@ export default function VoteQrCode({
   const qrCodeUrl = generateQrCodeUrl(baseUrl, queryParams)
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={4}>
       <Stack
         sx={{
           width: 160,
@@ -26,11 +26,13 @@ export default function VoteQrCode({
           justifyContent: 'center',
           borderRadius: 4,
           border: `1px solid ${palette.action.active}`,
+          boxShadow:
+            '0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)',
         }}
       >
         <QRCode value={qrCodeUrl} size={130} />
       </Stack>
-      <Typography variant='body2' typography={{ xs: 'body3', md: 'body2' }} color='textSecondary'>
+      <Typography variant='body3' color='textSecondary'>
         {t('vote.qr-code-subtitle')}
       </Typography>
     </Stack>

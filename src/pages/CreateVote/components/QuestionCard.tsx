@@ -16,10 +16,10 @@ import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Icons } from '@/enums'
+import { ICreateVote } from '@/types'
 import { UiIcon } from '@/ui'
 
 import { MAX_OPTIONS_PER_QUESTION } from '../constants'
-import { ICreateVote } from '../types'
 
 interface IQuestionForm {
   question: FieldArrayWithId<ICreateVote, 'questions', 'id'>

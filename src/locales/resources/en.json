@@ -128,7 +128,9 @@
       "votes-count-lbl": "Votes count",
       "success-msg": "Voting successfully topped up!",
       "top-up-button": "Top up"
-    }
+    },
+    "show-all-options-btn": "Show all options",
+    "question-name": "Question name"
   },
   "app-logo": {
     "title": "Freedom tool 2.0"

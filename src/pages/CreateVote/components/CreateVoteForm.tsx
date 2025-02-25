@@ -10,17 +10,18 @@ import * as Yup from 'yup'
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
 import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
-import { useCheckVoteAmount, useProposalState } from '@/hooks'
-import { UiCheckVoteInput, UiIcon } from '@/ui'
-
-import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '../constants'
 import {
+  bus,
+  ErrorHandler,
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
   uploadToIpfs,
-} from '../helpers'
-import { ICreateVote } from '../types'
+} from '@/helpers'
+import { useCheckVoteAmount, useProposalState } from '@/hooks'
+import { ICreateVote } from '@/types'
+import { UiCheckVoteInput, UiIcon } from '@/ui'
+
+import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '../constants'
 import QuestionCard from './QuestionCard'
 
 const minDate = time().utc()

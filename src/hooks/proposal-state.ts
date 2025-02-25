@@ -6,7 +6,7 @@ import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { createContract, ErrorHandler } from '@/helpers'
 import { ZERO_PROPOSAL_SMT } from '@/pages/CreateVote/constants'
-import { IProposalWithId } from '@/pages/CreateVote/types'
+import { IProposalWithId } from '@/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 

@@ -6,8 +6,7 @@ import { useState } from 'react'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
-import { predictVoteAmount } from '@/pages/CreateVote/helpers'
+import { bus, ErrorHandler, predictVoteAmount } from '@/helpers'
 
 interface CheckVoteAmountConfig {
   shouldUpdateHelperText?: boolean

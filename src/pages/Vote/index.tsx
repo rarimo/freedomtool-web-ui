@@ -108,6 +108,8 @@ export default function Vote() {
                   alignItems: 'center',
                   marginBottom: 3,
                   height: 'fit-content',
+                  position: 'sticky',
+                  top: 80,
                 }}
               >
                 <VoteQrCode

@@ -12,10 +12,9 @@ import { useTranslation } from 'react-i18next'
 import { generatePath, Link } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
-import { formatDateTime, formatTimeFromNow } from '@/helpers'
+import { formatDateTime, formatTimeFromNow, parseProposalFromContract } from '@/helpers'
 import { useIpfsLoading } from '@/hooks'
-import { parseProposalFromContract } from '@/pages/CreateVote/helpers'
-import { IVoteIpfs } from '@/pages/CreateVote/types'
+import { IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
 
