@@ -32,7 +32,7 @@ export default function VoteItem({
   const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
 
   const dateStyles = {
-    expired: { bgcolor: palette.grey[100], color: palette.text.secondary },
+    expired: { bgcolor: palette.grey[100], color: palette.grey[900] },
     almost: { bgcolor: palette.error.lighter, color: palette.error.main },
     soon: { bgcolor: palette.warning.lighter, color: palette.warning.dark },
     enough: { bgcolor: palette.success.lighter, color: palette.success.main },
