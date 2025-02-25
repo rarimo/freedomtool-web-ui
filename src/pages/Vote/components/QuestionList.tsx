@@ -14,6 +14,9 @@ import { useTranslation } from 'react-i18next'
 import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
 import { IParsedProposal, IQuestionIpfs } from '@/types'
 
+const MAX_VISIBLE_OPTIONS = 4
+const OPTION_HEIGHT = 38
+
 export default function QuestionList({
   proposal,
   questions,
@@ -87,7 +90,11 @@ function QuestionItem({
           component={motion.div}
           initial={false}
           justifyContent='flex-start'
-          animate={{ height: isExpanded ? 'auto' : 75 }}
+          animate={{
+            height: isExpanded
+              ? 'auto'
+              : OPTION_HEIGHT * Math.min(variants.length, MAX_VISIBLE_OPTIONS),
+          }}
           transition={{ duration: 0.3 }}
           sx={{ overflow: 'auto', ...hiddenScrollbar }}
           spacing={2}
@@ -109,7 +116,7 @@ function QuestionItem({
             count: totalCount,
           })}
         </Typography>
-        {variants.length > 2 && (
+        {variants.length > MAX_VISIBLE_OPTIONS && (
           <Button
             size='small'
             variant='text'

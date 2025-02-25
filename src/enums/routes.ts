@@ -1,7 +1,8 @@
 export enum RoutePaths {
   Home = '/',
 
+  VotesNew = '/new',
+
   Votes = '/votes',
-  VotesNew = '/votes/new',
   Vote = '/votes/:id',
 }
