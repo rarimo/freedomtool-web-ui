@@ -48,6 +48,7 @@ export default function QuestionList({
 
 import { motion } from 'framer-motion'
 
+import { useScrollWithShadow } from '@/hooks'
 import { hiddenScrollbar } from '@/theme/constants'
 
 function QuestionItem({
@@ -64,6 +65,7 @@ function QuestionItem({
   const { palette } = useTheme()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
+  const { shadowScrollStyle, onScrollHandler } = useScrollWithShadow()
 
   return (
     <Stack
@@ -96,9 +98,14 @@ function QuestionItem({
               : OPTION_HEIGHT * Math.min(variants.length, MAX_VISIBLE_OPTIONS),
           }}
           transition={{ duration: 0.3 }}
-          sx={{ overflow: 'auto', ...hiddenScrollbar }}
+          sx={{
+            overflow: 'auto',
+            ...hiddenScrollbar,
+            ...(variants.length > MAX_VISIBLE_OPTIONS && !isExpanded ? shadowScrollStyle : {}),
+          }}
           spacing={2}
           mt={3}
+          onScroll={onScrollHandler}
         >
           {variants.map((variant, oIndex) => (
             <LinearProgressWithLabel

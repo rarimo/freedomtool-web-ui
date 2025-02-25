@@ -75,7 +75,7 @@ export default function Vote() {
             >
               <Stack
                 component={Paper}
-                sx={{ padding: 10, height: 'fit-content' }}
+                sx={{ padding: 10, height: 'fit-content', mb: { md: 15 } }}
                 spacing={5}
                 divider={<Divider />}
               >
