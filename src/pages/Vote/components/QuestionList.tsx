@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
@@ -42,6 +43,10 @@ export default function QuestionList({
   )
 }
 
+import { motion } from 'framer-motion'
+
+import { hiddenScrollbar } from '@/theme/constants'
+
 function QuestionItem({
   title,
   variants,
@@ -55,6 +60,7 @@ function QuestionItem({
 }) {
   const { palette } = useTheme()
   const { t } = useTranslation()
+  const [showAllVariants, setShowAllVariants] = useState(false)
 
   return (
     <Stack
@@ -67,19 +73,33 @@ function QuestionItem({
         <Typography color={palette.text.secondary} variant='caption3'>
           {t('vote.question-name')}
         </Typography>
-        <Typography title={title} maxWidth={280} noWrap textOverflow='ellipsis' variant='h5'>
+        <Typography
+          title={title}
+          width={{ xs: 250, md: 500 }}
+          noWrap
+          textOverflow='ellipsis'
+          variant='h5'
+        >
           {title}
         </Typography>
-        <Stack spacing={2} mt={3}>
-          {variants.map((variant, oIndex) => {
-            return (
-              <LinearProgressWithLabel
-                title={variant}
-                progress={getCountProgress(totalCount, Number(voteResults[oIndex] || 0))}
-                key={oIndex}
-              />
-            )
-          })}
+
+        <Stack
+          component={motion.div}
+          initial={false}
+          justifyContent='flex-start'
+          animate={{ height: showAllVariants ? 'auto' : 75 }}
+          transition={{ duration: 0.3 }}
+          sx={{ overflow: 'auto', ...hiddenScrollbar }}
+          spacing={2}
+          mt={3}
+        >
+          {variants.map((variant, oIndex) => (
+            <LinearProgressWithLabel
+              title={variant}
+              progress={getCountProgress(totalCount, Number(voteResults[oIndex] || 0))}
+              key={oIndex}
+            />
+          ))}
         </Stack>
       </Stack>
       <Divider sx={{ my: { xs: 4, md: 0 } }} />
@@ -89,9 +109,16 @@ function QuestionItem({
             count: totalCount,
           })}
         </Typography>
-        <Button size='small' variant='text' sx={{ mr: { xs: 0, md: 3 } }}>
-          {t('vote.show-all-options-btn')}
-        </Button>
+        {variants.length > 2 && (
+          <Button
+            size='small'
+            variant='text'
+            sx={{ mr: { xs: 0, md: 3 } }}
+            onClick={() => setShowAllVariants(prev => !prev)}
+          >
+            {showAllVariants ? t('vote.hide-options-btn') : t('vote.show-all-options-btn')}
+          </Button>
+        )}
       </Stack>
     </Stack>
   )
@@ -102,24 +129,24 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
   const { t } = useTranslation()
 
   return (
-    <Tooltip title={title}>
-      <Stack>
-        <Stack sx={{ position: 'relative' }}>
+    <Stack>
+      <Stack sx={{ position: 'relative' }}>
+        <Typography
+          variant='caption1'
+          sx={{
+            position: 'absolute',
+            color: palette.primary.darker,
+            zIndex: 1,
+            right: 10,
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          {t('formats.percent', { value: progress })}
+        </Typography>
+        <Tooltip title={title}>
           <Typography
-            variant='caption1'
-            sx={{
-              position: 'absolute',
-              color: palette.primary.darker,
-              zIndex: 1,
-              right: 10,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            {t('formats.percent', { value: progress })}
-          </Typography>
-          <Typography
-            maxWidth={280}
+            maxWidth={{ xs: 150, md: 280 }}
             noWrap
             textOverflow='ellipsis'
             variant='buttonSmall'
@@ -134,9 +161,9 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
           >
             {title}
           </Typography>
-          <LinearProgress variant='determinate' value={progress} color='secondary' />
-        </Stack>
+        </Tooltip>
+        <LinearProgress variant='determinate' value={progress} color='secondary' />
       </Stack>
-    </Tooltip>
+    </Stack>
   )
 }

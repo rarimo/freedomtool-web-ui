@@ -60,14 +60,20 @@ export default function AppHeader({ compact = false }: Props) {
           </Typography>
         </Stack>
       )}
+
       <Typography
-        variant='h5'
+        variant='h6'
+        textAlign='center'
         color={palette.text.secondary}
+        textOverflow='ellipsis'
+        noWrap
         sx={{
+          maxWidth: 150,
           [breakpoints.up('md')]: {
             transition: Transitions.Default,
             transform: compact ? 'scale(0.875)' : 'none',
             transformOrigin: 'bottom',
+            maxWidth: 400,
           },
         }}
       >
