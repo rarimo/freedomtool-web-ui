@@ -1,15 +1,7 @@
-import {
-  Divider,
-  IconButton,
-  Paper,
-  Skeleton,
-  Stack,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material'
+import { Divider, Paper, Skeleton, Stack, Tooltip, Typography, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { generatePath, Link } from 'react-router-dom'
+import { generatePath, useNavigate } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
 import { formatDateTime, formatTimeFromNow, parseProposalFromContract } from '@/helpers'
@@ -30,6 +22,7 @@ export default function VoteItem({
 
   const { cid, duration, startTimestamp } = parseProposalFromContract(proposal)
   const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
+  const navigate = useNavigate()
 
   const dateStyles = {
     expired: { bgcolor: palette.grey[100], color: palette.grey[900] },
@@ -63,75 +56,80 @@ export default function VoteItem({
   if (isError) return null
 
   return (
-    <Stack
-      justifyContent='center'
-      component={Paper}
-      spacing={4}
-      sx={{ p: 4, mb: 2 }}
-      divider={<Divider orientation='horizontal' flexItem />}
+    <motion.div
+      whileFocus={{ scale: 0.95 }}
+      whileHover={{ scale: 0.95 }}
+      whileTap={{ scale: 0.88 }}
     >
-      <Stack spacing={1}>
-        <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
-          {data?.title || t('vote-item.no-title')}
-        </Typography>
-        <Typography
-          maxWidth={200}
-          noWrap
-          textOverflow='ellipsis'
-          variant='body4'
-          color={palette.text.secondary}
-        >
-          {data?.description || t('vote-item.no-description')}
-        </Typography>
-      </Stack>
-
       <Stack
-        color={palette.text.secondary}
-        justifyContent='space-between'
-        alignItems='center'
-        direction='row'
+        justifyContent='center'
+        component={Paper}
+        spacing={4}
+        sx={{ p: 4, mb: 2, cursor: 'pointer' }}
+        divider={<Divider orientation='horizontal' flexItem />}
+        onClick={() => navigate(generatePath(RoutePaths.Vote, { id: String(id) }))}
       >
-        <Tooltip
-          slotProps={{
-            popper: {
-              sx: { maxWidth: 260 },
-            },
-          }}
-          title={
-            <Stack spacing={1}>
-              <Typography variant='caption2'>
-                {t('vote-item.start-date', {
-                  date: formatDateTime(startTimestamp),
-                })}
-              </Typography>
-              <Typography variant='caption2'>
-                {t('vote-item.end-date', {
-                  date: formatDateTime(startTimestamp + duration),
-                })}
+        <Stack spacing={1}>
+          <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
+            {data?.title || t('vote-item.no-title')}
+          </Typography>
+          <Typography
+            maxWidth={200}
+            noWrap
+            textOverflow='ellipsis'
+            variant='body4'
+            color={palette.text.secondary}
+          >
+            {data?.description || t('vote-item.no-description')}
+          </Typography>
+        </Stack>
+
+        <Stack
+          color={palette.text.secondary}
+          justifyContent='space-between'
+          alignItems='center'
+          direction='row'
+        >
+          <Tooltip
+            slotProps={{
+              popper: {
+                sx: { maxWidth: 260 },
+              },
+            }}
+            title={
+              <Stack spacing={1}>
+                <Typography variant='caption2'>
+                  {t('vote-item.start-date', {
+                    date: formatDateTime(startTimestamp),
+                  })}
+                </Typography>
+                <Typography variant='caption2'>
+                  {t('vote-item.end-date', {
+                    date: formatDateTime(startTimestamp + duration),
+                  })}
+                </Typography>
+              </Stack>
+            }
+          >
+            <Stack
+              direction='row'
+              spacing={2}
+              px={3}
+              py={1}
+              borderRadius={10}
+              alignItems='center'
+              {...currentStyle}
+            >
+              <UiIcon name={Icons.CalendarEventFill} size={4} color='inherit' />
+              <Typography variant='caption3'>
+                {formatTimeFromNow(endTimestamp, { suffix: true })}
               </Typography>
             </Stack>
-          }
-        >
-          <Stack
-            direction='row'
-            spacing={2}
-            px={3}
-            py={1}
-            borderRadius={10}
-            alignItems='center'
-            {...currentStyle}
-          >
-            <UiIcon name={Icons.CalendarEventFill} size={4} color='inherit' />
-            <Typography variant='caption3'>
-              {formatTimeFromNow(endTimestamp, { suffix: true })}
-            </Typography>
-          </Stack>
-        </Tooltip>
-        <IconButton component={Link} to={generatePath(RoutePaths.Vote, { id: String(id) })}>
+          </Tooltip>
           <UiIcon name={Icons.ArrowRight} size={5} color={palette.text.secondary} />
-        </IconButton>
+        </Stack>
       </Stack>
-    </Stack>
+    </motion.div>
   )
 }
 
