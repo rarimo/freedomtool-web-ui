@@ -19,7 +19,7 @@ const AppNavbar = ({ ...rest }: StackProps) => {
   const navbarItems = useMemo<NavbarLinkProps[]>(
     () => [
       {
-        routesList: [RoutePaths.Votes],
+        routesList: [RoutePaths.Votes, RoutePaths.Vote],
         to: RoutePaths.Votes,
         title: t('routes.vote'),
         icon: Icons.ChartBar,
