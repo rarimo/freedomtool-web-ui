@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
-import { formatDateTime, getVotesCount, parseProposalFromContract } from '@/helpers'
+import { ErrorHandler, formatDateTime, getVotesCount, parseProposalFromContract } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { IVoteIpfs } from '@/types'
 
@@ -34,9 +34,14 @@ export function useVote(id?: string) {
   } = useLoading(
     null,
     async () => {
-      if (!id) return
-      const response = await getVotesCount(id)
-      return response.data.vote_count || 0
+      try {
+        if (!id) return
+        const response = await getVotesCount(id)
+        return response.data.vote_count || 0
+      } catch (error) {
+        ErrorHandler.processWithoutFeedback(error)
+        return '–'
+      }
     },
     { silentError: true },
   )

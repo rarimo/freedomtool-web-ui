@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { ErrorView } from '@/common'
 import { useRouteTitleContext } from '@/contexts'
 import { useVote } from '@/hooks/vote'
+import { lineClamp } from '@/theme/helpers'
 
 import { VOTE_QR_BASE_URL } from '../CreateVote/constants'
 import QuestionList from './components/QuestionList'
@@ -78,8 +79,12 @@ export default function Vote() {
                 spacing={5}
                 divider={<Divider />}
               >
-                <Stack spacing={2}>
-                  <Typography variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
+                <Stack spacing={3}>
+                  <Typography
+                    width={{ xs: 280, md: 500, ...lineClamp(2) }}
+                    variant='h3'
+                    typography={{ xs: 'h4', md: 'h3' }}
+                  >
                     {proposalMetadata?.title}
                   </Typography>
                   <Typography variant='body2' color={palette.text.secondary}>

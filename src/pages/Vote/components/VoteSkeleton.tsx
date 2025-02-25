@@ -17,7 +17,7 @@ export default function SkeletonPage() {
         spacing={5}
         divider={<Divider />}
       >
-        <Stack spacing={2}>
+        <Stack spacing={3}>
           <UiTypographySkeleton variant='h3' width='60%' />
           <UiTypographySkeleton variant='body2' width='80%' />
         </Stack>
