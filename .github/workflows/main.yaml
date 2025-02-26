@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - 'main'
+      - 'devops/ci'
+
+jobs:
+  converge:
+    name: Skaffold Build To Github
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Log in to registry
+        # This is where you will update the personal access token to GITHUB_TOKEN
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+          cp .env-staging .env
+
+      - name: Cache layers
+        uses: actions/cache@v3
+        with:
+          path: '${{ github.workspace }}/.skaffold/cache'
+          key: skaffold-${{ hashFiles('**/cache') }}
+          restore-keys: |
+            skaffold-
+
+      - name: Run Skaffold pipeline as command
+        uses: hiberbee/github-action-skaffold@latest
+        id: build
+        with:
+          command: build --tag ${{ github.sha }}
+          repository: ghcr.io/${{ github.repository_owner }}
+
+  deploy:
+    name: Deploy
+    needs: converge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: ConfigCreate
+        run: |
+          mkdir ~/.kube/
+          echo "${{ secrets.K8SCONFIG_DEV }}" | base64 -d > config
+          mv config ~/.kube/
+          kubectl set image deployment freedom-tool-web-2 freedom-tool-web-2=ghcr.io/rarimo/freedom-tool-2_0:$GITHUB_SHA -n freedom
