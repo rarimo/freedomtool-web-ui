@@ -83,16 +83,21 @@ export default function Vote() {
               >
                 <Stack spacing={3}>
                   <Typography
-                    width={{ xs: 280, md: 500, ...lineClamp(2) }}
+                    width={{ xs: 280, md: 500 }}
                     variant='h3'
+                    title={proposalMetadata?.title}
                     typography={{ xs: 'h5', md: 'h3' }}
+                    sx={{ ...lineClamp(2) }}
                   >
                     {proposalMetadata?.title}
                   </Typography>
                   <Typography
                     variant='body2'
+                    width={{ xs: 280, md: 500 }}
+                    title={proposalMetadata?.description}
                     typography={{ xs: 'body3', md: 'body2' }}
                     color={palette.text.secondary}
+                    sx={{ ...lineClamp(5) }}
                   >
                     {proposalMetadata?.description}
                   </Typography>
