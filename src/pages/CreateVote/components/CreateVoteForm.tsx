@@ -142,9 +142,7 @@ export default function CreateVoteForm() {
       })
       reset()
 
-      setTimeout(() => {
-        navigate(RoutePaths.Home)
-      }, 1_000)
+      navigate(RoutePaths.Home)
     } catch (error) {
       ErrorHandler.process(error)
     } finally {
