@@ -111,31 +111,52 @@ export default function Vote() {
               </Stack>
             </motion.div>
 
-            {(isMdDown && !isTopUpAllowed) ||
-              (!isMdDown && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
+            {isMdDown && isTopUpAllowed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2, delay: 0.2 }}
+              >
+                <Stack
+                  component={Paper}
+                  spacing={10}
+                  sx={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 3,
+                    height: 'fit-content',
+                    position: 'sticky',
+                    top: 80,
+                  }}
                 >
-                  <Stack
-                    component={Paper}
-                    spacing={10}
-                    sx={{
-                      textAlign: 'center',
-                      alignItems: 'center',
-                      marginBottom: 3,
-                      height: 'fit-content',
-                      position: 'sticky',
-                      top: 80,
-                    }}
-                  >
-                    {!isMdDown && <VoteQrCode qrCodeUrl={qrCodeUrl} />}
+                  <TopUpForm />
+                </Stack>
+              </motion.div>
+            )}
 
-                    {isTopUpAllowed && <TopUpForm />}
-                  </Stack>
-                </motion.div>
-              ))}
+            {!isMdDown && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2, delay: 0.2 }}
+              >
+                <Stack
+                  component={Paper}
+                  spacing={10}
+                  sx={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 3,
+                    height: 'fit-content',
+                    position: 'sticky',
+                    top: 80,
+                  }}
+                >
+                  <VoteQrCode qrCodeUrl={qrCodeUrl} />
+                  {isTopUpAllowed && <TopUpForm />}
+                </Stack>
+              </motion.div>
+            )}
           </Box>
         </motion.div>
       )}
