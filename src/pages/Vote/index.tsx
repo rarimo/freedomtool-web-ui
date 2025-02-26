@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Divider, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -8,7 +8,6 @@ import { useRouteTitleContext } from '@/contexts'
 import { useVote } from '@/hooks/vote'
 import { lineClamp } from '@/theme/helpers'
 
-import { VOTE_QR_BASE_URL } from '../CreateVote/constants'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
 import VoteBlock from './components/VoteBlock'
@@ -18,10 +17,11 @@ import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
   const { id } = useParams()
-  const { palette } = useTheme()
+  const { palette, breakpoints } = useTheme()
   const { setTitle } = useRouteTitleContext()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
 
-  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed } =
+  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed, qrCodeUrl } =
     useVote(id)
 
   useEffect(() => {
@@ -30,8 +30,6 @@ export default function Vote() {
 
   return (
     <AnimatePresence mode='popLayout'>
-      <VoteBlock />
-
       {isLoading && (
         <motion.div
           key='loading'
@@ -76,6 +74,7 @@ export default function Vote() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
+              {isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}
               <Stack
                 component={Paper}
                 sx={{ padding: 10, height: 'fit-content', mb: { md: 15 } }}
@@ -124,13 +123,7 @@ export default function Vote() {
                   top: 80,
                 }}
               >
-                <VoteQrCode
-                  baseUrl={VOTE_QR_BASE_URL}
-                  queryParams={{
-                    type: 'voting',
-                    proposal_id: id ?? '',
-                  }}
-                />
+                {!isMdDown && <VoteQrCode qrCodeUrl={qrCodeUrl} />}
 
                 {isTopUpAllowed && <TopUpForm />}
               </Stack>

@@ -1,5 +1,16 @@
-import { Divider, Paper, Skeleton, Stack, Tooltip, Typography, useTheme } from '@mui/material'
+import {
+  Divider,
+  IconButton,
+  Paper,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import { useInterval } from '@reactuses/core'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { generatePath, useNavigate } from 'react-router-dom'
 
@@ -9,6 +20,8 @@ import { useIpfsLoading } from '@/hooks'
 import { IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
+
+const MAX_FETCH_TRIES = 3
 
 export default function VoteItem({
   proposal,
@@ -21,8 +34,19 @@ export default function VoteItem({
   const { t } = useTranslation()
 
   const { cid, duration, startTimestamp } = parseProposalFromContract(proposal)
-  const { data, isLoading, isLoadingError: isError } = useIpfsLoading<IVoteIpfs>(cid)
+  const { data, isLoading, isLoadingError: isError, reload } = useIpfsLoading<IVoteIpfs>(cid)
+  const [attempts, setAttempts] = useState(0)
   const navigate = useNavigate()
+
+  const shouldRefetch = data || attempts >= MAX_FETCH_TRIES || isError
+
+  useInterval(
+    () => {
+      reload()
+      setAttempts(prev => prev + 1)
+    },
+    shouldRefetch ? null : 5_000,
+  )
 
   const dateStyles = {
     expired: { bgcolor: palette.grey[100], color: palette.grey[900] },
@@ -53,7 +77,7 @@ export default function VoteItem({
   }
 
   if (isLoading) return <VoteItemSkeleton />
-  if (isError) return null
+  if (isError) return <VoteItemErrorView onRetry={reload} />
 
   return (
     <motion.div
@@ -151,6 +175,32 @@ export function VoteItemSkeleton() {
       <Stack justifyContent='space-between' alignItems='center' direction='row'>
         <Skeleton height={24} width={88} sx={{ borderRadius: 10 }} />
       </Stack>
+    </Stack>
+  )
+}
+
+export function VoteItemErrorView({ onRetry }: { onRetry: () => void }) {
+  const { palette } = useTheme()
+  const { t } = useTranslation()
+
+  return (
+    <Stack
+      component={Paper}
+      height={141}
+      spacing={4}
+      sx={{ p: 4, mb: 2 }}
+      justifyContent='center'
+      divider={<Divider orientation='horizontal' flexItem />}
+    >
+      <Stack spacing={1}>
+        <Typography variant='subtitle3'>{t('vote-item.error-title')}</Typography>
+        <Typography variant='body4' color={palette.text.secondary}>
+          {t('vote-item.error-description')}
+        </Typography>
+      </Stack>
+      <IconButton color='error' sx={{ ml: 'auto' }} onClick={onRetry}>
+        <UiIcon color={palette.text.secondary} name={Icons.Restart} size={5} />
+      </IconButton>
     </Stack>
   )
 }

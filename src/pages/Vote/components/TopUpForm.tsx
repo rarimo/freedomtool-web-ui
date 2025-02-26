@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
-import { MAX_VOTE_COUNT_PER_TX } from '@/pages/CreateVote/constants'
 import { UiCheckVoteInput } from '@/ui'
 
 interface ITopUpForm {
