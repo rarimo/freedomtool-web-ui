@@ -111,28 +111,31 @@ export default function Vote() {
               </Stack>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: 0.2 }}
-            >
-              <Stack
-                component={Paper}
-                spacing={10}
-                sx={{
-                  textAlign: 'center',
-                  alignItems: 'center',
-                  marginBottom: 3,
-                  height: 'fit-content',
-                  position: 'sticky',
-                  top: 80,
-                }}
-              >
-                {!isMdDown && <VoteQrCode qrCodeUrl={qrCodeUrl} />}
+            {(isMdDown && !isTopUpAllowed) ||
+              (!isMdDown && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2, delay: 0.2 }}
+                >
+                  <Stack
+                    component={Paper}
+                    spacing={10}
+                    sx={{
+                      textAlign: 'center',
+                      alignItems: 'center',
+                      marginBottom: 3,
+                      height: 'fit-content',
+                      position: 'sticky',
+                      top: 80,
+                    }}
+                  >
+                    {!isMdDown && <VoteQrCode qrCodeUrl={qrCodeUrl} />}
 
-                {isTopUpAllowed && <TopUpForm />}
-              </Stack>
-            </motion.div>
+                    {isTopUpAllowed && <TopUpForm />}
+                  </Stack>
+                </motion.div>
+              ))}
           </Box>
         </motion.div>
       )}
