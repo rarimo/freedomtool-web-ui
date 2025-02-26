@@ -18,7 +18,7 @@ export default function SkeletonPage() {
         divider={<Divider />}
       >
         <Stack spacing={3}>
-          <UiTypographySkeleton variant='h3' width='60%' />
+          <UiTypographySkeleton variant='h3' typography={{ xs: 'h5', md: 'h3' }} width='60%' />
           <UiTypographySkeleton variant='body2' width='80%' />
         </Stack>
         <VoteDetailsSkeleton />
@@ -85,8 +85,8 @@ function QuestionItemSkeleton() {
 function VoteDetailsRowSkeleton() {
   return (
     <Stack direction='row' justifyContent='space-between'>
-      <UiTypographySkeleton variant='body3' width='40%' />
-      <UiTypographySkeleton variant='body3' width='20%' />
+      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='40%' />
+      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='20%' />
     </Stack>
   )
 }

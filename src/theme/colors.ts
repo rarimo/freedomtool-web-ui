@@ -14,7 +14,7 @@ export const lightPalette: PaletteOptions = {
     darker: '#1A5389', // primary/primary-darker
     dark: '#1D5E9A', // primary/primary-dark
     main: '#2168AB', // primary/primary-base
-    light: alpha('#2168AB', 0.12), // primary/primary-light
+    light: '#E0E7F2', // primary/primary-light
     lighter: alpha('#2168AB', 0.06), // primary/primary-lighter
     contrastText: '#ffffff',
   },
@@ -104,7 +104,7 @@ export const darkPalette: PaletteOptions = {
     darker: '#4A90E2', // primary/primary-darker
     dark: '#3F81D0', // primary/primary-dark
     main: '#3187D8', // primary/primary-base
-    light: alpha('#2168AB', 0.3), // primary/primary-light
+    light: '#182D41', // primary/primary-light
     lighter: alpha('#2168AB', 0.15), // primary/primary-lighter
     contrastText: '#000000',
   },

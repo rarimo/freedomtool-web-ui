@@ -11,6 +11,7 @@ import { lineClamp } from '@/theme/helpers'
 import { VOTE_QR_BASE_URL } from '../CreateVote/constants'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
+import VoteBlock from './components/VoteBlock'
 import VoteDetails from './components/VoteDetails'
 import VoteQrCode from './components/VoteQrCode'
 import VoteSkeleton from './components/VoteSkeleton'
@@ -29,6 +30,8 @@ export default function Vote() {
 
   return (
     <AnimatePresence mode='popLayout'>
+      <VoteBlock />
+
       {isLoading && (
         <motion.div
           key='loading'
@@ -83,11 +86,15 @@ export default function Vote() {
                   <Typography
                     width={{ xs: 280, md: 500, ...lineClamp(2) }}
                     variant='h3'
-                    typography={{ xs: 'h4', md: 'h3' }}
+                    typography={{ xs: 'h5', md: 'h3' }}
                   >
                     {proposalMetadata?.title}
                   </Typography>
-                  <Typography variant='body2' color={palette.text.secondary}>
+                  <Typography
+                    variant='body2'
+                    typography={{ xs: 'body3', md: 'body2' }}
+                    color={palette.text.secondary}
+                  >
                     {proposalMetadata?.description}
                   </Typography>
                 </Stack>

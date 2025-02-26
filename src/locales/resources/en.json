@@ -131,7 +131,12 @@
     },
     "show-all-options-btn": "Show all options",
     "hide-options-btn": "Collapse options",
-    "question-name": "Question name"
+    "question-name": "Question name",
+    "promo": {
+      "title": "Vote in Rarime!",
+      "description": "Upvote, participate, and explore — get the app!",
+      "vote-btn": "Vote"
+    }
   },
   "app-logo": {
     "title": "Freedom tool 2.0"
