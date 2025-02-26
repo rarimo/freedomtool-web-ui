@@ -4,12 +4,14 @@ import { Button, Paper, Stack, TextField } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
-import { BusEvents, Icons } from '@/enums'
+import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
 import {
   bus,
   ErrorHandler,
@@ -21,7 +23,6 @@ import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import { ICreateVote } from '@/types'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 
-import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '../constants'
 import QuestionCard from './QuestionCard'
 
 const minDate = time().utc()
@@ -103,6 +104,7 @@ export default function CreateVoteForm() {
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
   const [editQuestionIndex, setEditQuestionIndex] = useState(questionFields.length - 1)
   const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
+  const navigate = useNavigate()
 
   const submit = async (formData: ICreateVote) => {
     try {
@@ -139,6 +141,8 @@ export default function CreateVoteForm() {
         message: t('create-vote.success-msg'),
       })
       reset()
+
+      navigate(RoutePaths.Home)
     } catch (error) {
       ErrorHandler.process(error)
     } finally {

@@ -1,8 +1,11 @@
-import { Box, Divider, Paper, Skeleton, Stack, useTheme } from '@mui/material'
+import { Box, Divider, Paper, Skeleton, Stack, useMediaQuery, useTheme } from '@mui/material'
 
 import UiTypographySkeleton from '@/ui/UiTypographySkeleton'
 
 export default function SkeletonPage() {
+  const { breakpoints } = useTheme()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
+
   return (
     <Box
       sx={{
@@ -11,6 +14,7 @@ export default function SkeletonPage() {
         gap: 3,
       }}
     >
+      {isMdDown && <VoteBlockSkeleton />}
       <Stack
         component={Paper}
         sx={{ padding: 10, height: 'fit-content' }}
@@ -18,7 +22,7 @@ export default function SkeletonPage() {
         divider={<Divider />}
       >
         <Stack spacing={3}>
-          <UiTypographySkeleton variant='h3' width='60%' />
+          <UiTypographySkeleton variant='h3' typography={{ xs: 'h5', md: 'h3' }} width='60%' />
           <UiTypographySkeleton variant='body2' width='80%' />
         </Stack>
         <VoteDetailsSkeleton />
@@ -33,27 +37,35 @@ export default function SkeletonPage() {
         spacing={2}
         sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3, height: 'fit-content' }}
       >
-        <Stack
-          sx={{
-            borderRadius: 4,
-            boxShadow:
-              '0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)',
-          }}
-        >
-          <Skeleton
-            sx={{
-              width: 160,
-              height: 160,
-              borderRadius: 4,
-            }}
-          />
-        </Stack>
-        <UiTypographySkeleton variant='body3' width='50%' mb={{ xs: 8 }} mt={1} />
+        {!isMdDown && (
+          <Stack spacing={4} alignItems='center'>
+            <Stack
+              sx={{
+                borderRadius: 4,
+                boxShadow:
+                  '0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)',
+              }}
+            >
+              <Skeleton
+                sx={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: 4,
+                }}
+              />
+            </Stack>
+            <UiTypographySkeleton variant='body3' width='100%' mb={{ xs: 8 }} />
+          </Stack>
+        )}
 
         <TopUpFormSkeleton />
       </Stack>
     </Box>
   )
+}
+
+function VoteBlockSkeleton() {
+  return <Skeleton height={96} sx={{ mb: 1, borderRadius: 6 }} />
 }
 
 function QuestionItemSkeleton() {
@@ -85,8 +97,8 @@ function QuestionItemSkeleton() {
 function VoteDetailsRowSkeleton() {
   return (
     <Stack direction='row' justifyContent='space-between'>
-      <UiTypographySkeleton variant='body3' width='40%' />
-      <UiTypographySkeleton variant='body3' width='20%' />
+      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='40%' />
+      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='20%' />
     </Stack>
   )
 }

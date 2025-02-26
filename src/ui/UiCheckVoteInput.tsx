@@ -2,7 +2,8 @@ import { Button, TextField, TextFieldProps } from '@mui/material'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { MAX_VOTE_COUNT_PER_TX } from '@/pages/CreateVote/constants'
+import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { trimLeadingZeroes } from '@/helpers'
 
 type VoteCountInputProps = {
   onCheck: () => void
@@ -22,6 +23,7 @@ const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
         {...textFieldProps}
         type='number'
         inputRef={ref}
+        value={trimLeadingZeroes(String(textFieldProps.value))}
         InputProps={{
           ...textFieldProps.InputProps,
           sx: {

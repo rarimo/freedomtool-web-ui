@@ -171,6 +171,8 @@ export enum Icons {
   Warpcast = 'warpcast',
   Chat1Line = 'chat-1-line',
   Rarimo = 'rarimo',
+  Rarime = 'rarime',
+  Restart = 'restart-line',
   ArrowLeftSLine = 'arrow-left-s-line',
   ArrowRightSLine = 'arrow-right-s-line',
   FlashLightFill = 'flashlight-fill',

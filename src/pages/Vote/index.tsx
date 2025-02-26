@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Divider, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -8,19 +8,20 @@ import { useRouteTitleContext } from '@/contexts'
 import { useVote } from '@/hooks/vote'
 import { lineClamp } from '@/theme/helpers'
 
-import { VOTE_QR_BASE_URL } from '../CreateVote/constants'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
+import VoteBlock from './components/VoteBlock'
 import VoteDetails from './components/VoteDetails'
 import VoteQrCode from './components/VoteQrCode'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
   const { id } = useParams()
-  const { palette } = useTheme()
+  const { palette, breakpoints } = useTheme()
   const { setTitle } = useRouteTitleContext()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
 
-  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed } =
+  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed, qrCodeUrl } =
     useVote(id)
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function Vote() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
+              {isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}
               <Stack
                 component={Paper}
                 sx={{ padding: 10, height: 'fit-content', mb: { md: 15 } }}
@@ -81,13 +83,22 @@ export default function Vote() {
               >
                 <Stack spacing={3}>
                   <Typography
-                    width={{ xs: 280, md: 500, ...lineClamp(2) }}
+                    width={{ xs: 280, md: 500 }}
                     variant='h3'
-                    typography={{ xs: 'h4', md: 'h3' }}
+                    title={proposalMetadata?.title}
+                    typography={{ xs: 'h5', md: 'h3' }}
+                    sx={{ ...lineClamp(2) }}
                   >
                     {proposalMetadata?.title}
                   </Typography>
-                  <Typography variant='body2' color={palette.text.secondary}>
+                  <Typography
+                    variant='body2'
+                    width={{ xs: 280, md: 500 }}
+                    title={proposalMetadata?.description}
+                    typography={{ xs: 'body3', md: 'body2' }}
+                    color={palette.text.secondary}
+                    sx={{ ...lineClamp(5) }}
+                  >
                     {proposalMetadata?.description}
                   </Typography>
                 </Stack>
@@ -117,13 +128,7 @@ export default function Vote() {
                   top: 80,
                 }}
               >
-                <VoteQrCode
-                  baseUrl={VOTE_QR_BASE_URL}
-                  queryParams={{
-                    type: 'voting',
-                    proposal_id: id ?? '',
-                  }}
-                />
+                {!isMdDown && <VoteQrCode qrCodeUrl={qrCodeUrl} />}
 
                 {isTopUpAllowed && <TopUpForm />}
               </Stack>

@@ -52,7 +52,7 @@
     "user-rejected-request": "Oh, seems like you rejected the request",
     "resource-unavailable": "Hmm, check out your wallet, seems like the request is pending",
     "no-signed-order": "There is no signed order",
-    "not-enough-for-proposal": "You don't have enough balance to allocate the required number of votes for this proposal",
+    "not-enough-for-proposal": "You don't have enough balance to allocate this number of votes",
     "invalid-vote-count": "Invalid vote count"
   },
   "notifications": {
@@ -66,8 +66,8 @@
     "default-message-info": "Something is happening. Just want you to know that"
   },
   "routes": {
-    "vote": "Proposals",
-    "create-new-proposal": "Create new proposal"
+    "vote": "Votes",
+    "create-new-proposal": "Create new vote"
   },
   "auth-block": {
     "title": " Connect your wallet",
@@ -85,16 +85,16 @@
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
     "add-question-btn": "Add a question",
-    "submit-btn": "Submit proposal",
+    "submit-btn": "Submit new vote",
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Option #{{order}}",
-    "proposal-title-lbl": "Proposal title",
+    "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
-    "success-msg": "You have successfully created a proposal!",
+    "success-msg": "You have successfully created a vote!",
     "proposal-title-plh": "Approve this change?",
-    "proposal-description-plh": "This proposal outlines key points...",
+    "proposal-description-plh": "This vote outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date"
   },
@@ -106,7 +106,9 @@
     "no-title": "No title",
     "no-description": "No description",
     "start-date": "Start date: {{date}}",
-    "end-date": "End date: {{date}}"
+    "end-date": "End date: {{date}}",
+    "error-title": "Error occurred",
+    "error-description": "Error while loading this vote"
   },
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
@@ -131,7 +133,16 @@
     },
     "show-all-options-btn": "Show all options",
     "hide-options-btn": "Collapse options",
-    "question-name": "Question name"
+    "question-name": "Question name",
+    "promo": {
+      "title": "Vote with RariMe",
+      "description": "Use RariMe app to participate in this voting",
+      "vote-btn": "Vote",
+      "modal-title": "Scan or tap to vote in Rarime",
+      "download-app": "Download the app",
+      "app-store-alt": "Download on the App Store",
+      "play-market-alt": "Get it on Google Play"
+    }
   },
   "app-logo": {
     "title": "Freedom tool 2.0"

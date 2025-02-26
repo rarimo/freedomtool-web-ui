@@ -10,13 +10,19 @@ export default function VoteDetails({ list }: { list: IVoteDetails[] }) {
   const { palette } = useTheme()
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={{ xs: 1, md: 2 }}>
       {list.map(({ title, description }, index) => (
         <Stack direction='row' justifyContent='space-between' key={index}>
-          <Typography variant='body3' color={palette.text.secondary}>
+          <Typography
+            variant='body3'
+            typography={{ xs: 'body4', md: 'body3' }}
+            color={palette.text.secondary}
+          >
             {title}
           </Typography>
-          <Typography variant='body3'>{description}</Typography>
+          <Typography variant='body3' typography={{ xs: 'body4', md: 'body3' }}>
+            {description}
+          </Typography>
         </Stack>
       ))}
     </Stack>
