@@ -47,7 +47,7 @@ export default function VoteBlock({ qrCodeUrl }: { qrCodeUrl: string }) {
           <Stack
             flex={1}
             alignItems='center'
-            width={1}
+            width='100%'
             spacing={2}
             direction='row'
             justifyContent='space-between'
@@ -97,7 +97,7 @@ function VoteModal({
       open={isOpen}
       onClose={onClose}
       PaperProps={{
-        sx: { width: 1 },
+        sx: { width: '100%' },
       }}
     >
       <Stack>
@@ -111,24 +111,14 @@ function VoteModal({
               <Typography color={palette.text.secondary}>{t('vote.promo.download-app')}</Typography>
             </Divider>
             <Stack direction='row' spacing={4}>
-              <Box
-                component='a'
-                href={RARIME_APP_STORE_URL}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
+              <Box component='a' href={RARIME_APP_STORE_URL} target='_blank' rel='noreferrer'>
                 <Box
                   component='img'
                   src='/images/app-store.svg'
                   alt={t('vote.promo.app-store-alt')}
                 />
               </Box>
-              <Box
-                component='a'
-                href={RARIME_GOOGLE_PLAY_URL}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
+              <Box component='a' href={RARIME_GOOGLE_PLAY_URL} target='_blank' rel='noreferrer'>
                 <Box
                   component='img'
                   src='/images/play-market.svg'

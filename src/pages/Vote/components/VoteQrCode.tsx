@@ -35,7 +35,7 @@ export function QRCodeBlock({
       {...(isLink && {
         href: url,
         target: '_blank',
-        rel: 'noopener noreferrer',
+        rel: 'noreferrer',
       })}
       sx={{
         width: spacing(size),
