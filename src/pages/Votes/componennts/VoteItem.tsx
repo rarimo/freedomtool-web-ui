@@ -38,14 +38,14 @@ export default function VoteItem({
   const [attempts, setAttempts] = useState(0)
   const navigate = useNavigate()
 
-  const shouldRefetch = data || attempts >= MAX_FETCH_TRIES || isError
+  const shouldStopRefetching = data || attempts >= MAX_FETCH_TRIES || isError
 
   useInterval(
     () => {
       reload()
       setAttempts(prev => prev + 1)
     },
-    shouldRefetch ? null : 5_000,
+    shouldStopRefetching ? null : 5_000,
   )
 
   const dateStyles = {
