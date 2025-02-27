@@ -89,7 +89,7 @@ export default function CreateVoteForm() {
             return time(value).timestamp > time(this.parent.startDate).timestamp
           }),
         uniqueness: Yup.boolean().required(),
-        minAge: Yup.number().required().min(1).max(99).integer(),
+        minAge: Yup.number().required().moreThan(1).max(99).integer(),
         nationalities: Yup.string().required(),
         questions: Yup.array()
           .of(
