@@ -17,8 +17,11 @@ export interface ICreateVote {
   description: string
   startDate: string
   endDate: string
-  votesCount: number
   questions: IQuestion[]
+  uniqueness: boolean
+  minAge?: number | null
+  nationalities: string
+  votesCount: number
 }
 
 export interface IQuestionIpfs {

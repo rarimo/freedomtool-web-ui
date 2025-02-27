@@ -1,4 +1,4 @@
-import { BigNumberish, randomBytes } from 'ethers'
+import { BigNumberish } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
@@ -111,7 +111,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
       proposalConfig: Omit<
         ProposalsState.ProposalConfigStruct,
         'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
-      > & { amount: BigNumberish },
+      > & { amount: BigNumberish; votingWhitelistData: string },
     ) => {
       if (!contract) return
       const tx = await contract.contractInstance.createProposal(
@@ -122,7 +122,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
           duration: BigInt(proposalConfig.duration),
           multichoice: BigInt(0),
           votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-          votingWhitelistData: [randomBytes(32)],
+          votingWhitelistData: [proposalConfig.votingWhitelistData],
         },
         {
           value: proposalConfig.amount,

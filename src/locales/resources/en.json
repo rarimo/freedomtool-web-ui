@@ -96,7 +96,10 @@
     "proposal-title-plh": "Approve this change?",
     "proposal-description-plh": "This vote outlines key points...",
     "start-date-plh": "Select a start date",
-    "end-date-plh": "Select an end date"
+    "end-date-plh": "Select an end date",
+    "uniqueness-lbl": "Uniqueness",
+    "min-age-lbl": "Min age to participate",
+    "nationalities-lbl": "Nationalities"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

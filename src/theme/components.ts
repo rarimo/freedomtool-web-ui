@@ -206,6 +206,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
       fullWidth: true,
     },
   },
+
   MuiPaper: {
     defaultProps: {
       variant: 'elevation',

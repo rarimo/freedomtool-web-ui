@@ -12,6 +12,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { LazyImage } from '@/common'
 import { RARIME_APP_STORE_URL, RARIME_GOOGLE_PLAY_URL } from '@/constants'
 import { Icons } from '@/enums'
 import { UiDialogContent, UiIcon } from '@/ui'
@@ -112,17 +113,21 @@ function VoteModal({
             </Divider>
             <Stack direction='row' spacing={4}>
               <Box component='a' href={RARIME_APP_STORE_URL} target='_blank' rel='noreferrer'>
-                <Box
-                  component='img'
+                <LazyImage
                   src='/images/app-store.svg'
                   alt={t('vote.promo.app-store-alt')}
+                  sx={{ borderRadius: 2 }}
+                  width={131}
+                  height={40}
                 />
               </Box>
               <Box component='a' href={RARIME_GOOGLE_PLAY_URL} target='_blank' rel='noreferrer'>
-                <Box
-                  component='img'
+                <LazyImage
                   src='/images/play-market.svg'
                   alt={t('vote.promo.play-market-alt')}
+                  sx={{ borderRadius: 2 }}
+                  width={131}
+                  height={40}
                 />
               </Box>
             </Stack>

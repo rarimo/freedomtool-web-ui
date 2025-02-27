@@ -1,4 +1,9 @@
+import { time } from '@distributedlab/tools'
+import { AbiCoder } from 'ethers'
+import { stringToHex } from 'viem'
+
 import { api } from '@/api/clients'
+import { ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
@@ -70,3 +75,37 @@ export const getTotalVotesPerQuestion = (proposal: IParsedProposal, questionInde
 
 export const getCountProgress = (totalCount: number, count: number) =>
   totalCount > 0 ? (count / totalCount) * 100 : 0
+
+export const prepareVotingWhitelistData = (config: {
+  minAge?: number | null
+  nationalities: string
+  uniqueness: boolean
+  startTimestamp: number
+}) => {
+  const { minAge, startTimestamp, nationalities, uniqueness } = config
+
+  const formattedNationalities = nationalities
+    .split(',')
+    .map(country => stringToHex(country.trim().toUpperCase()))
+
+  const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
+  const uniquenessFlag = uniqueness ? 1 : 0
+
+  const birthDateUpperbound = minAge
+    ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
+    : ZERO_DATE
+
+  const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
+
+  const params = [
+    formattedNationalities,
+    identityCreationTimestampUpperBound,
+    uniquenessFlag,
+    birthDateUpperbound,
+    expirationDateLowerBound,
+  ]
+
+  const abiCoder = AbiCoder.defaultAbiCoder()
+
+  return abiCoder.encode(['tuple(uint256[],uint256,uint256,uint256,uint256)'], [params])
+}
