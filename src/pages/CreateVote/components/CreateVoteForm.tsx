@@ -27,6 +27,7 @@ import {
   ErrorHandler,
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
+  prepareVotingWhitelistData,
   uploadToIpfs,
 } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
@@ -56,7 +57,7 @@ const defaultValues: ICreateVote = {
   ],
 
   uniqueness: false,
-  minAge: 0,
+  minAge: null,
   nationalities: '',
 
   votesCount: 0,
@@ -89,7 +90,13 @@ export default function CreateVoteForm() {
             return time(value).timestamp > time(this.parent.startDate).timestamp
           }),
         uniqueness: Yup.boolean().required(),
-        minAge: Yup.number().required().moreThan(1).max(99).integer(),
+        minAge: Yup.number()
+          .transform((value, originalValue) => (originalValue === '' ? null : value))
+          .nullable()
+          .notRequired()
+          .moreThan(1)
+          .max(99)
+          .integer(),
         nationalities: Yup.string().required(),
         questions: Yup.array()
           .of(
@@ -144,15 +151,6 @@ export default function CreateVoteForm() {
         uniqueness,
       } = formData
 
-      // TODO: Replace console.log()
-
-      // eslint-disable-next-line no-console
-      console.log('minAge', minAge)
-      // eslint-disable-next-line no-console
-      console.log('nationalities', nationalities)
-      // eslint-disable-next-line no-console
-      console.log('uniqueness', uniqueness)
-
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
       const response = await uploadToIpfs({
         title,
@@ -167,13 +165,21 @@ export default function CreateVoteForm() {
       const endTimestamp = time(endDate).timestamp
       const duration = endTimestamp - startTimestamp
 
+      const votingWhitelistData = prepareVotingWhitelistData({
+        minAge,
+        nationalities,
+        uniqueness,
+        startTimestamp,
+      })
+
       setIsConfirmationModalShown(true)
 
       await createProposal({
+        votingWhitelistData,
         acceptedOptions,
         description: cid,
         amount: votesAmount,
-        startTimestamp: time(startDate).timestamp,
+        startTimestamp,
         duration,
       })
 
