@@ -1,9 +1,10 @@
-import { Button, TextField, TextFieldProps } from '@mui/material'
+import { Button, TextFieldProps } from '@mui/material'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
-import { trimLeadingZeroes } from '@/helpers'
+
+import UiNumberField from './UiNumberField'
 
 type VoteCountInputProps = {
   onCheck: () => void
@@ -19,24 +20,10 @@ const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
       Number(textFieldProps.value) > MAX_VOTE_COUNT_PER_TX
 
     return (
-      <TextField
+      <UiNumberField
         {...textFieldProps}
-        type='number'
         inputRef={ref}
-        value={trimLeadingZeroes(String(textFieldProps.value))}
         InputProps={{
-          ...textFieldProps.InputProps,
-          sx: {
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-            },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
-              {
-                WebkitAppearance: 'none',
-                margin: 0,
-              },
-            ...(textFieldProps.InputProps?.sx || {}),
-          },
           endAdornment: (
             <Button variant='text' size='small' disabled={isDisabled} onClick={onCheck}>
               {t('check-vote-input.calculate-eth-btn')}
