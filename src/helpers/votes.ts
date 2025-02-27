@@ -88,21 +88,21 @@ export const prepareVotingWhitelistData = (config: {
     .split(',')
     .map(country => stringToHex(country.trim().toUpperCase()))
 
-  const votingStartTime = time(startTimestamp).subtract(1, 'hour').timestamp
+  const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
   const uniquenessFlag = uniqueness ? 1 : 0
 
-  const birthDateThreshold = minAge
+  const birthDateUpperbound = minAge
     ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
     : ZERO_DATE
 
-  const votingStartDateHex = stringToHex(time(startTimestamp).format('YYMMDD'))
+  const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
 
   const params = [
     formattedNationalities,
-    votingStartTime,
+    identityCreationTimestampUpperBound,
     uniquenessFlag,
-    birthDateThreshold,
-    votingStartDateHex,
+    birthDateUpperbound,
+    expirationDateLowerBound,
   ]
 
   const abiCoder = AbiCoder.defaultAbiCoder()
