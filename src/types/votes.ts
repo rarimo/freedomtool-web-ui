@@ -20,7 +20,7 @@ export interface ICreateVote {
   questions: IQuestion[]
   uniqueness: boolean
   minAge?: number | null
-  nationalities: string
+  nationalities: INationality[]
   votesCount: number
 }
 
@@ -52,4 +52,10 @@ export interface IParsedProposal {
   startTimestamp: number
   duration: number
   voteResults: bigint[][]
+}
+
+export interface INationality {
+  name: string
+  codes: string[]
+  flag: string
 }
