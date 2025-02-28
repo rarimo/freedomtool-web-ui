@@ -320,6 +320,7 @@ export default function CreateVoteForm() {
                       renderInput={params => (
                         <TextField
                           {...params}
+                          error={Boolean(fieldState.error)}
                           InputProps={{
                             ...params.InputProps,
                             sx: {
