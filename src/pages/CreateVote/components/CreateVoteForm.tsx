@@ -36,7 +36,7 @@ import nationalities from '@/locales/resources/countries_en.json'
 import { ICreateVote, INationality } from '@/types'
 import { UiCheckVoteInput, UiIcon, UiNumberField } from '@/ui'
 
-import { createVoteSchema } from '../schemas/createVoteSchema'
+import { createVoteSchema } from '../createVoteSchema'
 import QuestionCard from './QuestionCard'
 
 nationalities satisfies INationality[]

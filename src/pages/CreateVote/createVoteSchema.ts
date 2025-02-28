@@ -1,4 +1,5 @@
 import { time } from '@distributedlab/tools'
+import { t } from 'i18next'
 import { z as zod } from 'zod'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
@@ -39,7 +40,7 @@ export const createVoteSchema = zod
       .min(1),
   })
   .refine(data => time(data.endDate).timestamp > time(data.startDate).timestamp, {
-    message: 'End date must be after start date',
+    message: t('create-vote.end-date-error'),
     path: ['endDate'],
   })
 
