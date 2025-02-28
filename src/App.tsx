@@ -9,7 +9,7 @@ import { ToastsManager } from '@/contexts'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ErrorHandler } from '@/helpers'
 import { useSystemPaletteMode, useViewportSizes } from '@/hooks'
-import { useLocalisedYupScheme } from '@/hooks/yup'
+import { useLocalizedZodSchema } from '@/hooks/zod'
 import { createRouter } from '@/router'
 import { createTheme } from '@/theme'
 
@@ -24,7 +24,7 @@ const App = () => {
   const { open: isOpen, loading: isLoading } = useAppKitState()
 
   useViewportSizes()
-  useLocalisedYupScheme()
+  useLocalizedZodSchema()
 
   const init = useCallback(async () => {
     try {

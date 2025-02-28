@@ -1,5 +1,5 @@
 import { time } from '@distributedlab/tools'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Autocomplete,
   Button,
@@ -18,11 +18,10 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import * as Yup from 'yup'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
-import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { MAX_QUESTIONS } from '@/constants'
 import { BusEvents, Icons, RoutePaths } from '@/enums'
 import {
   bus,
@@ -37,6 +36,7 @@ import nationalities from '@/locales/resources/countries_en.json'
 import { ICreateVote, INationality } from '@/types'
 import { UiCheckVoteInput, UiIcon, UiNumberField } from '@/ui'
 
+import { createVoteSchema } from '../schemas/createVoteSchema'
 import QuestionCard from './QuestionCard'
 
 nationalities satisfies INationality[]
@@ -62,7 +62,6 @@ const defaultValues: ICreateVote = {
   ],
 
   uniqueness: false,
-  minAge: null,
   nationalities: [],
 
   votesCount: 0,
@@ -83,54 +82,7 @@ export default function CreateVoteForm() {
   } = useForm<ICreateVote>({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver<ICreateVote>(
-      Yup.object({
-        title: Yup.string().required().max(50),
-        description: Yup.string().required().max(200),
-        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
-        startDate: Yup.string().required(),
-        endDate: Yup.string()
-          .required()
-          .test('isAfterStartDate', t('create-vote.end-date-error'), function (value) {
-            return time(value).timestamp > time(this.parent.startDate).timestamp
-          }),
-        uniqueness: Yup.boolean().required(),
-        minAge: Yup.number()
-          .transform((value, originalValue) => (originalValue === '' ? null : value))
-          .nullable()
-          .notRequired()
-          .moreThan(1)
-          .max(99)
-          .integer(),
-        nationalities: Yup.array()
-          .of(
-            Yup.object({
-              flag: Yup.string().required(),
-              name: Yup.string().required(),
-              codes: Yup.array().of(Yup.string().required()).required(),
-            }),
-          )
-          .min(1)
-          .required(),
-        questions: Yup.array()
-          .of(
-            Yup.object({
-              id: Yup.string().required(),
-              text: Yup.string().required().min(5).max(40),
-              options: Yup.array()
-                .of(
-                  Yup.object({
-                    id: Yup.string().required(),
-                    text: Yup.string().required().min(2).max(25),
-                  }),
-                )
-                .required(),
-            }),
-          )
-          .min(1)
-          .required(),
-      }),
-    ),
+    resolver: zodResolver(createVoteSchema),
   })
 
   const {

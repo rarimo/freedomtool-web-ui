@@ -1,10 +1,10 @@
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Stack } from '@mui/material'
 import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import * as Yup from 'yup'
+import { z as zod } from 'zod'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
 import { BusEvents } from '@/enums'
@@ -34,9 +34,9 @@ export default function TopUpForm() {
   } = useForm<ITopUpForm>({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver<ITopUpForm>(
-      Yup.object({
-        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
+    resolver: zodResolver(
+      zod.object({
+        votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
       }),
     ),
   })

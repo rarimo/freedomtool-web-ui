@@ -19,7 +19,7 @@ export interface ICreateVote {
   endDate: string
   questions: IQuestion[]
   uniqueness: boolean
-  minAge?: number | null
+  minAge?: number
   nationalities: INationality[]
   votesCount: number
 }
