@@ -309,11 +309,12 @@ export default function CreateVoteForm() {
                 name='nationalities'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl error={Boolean(fieldState.error)}>
+                  <FormControl {...field} error={Boolean(fieldState.error)}>
                     <Autocomplete
                       multiple
                       limitTags={2}
                       disableCloseOnSelect
+                      disabled={field.disabled || isSubmitting}
                       sx={{ maxWidth: 572 }}
                       options={nationalities}
                       getOptionLabel={({ name, flag }) => `${flag} ${name}`}
@@ -367,7 +368,7 @@ export default function CreateVoteForm() {
                 render={({ field, fieldState }) => (
                   <FormControl {...field} error={Boolean(fieldState.error)}>
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox disabled={field.disabled || isSubmitting} />}
                       label={
                         <Typography variant='caption2' color={palette.text.secondary}>
                           {t('create-vote.uniqueness-lbl')}
