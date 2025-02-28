@@ -12,18 +12,6 @@ export interface IQuestion {
   options: IOption[]
 }
 
-export interface ICreateVote {
-  title: string
-  description: string
-  startDate: string
-  endDate: string
-  questions: IQuestion[]
-  uniqueness: boolean
-  minAge?: number
-  nationalities: INationality[]
-  votesCount: number
-}
-
 export interface IQuestionIpfs {
   title: string
   variants: string[]

@@ -18,12 +18,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { DotDivider } from '@/common'
 import { MAX_OPTIONS_PER_QUESTION } from '@/constants'
 import { Icons } from '@/enums'
-import { ICreateVote } from '@/types'
 import { UiIcon } from '@/ui'
 
+import { CreateVoteSchema } from '../createVoteSchema'
+
 interface IQuestionForm {
-  question: FieldArrayWithId<ICreateVote, 'questions', 'id'>
-  control: Control<ICreateVote, unknown>
+  question: FieldArrayWithId<CreateVoteSchema, 'questions', 'id'>
+  control: Control<CreateVoteSchema, unknown>
   index: number
   canDelete: boolean
   isDisabled: boolean
@@ -124,7 +125,7 @@ function OptionsForm({
   control,
   questionIndex,
 }: {
-  control: Control<ICreateVote, unknown>
+  control: Control<CreateVoteSchema, unknown>
   questionIndex: number
 }) {
   const { t } = useTranslation()

@@ -33,17 +33,17 @@ import {
 } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
-import { ICreateVote, INationality } from '@/types'
+import { INationality } from '@/types'
 import { UiCheckVoteInput, UiIcon, UiNumberField } from '@/ui'
 
-import { createVoteSchema } from '../createVoteSchema'
+import { CreateVoteSchema, createVoteSchema } from '../createVoteSchema'
 import QuestionCard from './QuestionCard'
 
 nationalities satisfies INationality[]
 
 const minDate = time().utc()
 
-const defaultValues: ICreateVote = {
+const defaultValues = {
   title: '',
   description: '',
 
@@ -79,7 +79,7 @@ export default function CreateVoteForm() {
     reset,
     getValues,
     formState: { isSubmitting },
-  } = useForm<ICreateVote>({
+  } = useForm<CreateVoteSchema>({
     defaultValues,
     mode: 'onChange',
     resolver: zodResolver(createVoteSchema),
@@ -100,7 +100,7 @@ export default function CreateVoteForm() {
   const { palette } = useTheme()
   const navigate = useNavigate()
 
-  const submit = async (formData: ICreateVote) => {
+  const submit = async (formData: CreateVoteSchema) => {
     try {
       const votesCount = String(getValues('votesCount'))
       const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
@@ -132,7 +132,7 @@ export default function CreateVoteForm() {
       const duration = endTimestamp - startTimestamp
 
       const votingWhitelistData = prepareVotingWhitelistData({
-        minAge,
+        minAge: Number(minAge),
         nationalities,
         uniqueness,
         startTimestamp,
