@@ -1,10 +1,12 @@
 import { time } from '@distributedlab/tools'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  Autocomplete,
   Button,
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Paper,
   Stack,
   TextField,
@@ -16,11 +18,10 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import * as Yup from 'yup'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import UiDatePicker from '@/common/UiDatePicker'
-import { MAX_QUESTIONS, MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { MAX_QUESTIONS } from '@/constants'
 import { BusEvents, Icons, RoutePaths } from '@/enums'
 import {
   bus,
@@ -31,10 +32,14 @@ import {
   uploadToIpfs,
 } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
-import { ICreateVote } from '@/types'
+import nationalities from '@/locales/resources/countries_en.json'
+import { ICreateVote, INationality } from '@/types'
 import { UiCheckVoteInput, UiIcon, UiNumberField } from '@/ui'
 
+import { createVoteSchema } from '../createVoteSchema'
 import QuestionCard from './QuestionCard'
+
+nationalities satisfies INationality[]
 
 const minDate = time().utc()
 
@@ -57,8 +62,7 @@ const defaultValues: ICreateVote = {
   ],
 
   uniqueness: false,
-  minAge: null,
-  nationalities: '',
+  nationalities: [],
 
   votesCount: 0,
 }
@@ -78,45 +82,7 @@ export default function CreateVoteForm() {
   } = useForm<ICreateVote>({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver<ICreateVote>(
-      Yup.object({
-        title: Yup.string().required().max(50),
-        description: Yup.string().required().max(200),
-        votesCount: Yup.number().required().moreThan(0).integer().max(MAX_VOTE_COUNT_PER_TX),
-        startDate: Yup.string().required(),
-        endDate: Yup.string()
-          .required()
-          .test('isAfterStartDate', t('create-vote.end-date-error'), function (value) {
-            return time(value).timestamp > time(this.parent.startDate).timestamp
-          }),
-        uniqueness: Yup.boolean().required(),
-        minAge: Yup.number()
-          .transform((value, originalValue) => (originalValue === '' ? null : value))
-          .nullable()
-          .notRequired()
-          .moreThan(1)
-          .max(99)
-          .integer(),
-        nationalities: Yup.string().required(),
-        questions: Yup.array()
-          .of(
-            Yup.object({
-              id: Yup.string().required(),
-              text: Yup.string().required().min(5).max(40),
-              options: Yup.array()
-                .of(
-                  Yup.object({
-                    id: Yup.string().required(),
-                    text: Yup.string().required().min(2).max(25),
-                  }),
-                )
-                .required(),
-            }),
-          )
-          .min(1)
-          .required(),
-      }),
-    ),
+    resolver: zodResolver(createVoteSchema),
   })
 
   const {
@@ -339,18 +305,58 @@ export default function CreateVoteForm() {
                 )}
               />
 
-              {/* TODO: Replace with countries multi select   */}
               <Controller
                 name='nationalities'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    disabled={isSubmitting}
-                    error={Boolean(fieldState.error)}
-                    helperText={fieldState.error?.message}
-                    label={t('create-vote.nationalities-lbl')}
-                  />
+                  <FormControl error={Boolean(fieldState.error)}>
+                    <Autocomplete
+                      multiple
+                      limitTags={2}
+                      disableCloseOnSelect
+                      sx={{ maxWidth: 572 }}
+                      options={nationalities}
+                      getOptionLabel={({ name, flag }) => `${flag} ${name}`}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            sx: {
+                              '&.MuiInputBase-root:not(.MuiInputBase-multiline)': {
+                                maxHeight: 'unset',
+                                height: 'unset',
+                              },
+                            },
+                          }}
+                          InputLabelProps={{
+                            ...params.InputLabelProps,
+                            shrink: true,
+                          }}
+                          label={t('create-vote.nationalities-lbl')}
+                        />
+                      )}
+                      renderOption={({ key, ...props }, { flag, name }) => {
+                        return (
+                          <Stack
+                            alignItems='center'
+                            justifyContent='center'
+                            component='li'
+                            direction='row'
+                            spacing={2}
+                            key={key}
+                            {...props}
+                          >
+                            <Typography>{flag}</Typography>
+                            <Typography>{name}</Typography>
+                          </Stack>
+                        )
+                      }}
+                      onChange={(_, value) => field.onChange(value)}
+                    />
+
+                    <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                  </FormControl>
                 )}
               />
 

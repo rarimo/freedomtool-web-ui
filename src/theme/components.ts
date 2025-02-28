@@ -228,6 +228,21 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
     },
   },
+  MuiAutocomplete: {
+    styleOverrides: {
+      paper: ({ theme }) => ({
+        padding: 3,
+        borderRadius: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+          padding: 0,
+        },
+      }),
+      noOptions: ({ theme }) => ({
+        ...theme.typography.body3,
+      }),
+      root: { marginTop: 2 },
+    },
+  },
   MuiTextField: {
     defaultProps: { InputLabelProps: { shrink: true } },
     styleOverrides: {

@@ -5,7 +5,7 @@ import { stringToHex } from 'viem'
 import { api } from '@/api/clients'
 import { ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
-import { ICreateVote, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
+import { ICreateVote, INationality, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
 export const prepareAcceptedOptionsToIpfs = (questions: ICreateVote['questions']) =>
@@ -78,15 +78,15 @@ export const getCountProgress = (totalCount: number, count: number) =>
 
 export const prepareVotingWhitelistData = (config: {
   minAge?: number | null
-  nationalities: string
+  nationalities: INationality[]
   uniqueness: boolean
   startTimestamp: number
 }) => {
   const { minAge, startTimestamp, nationalities, uniqueness } = config
 
   const formattedNationalities = nationalities
-    .split(',')
-    .map(country => stringToHex(country.trim().toUpperCase()))
+    .flatMap(({ codes }) => codes)
+    .map(code => stringToHex(code))
 
   const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
   const uniquenessFlag = uniqueness ? 1 : 0

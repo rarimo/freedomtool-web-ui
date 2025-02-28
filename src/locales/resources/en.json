@@ -3,6 +3,8 @@
     "field-error-required": "Please fill out this field",
     "field-error-min-length": "This field must contain minimum {{min}} symbols",
     "field-error-max-length": "This field must contain maximum {{max}} symbols",
+    "field-error-min-array-length": "This field must contain at least {{min}} item",
+    "field-error-max-array-length": "This field must contain maximum {{max}} items",
     "field-error-number-type-mismatch": "This field must be a number",
     "field-error-type-mismatch": "This field must be a {{type}}",
     "field-error-more-than": "This field must be greater than {{more}}",
