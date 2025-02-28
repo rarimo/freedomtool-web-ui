@@ -80,6 +80,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
             result.status === 'fulfilled' && result.value.proposal?.[0] !== ZERO_PROPOSAL_SMT,
         )
         .map(result => result.value)
+        .toSorted((a, b) => b.id - a.id)
 
       const newLoadedProposals = new Set(loadedProposals)
       successfulProposals.forEach(proposal => newLoadedProposals.add(proposal.id))

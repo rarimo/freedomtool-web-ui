@@ -4,7 +4,7 @@ import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
 import { LoadingStates } from '@/enums'
 import { ErrorHandler } from '@/helpers'
 
-export const useProposalMultiPageLoading = <D>(
+export const useProposalMultiPageLoading = <D extends { id: number }>(
   loadFn: (page: number, pageLimit: number) => Promise<D[]>,
   opts?: {
     loadOnMount?: boolean
@@ -28,9 +28,6 @@ export const useProposalMultiPageLoading = <D>(
   const [loadingState, setLoadingState] = useState<LoadingStates>(LoadingStates.Initial)
   const [hasNext, setHasNext] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalItems, setTotalItems] = useState<number | null>(null)
-
-  const [lastProposalId, setLastProposalId] = useState<number | null>(null)
 
   const optsWithDefaults = useMemo(() => {
     return {
@@ -52,24 +49,20 @@ export const useProposalMultiPageLoading = <D>(
     [optsWithDefaults.silentError],
   )
 
-  const handleResponse = useCallback(
-    (newData: D[], total: number | null) => {
-      setData(prevData => [...prevData, ...newData])
-      setTotalItems(total)
-      if (total !== null) {
-        setHasNext(newData.length >= optsWithDefaults.pageLimit && newData.length < total)
-        return
-      }
-      setHasNext(newData.length >= optsWithDefaults.pageLimit)
-    },
-    [optsWithDefaults.pageLimit],
-  )
+  const handleResponse = useCallback((newData: D[]) => {
+    setData(prevData => {
+      const map = new Map(prevData.map(item => [item.id, item]))
+      newData.forEach(item => map.set(item.id, item))
+      return Array.from(map.values())
+    })
+    setHasNext(newData.length !== 0)
+  }, [])
 
   const load = useCallback(async () => {
     setLoadingState(LoadingStates.Loading)
     try {
       const newData = await loadFn(1, optsWithDefaults.pageLimit)
-      handleResponse(newData, newData.length)
+      handleResponse(newData)
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
       setLoadingState(LoadingStates.Error)
@@ -80,7 +73,7 @@ export const useProposalMultiPageLoading = <D>(
   const update = useCallback(async () => {
     try {
       const newData = await loadFn(currentPage, optsWithDefaults.pageLimit)
-      handleResponse(newData, newData.length)
+      handleResponse(newData)
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
       setLoadingState(LoadingStates.Error)
@@ -89,13 +82,13 @@ export const useProposalMultiPageLoading = <D>(
   }, [handleError, handleResponse, loadFn, currentPage, optsWithDefaults.pageLimit])
 
   const loadNext = useCallback(async () => {
-    if (!hasNext || loadingState === LoadingStates.NextLoading || lastProposalId === null) return
+    if (!hasNext || loadingState === LoadingStates.NextLoading) return
 
     setLoadingState(LoadingStates.NextLoading)
     try {
       const newData = await loadFn(currentPage + 1, optsWithDefaults.pageLimit)
       setCurrentPage(prevPage => prevPage + 1)
-      handleResponse(newData, totalItems ?? 0)
+      handleResponse(newData)
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
       setLoadingState(LoadingStates.Error)
@@ -104,12 +97,10 @@ export const useProposalMultiPageLoading = <D>(
   }, [
     hasNext,
     loadingState,
-    lastProposalId,
     loadFn,
     currentPage,
     optsWithDefaults.pageLimit,
     handleResponse,
-    totalItems,
     handleError,
   ])
 
@@ -117,9 +108,7 @@ export const useProposalMultiPageLoading = <D>(
     setData([])
     setLoadingState(LoadingStates.Initial)
     setHasNext(true)
-    setTotalItems(null)
     setCurrentPage(1)
-    setLastProposalId(null)
   }, [])
 
   const reload = useCallback(async () => {

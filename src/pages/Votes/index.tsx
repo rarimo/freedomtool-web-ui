@@ -11,6 +11,7 @@ const listSx = {
   alignItems: 'center',
   gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
   gap: 2,
+  pb: { md: 10 },
 }
 
 const itemVariants = {
