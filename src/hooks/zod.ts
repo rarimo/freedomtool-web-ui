@@ -7,104 +7,101 @@ export const useLocalizedZodSchema = () => {
   const customErrorMap: zod.ZodErrorMap = (issue, ctx) => {
     const issueField = issue.path[issue.path.length - 1]
 
-    if (issue.code === zod.ZodIssueCode.too_big) {
-      if (issue.type === 'array') {
-        return {
-          message: t('validations.field-error-max-length', {
-            field: issueField,
-            max: issue.maximum,
-          }),
+    switch (issue.code) {
+      case zod.ZodIssueCode.too_big: {
+        switch (issue.type) {
+          case 'array':
+          case 'string':
+            return {
+              message: t('validations.field-error-max-length', {
+                field: issueField,
+                max: issue.maximum,
+              }),
+            }
+          case 'number':
+          case 'bigint':
+            return {
+              message: t('validations.field-error-max-value', {
+                field: issueField,
+                max: issue.maximum,
+              }),
+            }
+          case 'date':
+            return {
+              message: t('validations.field-error-max-length', {
+                field: issueField,
+                max: new Date(Number(issue.maximum)).toLocaleString(),
+              }),
+            }
         }
+        break
       }
 
-      if (issue.type === 'string') {
-        return {
-          message: t('validations.field-error-max-length', {
-            field: issueField,
-            max: issue.maximum,
-          }),
+      case zod.ZodIssueCode.too_small: {
+        switch (issue.type) {
+          case 'array':
+            return {
+              message: t('validations.field-error-min-array-length', {
+                field: issueField,
+                min: issue.minimum,
+              }),
+            }
+          case 'string':
+            return String(ctx.data).length === 0
+              ? { message: t('validations.field-error-required', { field: issueField }) }
+              : {
+                  message: t('validations.field-error-min-length', {
+                    field: issueField,
+                    min: issue.minimum,
+                  }),
+                }
+          case 'number':
+          case 'bigint':
+            return {
+              message: t('validations.field-error-more-than', {
+                field: issueField,
+                more: issue.minimum,
+              }),
+            }
+          case 'date':
+            return {
+              message: t('validations.field-error-min-length', {
+                field: issueField,
+                min: new Date(Number(issue.minimum)).toLocaleString(),
+              }),
+            }
         }
+        break
       }
 
-      if (issue.type === 'number' || issue.type === 'bigint') {
-        return {
-          message: t('validations.field-error-max-value', {
-            field: issueField,
-            max: issue.maximum,
-          }),
-        }
-      }
-
-      if (issue.type === 'date') {
-        return {
-          message: t('validations.field-error-max-length', {
-            field: issueField,
-            max: new Date(Number(issue.maximum)).toLocaleString(),
-          }),
-        }
-      }
-    }
-
-    if (issue.code === zod.ZodIssueCode.too_small) {
-      if (issue.type === 'array') {
-        return {
-          message: t('validations.field-error-min-array-length', {
-            field: issueField,
-            min: issue.minimum,
-          }),
-        }
-      }
-
-      if (issue.type === 'string') {
-        if (String(ctx.data).length === 0) {
+      case zod.ZodIssueCode.invalid_string:
+        if (issue.validation === 'email') {
           return {
-            message: t('validations.field-error-required', { field: issueField }),
-          }
-        } else {
-          return {
-            message: t('validations.field-error-min-length', {
+            message: t('validations.field-error-type-mismatch', {
               field: issueField,
-              min: issue.minimum,
+              type: 'email',
             }),
           }
         }
-      }
+        break
 
-      if (issue.type === 'number' || issue.type === 'bigint') {
+      case zod.ZodIssueCode.invalid_enum_value:
         return {
-          message: t('validations.field-error-more-than', {
+          message: t('validations.field-error-type-mismatch', {
             field: issueField,
-            more: issue.minimum,
+            type: issue.options.join(', '),
           }),
         }
-      }
 
-      if (issue.type === 'date') {
-        return {
-          message: t('validations.field-error-min-length', {
-            field: issueField,
-            min: new Date(Number(issue.minimum)).toLocaleString(),
-          }),
+      case zod.ZodIssueCode.invalid_type:
+        if (issue.expected === 'integer') {
+          return {
+            message: t('validations.field-error-integer', {
+              field: issueField,
+            }),
+          }
         }
-      }
-    }
-
-    if (issue.code === zod.ZodIssueCode.invalid_string && issue.validation === 'email') {
-      return {
-        message: t('validations.field-error-type-mismatch', {
-          field: issueField,
-          type: 'email',
-        }),
-      }
-    }
-
-    if (issue.code === zod.ZodIssueCode.invalid_enum_value) {
-      return {
-        message: t('validations.field-error-type-mismatch', {
-          field: issueField,
-          type: issue.options.join(', '),
-        }),
-      }
+        break
     }
 
     return { message: ctx.defaultError }
