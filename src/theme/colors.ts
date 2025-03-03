@@ -11,12 +11,12 @@ export const lightPalette: PaletteOptions = {
     baseBackground: alpha('#112a0a', 0.28), // base/base-background
   },
   primary: {
-    darker: '#1A5389', // primary/primary-darker
-    dark: '#1D5E9A', // primary/primary-dark
-    main: '#2168AB', // primary/primary-base
-    light: '#E0E7F2', // primary/primary-light
-    lighter: alpha('#2168AB', 0.06), // primary/primary-lighter
-    contrastText: '#ffffff',
+    darker: '#3D7149',
+    dark: '#7AE191',
+    main: '#80ED99',
+    light: '#E1F2E4',
+    lighter: alpha('#80ED99', 0.06),
+    contrastText: '#000000',
   },
   secondary: {
     darker: '#8f40d0', // secondary/secondary-darker
@@ -101,12 +101,12 @@ export const darkPalette: PaletteOptions = {
     baseBackground: alpha('#112a0a', 0.28), // base/base-background
   },
   primary: {
-    darker: '#4A90E2', // primary/primary-darker
-    dark: '#3F81D0', // primary/primary-dark
-    main: '#3187D8', // primary/primary-base
-    light: '#182D41', // primary/primary-light
-    lighter: alpha('#2168AB', 0.15), // primary/primary-lighter
-    contrastText: '#000000',
+    darker: '#2A4B34',
+    dark: '#4F8E63',
+    main: '#4A9F7B',
+    light: '#7A9D85',
+    lighter: alpha('#4A9F7B', 0.1),
+    contrastText: '#FFFFFF',
   },
   secondary: {
     darker: '#c287f3', // secondary/secondary-darker

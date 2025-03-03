@@ -156,7 +156,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
             transform: 'translateY(-50%)',
           }}
         >
-          {t('formats.percent', { value: progress })}
+          {t('formats.percent', { value: progress.toFixed(2) })}
         </Typography>
         <Tooltip title={title}>
           <Typography
@@ -170,7 +170,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
               zIndex: 1,
               left: 10,
               top: '50%',
-              transform: 'translateY(-50%)',
+              transform: 'translateY(-60%)',
             }}
           >
             {title}

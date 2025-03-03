@@ -113,7 +113,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
       containedPrimary: ({ theme }) => ({
         backgroundColor: theme.palette.primary.main,
-        color: theme.palette.inverted.light,
         '&:hover': {
           background: alpha(theme.palette.primary.main, 0.9),
         },
@@ -602,7 +601,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.primary.main,
       }),
       barColorSecondary: ({ theme }) => ({
-        backgroundColor: theme.palette.primary.lighter,
+        backgroundColor: theme.palette.primary.light,
         borderRadius: 250,
       }),
     },

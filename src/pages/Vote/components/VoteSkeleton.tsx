@@ -65,7 +65,7 @@ export default function SkeletonPage() {
 }
 
 function VoteBlockSkeleton() {
-  return <Skeleton height={96} sx={{ mb: 1, borderRadius: 6 }} />
+  return <Skeleton height={84} sx={{ mb: 1, borderRadius: 6 }} />
 }
 
 function QuestionItemSkeleton() {
