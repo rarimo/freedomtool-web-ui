@@ -14,8 +14,9 @@ export const useSignIn = () => {
       await open()
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return {

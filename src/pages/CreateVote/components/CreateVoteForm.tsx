@@ -13,6 +13,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -179,235 +180,294 @@ export default function CreateVoteForm() {
   }, [questionFields.length, trigger])
 
   return (
-    <Stack>
+    <>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-        <Stack spacing={2} width='100%' pb={{ md: 10 }}>
-          <Stack sx={{ position: 'relative' }} component={Paper} spacing={5}>
-            <Controller
-              name='title'
-              control={control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  disabled={isSubmitting}
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                  placeholder={t('create-vote.proposal-title-plh')}
-                  label={t('create-vote.proposal-title-lbl')}
-                />
-              )}
-            />
-            <Controller
-              name='description'
-              control={control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  multiline
-                  rows={3}
-                  disabled={isSubmitting}
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                  label={t('create-vote.proposal-description-lbl')}
-                  placeholder={t('create-vote.proposal-description-plh')}
-                  sx={{
-                    background: 'transparent',
-                    '& .MuiInputBase-root': {
-                      height: 'unset',
-                    },
-                  }}
-                />
-              )}
-            />
-          </Stack>
-          <Stack component={Paper} direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
-            <Controller
-              name='startDate'
-              control={control}
-              render={({ field, fieldState }) => (
-                <UiDatePicker
-                  {...field}
-                  hasTime
-                  minDate={minDate}
-                  disabled={isSubmitting}
-                  errorMessage={fieldState.error?.message}
-                  label={t('create-vote.start-date-lbl')}
-                  slotProps={{
-                    textField: {
-                      placeholder: t('create-vote.start-date-plh'),
-                    },
-                  }}
-                />
-              )}
-            />
-            <Controller
-              name='endDate'
-              control={control}
-              render={({ field, fieldState }) => (
-                <UiDatePicker
-                  {...field}
-                  hasTime
-                  minDate={minDate}
-                  disabled={isSubmitting}
-                  errorMessage={fieldState.error?.message}
-                  label={t('create-vote.end-date-lbl')}
-                  slotProps={{
-                    textField: {
-                      placeholder: t('create-vote.end-date-plh'),
-                    },
-                  }}
-                />
-              )}
-            />
-          </Stack>
-
-          <Stack component={Paper} spacing={1}>
-            {questionFields.map((question, index) => {
-              return (
-                <QuestionCard
-                  key={question.id}
-                  question={question}
-                  index={index}
-                  control={control}
-                  isDisabled={isSubmitting}
-                  canDelete={questionFields.length > 1}
-                  isEditing={editQuestionIndex === index}
-                  onDelete={() => remove(index)}
-                  onEdit={() => setEditQuestionIndex(index)}
-                />
-              )
-            })}
-            <Button
-              sx={{ ml: 'auto', mt: 2, pb: 0 }}
-              size='small'
-              variant='text'
-              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
-              startIcon={<UiIcon name={Icons.Plus} size={4} />}
-              onClick={addQuestion}
-            >
-              {t('create-vote.add-question-btn')}
-            </Button>
-          </Stack>
-
-          <Stack component={Paper}>
-            <Stack spacing={5}>
+        <Stack spacing={3} width='100%' pb={{ md: 10 }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Stack sx={{ position: 'relative' }} component={Paper} spacing={5}>
               <Controller
-                name='minAge'
+                name='title'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <UiNumberField
+                  <TextField
                     {...field}
                     disabled={isSubmitting}
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
-                    label={t('create-vote.min-age-lbl')}
+                    placeholder={t('create-vote.proposal-title-plh')}
+                    label={t('create-vote.proposal-title-lbl')}
                   />
                 )}
               />
-
               <Controller
-                name='nationalities'
+                name='description'
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl {...field} error={Boolean(fieldState.error)}>
-                    <Autocomplete
-                      multiple
-                      limitTags={2}
-                      disableCloseOnSelect
-                      disabled={field.disabled || isSubmitting}
-                      sx={{ maxWidth: 572 }}
-                      options={nationalities}
-                      getOptionLabel={({ name, flag }) => `${flag} ${name}`}
-                      renderInput={params => (
-                        <TextField
-                          {...params}
-                          error={Boolean(fieldState.error)}
-                          InputProps={{
-                            ...params.InputProps,
-                            sx: {
-                              '&.MuiInputBase-root:not(.MuiInputBase-multiline)': {
-                                maxHeight: 'unset',
-                                height: 'unset',
-                              },
-                            },
-                          }}
-                          InputLabelProps={{
-                            ...params.InputLabelProps,
-                            shrink: true,
-                          }}
-                          label={t('create-vote.nationalities-lbl')}
-                        />
-                      )}
-                      renderOption={({ key, ...props }, { flag, name }) => {
-                        return (
-                          <Stack
-                            alignItems='center'
-                            justifyContent='center'
-                            component='li'
-                            direction='row'
-                            spacing={2}
-                            key={key}
-                            {...props}
-                          >
-                            <Typography>{flag}</Typography>
-                            <Typography>{name}</Typography>
-                          </Stack>
-                        )
-                      }}
-                      onChange={(_, value) => field.onChange(value)}
-                    />
-
-                    <FormHelperText>{fieldState.error?.message}</FormHelperText>
-                  </FormControl>
-                )}
-              />
-
-              <Controller
-                name='uniqueness'
-                control={control}
-                render={({ field, fieldState }) => (
-                  <FormControl {...field} error={Boolean(fieldState.error)}>
-                    <FormControlLabel
-                      control={<Checkbox disabled={field.disabled || isSubmitting} />}
-                      label={
-                        <Typography variant='caption2' color={palette.text.secondary}>
-                          {t('create-vote.uniqueness-lbl')}
-                        </Typography>
-                      }
-                    />
-                  </FormControl>
+                  <TextField
+                    {...field}
+                    multiline
+                    rows={3}
+                    disabled={isSubmitting}
+                    error={Boolean(fieldState.error)}
+                    helperText={fieldState.error?.message}
+                    label={t('create-vote.proposal-description-lbl')}
+                    placeholder={t('create-vote.proposal-description-plh')}
+                    sx={{
+                      background: 'transparent',
+                      '& .MuiInputBase-root': {
+                        height: 'unset',
+                      },
+                    }}
+                  />
                 )}
               />
             </Stack>
-          </Stack>
+          </motion.div>
 
-          <Stack component={Paper}>
-            <Controller
-              name='votesCount'
-              control={control}
-              render={({ field, fieldState }) => (
-                <UiCheckVoteInput
-                  {...field}
-                  disabled={isSubmitting || isCalculating}
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message || helperText}
-                  label={t('create-vote.votes-count-lbl')}
-                  onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
-                  onChange={e => {
-                    field.onChange(e)
-                    resetHelperText?.()
-                  }}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Stack
+              component={Paper}
+              direction={{ md: 'row' }}
+              justifyContent='space-between'
+              gap={5}
+            >
+              <Controller
+                name='startDate'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <UiDatePicker
+                    {...field}
+                    hasTime
+                    minDate={minDate}
+                    disabled={isSubmitting}
+                    errorMessage={fieldState.error?.message}
+                    label={t('create-vote.start-date-lbl')}
+                    slotProps={{
+                      textField: {
+                        placeholder: t('create-vote.start-date-plh'),
+                      },
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name='endDate'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <UiDatePicker
+                    {...field}
+                    hasTime
+                    minDate={minDate}
+                    disabled={isSubmitting}
+                    errorMessage={fieldState.error?.message}
+                    label={t('create-vote.end-date-lbl')}
+                    slotProps={{
+                      textField: {
+                        placeholder: t('create-vote.end-date-plh'),
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Stack>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Stack component={Paper} spacing={1}>
+              {questionFields.map((question, index) => {
+                return (
+                  <QuestionCard
+                    key={question.id}
+                    question={question}
+                    index={index}
+                    control={control}
+                    isDisabled={isSubmitting}
+                    canDelete={questionFields.length > 1}
+                    isEditing={editQuestionIndex === index}
+                    onDelete={() => remove(index)}
+                    onEdit={() => setEditQuestionIndex(index)}
+                  />
+                )
+              })}
+              <Button
+                sx={{ ml: 'auto', mt: 2, pb: 0 }}
+                size='small'
+                variant='text'
+                disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
+                startIcon={<UiIcon name={Icons.Plus} size={4} />}
+                onClick={addQuestion}
+              >
+                {t('create-vote.add-question-btn')}
+              </Button>
+            </Stack>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <Stack component={Paper}>
+              <Stack spacing={5}>
+                <Controller
+                  name='minAge'
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <UiNumberField
+                      {...field}
+                      disabled={isSubmitting}
+                      error={Boolean(fieldState.error)}
+                      helperText={fieldState.error?.message}
+                      label={t('create-vote.min-age-lbl')}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Stack>
 
-          <Button sx={{ ml: 'auto', mt: 3 }} disabled={isSubmitting} type='submit'>
-            {t('create-vote.submit-btn')}
-          </Button>
+                <Controller
+                  name='nationalities'
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <FormControl {...field} error={Boolean(fieldState.error)}>
+                      <Autocomplete
+                        multiple
+                        limitTags={2}
+                        disableCloseOnSelect
+                        disabled={field.disabled || isSubmitting}
+                        sx={{ maxWidth: 572 }}
+                        options={nationalities}
+                        getOptionLabel={({ name, flag }) => `${flag} ${name}`}
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            error={Boolean(fieldState.error)}
+                            InputProps={{
+                              ...params.InputProps,
+                              sx: {
+                                '&.MuiInputBase-root:not(.MuiInputBase-multiline)': {
+                                  maxHeight: 'unset',
+                                  height: 'unset',
+                                },
+                              },
+                            }}
+                            InputLabelProps={{
+                              ...params.InputLabelProps,
+                              shrink: true,
+                            }}
+                            label={t('create-vote.nationalities-lbl')}
+                          />
+                        )}
+                        renderOption={({ key, ...props }, { flag, name }) => {
+                          return (
+                            <Stack
+                              alignItems='center'
+                              justifyContent='center'
+                              component='li'
+                              direction='row'
+                              spacing={2}
+                              key={key}
+                              {...props}
+                            >
+                              <Typography>{flag}</Typography>
+                              <Typography>{name}</Typography>
+                            </Stack>
+                          )
+                        }}
+                        onChange={(_, value) => field.onChange(value)}
+                      />
+
+                      <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                    </FormControl>
+                  )}
+                />
+
+                <Controller
+                  name='uniqueness'
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <FormControl {...field} error={Boolean(fieldState.error)}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            sx={{
+                              color: palette.text.secondary,
+                              '&.Mui-checked': {
+                                color: palette.text.secondary,
+                              },
+                            }}
+                            disabled={field.disabled || isSubmitting}
+                          />
+                        }
+                        label={
+                          <Typography variant='caption2' color={palette.text.secondary}>
+                            {t('create-vote.uniqueness-lbl')}
+                          </Typography>
+                        }
+                      />
+                    </FormControl>
+                  )}
+                />
+              </Stack>
+            </Stack>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9 }}
+          >
+            <Stack component={Paper}>
+              <Controller
+                name='votesCount'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <UiCheckVoteInput
+                    {...field}
+                    disabled={isSubmitting || isCalculating}
+                    error={Boolean(fieldState.error)}
+                    helperText={fieldState.error?.message || helperText}
+                    label={t('create-vote.votes-count-lbl')}
+                    onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
+                    onChange={e => {
+                      field.onChange(e)
+                      resetHelperText?.()
+                    }}
+                  />
+                )}
+              />
+            </Stack>
+          </motion.div>
+
+          <Stack
+            component={motion.div}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.2 }}
+          >
+            <Button
+              type='submit'
+              variant='contained'
+              size='large'
+              disabled={isSubmitting}
+              sx={{ ml: 'auto' }}
+            >
+              {isSubmitting ? t('create-vote.submit-btn-disabled') : t('create-vote.submit-btn')}
+            </Button>
+          </Stack>
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />
-    </Stack>
+    </>
   )
 }

@@ -27,6 +27,24 @@ const itemVariants = {
   }),
 }
 
+const headerVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, type: 'spring', stiffness: 50 },
+  },
+}
+
+const buttonVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5, type: 'spring', stiffness: 50 },
+  },
+}
+
 export default function Votes() {
   const { proposals, proposalsLoadingState, loadNextProposals, reloadProposals } = useProposalState(
     {
@@ -40,20 +58,35 @@ export default function Votes() {
 
   return (
     <Stack mt={12} spacing={8} divider={<Divider />}>
-      <Stack alignItems='center' spacing={3} direction='row' justifyContent='space-between'>
-        <Typography component='h1' variant='h2'>
-          {t('votes.title')}
-        </Typography>
-        <Button
-          component={Link}
-          to={RoutePaths.VotesNew}
-          size={isMdUp ? 'large' : 'small'}
-          variant='outlined'
-          startIcon={<UiIcon name={Icons.Plus} size={5} />}
-        >
-          {t('votes.create-new-vote-btn')}
-        </Button>
+      <Stack
+        alignItems='center'
+        justifyContent='space-between'
+        direction='row'
+        spacing={8}
+        divider={<Divider />}
+      >
+        <motion.div initial='hidden' animate='visible' variants={headerVariants}>
+          <Stack alignItems='center' spacing={3} direction='row' justifyContent='space-between'>
+            <Typography component='h1' variant='h2'>
+              {t('votes.title')}
+            </Typography>
+          </Stack>
+        </motion.div>
+
+        <motion.div initial='hidden' animate='visible' variants={buttonVariants}>
+          <Button
+            component={Link}
+            to={RoutePaths.VotesNew}
+            size={isMdUp ? 'large' : 'small'}
+            variant='outlined'
+            startIcon={<UiIcon name={Icons.Plus} size={5} />}
+          >
+            {t('votes.create-new-vote-btn')}
+          </Button>
+        </motion.div>
       </Stack>
+
+      {/* List of votes */}
       <InfiniteList
         items={proposals}
         loadingState={proposalsLoadingState}

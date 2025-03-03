@@ -760,24 +760,14 @@ export const components: Components<Omit<Theme, 'components'>> = {
           ...typography.buttonSmall,
           width: '56px',
           borderRadius: theme.spacing(2),
-          '&.Mui-selected': {
-            color: theme.palette.common.white,
-          },
         },
-        '& .MuiDayCalendar-weekContainer': {
-          '& .Mui-selected': {
-            color: theme.palette.common.white,
-          },
-        },
+
         '& .MuiDateCalendar-root': {
           width: '280px',
           maxHeight: '260px',
         },
         '& .MuiMultiSectionDigitalClockSection-item': {
           ...typography.buttonSmall,
-          '&.Mui-selected': {
-            color: theme.palette.common.white,
-          },
         },
       }),
     },
