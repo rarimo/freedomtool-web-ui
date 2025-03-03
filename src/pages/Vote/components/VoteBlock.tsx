@@ -33,9 +33,18 @@ export default function VoteBlock({ qrCodeUrl }: { qrCodeUrl: string }) {
       <Stack
         justifyContent='center'
         component={Paper}
-        sx={{ mb: 4, position: 'sticky', top: 60, background: palette.primary.light, zIndex: 2 }}
+        sx={{
+          mb: 4,
+          position: 'sticky',
+          top: 70,
+          background: palette.primary.light,
+          zIndex: 2,
+          [breakpoints.down('md')]: {
+            padding: 3.5,
+          },
+        }}
       >
-        <Stack alignItems='center' direction='row' spacing={4}>
+        <Stack alignItems='center' direction='row' spacing={3.5}>
           <Stack
             width={40}
             height={40}
@@ -57,7 +66,7 @@ export default function VoteBlock({ qrCodeUrl }: { qrCodeUrl: string }) {
               <Typography variant='buttonMedium' color={palette.primary.darker}>
                 {t('vote.promo.title')}
               </Typography>
-              <Typography variant='body4' color={palette.primary.main}>
+              <Typography variant='body4' color={palette.text.secondary}>
                 {t('vote.promo.description')}
               </Typography>
             </Stack>

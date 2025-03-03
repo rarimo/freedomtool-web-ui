@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 
-export const FONT_FAMILY = "'Poppins', sans-serif"
+export const FONT_FAMILY = "'Roboto Mono', sans-serif"
 
 export enum FontWeight {
   Regular = 400,

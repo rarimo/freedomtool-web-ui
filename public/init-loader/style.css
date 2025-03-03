@@ -31,5 +31,7 @@
 }
 
 .app__init-logo-title {
-  color: #267ac9;
+  font-family: 'Roboto Mono';
+  font-size: 2rem;
+  text-align: center;
 }

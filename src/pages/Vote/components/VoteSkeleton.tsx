@@ -65,7 +65,7 @@ export default function SkeletonPage() {
 }
 
 function VoteBlockSkeleton() {
-  return <Skeleton height={96} sx={{ mb: 1, borderRadius: 6 }} />
+  return <Skeleton height={84} sx={{ mb: 1, borderRadius: 6 }} />
 }
 
 function QuestionItemSkeleton() {
@@ -82,8 +82,8 @@ function QuestionItemSkeleton() {
         <UiTypographySkeleton variant='caption3' width={80} />
         <UiTypographySkeleton variant='h5' width={150} />
         <Stack spacing={2} mt={3}>
-          <Skeleton width='100%' sx={{ borderRadius: 100, height: 32 }} />
-          <Skeleton width='100%' sx={{ borderRadius: 100, height: 32 }} />
+          <Skeleton width='100%' sx={{ borderRadius: 100, height: 40 }} />
+          <Skeleton width='100%' sx={{ borderRadius: 100, height: 40 }} />
         </Stack>
       </Stack>
       <Divider sx={{ my: { xs: 4, md: 0 } }} />

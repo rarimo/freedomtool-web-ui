@@ -15,7 +15,7 @@ import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
 import { IParsedProposal, IQuestionIpfs } from '@/types'
 
 const MAX_VISIBLE_OPTIONS = 4
-const OPTION_HEIGHT = 38
+const OPTION_HEIGHT = 46
 
 export default function QuestionList({
   proposal,
@@ -151,12 +151,12 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
             position: 'absolute',
             color: palette.primary.darker,
             zIndex: 1,
-            right: 10,
+            right: 15,
             top: '50%',
             transform: 'translateY(-50%)',
           }}
         >
-          {t('formats.percent', { value: progress })}
+          {t('formats.percent', { value: progress.toFixed(2) })}
         </Typography>
         <Tooltip title={title}>
           <Typography
@@ -168,7 +168,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
               position: 'absolute',
               color: palette.primary.darker,
               zIndex: 1,
-              left: 10,
+              left: 15,
               top: '50%',
               transform: 'translateY(-50%)',
             }}

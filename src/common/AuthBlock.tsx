@@ -1,34 +1,20 @@
 import { Button, Paper, Stack, Typography, useTheme } from '@mui/material'
-import { useAppKit } from '@reown/appkit/react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
-import { ErrorHandler } from '@/helpers'
+import { useSignIn } from '@/hooks'
 import { UiIcon } from '@/ui'
 
 export default function AuthBlock() {
   const { palette } = useTheme()
   const { t } = useTranslation()
-  const { open } = useAppKit()
-
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleSignIn = async () => {
-    setIsLoading(true)
-    try {
-      await open()
-    } catch (error) {
-      ErrorHandler.processWithoutFeedback(error)
-    }
-    setIsLoading(false)
-  }
+  const { handleSignIn, isLoading } = useSignIn()
 
   return (
     <Stack
       component={Paper}
       spacing={4}
-      width={{ xs: 1, md: 350 }}
+      width={{ xs: 1, md: 360 }}
       mx='auto'
       alignItems='center'
       textAlign='center'
@@ -45,17 +31,16 @@ export default function AuthBlock() {
       </Stack>
       <Stack spacing={1}>
         <Typography variant='subtitle3'>{t('auth-block.title')}</Typography>
-        <Typography variant='body4' color={palette.text.secondary} maxWidth={200}>
+        <Typography
+          variant='body4'
+          textAlign='center'
+          color={palette.text.secondary}
+          maxWidth={260}
+        >
           {t('auth-block.description')}
         </Typography>
       </Stack>
-      <Button
-        variant='contained'
-        size='medium'
-        disabled={isLoading}
-        sx={{ width: 160 }}
-        onClick={() => handleSignIn()}
-      >
+      <Button variant='contained' size='medium' disabled={isLoading} onClick={() => handleSignIn()}>
         {t('auth-block.auth-btn')}
       </Button>
     </Stack>

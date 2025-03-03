@@ -1,7 +1,7 @@
 import { Stack, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
 
-import { AppHeader, AppNavbar, NetworkWarningProtector } from '@/common'
+import { AppHeader, NetworkWarningProtector } from '@/common'
 import { RouteTitleContextProvider } from '@/contexts'
 import { Transitions } from '@/theme/constants'
 import { vh } from '@/theme/helpers'
@@ -23,17 +23,6 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           },
         }}
       >
-        <AppNavbar
-          sx={{
-            [breakpoints.up('md')]: {
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              height: '100%',
-            },
-          }}
-        />
-        <AppHeader />
         <UiContainer
           id='main-content'
           sx={{
@@ -42,6 +31,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
             transition: Transitions.Default,
           }}
         >
+          <AppHeader />
           <NetworkWarningProtector>{children}</NetworkWarningProtector>
         </UiContainer>
       </Stack>

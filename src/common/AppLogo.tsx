@@ -1,11 +1,13 @@
-import { Stack, StackProps, Typography, useTheme } from '@mui/material'
+import { Stack, StackProps, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { RoutePaths } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
+import { UiIcon } from '@/ui'
 
 export default function AppLogo(props: StackProps) {
-  const { palette, typography } = useTheme()
+  const { palette, typography, breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
   const { t } = useTranslation()
 
   return (
@@ -22,16 +24,18 @@ export default function AppLogo(props: StackProps) {
         ...props.sx,
       }}
     >
-      <Typography
-        sx={{
-          fontSize: '3rem',
-          fontWeight: 400,
-          color: palette.text.primary,
-          opacity: 0,
-        }}
-      >
-        {t('app-logo.title')}
-      </Typography>
+      <UiIcon name={Icons.App} color={palette.inverted.light} size={8} />
+      {isMdUp && (
+        <Typography
+          variant='buttonMedium'
+          sx={{
+            fontWeight: 400,
+            color: palette.text.primary,
+          }}
+        >
+          {t('app-navbar.title')}
+        </Typography>
+      )}
     </Stack>
   )
 }

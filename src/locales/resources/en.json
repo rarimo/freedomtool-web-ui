@@ -18,7 +18,7 @@
   "app-navbar": {
     "logout-lbl": "Log out",
     "settings-tooltip": "Settings",
-    "title": "FT v2.0"
+    "title": "Freedom tool 2.0"
   },
   "network-warning-modal": {
     "title": "Where are you?",
@@ -68,12 +68,12 @@
     "default-message-info": "Something is happening. Just want you to know that"
   },
   "routes": {
-    "vote": "Votes",
-    "create-new-proposal": "Create new vote"
+    "vote": "Polls",
+    "create-new-proposal": "Create new poll"
   },
   "auth-block": {
     "title": " Connect your wallet",
-    "description": "To create a vote, you need to authenticate using a wallet.",
+    "description": "To create a poll, you need to authenticate using a wallet.",
     "auth-btn": "Connect wallet"
   },
   "infinite-list": {
@@ -87,16 +87,16 @@
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
     "add-question-btn": "Add a question",
-    "submit-btn": "Submit new vote",
+    "submit-btn": "Submit new poll",
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Option #{{order}}",
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
-    "success-msg": "You have successfully created a vote!",
+    "success-msg": "You have successfully created a poll!",
     "proposal-title-plh": "Approve this change?",
-    "proposal-description-plh": "This vote outlines key points...",
+    "proposal-description-plh": "This poll outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
     "uniqueness-lbl": "Uniqueness",
@@ -113,7 +113,7 @@
     "start-date": "Start date: {{date}}",
     "end-date": "End date: {{date}}",
     "error-title": "Error occurred",
-    "error-description": "Error while loading this vote"
+    "error-description": "Error while loading this poll"
   },
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
@@ -156,10 +156,16 @@
     "title": "Freedom tool 2.0"
   },
   "app-header": {
-    "title": "FT v2.0"
+    "title": "FT v2.0",
+    "connect-btn": "Connect",
+    "disconnect-tooltip": "Disconnect"
   },
   "check-vote": {
     "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",
     "helper-text_other": "You need {{currencyAmount}} {{currency}} to cast {{count}} votes."
+  },
+  "votes": {
+    "title": "Polls",
+    "create-new-vote-btn": "Create a new poll"
   }
 }

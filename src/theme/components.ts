@@ -66,12 +66,12 @@ export const components: Components<Omit<Theme, 'components'>> = {
       sizeMedium: ({ theme }) => ({
         ...typography.buttonMedium,
         padding: theme.spacing(2.5, 6),
-        height: theme.spacing(10),
+        height: theme.spacing(11),
       }),
       sizeSmall: ({ theme }) => ({
         ...typography.buttonSmall,
-        padding: theme.spacing(2.5, 4),
-        height: theme.spacing(8),
+        padding: theme.spacing(1.5, 4),
+        height: theme.spacing(10),
       }),
       fullWidth: {
         width: '100%',
@@ -113,7 +113,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
       containedPrimary: ({ theme }) => ({
         backgroundColor: theme.palette.primary.main,
-        color: theme.palette.inverted.light,
         '&:hover': {
           background: alpha(theme.palette.primary.main, 0.9),
         },
@@ -181,11 +180,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
       outlinedPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
         backgroundColor: 'transparent',
-        border: `2px solid ${theme.palette.text.primary}`,
+        border: `1px solid ${theme.palette.text.primary}`,
         '&:hover, &:focus, &:active': {
           color: theme.palette.inverted.light,
           backgroundColor: theme.palette.text.primary,
-          border: `2px solid ${theme.palette.text.primary}`,
+          border: `1px solid ${theme.palette.text.primary}`,
         },
         '&.Mui-disabled': {
           border: 'transparent',
@@ -594,7 +593,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: 250,
-        height: theme.spacing(8),
+        height: theme.spacing(10),
         backgroundColor: theme.palette.action.active,
       }),
       barColorPrimary: ({ theme }) => ({
@@ -602,7 +601,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.primary.main,
       }),
       barColorSecondary: ({ theme }) => ({
-        backgroundColor: theme.palette.primary.lighter,
+        backgroundColor: theme.palette.primary.light,
         borderRadius: 250,
       }),
     },
@@ -761,24 +760,14 @@ export const components: Components<Omit<Theme, 'components'>> = {
           ...typography.buttonSmall,
           width: '56px',
           borderRadius: theme.spacing(2),
-          '&.Mui-selected': {
-            color: theme.palette.common.white,
-          },
         },
-        '& .MuiDayCalendar-weekContainer': {
-          '& .Mui-selected': {
-            color: theme.palette.common.white,
-          },
-        },
+
         '& .MuiDateCalendar-root': {
           width: '280px',
           maxHeight: '260px',
         },
         '& .MuiMultiSectionDigitalClockSection-item': {
           ...typography.buttonSmall,
-          '&.Mui-selected': {
-            color: theme.palette.common.white,
-          },
         },
       }),
     },
