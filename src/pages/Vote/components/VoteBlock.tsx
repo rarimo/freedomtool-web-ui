@@ -36,7 +36,7 @@ export default function VoteBlock({ qrCodeUrl }: { qrCodeUrl: string }) {
         sx={{
           mb: 4,
           position: 'sticky',
-          top: 60,
+          top: 70,
           background: palette.primary.light,
           zIndex: 2,
           [breakpoints.down('md')]: {

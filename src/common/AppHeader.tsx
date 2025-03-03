@@ -1,95 +1,117 @@
-import { alpha, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
-import zIndex from '@mui/material/styles/zIndex'
-import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
+import {
+  alpha,
+  Button,
+  Divider,
+  IconButton,
+  Stack,
+  StackProps,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import { motion } from 'framer-motion'
+import { t } from 'i18next'
+import { useEffect, useState } from 'react'
 
-import SettingsMenu from '@/common/SettingsMenu'
-import { MOBILE_HEADER_HEIGHT } from '@/constants'
-import { useRouteTitleContext } from '@/contexts'
-import { RoutePaths } from '@/enums'
-import { Transitions } from '@/theme/constants'
+import { useWeb3Context } from '@/contexts/web3-context'
+import { Icons } from '@/enums'
+import { formatAddress } from '@/helpers'
+import { useSignIn } from '@/hooks'
+import { uiStore } from '@/store'
+import { UiIcon } from '@/ui'
 
-interface Props {
-  compact?: boolean
-}
-
-export default function AppHeader({ compact = false }: Props) {
-  const { title } = useRouteTitleContext()
-  const { t } = useTranslation()
-  const { palette, breakpoints, spacing } = useTheme()
-
-  const isMdDown = useMediaQuery(() => breakpoints.down('md'))
+import AppLogo from './AppLogo'
+export default function AppHeader(props: StackProps) {
+  const { palette, zIndex } = useTheme()
+  const { disconnect } = useWeb3Context()
+  const { address } = useWeb3Context()
+  const { handleSignIn, isLoading } = useSignIn()
 
   return (
     <Stack
-      direction='row'
-      position='fixed'
-      zIndex={zIndex.appBar - 1}
-      justifyContent='center'
-      alignItems='center'
-      top={0}
-      left={{ xs: 0 }}
-      right={0}
-      px={6}
+      {...props}
       bgcolor={alpha(palette.background.default, 0.8)}
-      // HACK min-height is the sum of 2*py and 2*py + icon size of absolutely positioned element
-      minHeight={{
-        xs: MOBILE_HEADER_HEIGHT,
-        md: compact ? 50 : 80,
-      }}
+      component='header'
       sx={{
-        backdropFilter: 'blur(10px)',
-        transition: Transitions.Default,
+        position: 'fixed',
+        py: { xs: 0, md: 5 },
+        px: { xs: 5, lg: 0 },
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: zIndex.appBar,
+        flexDirection: { xs: 'column', md: 'row' },
+        alignItems: 'center',
+        width: 1,
+
+        ...props.sx,
       }}
     >
-      {isMdDown && (
-        <Stack
-          component={NavLink}
-          to={RoutePaths.Home}
-          alignItems='center'
-          position='relative'
-          sx={{
-            [breakpoints.down('md')]: {
-              position: 'absolute',
-              left: spacing(3),
-            },
-          }}
-        >
-          <Typography variant='buttonMedium' color={palette.text.secondary}>
-            {t('app-header.title')}
-          </Typography>
-        </Stack>
-      )}
-
-      <Typography
-        variant='h6'
-        textAlign='center'
-        color={palette.text.secondary}
-        textOverflow='ellipsis'
-        noWrap
+      <Stack
         sx={{
-          maxWidth: 150,
-          [breakpoints.up('md')]: {
-            transition: Transitions.Default,
-            transform: compact ? 'scale(0.875)' : 'none',
-            transformOrigin: 'bottom',
-            maxWidth: 400,
-          },
+          flexDirection: { xs: 'row' },
+          maxWidth: { md: 1192 },
+          py: { xs: 4, lg: 0 },
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: 1,
+          mx: 'auto',
         }}
       >
-        {title}
-      </Typography>
+        <AppLogo />
 
-      {isMdDown && (
-        <SettingsMenu
-          sx={{
-            [breakpoints.down('md')]: {
-              position: 'absolute',
-              right: spacing(5),
-            },
-          }}
-        />
-      )}
+        <Stack
+          direction='row'
+          alignItems='center'
+          spacing={4}
+          divider={<Divider flexItem orientation='vertical' />}
+        >
+          <ThemeButton />
+          {address ? (
+            <Stack color={palette.text.secondary} direction='row' alignItems='center' spacing={2}>
+              <Typography title={address} variant='buttonSmall'>
+                {formatAddress(address)}
+              </Typography>
+              <Tooltip title={t('app-header.disconnect-tooltip')}>
+                <IconButton
+                  size='small'
+                  sx={{ px: 1, color: palette.text.secondary }}
+                  onClick={() => disconnect()}
+                >
+                  <UiIcon name={Icons.LogoutCircleRLine} size={4} />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          ) : (
+            <Button size='small' sx={{ height: 34 }} disabled={isLoading} onClick={handleSignIn}>
+              {t('app-header.connect-btn')}
+            </Button>
+          )}
+        </Stack>
+      </Stack>
     </Stack>
+  )
+}
+
+function ThemeButton() {
+  const { palette } = useTheme()
+  const [icon, setIcon] = useState(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
+
+  useEffect(() => {
+    setIcon(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
+  }, [palette.mode])
+
+  return (
+    <IconButton key={palette.mode} onClick={uiStore.togglePaletteMode}>
+      <motion.div
+        key={palette.mode}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <UiIcon name={icon} size={4} color={palette.text.primary} />
+      </motion.div>
+    </IconButton>
   )
 }

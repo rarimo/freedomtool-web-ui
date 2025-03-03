@@ -66,12 +66,12 @@ export const components: Components<Omit<Theme, 'components'>> = {
       sizeMedium: ({ theme }) => ({
         ...typography.buttonMedium,
         padding: theme.spacing(2.5, 6),
-        height: theme.spacing(10),
+        height: theme.spacing(11),
       }),
       sizeSmall: ({ theme }) => ({
         ...typography.buttonSmall,
-        padding: theme.spacing(2.5, 4),
-        height: theme.spacing(8),
+        padding: theme.spacing(1.5, 4),
+        height: theme.spacing(10),
       }),
       fullWidth: {
         width: '100%',
@@ -180,11 +180,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
       outlinedPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
         backgroundColor: 'transparent',
-        border: `2px solid ${theme.palette.text.primary}`,
+        border: `1px solid ${theme.palette.text.primary}`,
         '&:hover, &:focus, &:active': {
           color: theme.palette.inverted.light,
           backgroundColor: theme.palette.text.primary,
-          border: `2px solid ${theme.palette.text.primary}`,
+          border: `1px solid ${theme.palette.text.primary}`,
         },
         '&.Mui-disabled': {
           border: 'transparent',
@@ -593,7 +593,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: 250,
-        height: theme.spacing(8),
+        height: theme.spacing(10),
         backgroundColor: theme.palette.action.active,
       }),
       barColorPrimary: ({ theme }) => ({

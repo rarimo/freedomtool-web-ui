@@ -32,5 +32,6 @@
 
 .app__init-logo-title {
   font-family: 'Roboto Mono';
-  font-size: 3rem;
+  font-size: 2rem;
+  text-align: center;
 }

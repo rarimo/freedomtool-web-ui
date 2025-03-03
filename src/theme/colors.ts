@@ -101,12 +101,12 @@ export const darkPalette: PaletteOptions = {
     baseBackground: alpha('#112a0a', 0.28), // base/base-background
   },
   primary: {
-    darker: '#2A4B34',
+    darker: '#80ED99',
     dark: '#4F8E63',
-    main: '#4A9F7B',
-    light: '#7A9D85',
-    lighter: alpha('#4A9F7B', 0.1),
-    contrastText: '#FFFFFF',
+    main: '#80ED99',
+    light: '#232B27',
+    lighter: alpha('#4A9F7B', 0.6),
+    contrastText: '#000000',
   },
   secondary: {
     darker: '#c287f3', // secondary/secondary-darker
