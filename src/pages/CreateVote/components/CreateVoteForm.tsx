@@ -462,7 +462,7 @@ export default function CreateVoteForm() {
               disabled={isSubmitting}
               sx={{ ml: 'auto' }}
             >
-              {isSubmitting ? t('create-vote.submit-btn-disabled') : t('create-vote.submit-btn')}
+              {t('create-vote.submit-btn')}
             </Button>
           </Stack>
         </Stack>
