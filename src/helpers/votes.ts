@@ -94,7 +94,7 @@ export const prepareVotingWhitelistData = (config: {
 
   const birthDateUpperbound = stringToHex(
     time()
-      .subtract(minAge ? minAge : 18, 'years')
+      .subtract(minAge ? minAge : 1, minAge ? 'years' : 'day')
       .format('YYMMDD'),
   )
 
