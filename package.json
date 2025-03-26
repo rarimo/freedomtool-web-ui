@@ -1,11 +1,11 @@
 {
-  "name": "freedom-tool-2.0",
-  "version": "1.7.2",
+  "name": "freedomtool-web-ui",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rarimo/freedom-tool-2.0"
+    "url": "https://github.com/rarimo/freedomtool-web-ui.git"
   },
   "gitHooks": {
     "pre-push": "yarn lint && yarn type-check"
@@ -104,5 +104,5 @@
     "vite-tsconfig-paths": "^4.0.3",
     "yorkie": "^2.0.0"
   },
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.7.0"
 }
