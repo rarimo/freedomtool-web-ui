@@ -1,4 +1,4 @@
-import { Button, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { Button, IconButton, Stack, Typography } from '@mui/material'
 import { ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -21,7 +21,6 @@ export default function SectiPonsController({ sections, isDisabled }: ISectionsC
   const [currentIndex, setCurrentIndex] = useState(0)
   const { body, footer, title, onContinue } = sections[currentIndex]
   const { t } = useTranslation()
-  const { palette } = useTheme()
 
   const isLastStep = currentIndex === sections.length - 1
 
@@ -48,10 +47,10 @@ export default function SectiPonsController({ sections, isDisabled }: ISectionsC
         <Stack flex={1} spacing={10} direction='row'>
           {currentIndex !== 0 && (
             <IconButton
-              sx={{ background: palette.action.active }}
+              sx={{ width: 48, height: 48 }}
               onClick={() => setCurrentIndex(prev => prev - 1)}
             >
-              <UiIcon name={Icons.ArrowLeft} />
+              <UiIcon name={Icons.ArrowLeft} size={5} />
             </IconButton>
           )}
           {isLastStep ? (
@@ -61,7 +60,7 @@ export default function SectiPonsController({ sections, isDisabled }: ISectionsC
           ) : (
             <Button
               disabled={isDisabled}
-              endIcon={<UiIcon name={Icons.ArrowRight} />}
+              endIcon={<UiIcon name={Icons.ArrowRight} size={5} />}
               onClick={goNext}
             >
               {t('create-poll.continue-btn')}

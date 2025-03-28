@@ -330,7 +330,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: {
-        padding: 0,
         borderRadius: '1000px',
         transition: Transitions.Default,
         '&:hover': {
@@ -339,6 +338,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
       },
       colorPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
+        background: theme.palette.action.active,
+        '&:hover': {
+          background: theme.palette.action.hover,
+        },
       }),
       colorSecondary: ({ theme }) => ({
         color: theme.palette.text.secondary,
