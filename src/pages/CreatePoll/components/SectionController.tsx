@@ -26,8 +26,10 @@ export default function SectionsController({ sections, isDisabled }: ISectionsCo
   const isLastStep = currentIndex === sections.length - 1
 
   const goNext = async () => {
-    const isValid = await onContinue?.()
-    if (!isValid) return
+    if (onContinue) {
+      const isValid = await onContinue()
+      if (!isValid) return
+    }
     setCurrentIndex(prev => prev + 1)
   }
 

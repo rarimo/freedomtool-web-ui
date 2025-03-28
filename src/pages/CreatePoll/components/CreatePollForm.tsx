@@ -140,7 +140,6 @@ export default function CreatePollForm() {
               {
                 title: 'Poll details',
                 body: <DetailsSection />,
-                footer: form.getValues('title'),
                 onContinue: () => form.trigger(['title', 'description', 'endDate', 'startDate']),
               },
               {
@@ -154,6 +153,7 @@ export default function CreatePollForm() {
               {
                 title: 'Settings',
                 body: <SettingsSection />,
+                footer: null, // TODO: Add <CheckAmountResult/> and pass value from its context
               },
             ]}
           />
