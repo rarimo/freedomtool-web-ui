@@ -78,14 +78,12 @@ declare module '@mui/material/styles' {
 
   interface PaletteOptions {
     additional: {
-      popupBackground: string
-      gradient: string
-
-      // TODO: Sync with design palette
-      marketFlashWrapper: string
-      marketFlashHeaderText: string
-      marketFlashProgressThumb: string
-      marketFlashProgressIndicator: string
+      gradient1: string
+      gradient2: string
+      gradient3: string
+      gradient4: string
+      gradient5: string
+      gradient6: string
     }
     inverted: {
       light: string
@@ -99,20 +97,14 @@ declare module '@mui/material/styles' {
 
   interface Palette {
     additional: {
-      popupBackground: string
-      gradient: string
-      layerBorder: string
-      pureBlack: string
+      gradient1: string
+      gradient2: string
+      gradient3: string
+      gradient4: string
+      gradient5: string
+      gradient6: string
+    }
 
-      // TODO: Sync with design palette
-      marketFlashWrapper: string
-      marketFlashHeaderText: string
-      marketFlashProgressThumb: string
-      marketFlashProgressIndicator: string
-    }
-    base: {
-      baseBackground: string
-    }
     inverted: {
       light: string
       dark: string
