@@ -11,7 +11,7 @@ import PreviewLayout from './PreviewLayout'
 interface Props {
   title: string
   description: string
-  imageSrc: string
+  imageSrc?: string
   startDate: string
   endDate: string
   nationalities: INationality[]
@@ -37,6 +37,13 @@ export default function PollPreview({
   const formattedStartDate = startDate ? formatDateTime(startDate) : '---'
   const formattedEndDate = endDate ? formatDateTime(endDate) : '---'
 
+  const getAgeValue = () => {
+    if (minimumAge && maximumAge) return `${minimumAge}-${maximumAge}`
+    if (minimumAge) return `${minimumAge}+`
+    if (maximumAge) return t('poll-preview.max-age-criteria', { age: maximumAge })
+    return ''
+  }
+
   const criteriaItems: { id: string; text: string; isHidden: boolean }[] = [
     {
       id: 'nationalities',
@@ -47,14 +54,7 @@ export default function PollPreview({
     },
     {
       id: 'age',
-      text: t('poll-preview.age-criteria-item', {
-        value: () => {
-          if (minimumAge && maximumAge) return `${minimumAge}-${maximumAge}`
-          if (minimumAge) return `${minimumAge}+`
-          if (maximumAge) return t('poll-preview.max-age-criteria', { age: maximumAge })
-          return ''
-        },
-      }),
+      text: t('poll-preview.age-criteria-item', { value: getAgeValue() }),
       isHidden: !minimumAge && !maximumAge,
     },
     {
@@ -70,7 +70,30 @@ export default function PollPreview({
 
   return (
     <PreviewLayout>
-      <Box component='img' src={imageSrc} width='100%' height={194} sx={{ objectFit: 'cover' }} />
+      <Stack
+        position='relative'
+        justifyContent='center'
+        alignItems='center'
+        height={194}
+        borderBottom={imageSrc ? 0 : 1}
+        borderColor={palette.action.active}
+      >
+        {imageSrc ? (
+          <Box
+            component='img'
+            src={imageSrc}
+            position='absolute'
+            width='100%'
+            height='100%'
+            sx={{
+              inset: 0,
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <UiIcon name={Icons.ImageFill} size={6} color={palette.text.placeholder} />
+        )}
+      </Stack>
       <Stack spacing={5} px={3.5} py={5}>
         <Stack spacing={2.5}>
           <Typography variant='h4' color={palette.text.primary}>

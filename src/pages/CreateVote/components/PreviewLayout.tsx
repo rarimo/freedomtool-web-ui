@@ -2,6 +2,8 @@ import { Box, BoxProps, Stack, Typography, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { hiddenScrollbar } from '@/theme/constants'
+
 export default function PreviewLayout({ children }: PropsWithChildren) {
   const { palette } = useTheme()
   const { t } = useTranslation()
@@ -35,7 +37,10 @@ export default function PreviewLayout({ children }: PropsWithChildren) {
           bgcolor={palette.background.paper}
           zIndex={1}
           overflow='hidden'
+          maxHeight={637}
           sx={{
+            ...hiddenScrollbar,
+            overflowY: 'auto',
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
             borderBottomLeftRadius: 48,
