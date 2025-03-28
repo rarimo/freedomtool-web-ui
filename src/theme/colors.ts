@@ -19,7 +19,7 @@ export const lightPalette: PaletteOptions = {
     contrastText: '#000000',
   },
   secondary: {
-    darker: '#8f40d0', // secondary/secondary-darker
+    darker: '#8f40d0',
     dark: '#9f4be4', // secondary/secondary-dark
     main: '#ad56f4', // secondary/secondary-base
     light: alpha('#ad56f4', 0.12), // secondary/secondary-light
