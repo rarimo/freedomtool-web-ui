@@ -18,7 +18,7 @@ export default function SettingsSection() {
   return (
     <Stack component={Paper}>
       <Controller
-        name='votesCount'
+        name='settings.votesCount'
         control={control}
         render={({ field, fieldState }) => (
           <UiCheckVoteInput
@@ -27,7 +27,7 @@ export default function SettingsSection() {
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
             label={t('create-poll.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
+            onCheck={() => getVoteAmountDetails(String(getValues('settings.votesCount')))}
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()

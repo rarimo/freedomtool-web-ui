@@ -33,7 +33,7 @@ export default function CriteriasSection() {
       <Stack component={Paper}>
         <Stack spacing={5}>
           <Controller
-            name='minAge'
+            name='criterias.minAge'
             control={control}
             render={({ field, fieldState }) => (
               <UiNumberField
@@ -47,7 +47,7 @@ export default function CriteriasSection() {
           />
 
           <Controller
-            name='nationalities'
+            name='criterias.nationalities'
             control={control}
             render={({ field, fieldState }) => (
               <FormControl {...field} error={Boolean(fieldState.error)}>
@@ -104,7 +104,7 @@ export default function CriteriasSection() {
           />
 
           <Controller
-            name='uniqueness'
+            name='criterias.uniqueness'
             control={control}
             render={({ field, fieldState }) => (
               <FormControl {...field} error={Boolean(fieldState.error)}>

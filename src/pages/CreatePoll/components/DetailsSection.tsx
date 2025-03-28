@@ -17,7 +17,7 @@ export default function DetailsSection() {
   return (
     <Stack component={Paper} spacing={6}>
       <Controller
-        name='title'
+        name='details.title'
         control={control}
         render={({ field, fieldState }) => (
           <TextField
@@ -31,7 +31,7 @@ export default function DetailsSection() {
         )}
       />
       <Controller
-        name='description'
+        name='details.description'
         control={control}
         render={({ field, fieldState }) => (
           <TextField
@@ -54,7 +54,7 @@ export default function DetailsSection() {
       />
       <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
         <Controller
-          name='startDate'
+          name='details.startDate'
           control={control}
           render={({ field, fieldState }) => (
             <UiDatePicker
@@ -73,7 +73,7 @@ export default function DetailsSection() {
           )}
         />
         <Controller
-          name='endDate'
+          name='details.endDate'
           control={control}
           render={({ field, fieldState }) => (
             <UiDatePicker

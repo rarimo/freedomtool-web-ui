@@ -31,11 +31,16 @@ import SettingsSection from './SettingsSection'
 nationalities satisfies INationality[]
 
 const defaultValues = {
-  title: '',
-  description: '',
-  startDate: '',
-  endDate: '',
-
+  details: {
+    title: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+  },
+  criterias: {
+    uniqueness: false,
+    nationalities: [],
+  },
   questions: [
     {
       id: uuidv4(),
@@ -46,11 +51,9 @@ const defaultValues = {
       ],
     },
   ],
-
-  uniqueness: false,
-  nationalities: [],
-
-  votesCount: 0,
+  settings: {
+    votesCount: 0,
+  },
 }
 
 export default function CreatePollForm() {
@@ -70,19 +73,14 @@ export default function CreatePollForm() {
 
   const submit = async (formData: CreatePollSchema) => {
     try {
-      const votesCount = String(form.getValues('votesCount'))
+      const votesCount = String(form.getValues('settings.votesCount'))
       const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
       if (!isEnoughBalance) return
 
       const {
-        endDate,
-        startDate,
+        criterias: { minAge, nationalities, uniqueness },
+        details: { title, description, startDate, endDate },
         questions,
-        title,
-        description,
-        minAge,
-        nationalities,
-        uniqueness,
       } = formData
 
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
@@ -140,15 +138,17 @@ export default function CreatePollForm() {
               {
                 title: 'Poll details',
                 body: <DetailsSection />,
-                onContinue: () => form.trigger(['title', 'description', 'endDate', 'startDate']),
+                onContinue: () => form.trigger('details'),
               },
               {
                 title: 'Criterias',
                 body: <CriteriasSection />,
+                onContinue: () => form.trigger('criterias'),
               },
               {
                 title: 'Questions',
                 body: <QuestionsSection />,
+                onContinue: () => form.trigger('questions'),
               },
               {
                 title: 'Settings',
@@ -157,16 +157,6 @@ export default function CreatePollForm() {
               },
             ]}
           />
-
-          {/* <Button
-            type='submit'
-            variant='contained'
-            size='large'
-            disabled={form.formState.isSubmitting}
-            sx={{ ml: 'auto' }}
-          >
-            {t('create-poll.submit-btn')}
-          </Button> */}
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />
