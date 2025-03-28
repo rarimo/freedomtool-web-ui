@@ -20,11 +20,11 @@ import { MAX_OPTIONS_PER_QUESTION } from '@/constants'
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
 
-import { CreateVoteSchema } from '../createVoteSchema'
+import { CreatePollSchema } from '../createPollSchema'
 
 interface IQuestionForm {
-  question: FieldArrayWithId<CreateVoteSchema, 'questions', 'id'>
-  control: Control<CreateVoteSchema, unknown>
+  question: FieldArrayWithId<CreatePollSchema, 'questions', 'id'>
+  control: Control<CreatePollSchema, unknown>
   index: number
   canDelete: boolean
   isDisabled: boolean
@@ -125,7 +125,7 @@ function OptionsForm({
   control,
   questionIndex,
 }: {
-  control: Control<CreateVoteSchema, unknown>
+  control: Control<CreatePollSchema, unknown>
   questionIndex: number
 }) {
   const { t } = useTranslation()

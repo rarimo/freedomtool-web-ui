@@ -5,11 +5,11 @@ import { stringToHex } from 'viem'
 import { api } from '@/api/clients'
 import { MAX_UINT32 } from '@/constants'
 import { ApiServicePaths } from '@/enums'
-import { CreateVoteSchema } from '@/pages/CreateVote/createVoteSchema'
+import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 import { INationality, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-export const prepareAcceptedOptionsToIpfs = (questions: CreateVoteSchema['questions']) =>
+export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
   questions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
@@ -17,7 +17,7 @@ export const prepareAcceptedOptionsToIpfs = (questions: CreateVoteSchema['questi
 
 // The array [3, 7] indicates that there are
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
-export const prepareAcceptedOptionsToContract = (questions: CreateVoteSchema['questions']) => {
+export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['questions']) => {
   return questions.map(question => {
     const optionsCount = question.options.length
     const bitMask = (1 << optionsCount) - 1

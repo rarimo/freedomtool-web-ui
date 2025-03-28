@@ -4,7 +4,7 @@ import { z as zod } from 'zod'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
 
-export const createVoteSchema = zod
+export const createPollSchema = zod
   .object({
     title: zod.string().min(1).max(50),
     description: zod.string().min(1).max(200),
@@ -42,4 +42,4 @@ export const createVoteSchema = zod
     path: ['endDate'],
   })
 
-export type CreateVoteSchema = zod.infer<typeof createVoteSchema>
+export type CreatePollSchema = zod.infer<typeof createPollSchema>
