@@ -3,7 +3,7 @@ import { AbiCoder } from 'ethers'
 import { stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
-import { ZERO_DATE } from '@/constants'
+import { MAX_UINT32 } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreateVoteSchema } from '@/pages/CreateVote/createVoteSchema'
 import { INationality, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
@@ -90,11 +90,13 @@ export const prepareVotingWhitelistData = (config: {
     .map(code => stringToHex(code))
 
   const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
-  const uniquenessFlag = uniqueness ? 1 : 0
+  const uniquenessFlag = uniqueness ? 1 : MAX_UINT32
 
-  const birthDateUpperbound = minAge
-    ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
-    : ZERO_DATE
+  const birthDateUpperbound = stringToHex(
+    time()
+      .subtract(minAge ? minAge : 1, minAge ? 'years' : 'day')
+      .format('YYMMDD'),
+  )
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
 
