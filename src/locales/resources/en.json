@@ -18,7 +18,7 @@
   "app-navbar": {
     "logout-lbl": "Log out",
     "settings-tooltip": "Settings",
-    "title": "Freedom tool 2.0"
+    "title": "Freedom Tool"
   },
   "network-warning-modal": {
     "title": "Where are you?",
@@ -150,10 +150,10 @@
     }
   },
   "app-logo": {
-    "title": "Freedom tool 2.0"
+    "title": "Freedom Tool"
   },
   "logo-spinner": {
-    "title": "Freedom tool 2.0"
+    "title": "Freedom Tool"
   },
   "app-header": {
     "title": "FT v2.0",
