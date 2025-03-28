@@ -1,6 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +25,7 @@ import { CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriasSection from './CriteriasSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
+import SectionsController from './SectionController'
 import SettingsSection from './SettingsSection'
 
 nationalities satisfies INationality[]
@@ -32,7 +33,6 @@ nationalities satisfies INationality[]
 const defaultValues = {
   title: '',
   description: '',
-
   startDate: '',
   endDate: '',
 
@@ -118,7 +118,7 @@ export default function CreatePollForm() {
       })
 
       bus.emit(BusEvents.success, {
-        message: t('create-vote.success-msg'),
+        message: t('create-poll.success-msg'),
       })
       form.reset()
 
@@ -134,20 +134,39 @@ export default function CreatePollForm() {
     <FormProvider {...form}>
       <Stack onSubmit={form.handleSubmit(submit)} component='form' width='100%'>
         <Stack spacing={3} width='100%' pb={{ md: 10 }}>
-          <DetailsSection />
-          <CriteriasSection />
-          <QuestionsSection />
-          <SettingsSection />
+          <SectionsController
+            isDisabled={form.formState.isValid || form.formState.disabled}
+            sections={[
+              {
+                title: 'Poll details',
+                body: <DetailsSection />,
+                footer: form.getValues('title'),
+                onContinue: () => form.trigger(['title', 'description', 'endDate', 'startDate']),
+              },
+              {
+                title: 'Criterias',
+                body: <CriteriasSection />,
+              },
+              {
+                title: 'Questions',
+                body: <QuestionsSection />,
+              },
+              {
+                title: 'Settings',
+                body: <SettingsSection />,
+              },
+            ]}
+          />
 
-          <Button
+          {/* <Button
             type='submit'
             variant='contained'
             size='large'
             disabled={form.formState.isSubmitting}
             sx={{ ml: 'auto' }}
           >
-            {t('create-vote.submit-btn')}
-          </Button>
+            {t('create-poll.submit-btn')}
+          </Button> */}
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />

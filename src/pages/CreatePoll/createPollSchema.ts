@@ -38,7 +38,7 @@ export const createPollSchema = zod
       .min(1),
   })
   .refine(data => time(data.endDate).timestamp > time(data.startDate).timestamp, {
-    message: t('create-vote.end-date-error'),
+    message: t('create-poll.end-date-error'),
     path: ['endDate'],
   })
 

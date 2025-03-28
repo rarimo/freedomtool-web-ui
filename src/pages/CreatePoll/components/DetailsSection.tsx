@@ -25,8 +25,8 @@ export default function DetailsSection() {
             disabled={isSubmitting}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message}
-            placeholder={t('create-vote.proposal-title-plh')}
-            label={t('create-vote.proposal-title-lbl')}
+            placeholder={t('create-poll.proposal-title-plh')}
+            label={t('create-poll.proposal-title-lbl')}
           />
         )}
       />
@@ -41,8 +41,8 @@ export default function DetailsSection() {
             disabled={isSubmitting}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message}
-            label={t('create-vote.proposal-description-lbl')}
-            placeholder={t('create-vote.proposal-description-plh')}
+            label={t('create-poll.proposal-description-lbl')}
+            placeholder={t('create-poll.proposal-description-plh')}
             sx={{
               background: 'transparent',
               '& .MuiInputBase-root': {
@@ -63,10 +63,10 @@ export default function DetailsSection() {
               minDate={minDate}
               disabled={isSubmitting}
               errorMessage={fieldState.error?.message}
-              label={t('create-vote.start-date-lbl')}
+              label={t('create-poll.start-date-lbl')}
               slotProps={{
                 textField: {
-                  placeholder: t('create-vote.start-date-plh'),
+                  placeholder: t('create-poll.start-date-plh'),
                 },
               }}
             />
@@ -82,10 +82,10 @@ export default function DetailsSection() {
               minDate={minDate}
               disabled={isSubmitting}
               errorMessage={fieldState.error?.message}
-              label={t('create-vote.end-date-lbl')}
+              label={t('create-poll.end-date-lbl')}
               slotProps={{
                 textField: {
-                  placeholder: t('create-vote.end-date-plh'),
+                  placeholder: t('create-poll.end-date-plh'),
                 },
               }}
             />

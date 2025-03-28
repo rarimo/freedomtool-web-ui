@@ -72,7 +72,7 @@ export default function QuestionsSection() {
           startIcon={<UiIcon name={Icons.Plus} size={4} />}
           onClick={addQuestion}
         >
-          {t('create-vote.add-question-btn')}
+          {t('create-poll.add-question-btn')}
         </Button>
       </Stack>
     </Stack>

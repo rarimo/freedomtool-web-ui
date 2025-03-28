@@ -70,7 +70,7 @@ export default function TopUpForm() {
             disabled={field.disabled || isDisabled}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
-            label={t('create-vote.votes-count-lbl')}
+            label={t('create-poll.votes-count-lbl')}
             onCheck={() => getVoteAmountDetails(String(getValues('votesCount')), id)}
             onChange={e => {
               field.onChange(e)

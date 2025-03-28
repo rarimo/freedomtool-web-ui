@@ -26,7 +26,7 @@ export default function SettingsSection() {
             disabled={isSubmitting || isCalculating}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
-            label={t('create-vote.votes-count-lbl')}
+            label={t('create-poll.votes-count-lbl')}
             onCheck={() => getVoteAmountDetails(String(getValues('votesCount')))}
             onChange={e => {
               field.onChange(e)

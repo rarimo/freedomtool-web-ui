@@ -82,7 +82,7 @@
     "retry-btn": "Retry",
     "no-data-title": "No data"
   },
-  "create-vote": {
+  "create-poll": {
     "end-date-error": "End Date must be after Start Date",
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
@@ -101,7 +101,9 @@
     "end-date-plh": "Select an end date",
     "uniqueness-lbl": "Uniqueness",
     "min-age-lbl": "Min age to participate",
-    "nationalities-lbl": "Nationalities"
+    "nationalities-lbl": "Nationalities",
+    "step-counter": "Step {{current}}/{{total}}",
+    "continue-btn": "Continue"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

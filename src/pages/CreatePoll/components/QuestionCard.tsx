@@ -75,7 +75,7 @@ export default function QuestionCard(props: IQuestionCard) {
             whiteSpace: 'nowrap',
           }}
         >
-          {questionText || t('create-vote.question-lbl', { order: index + 1 })}
+          {questionText || t('create-poll.question-lbl', { order: index + 1 })}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -99,7 +99,7 @@ function QuestionForm(props: IQuestionForm) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              placeholder={t('create-vote.question-lbl', { order: index + 1 })}
+              placeholder={t('create-poll.question-lbl', { order: index + 1 })}
               size='medium'
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message}
@@ -148,7 +148,7 @@ function OptionsForm({
                   {...field}
                   size='small'
                   variant='outlined'
-                  placeholder={t('create-vote.option-lbl', { order: index + 1 })}
+                  placeholder={t('create-poll.option-lbl', { order: index + 1 })}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
                   InputProps={{
@@ -173,7 +173,7 @@ function OptionsForm({
         disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}
       >
-        {t('create-vote.add-option-lbl')}
+        {t('create-poll.add-option-lbl')}
       </Button>
     </Stack>
   )

@@ -41,7 +41,7 @@ export default function CriteriasSection() {
                 disabled={isSubmitting}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
-                label={t('create-vote.min-age-lbl')}
+                label={t('create-poll.min-age-lbl')}
               />
             )}
           />
@@ -76,7 +76,7 @@ export default function CriteriasSection() {
                         ...params.InputLabelProps,
                         shrink: true,
                       }}
-                      label={t('create-vote.nationalities-lbl')}
+                      label={t('create-poll.nationalities-lbl')}
                     />
                   )}
                   renderOption={({ key, ...props }, { flag, name }) => {
@@ -122,7 +122,7 @@ export default function CriteriasSection() {
                   }
                   label={
                     <Typography variant='caption2' color={palette.text.secondary}>
-                      {t('create-vote.uniqueness-lbl')}
+                      {t('create-poll.uniqueness-lbl')}
                     </Typography>
                   }
                 />
