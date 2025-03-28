@@ -8,12 +8,15 @@ import { UiIcon } from '@/ui'
 
 import PreviewLayout from './PreviewLayout'
 
-interface Props {
+interface PollDetailsProps {
   title: string
   description: string
-  imageSrc?: string
   startDate: string
   endDate: string
+}
+
+interface Props extends PollDetailsProps {
+  imageSrc?: string
   nationalities: INationality[]
   minimumAge?: number
   maximumAge?: number
@@ -33,9 +36,6 @@ export default function PollPreview({
 }: Props) {
   const { palette } = useTheme()
   const { t } = useTranslation()
-
-  const formattedStartDate = startDate ? formatDateTime(startDate) : '---'
-  const formattedEndDate = endDate ? formatDateTime(endDate) : '---'
 
   const getAgeValue = () => {
     if (minimumAge && maximumAge) return `${minimumAge}-${maximumAge}`
@@ -70,48 +70,17 @@ export default function PollPreview({
 
   return (
     <PreviewLayout>
-      <Stack
-        position='relative'
-        justifyContent='center'
-        alignItems='center'
-        height={194}
-        borderBottom={imageSrc ? 0 : 1}
-        borderColor={palette.action.active}
-      >
-        {imageSrc ? (
-          <Box
-            component='img'
-            src={imageSrc}
-            position='absolute'
-            width='100%'
-            height='100%'
-            sx={{
-              inset: 0,
-              objectFit: 'cover',
-            }}
-          />
-        ) : (
-          <UiIcon name={Icons.ImageFill} size={6} color={palette.text.placeholder} />
-        )}
-      </Stack>
+      <PollImage imageSrc={imageSrc} />
       <Stack spacing={5} px={3.5} py={5}>
-        <Stack spacing={2.5}>
-          <Typography variant='h4' color={palette.text.primary}>
-            {title || '---'}
-          </Typography>
-          <Stack direction='row' spacing={1.5} color={palette.text.placeholder}>
-            <UiIcon name={Icons.CalendarBlank} size={4} />
-            <Typography variant='body4'>
-              {startDate || endDate ? `${formattedStartDate} - ${formattedEndDate}` : '----'}
-            </Typography>
-          </Stack>
-          <Typography variant='body4' color={palette.text.placeholder}>
-            {description || '----'}
-          </Typography>
-        </Stack>
+        <PollDetails
+          title={title}
+          startDate={startDate}
+          endDate={endDate}
+          description={description}
+        />
 
         {hasAnyCriteria && (
-          <>
+          <Stack spacing={5}>
             <Divider />
             <Typography variant='overline3' color={palette.text.placeholder}>
               {t('poll-preview.criteria-subtitle')}
@@ -121,10 +90,65 @@ export default function PollPreview({
                 ({ id, text, isHidden }) => !isHidden && <CriteriaItem key={id} text={text} />,
               )}
             </Stack>
-          </>
+          </Stack>
         )}
       </Stack>
     </PreviewLayout>
+  )
+}
+
+function PollImage({ imageSrc }: { imageSrc?: string }) {
+  const { palette } = useTheme()
+
+  return (
+    <Stack
+      position='relative'
+      justifyContent='center'
+      alignItems='center'
+      height={194}
+      borderBottom={imageSrc ? 0 : 1}
+      borderColor={palette.action.active}
+    >
+      {imageSrc ? (
+        <Box
+          component='img'
+          src={imageSrc}
+          position='absolute'
+          width='100%'
+          height='100%'
+          sx={{
+            inset: 0,
+            objectFit: 'cover',
+          }}
+        />
+      ) : (
+        <UiIcon name={Icons.ImageFill} size={6} color={palette.text.placeholder} />
+      )}
+    </Stack>
+  )
+}
+
+function PollDetails({ title, startDate, endDate, description }: PollDetailsProps) {
+  const { palette } = useTheme()
+
+  const formattedStartDate = startDate ? formatDateTime(startDate) : '---'
+  const formattedEndDate = endDate ? formatDateTime(endDate) : '---'
+
+  return (
+    <Stack spacing={2.5}>
+      <Typography variant='h4' color={palette.text.primary}>
+        {title || '---'}
+      </Typography>
+      <Stack direction='row' spacing={1.5} color={palette.text.placeholder}>
+        <UiIcon name={Icons.CalendarLine} size={4} />
+        <Typography variant='body4'>
+          {startDate || endDate ? `${formattedStartDate} - ${formattedEndDate}` : '----'}
+        </Typography>
+      </Stack>
+      <Typography variant='body4' color={palette.text.placeholder}>
+        {description || '----'}
+      </Typography>
+    </Stack>
   )
 }
 
