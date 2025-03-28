@@ -167,5 +167,15 @@
   "votes": {
     "title": "Polls",
     "create-new-vote-btn": "Create a new poll"
+  },
+  "poll-preview": {
+    "title": "Preview",
+    "criteria-subtitle": "Criteria",
+    "max-age-criteria": "{age} and below",
+    "sex-male": "Male",
+    "sex-female": "Female",
+    "age-criteria-item": "Age: {{value}}",
+    "nationalities-criteria-item": "Citizen of {{value}}",
+    "sex-criteria-item": "{{value}} only"
   }
 }

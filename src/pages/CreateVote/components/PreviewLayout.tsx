@@ -1,8 +1,10 @@
 import { Box, BoxProps, Stack, Typography, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function PreviewLayout({ children }: PropsWithChildren) {
   const { palette } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Stack position='relative' width={364} height={750} p={4}>
@@ -18,7 +20,7 @@ export default function PreviewLayout({ children }: PropsWithChildren) {
         pt={6}
       >
         <Typography variant='overline2' color={palette.text.secondary}>
-          Preview
+          {t('poll-preview.title')}
         </Typography>
         <Box
           position='absolute'
@@ -27,7 +29,7 @@ export default function PreviewLayout({ children }: PropsWithChildren) {
           borderRadius={4}
           sx={{ inset: 40 }}
         />
-        <Box
+        <Stack
           width='100%'
           flex={1}
           bgcolor={palette.background.paper}
@@ -41,7 +43,7 @@ export default function PreviewLayout({ children }: PropsWithChildren) {
           }}
         >
           {children}
-        </Box>
+        </Stack>
       </Stack>
     </Stack>
   )

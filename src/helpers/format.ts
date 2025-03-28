@@ -9,7 +9,7 @@ export function formatDateDMY(date: TimeDate) {
 }
 
 export function formatDateTime(date: TimeDate) {
-  return time(date).format('DD MMM, YYYY, HH:mm')
+  return time(date).format('MM/DD/YYYY HH:mm')
 }
 
 export function formatDateDM(date: TimeDate) {
