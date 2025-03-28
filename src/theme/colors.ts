@@ -6,8 +6,6 @@ export type AppPaletteMode = PaletteMode | 'system'
 /*
  * Colors added from the design system in Figma.
  * Each color is mapped according to its label in the project.
- * Design system reference (colors):
- * https://www.figma.com/design/CoWp9sqI3kGWhDFTRBawVj/Design-System-(Freedomtool)?node-id=4089-32
  */
 export const lightPalette: PaletteOptions = {
   mode: 'light',

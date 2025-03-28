@@ -3,7 +3,6 @@ import { ExtendedTypographyOptions } from '@/types'
 import { FONT_FAMILY_ACCENT, FONT_FAMILY_MAIN, FontWeight } from './constants'
 import { toRem } from './helpers'
 
-// Refer to https://www.figma.com/design/CoWp9sqI3kGWhDFTRBawVj/Design-System-(Freedomtool)?node-id=5-2035
 export const typography: ExtendedTypographyOptions = {
   htmlFontSize: 16,
 
