@@ -66,11 +66,11 @@ export const lightPalette: PaletteOptions = {
     disabled: alpha('#000000', 0.28), // text & icons/disabled
   },
   action: {
-    active: alpha('#FFFFFF', 0.03), // background/component/primary
-    hover: alpha('#FFFFFF', 0.1), // background/component/hovered
-    focus: alpha('#FFFFFF', 0.15), // background/component/pressed
-    selected: alpha('#FFFFFF', 0.06), // background/component/selected
-    disabled: alpha('#FFFFFF', 0.06), // background/component/selected
+    active: alpha('#000000', 0.03), // background/component/primary
+    hover: alpha('#000000', 0.1), // background/component/hovered
+    focus: alpha('#000000', 0.15), // background/component/pressed
+    selected: alpha('#000000', 0.06), // background/component/selected
+    disabled: alpha('#000000', 0.06), // background/component/selected
   },
   background: {
     default: '#F6F6F6', // background/bg/primary
@@ -159,11 +159,11 @@ export const darkPalette: PaletteOptions = {
     disabled: alpha('#ffffff', 0.28), // text & icons/disabled
   },
   action: {
-    active: alpha('#000000', 0.03), // background/component/primary
-    hover: alpha('#000000', 0.1), // background/component/hovered
-    focus: alpha('#000000', 0.15), // background/component/pressed
-    selected: alpha('#000000', 0.06), // background/component/selected
-    disabled: alpha('#000000', 0.06), // background/component/selected
+    active: alpha('#FFFFFF', 0.03), // background/component/primary
+    hover: alpha('#FFFFFF', 0.1), // background/component/hovered
+    focus: alpha('#FFFFFF', 0.15), // background/component/pressed
+    selected: alpha('#FFFFFF', 0.06), // background/component/selected
+    disabled: alpha('#FFFFFF', 0.06), // background/component/selected
   },
   background: {
     default: '#0E0E0E', // background/bg/primary

@@ -1,5 +1,4 @@
 import {
-  alpha,
   Button,
   Divider,
   IconButton,
@@ -30,7 +29,7 @@ export default function AppHeader(props: StackProps) {
   return (
     <Stack
       {...props}
-      bgcolor={alpha(palette.background.default, 0.8)}
+      bgcolor={palette.background.light}
       component='header'
       sx={{
         position: 'fixed',
