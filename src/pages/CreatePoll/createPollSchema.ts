@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { SEX_OPTIONS } from '@/types'
 
 export const defaultValues = {
   details: {
@@ -41,6 +42,7 @@ export const createPollSchema = zod
     }),
     criterias: zod.object({
       uniqueness: zod.boolean(),
+      sex: zod.enum(SEX_OPTIONS),
       minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
       maxAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
       nationalities: zod.array(

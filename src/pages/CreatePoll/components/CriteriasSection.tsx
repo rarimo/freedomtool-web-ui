@@ -4,7 +4,10 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -14,7 +17,7 @@ import { t } from 'i18next'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import nationalities from '@/locales/resources/countries_en.json'
-import { INationality } from '@/types'
+import { INationality, SEX_OPTIONS } from '@/types'
 import { UiNumberField } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
@@ -27,6 +30,12 @@ export default function CriteriasSection() {
     control,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
+
+  const sexLabels: Record<(typeof SEX_OPTIONS)[number], string> = {
+    male: t('create-poll.sex-male'),
+    female: t('create-poll.sex-female'),
+    any: t('create-poll.sex-any'),
+  }
 
   return (
     <Stack>
@@ -127,6 +136,30 @@ export default function CriteriasSection() {
                 />
 
                 <FormHelperText>{fieldState.error?.message}</FormHelperText>
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            name='criterias.sex'
+            control={control}
+            render={({ field, fieldState }) => (
+              <FormControl>
+                <InputLabel id='demo-simple-select-label'>Age</InputLabel>
+                <Select
+                  {...field}
+                  labelId='demo-simple-select-label'
+                  defaultValue={SEX_OPTIONS[2]}
+                  disabled={field.disabled || isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  label={t('create-poll.sex-lbl')}
+                >
+                  {SEX_OPTIONS.map(option => (
+                    <MenuItem key={option} value={option}>
+                      {sexLabels[option]}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
             )}
           />

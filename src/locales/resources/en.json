@@ -105,7 +105,11 @@
     "step-counter": "Step {{current}}/{{total}}",
     "continue-btn": "Continue",
     "max-age-lbl": "Maximum age (Optional)",
-    "max-age-error": "Max age should be greater or equal than min age"
+    "max-age-error": "Max age should be greater or equal than min age",
+    "sex-lbl": "Sex",
+    "sex-male": "Male",
+    "sex-female": "Female",
+    "sex-any": "Any"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

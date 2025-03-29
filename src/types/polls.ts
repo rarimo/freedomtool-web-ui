@@ -47,3 +47,5 @@ export interface INationality {
   codes: string[]
   flag: string
 }
+
+export const SEX_OPTIONS = ['male', 'female', 'any'] as const
