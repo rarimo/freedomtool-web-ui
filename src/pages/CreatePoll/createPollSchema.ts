@@ -1,8 +1,35 @@
 import { time } from '@distributedlab/tools'
 import { t } from 'i18next'
+import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
 import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+
+export const defaultValues = {
+  details: {
+    title: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+  },
+  criterias: {
+    uniqueness: false,
+    nationalities: [],
+  },
+  questions: [
+    {
+      id: uuidv4(),
+      text: '',
+      options: [
+        { id: uuidv4(), text: '' },
+        { id: uuidv4(), text: '' },
+      ],
+    },
+  ],
+  settings: {
+    votesCount: 0,
+  },
+}
 
 export const createPollSchema = zod
   .object({
@@ -15,6 +42,7 @@ export const createPollSchema = zod
     criterias: zod.object({
       uniqueness: zod.boolean(),
       minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
+      maxAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
       nationalities: zod.array(
         zod.object({
           flag: zod.string().min(1),
@@ -43,9 +71,16 @@ export const createPollSchema = zod
       votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
     }),
   })
-  .refine(data => time(data.details.endDate).timestamp > time(data.details.startDate).timestamp, {
-    message: t('create-poll.end-date-error'),
-    path: ['details', 'endDate'],
+  .refine(
+    ({ details: { endDate, startDate } }) => time(endDate).timestamp > time(startDate).timestamp,
+    {
+      message: t('create-poll.end-date-error'),
+      path: ['details', 'endDate'],
+    },
+  )
+  .refine(({ criterias: { maxAge, minAge } }) => (maxAge && minAge ? maxAge >= minAge : true), {
+    message: t('create-poll.max-age-error'),
+    path: ['criterias', 'maxAge'],
   })
 
 export type CreatePollSchema = zod.infer<typeof createPollSchema>

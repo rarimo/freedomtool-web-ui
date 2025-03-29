@@ -32,19 +32,47 @@ export default function CriteriasSection() {
     <Stack>
       <Stack component={Paper}>
         <Stack spacing={5}>
-          <Controller
-            name='criterias.minAge'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiNumberField
-                {...field}
-                disabled={isSubmitting}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                label={t('create-poll.min-age-lbl')}
-              />
-            )}
-          />
+          <Stack
+            alignItems='center'
+            justifyContent='space-between'
+            direction='row'
+            spacing={6}
+            divider={
+              <Typography variant='body4' color={palette.text.secondary}>
+                –
+              </Typography>
+            }
+          >
+            <Controller
+              name='criterias.minAge'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiNumberField
+                  {...field}
+                  sx={{ flex: 1 }}
+                  disabled={isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  label={t('create-poll.min-age-lbl')}
+                />
+              )}
+            />
+
+            <Controller
+              name='criterias.maxAge'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiNumberField
+                  {...field}
+                  sx={{ flex: 1 }}
+                  disabled={isSubmitting}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  label={t('create-poll.max-age-lbl')}
+                />
+              )}
+            />
+          </Stack>
 
           <Controller
             name='criterias.nationalities'

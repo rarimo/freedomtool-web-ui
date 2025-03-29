@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import { BusEvents, RoutePaths } from '@/enums'
@@ -21,7 +20,7 @@ import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
 import { INationality } from '@/types'
 
-import { CreatePollSchema, createPollSchema } from '../createPollSchema'
+import { CreatePollSchema, createPollSchema, defaultValues } from '../createPollSchema'
 import CriteriasSection from './CriteriasSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
@@ -29,32 +28,6 @@ import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
 
 nationalities satisfies INationality[]
-
-const defaultValues = {
-  details: {
-    title: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-  },
-  criterias: {
-    uniqueness: false,
-    nationalities: [],
-  },
-  questions: [
-    {
-      id: uuidv4(),
-      text: '',
-      options: [
-        { id: uuidv4(), text: '' },
-        { id: uuidv4(), text: '' },
-      ],
-    },
-  ],
-  settings: {
-    votesCount: 0,
-  },
-}
 
 export default function CreatePollForm() {
   const { t } = useTranslation()

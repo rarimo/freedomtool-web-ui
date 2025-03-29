@@ -1,5 +1,5 @@
 import { time } from '@distributedlab/tools'
-import { Paper, Stack, TextField } from '@mui/material'
+import { Paper, Stack, TextField, Typography, useTheme } from '@mui/material'
 import { t } from 'i18next'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -10,10 +10,12 @@ import { CreatePollSchema } from '../createPollSchema'
 const minDate = time().utc()
 
 export default function DetailsSection() {
+  const { palette } = useTheme()
   const {
     control,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
+
   return (
     <Stack component={Paper} spacing={6}>
       <Controller
@@ -52,7 +54,17 @@ export default function DetailsSection() {
           />
         )}
       />
-      <Stack direction={{ md: 'row' }} justifyContent='space-between' gap={5}>
+      <Stack
+        direction='row'
+        justifyContent='space-between'
+        alignItems='center'
+        gap={5}
+        divider={
+          <Typography variant='body4' color={palette.text.secondary}>
+            –
+          </Typography>
+        }
+      >
         <Controller
           name='details.startDate'
           control={control}

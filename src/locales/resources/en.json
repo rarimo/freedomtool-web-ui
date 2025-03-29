@@ -100,10 +100,12 @@
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
     "uniqueness-lbl": "Uniqueness",
-    "min-age-lbl": "Min age to participate",
+    "min-age-lbl": "Minimum age (Optional)",
     "nationalities-lbl": "Nationalities",
     "step-counter": "Step {{current}}/{{total}}",
-    "continue-btn": "Continue"
+    "continue-btn": "Continue",
+    "max-age-lbl": "Maximum age (Optional)",
+    "max-age-error": "Max age should be greater or equal than min age"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
