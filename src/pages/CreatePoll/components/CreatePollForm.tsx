@@ -25,7 +25,7 @@ import { CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriasSection from './CriteriasSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
-import SectionsController from './SectionController'
+import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
 
 nationalities satisfies INationality[]
