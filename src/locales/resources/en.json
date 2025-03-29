@@ -109,7 +109,15 @@
     "sex-lbl": "Sex",
     "sex-male": "Male",
     "sex-female": "Female",
-    "sex-any": "Any"
+    "sex-any": "Any",
+    "age-lbl": "Age",
+    "titles": {
+      "details": "Poll details",
+      "criterias": "Criterias",
+      "questions": "Questions",
+      "settings": "Settings"
+    },
+    "add-criteria": "Add a criteria"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

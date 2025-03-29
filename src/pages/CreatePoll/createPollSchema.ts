@@ -16,6 +16,7 @@ export const defaultValues = {
   criterias: {
     uniqueness: false,
     nationalities: [],
+    sex: SEX_OPTIONS[2],
   },
   questions: [
     {

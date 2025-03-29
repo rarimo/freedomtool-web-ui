@@ -109,22 +109,22 @@ export default function CreatePollForm() {
             isDisabled={form.formState.isValid || form.formState.disabled}
             sections={[
               {
-                title: 'Poll details',
+                title: t('create-poll.titles.details'),
                 body: <DetailsSection />,
                 onContinue: () => form.trigger('details'),
               },
               {
-                title: 'Criterias',
+                title: t('create-poll.titles.criterias'),
                 body: <CriteriasSection />,
                 onContinue: () => form.trigger('criterias'),
               },
               {
-                title: 'Questions',
+                title: t('create-poll.titles.questions'),
                 body: <QuestionsSection />,
                 onContinue: () => form.trigger('questions'),
               },
               {
-                title: 'Settings',
+                title: t('create-poll.titles.settings'),
                 body: <SettingsSection />,
                 footer: null, // TODO: Add <CheckAmountResult/> and pass value from its context
               },
