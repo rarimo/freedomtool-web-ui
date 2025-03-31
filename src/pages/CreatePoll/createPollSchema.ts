@@ -3,16 +3,10 @@ import { t } from 'i18next'
 import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
-import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { MAX_TOKEN_AMOUNT_PER_TX, MAX_VOTE_COUNT_PER_TX } from '@/constants'
 import { SEX_OPTIONS } from '@/types'
 
 export const defaultValues = {
-  details: {
-    title: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-  },
   criterias: {
     uniqueness: false,
     nationalities: [],
@@ -21,16 +15,9 @@ export const defaultValues = {
   questions: [
     {
       id: uuidv4(),
-      text: '',
-      options: [
-        { id: uuidv4(), text: '' },
-        { id: uuidv4(), text: '' },
-      ],
+      options: [{ id: uuidv4() }, { id: uuidv4() }],
     },
   ],
-  settings: {
-    votesCount: 0,
-  },
 }
 
 export const createPollSchema = zod
@@ -72,6 +59,7 @@ export const createPollSchema = zod
       .min(1),
     settings: zod.object({
       votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
+      amount: zod.coerce.number().int().min(1).max(MAX_TOKEN_AMOUNT_PER_TX),
     }),
   })
   .refine(

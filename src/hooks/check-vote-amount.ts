@@ -7,9 +7,13 @@ import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler, predictVoteParams } from '@/helpers'
+import { VoteAmountOverload, VoteCountOverload } from '@/types'
 
-interface CheckVoteAmountConfig {
-  shouldUpdateHelperText?: boolean
+type VoteParamsResult = { isEnoughBalance: boolean; votesCount: string; votesAmount: string }
+
+type GetVoteParamsOverloads = {
+  (params: VoteAmountOverload): Promise<VoteParamsResult>
+  (params: VoteCountOverload): Promise<VoteParamsResult>
 }
 
 export const useCheckVoteAmount = () => {
@@ -17,30 +21,41 @@ export const useCheckVoteAmount = () => {
   const [helperText, setHelperText] = useState<string>('')
   const { balance } = useWeb3Context()
 
-  const getVoteAmountDetails = async (
-    votesCount: string,
-    proposalId?: string,
-    config: CheckVoteAmountConfig = { shouldUpdateHelperText: true },
-  ) => {
+  const getVoteParams: GetVoteParamsOverloads = async params => {
     setIsCalculating(true)
     try {
-      const votesAmount = await getVoteAmount(votesCount, Number(proposalId))
-      const isEnoughBalance = checkBalanceSufficiency(votesAmount)
+      if (params.type === 'vote_predict_amount' && 'votesCount' in params) {
+        const { votesCount, proposalId } = params
+        const votesAmount = (await getVoteAmount(votesCount, proposalId)) as string
+        const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
-      if (config.shouldUpdateHelperText) {
+        // TODO: Remove
         updateHelperText(Number(votesCount), votesAmount)
+
+        return { isEnoughBalance, votesCount, votesAmount }
       }
 
-      return { isEnoughBalance, votesAmount }
+      if (params.type === 'vote_predict_count_tx' && 'amount' in params) {
+        const { amount: votesAmount, proposalId } = params
+        const votesCount = (await getTokenAmount(votesAmount, proposalId)) as string
+        const isEnoughBalance = checkBalanceSufficiency(votesAmount)
+
+        // TODO: Remove
+        updateHelperText(Number(votesAmount), votesCount)
+
+        return { isEnoughBalance, votesCount, votesAmount }
+      }
+
+      throw new Error('Wrong inputs')
     } catch (error) {
       ErrorHandler.process(error)
-      return { isEnoughBalance: false, votesAmount: 0 }
+      return { isEnoughBalance: false, votesAmount: '0', votesCount: '0' }
     } finally {
       setIsCalculating(false)
     }
   }
 
-  const getVoteAmount = async (votesCount: string, proposalId?: number): Promise<BigNumberish> => {
+  const getVoteAmount = async (votesCount: string, proposalId?: string): Promise<BigNumberish> => {
     if (Number(votesCount) <= 0) {
       bus.emit(BusEvents.error, {
         message: t('errors.invalid-vote-count'),
@@ -55,6 +70,23 @@ export const useCheckVoteAmount = () => {
     })
 
     return amount_predict
+  }
+
+  const getTokenAmount = async (amount: string, proposalId?: string): Promise<BigNumberish> => {
+    if (Number(amount) <= 0) {
+      bus.emit(BusEvents.error, {
+        message: t('errors.invalid-vote-count'),
+      })
+      throw new Error(t('errors.invalid-vote-count'))
+    }
+
+    const { count_tx_predict } = await predictVoteParams({
+      type: 'vote_predict_count_tx',
+      amount: BN.fromRaw(amount).value,
+      proposalId,
+    })
+
+    return count_tx_predict
   }
 
   const checkBalanceSufficiency = (amount: BigNumberish) => {
@@ -85,13 +117,14 @@ export const useCheckVoteAmount = () => {
 
   return {
     isCalculating,
-    getVoteAmountDetails,
+    getVoteParams,
 
     helperText,
     updateHelperText,
     resetHelperText,
 
     getVoteAmount,
+    getTokenAmount,
     checkBalanceSufficiency,
   }
 }

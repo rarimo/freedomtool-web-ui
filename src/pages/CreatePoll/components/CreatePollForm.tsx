@@ -41,13 +41,16 @@ export default function CreatePollForm() {
   })
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
-  const { getVoteAmountDetails } = useCheckVoteAmount()
+  const { getVoteParams } = useCheckVoteAmount()
   const navigate = useNavigate()
 
   const submit = async (formData: CreatePollSchema) => {
     try {
       const votesCount = String(form.getValues('settings.votesCount'))
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount)
+      const { isEnoughBalance, votesAmount } = await getVoteParams({
+        type: 'vote_predict_amount',
+        votesCount,
+      })
       if (!isEnoughBalance) return
 
       const {

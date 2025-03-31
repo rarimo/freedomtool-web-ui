@@ -5,12 +5,13 @@ import { useTranslation } from 'react-i18next'
 
 import { useCheckVoteAmount } from '@/hooks'
 import { UiCheckVoteInput } from '@/ui'
+import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
 import { CreatePollSchema } from '../createPollSchema'
 
 export default function SettingsSection() {
   const { t } = useTranslation()
-  const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
+  const { isCalculating, helperText, resetHelperText, getVoteParams } = useCheckVoteAmount()
   const {
     control,
     getValues,
@@ -32,7 +33,36 @@ export default function SettingsSection() {
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message || helperText}
               label={t('create-poll.votes-count-lbl')}
-              onCheck={() => getVoteAmountDetails(String(getValues('settings.votesCount')))}
+              onCheck={() =>
+                getVoteParams({
+                  type: 'vote_predict_amount',
+                  votesCount: String(getValues('settings.votesCount')),
+                })
+              }
+              onChange={e => {
+                field.onChange(e)
+                resetHelperText?.()
+              }}
+            />
+          )}
+        />
+
+        <Controller
+          name='settings.amount'
+          control={control}
+          render={({ field, fieldState }) => (
+            <UiCheckAmountInput
+              {...field}
+              disabled={isSubmitting || isCalculating}
+              error={Boolean(fieldState.error)}
+              helperText={fieldState.error?.message || helperText}
+              label={t('create-poll.amount-lbl')}
+              onCheck={() =>
+                getVoteParams({
+                  type: 'vote_predict_count_tx',
+                  amount: String(getValues('settings.amount')),
+                })
+              }
               onChange={e => {
                 field.onChange(e)
                 resetHelperText?.()

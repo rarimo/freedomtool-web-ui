@@ -6,7 +6,15 @@ import { api } from '@/api/clients'
 import { MAX_UINT32 } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
-import { INationality, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
+import {
+  INationality,
+  IParsedProposal,
+  IUploadData,
+  IVoteIpfs,
+  VoteAmountOverload,
+  VoteCountOverload,
+  VoteParamsInput,
+} from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
 export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
@@ -51,11 +59,9 @@ export const getVotesCount = (id: string) => {
  * @param params - Object containing vote count and optional proposal ID.
  * @returns An object with the predicted token amount.
  */
-export async function predictVoteParams(params: {
-  type: 'vote_predict_amount'
-  votesCount: string
-  proposalId?: number
-}): Promise<{ amount_predict: string }>
+export async function predictVoteParams(
+  params: VoteAmountOverload,
+): Promise<{ amount_predict: string }>
 
 /**
  * Overload II
@@ -64,18 +70,12 @@ export async function predictVoteParams(params: {
  * @param params - Object containing the token amount and optional proposal ID.
  * @returns An object with the predicted vote count.
  */
-export async function predictVoteParams(params: {
-  type: 'vote_predict_count_tx'
-  amount: string
-  proposalId?: number
-}): Promise<{ count_tx_predict: string }>
+export async function predictVoteParams(
+  params: VoteCountOverload,
+): Promise<{ count_tx_predict: string }>
 
 // Implementation
-export async function predictVoteParams(
-  params:
-    | { type: 'vote_predict_amount'; votesCount: string; proposalId?: number }
-    | { type: 'vote_predict_count_tx'; amount: string; proposalId?: number },
-) {
+export async function predictVoteParams(params: VoteParamsInput) {
   const { type, proposalId, ...rest } = params
 
   let attributes: { count_tx: string } | { amount: string } | undefined

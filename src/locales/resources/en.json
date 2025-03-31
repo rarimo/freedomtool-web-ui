@@ -94,6 +94,7 @@
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
+    "token-amount-lbl": "Votes count",
     "success-msg": "You have successfully created a poll!",
     "proposal-title-plh": "Approve this change?",
     "proposal-description-plh": "This poll outlines key points...",

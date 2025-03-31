@@ -49,3 +49,15 @@ export interface INationality {
 }
 
 export const SEX_OPTIONS = ['male', 'female', 'any'] as const
+
+export type VoteAmountOverload = {
+  type: 'vote_predict_amount'
+  votesCount: string
+  proposalId?: string
+}
+export type VoteCountOverload = {
+  type: 'vote_predict_count_tx'
+  amount: string
+  proposalId?: string
+}
+export type VoteParamsInput = VoteAmountOverload | VoteCountOverload
