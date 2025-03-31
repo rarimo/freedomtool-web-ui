@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
+import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
+import { VoteParamsProvider } from '@/contexts/vote-params/VoteParamsContext'
 import { BusEvents, RoutePaths } from '@/enums'
 import {
   bus,
@@ -108,31 +110,33 @@ export default function CreatePollForm() {
     <FormProvider {...form}>
       <Stack onSubmit={form.handleSubmit(submit)} component='form' width='100%'>
         <Stack spacing={3} width='100%' pb={{ md: 10 }}>
-          <SectionsController
-            isDisabled={form.formState.isValid || form.formState.disabled}
-            sections={[
-              {
-                title: t('create-poll.titles.details'),
-                body: <DetailsSection />,
-                onContinue: () => form.trigger('details'),
-              },
-              {
-                title: t('create-poll.titles.criterias'),
-                body: <CriteriasSection />,
-                onContinue: () => form.trigger('criterias'),
-              },
-              {
-                title: t('create-poll.titles.questions'),
-                body: <QuestionsSection />,
-                onContinue: () => form.trigger('questions'),
-              },
-              {
-                title: t('create-poll.titles.settings'),
-                body: <SettingsSection />,
-                footer: null, // TODO: Add <CheckAmountResult/> and pass value from its context
-              },
-            ]}
-          />
+          <VoteParamsProvider>
+            <SectionsController
+              isDisabled={form.formState.isValid || form.formState.disabled}
+              sections={[
+                {
+                  title: t('create-poll.titles.details'),
+                  body: <DetailsSection />,
+                  onContinue: () => form.trigger('details'),
+                },
+                {
+                  title: t('create-poll.titles.criterias'),
+                  body: <CriteriasSection />,
+                  onContinue: () => form.trigger('criterias'),
+                },
+                {
+                  title: t('create-poll.titles.questions'),
+                  body: <QuestionsSection />,
+                  onContinue: () => form.trigger('questions'),
+                },
+                {
+                  title: t('create-poll.titles.settings'),
+                  body: <SettingsSection />,
+                  footer: <VoteParamsResult />,
+                },
+              ]}
+            />
+          </VoteParamsProvider>
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />
