@@ -153,7 +153,7 @@ function OptionsForm({
                   helperText={fieldState.error?.message}
                   InputProps={{
                     endAdornment: fields.length > 2 && (
-                      <IconButton color='error' onClick={() => remove(index)}>
+                      <IconButton color='secondary' onClick={() => remove(index)}>
                         <UiIcon name={Icons.DeleteBin6Line} size={4} />
                       </IconButton>
                     ),

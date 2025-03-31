@@ -99,7 +99,6 @@
     "proposal-description-plh": "This poll outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
-    "uniqueness-lbl": "Uniqueness",
     "min-age-lbl": "Minimum age (Optional)",
     "nationalities-lbl": "Nationalities",
     "step-counter": "Step {{current}}/{{total}}",

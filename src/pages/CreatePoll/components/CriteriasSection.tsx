@@ -1,9 +1,7 @@
 import {
   Autocomplete,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   IconButton,
   InputLabel,
@@ -27,7 +25,7 @@ import { UiIcon, UiNumberField } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
 
-type CriteriaKey = 'age' | 'nationalities' | 'sex' | 'uniqueness'
+type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
 interface ICriteria {
   key: CriteriaKey
@@ -42,7 +40,7 @@ export default function CriteriasSection() {
 
   const { palette } = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(['nationalities', 'uniqueness'])
+  const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(['nationalities'])
 
   const sexLabels: Record<(typeof SEX_OPTIONS)[number], string> = {
     male: t('create-poll.sex-male'),
@@ -55,7 +53,6 @@ export default function CriteriasSection() {
       { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
       { key: 'sex', label: t('create-poll.sex-lbl') },
-      { key: 'uniqueness', label: t('create-poll.uniqueness-lbl') },
     ],
     [],
   )
@@ -194,22 +191,7 @@ export default function CriteriasSection() {
           </IconButton>
         </Stack>
       )}
-      {/*
-       * The 'uniqueness' criterion is displayed by default
-       * because its value is always either true or false,
-       * so it doesn't require a delete icon, which makes its visual representation simpler
-       * and cleaner without unnecessary elements.
-       */}
-      <Controller
-        name='criterias.uniqueness'
-        control={control}
-        render={({ field }) => (
-          <FormControlLabel
-            control={<Checkbox {...field} disabled={isSubmitting} />}
-            label={t('create-poll.uniqueness-lbl')}
-          />
-        )}
-      />
+
       {unselectedCriterias.length !== 0 && (
         <Button
           size='small'
