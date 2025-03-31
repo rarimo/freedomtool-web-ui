@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
-import { bus, ErrorHandler, predictVoteAmount } from '@/helpers'
+import { bus, ErrorHandler, predictVoteParams } from '@/helpers'
 
 interface CheckVoteAmountConfig {
   shouldUpdateHelperText?: boolean
@@ -48,9 +48,11 @@ export const useCheckVoteAmount = () => {
       throw new Error(t('errors.invalid-vote-count'))
     }
 
-    const {
-      data: { amount_predict },
-    } = await predictVoteAmount(votesCount, proposalId)
+    const { amount_predict } = await predictVoteParams({
+      type: 'vote_predict_amount',
+      votesCount,
+      proposalId,
+    })
 
     return amount_predict
   }

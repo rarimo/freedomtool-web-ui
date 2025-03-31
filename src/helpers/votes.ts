@@ -44,21 +44,62 @@ export const getVotesCount = (id: string) => {
   )
 }
 
-export const predictVoteAmount = (votesCount: string, proposalId?: number) => {
-  return api.post<{ amount_predict: string }>(
+/**
+ * Predicts the token amount based on the number of votes.
+ * @param params - Object containing vote count and optional proposal ID.
+ * @returns An object with the predicted token amount.
+ */
+export async function predictVoteParams(params: {
+  type: 'vote_predict_amount'
+  votesCount: string
+  proposalId?: number
+}): Promise<{ amount_predict: string }>
+
+/**
+ * Predicts the number of votes based on the token amount.
+ * @param params - Object containing the token amount and optional proposal ID.
+ * @returns An object with the predicted vote count.
+ */
+export async function predictVoteParams(params: {
+  type: 'vote_predict_count_tx'
+  amount: string
+  proposalId?: number
+}): Promise<{ count_tx_predict: string }>
+
+// Implementation
+export async function predictVoteParams(
+  params:
+    | { type: 'vote_predict_amount'; votesCount: string; proposalId?: number }
+    | { type: 'vote_predict_count_tx'; amount: string; proposalId?: number },
+) {
+  const { type, proposalId, ...rest } = params
+
+  let attributes: { count_tx: string } | { amount: string } | undefined
+
+  if (type === 'vote_predict_amount' && 'votesCount' in rest) {
+    attributes = { count_tx: rest.votesCount }
+  }
+
+  if (type === 'vote_predict_count_tx' && 'amount' in rest) {
+    attributes = { amount: rest.amount }
+  }
+
+  const response = await api.post<{ amount_predict: string } | { count_tx_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
       body: {
         data: {
-          type: 'vote_predict_amount',
+          type,
           attributes: {
-            count_tx: String(votesCount),
-            ...(proposalId && { voting_id: Number(proposalId) }),
+            ...attributes,
+            ...(proposalId && { voting_id: proposalId }),
           },
         },
       },
     },
   )
+
+  return response.data
 }
 
 export const parseProposalFromContract = (
