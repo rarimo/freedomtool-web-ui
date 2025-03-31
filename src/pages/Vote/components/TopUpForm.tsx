@@ -21,7 +21,7 @@ const defaultValues = { votesCount: 0 }
 export default function TopUpForm() {
   const { t } = useTranslation()
   const { id } = useParams()
-  const { isCalculating, helperText, resetHelperText, getVoteParams } = useCheckVoteAmount()
+  const { isCalculating, helperText, resetHelperText, updateVoteParams } = useCheckVoteAmount()
 
   const { addFundsToProposal } = useProposalState({ shouldFetchProposals: false })
 
@@ -44,7 +44,7 @@ export default function TopUpForm() {
   const submit = useCallback(async () => {
     try {
       const votesCount = String(getValues('votesCount'))
-      const { isEnoughBalance, votesAmount } = await getVoteParams({
+      const { isEnoughBalance, votesAmount } = await updateVoteParams({
         type: 'vote_predict_amount',
         votesCount,
         proposalId: String(id),
@@ -59,7 +59,7 @@ export default function TopUpForm() {
       reset()
       resetHelperText?.()
     }
-  }, [addFundsToProposal, getValues, getVoteParams, id, reset, resetHelperText, t])
+  }, [addFundsToProposal, getValues, updateVoteParams, id, reset, resetHelperText, t])
 
   const isDisabled = isSubmitting || isCalculating
 
@@ -75,13 +75,6 @@ export default function TopUpForm() {
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
             label={t('create-poll.votes-count-lbl')}
-            onCheck={() =>
-              getVoteParams({
-                type: 'vote_predict_amount',
-                votesCount: String(getValues('votesCount')),
-                proposalId: String(id),
-              })
-            }
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()

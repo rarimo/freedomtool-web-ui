@@ -1,37 +1,27 @@
-import { Button, TextFieldProps } from '@mui/material'
-import { forwardRef } from 'react'
-import { useTranslation } from 'react-i18next'
-
-import { MAX_TOKEN_AMOUNT_PER_TX } from '@/constants'
+import { TextFieldProps } from '@mui/material'
+import { ChangeEvent, forwardRef } from 'react'
 
 import UiNumberField from './UiNumberField'
 
-type AmountInputProps = {
-  onCheck: () => void
-} & TextFieldProps
+type AmountInputProps = {} & TextFieldProps
 
 const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
-  ({ onCheck, ...textFieldProps }, ref) => {
-    const { t } = useTranslation()
+  ({ ...textFieldProps }, ref) => {
+    const trimToDecimals = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      let value = event.target.value
 
-    const isDisabled =
-      textFieldProps.disabled ||
-      Number(textFieldProps.value) <= 0 ||
-      Number(textFieldProps.value) > MAX_TOKEN_AMOUNT_PER_TX
+      if (value.includes('.')) {
+        const [integer, decimal] = value.split('.')
+        value = decimal.length > 18 ? `${integer}.${decimal.slice(0, 18)}` : value
+      }
 
-    return (
-      <UiNumberField
-        {...textFieldProps}
-        inputRef={ref}
-        InputProps={{
-          endAdornment: (
-            <Button variant='text' size='small' disabled={isDisabled} onClick={onCheck}>
-              {t('check-vote-input.calculate-eth-btn')}
-            </Button>
-          ),
-        }}
-      />
-    )
+      textFieldProps.onChange?.({
+        ...event,
+        target: { ...event.target, value },
+      } as React.ChangeEvent<HTMLInputElement>)
+    }
+
+    return <UiNumberField {...textFieldProps} inputRef={ref} onChange={e => trimToDecimals(e)} />
   },
 )
 

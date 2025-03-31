@@ -5,15 +5,15 @@ import { createContext, ReactNode, useContext, useState } from 'react'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
-import { bus, ErrorHandler, predictVoteParams } from '@/helpers'
+import { bus, ErrorHandler, parseBigIntToInteger, predictVoteParams } from '@/helpers'
 import { VoteAmountOverload, VoteCountOverload } from '@/types'
 
 type VoteParamsContextType = {
   isCalculating: boolean
-  votesAmount: string
-  votesCount: string
+  votesAmount: BigNumberish
+  votesCount: BigNumberish
   isEnoughBalance: boolean
-  getVoteParams: (params: VoteAmountOverload | VoteCountOverload) => Promise<void>
+  updateVoteParams: (params: VoteAmountOverload | VoteCountOverload) => Promise<void>
   resetParamsState: () => void
 }
 
@@ -22,7 +22,7 @@ const VoteParamsContext = createContext<VoteParamsContextType>({
   votesAmount: '',
   votesCount: '',
   isEnoughBalance: false,
-  getVoteParams: async () => {},
+  updateVoteParams: async () => {},
   resetParamsState: () => {},
 })
 
@@ -30,12 +30,14 @@ export const useVoteParamsContext = () => useContext(VoteParamsContext)
 
 export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
   const [isCalculating, setIsCalculating] = useState(false)
-  const [votesAmount, setVotesAmount] = useState<string>('')
-  const [votesCount, setVotesCount] = useState<string>('')
+
+  const [votesAmount, setVotesAmount] = useState<BigNumberish>('0')
+  const [votesCount, setVotesCount] = useState<BigNumberish>('0')
   const [isEnoughBalance, setIsEnoughBalance] = useState<boolean>(false)
+
   const { balance } = useWeb3Context()
 
-  const getVoteParams = async (params: VoteAmountOverload | VoteCountOverload) => {
+  const updateVoteParams = async (params: VoteAmountOverload | VoteCountOverload) => {
     setIsCalculating(true)
     try {
       if (params.type === 'vote_predict_amount' && 'votesCount' in params) {
@@ -43,22 +45,25 @@ export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
         const votesAmount = (await getVoteAmount(votesCount, proposalId)) as string
         const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
-        setVotesAmount(votesAmount)
+        setVotesAmount(votesAmount || '0')
         setVotesCount(votesCount)
         setIsEnoughBalance(isEnoughBalance)
+        return
       }
 
       if (params.type === 'vote_predict_count_tx' && 'amount' in params) {
-        const { amount: votesAmount, proposalId } = params
+        const { amount, proposalId } = params
+        const votesAmount = BN.fromRaw(amount).value
         const votesCount = (await getTokenAmount(votesAmount, proposalId)) as string
         const isEnoughBalance = checkBalanceSufficiency(votesAmount)
 
         setVotesAmount(votesAmount)
-        setVotesCount(votesCount)
+        setVotesCount(parseBigIntToInteger(votesCount) || '0')
         setIsEnoughBalance(isEnoughBalance)
+        return
       }
 
-      throw new Error('Wrong inputs')
+      throw new Error(t('create-poll.vote-params-error'))
     } catch (error) {
       ErrorHandler.process(error)
       resetParamsState()
@@ -116,8 +121,8 @@ export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const resetParamsState = () => {
-    setVotesAmount('')
-    setVotesCount('')
+    setVotesAmount('0')
+    setVotesCount('0')
     setIsEnoughBalance(false)
   }
 
@@ -129,7 +134,7 @@ export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
         votesCount,
         isEnoughBalance,
         resetParamsState,
-        getVoteParams,
+        updateVoteParams,
       }}
     >
       {children}

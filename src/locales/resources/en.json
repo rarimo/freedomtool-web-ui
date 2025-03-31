@@ -94,7 +94,7 @@
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Votes count",
-    "token-amount-lbl": "Votes count",
+    "amount-lbl": "Amount",
     "success-msg": "You have successfully created a poll!",
     "proposal-title-plh": "Approve this change?",
     "proposal-description-plh": "This poll outlines key points...",
@@ -122,7 +122,8 @@
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
-    "show-poll-title": "Show poll results:"
+    "show-poll-title": "Show poll results:",
+    "vote-params-error": "Invalid vote parameters"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -147,7 +148,6 @@
     "accepted-options-title": "Accepted options",
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
-    "amount-lbl": "Amount",
     "success-msg": "You have successfully added funds to your voting contract",
     "remaining-votes": "Remaining votes:",
     "votes-count_one": "{{count}} vote",

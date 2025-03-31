@@ -1,9 +1,13 @@
 import { Paper, Radio, RadioGroup, Stack, Typography, useTheme } from '@mui/material'
-import { memo } from 'react'
+import { formatUnits } from 'ethers'
+import { debounce } from 'lodash'
+import { memo, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { useCheckVoteAmount } from '@/hooks'
+import { NATIVE_CURRENCY } from '@/constants'
+import { useVoteParamsContext } from '@/contexts/vote-params/VoteParamsContext'
+import { formatBalance } from '@/helpers'
 import { UiCheckVoteInput } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
@@ -11,12 +15,64 @@ import { CreatePollSchema } from '../createPollSchema'
 
 export default function SettingsSection() {
   const { t } = useTranslation()
-  const { isCalculating, helperText, resetHelperText, getVoteParams } = useCheckVoteAmount()
   const {
     control,
     getValues,
     formState: { isSubmitting },
+    setValue,
+    clearErrors,
   } = useFormContext<CreatePollSchema>()
+  const { updateVoteParams, isCalculating, votesAmount, votesCount } = useVoteParamsContext()
+
+  /*
+   * Base function for "settings" fields that updates both fields and its mirrored counterpart
+   * (votesAmount and votesCount) if the input field is valid.
+   *
+   * The generic types <T, M> ensure type safety because
+   * React Hook Form does not accept plain strings
+   * for field names in this case.
+   */
+  const debouncedCheckField = debounce(
+    <T extends keyof CreatePollSchema['settings'], M extends keyof CreatePollSchema['settings']>(
+      field: `settings.${T}`,
+      mirrorField: `settings.${M}`,
+      updateFn: () => void,
+    ) => {
+      const isValid = !control._formState.errors.settings?.[field.split('.')[1] as T]
+
+      // Clear the mirror field error for better UX
+      if (!isValid) return
+
+      clearErrors(mirrorField)
+
+      updateFn()
+    },
+    500,
+  )
+
+  const debouncedCheckVotesCount = () =>
+    debouncedCheckField('settings.votesCount', 'settings.amount', () =>
+      updateVoteParams({
+        type: 'vote_predict_amount',
+        votesCount: String(getValues('settings.votesCount')),
+      }),
+    )
+
+  const debouncedCheckAmount = () =>
+    debouncedCheckField('settings.amount', 'settings.votesCount', () =>
+      updateVoteParams({
+        type: 'vote_predict_count_tx',
+        amount: String(getValues('settings.amount')),
+      }),
+    )
+
+  useEffect(() => {
+    setValue('settings.votesCount', Number(votesCount))
+  }, [votesAmount, setValue, votesCount])
+
+  useEffect(() => {
+    setValue('settings.amount', Number(formatUnits(votesAmount)))
+  }, [votesCount, setValue, votesAmount])
 
   return (
     <Stack component={Paper}>
@@ -31,17 +87,14 @@ export default function SettingsSection() {
               {...field}
               disabled={isSubmitting || isCalculating}
               error={Boolean(fieldState.error)}
-              helperText={fieldState.error?.message || helperText}
-              label={t('create-poll.votes-count-lbl')}
-              onCheck={() =>
-                getVoteParams({
-                  type: 'vote_predict_amount',
-                  votesCount: String(getValues('settings.votesCount')),
-                })
+              // TODO: Remove
+              helperText={
+                fieldState.error?.message || `${formatBalance(votesAmount)} ${NATIVE_CURRENCY}`
               }
+              label={t('create-poll.votes-count-lbl')}
               onChange={e => {
                 field.onChange(e)
-                resetHelperText?.()
+                debouncedCheckVotesCount()
               }}
             />
           )}
@@ -55,17 +108,12 @@ export default function SettingsSection() {
               {...field}
               disabled={isSubmitting || isCalculating}
               error={Boolean(fieldState.error)}
-              helperText={fieldState.error?.message || helperText}
+              // TODO: Remove
+              helperText={fieldState.error?.message || `${votesCount} votes`}
               label={t('create-poll.amount-lbl')}
-              onCheck={() =>
-                getVoteParams({
-                  type: 'vote_predict_count_tx',
-                  amount: String(getValues('settings.amount')),
-                })
-              }
               onChange={e => {
                 field.onChange(e)
-                resetHelperText?.()
+                debouncedCheckAmount()
               }}
             />
           )}

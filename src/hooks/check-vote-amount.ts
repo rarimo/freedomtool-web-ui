@@ -1,3 +1,4 @@
+// TODO: Remove and replace with context when main form is ready
 import { BN } from '@distributedlab/tools'
 import { BigNumberish, formatEther } from 'ethers'
 import { t } from 'i18next'
@@ -21,7 +22,7 @@ export const useCheckVoteAmount = () => {
   const [helperText, setHelperText] = useState<string>('')
   const { balance } = useWeb3Context()
 
-  const getVoteParams: GetVoteParamsOverloads = async params => {
+  const updateVoteParams: GetVoteParamsOverloads = async params => {
     setIsCalculating(true)
     try {
       if (params.type === 'vote_predict_amount' && 'votesCount' in params) {
@@ -117,7 +118,7 @@ export const useCheckVoteAmount = () => {
 
   return {
     isCalculating,
-    getVoteParams,
+    updateVoteParams,
 
     helperText,
     updateHelperText,

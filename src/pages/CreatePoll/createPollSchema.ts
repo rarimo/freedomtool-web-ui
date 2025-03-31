@@ -59,7 +59,7 @@ export const createPollSchema = zod
       .min(1),
     settings: zod.object({
       votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
-      amount: zod.coerce.number().int().min(1).max(MAX_TOKEN_AMOUNT_PER_TX),
+      amount: zod.coerce.number().gt(0).max(MAX_TOKEN_AMOUNT_PER_TX),
     }),
   })
   .refine(

@@ -1,7 +1,8 @@
+import { BN } from '@distributedlab/tools'
 import { Stack, Typography, useTheme } from '@mui/material'
 
 import { NATIVE_CURRENCY } from '@/constants'
-import { formatAmount } from '@/helpers'
+import { formatBalance } from '@/helpers'
 
 import { useVoteParamsContext } from '../VoteParamsContext'
 
@@ -19,7 +20,7 @@ export default function VoteParamsResult() {
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>Total:</Typography>
         <Typography variant='subtitle4'>
-          {formatAmount(votesAmount)} {NATIVE_CURRENCY}
+          {formatBalance(BN.fromBigInt(votesAmount).value)} {NATIVE_CURRENCY}
         </Typography>
       </Stack>
     </Stack>
