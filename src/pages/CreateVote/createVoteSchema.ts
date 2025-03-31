@@ -13,15 +13,13 @@ export const createVoteSchema = zod
     endDate: zod.string().min(1),
     uniqueness: zod.boolean(),
     minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
-    nationalities: zod
-      .array(
-        zod.object({
-          flag: zod.string().min(1),
-          name: zod.string().min(1),
-          codes: zod.array(zod.string().min(1)).min(1),
-        }),
-      )
-      .min(1),
+    nationalities: zod.array(
+      zod.object({
+        flag: zod.string().min(1),
+        name: zod.string().min(1),
+        codes: zod.array(zod.string().min(1)).min(1),
+      }),
+    ),
     questions: zod
       .array(
         zod.object({
