@@ -18,7 +18,7 @@ interface ISectionsController {
 }
 
 export default function SectionsController({ sections, isDisabled }: ISectionsController) {
-  const [currentIndex, setCurrentIndex] = useState(1)
+  const [currentIndex, setCurrentIndex] = useState(3)
   const { body, footer, title, onContinue } = sections[currentIndex]
   const { t } = useTranslation()
 

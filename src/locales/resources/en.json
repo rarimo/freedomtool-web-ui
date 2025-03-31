@@ -116,7 +116,12 @@
       "questions": "Questions",
       "settings": "Settings"
     },
-    "add-criteria": "Add a criteria"
+    "add-criteria": "Add a criteria",
+    "show-poll-option-title-1": "Real time",
+    "show-poll-option-description-1": "The results will be available to participants during the voting",
+    "show-poll-option-title-2": "After completion",
+    "show-poll-option-description-2": "The results will be shown only after the voting ends",
+    "show-poll-title": "Show poll results:"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
