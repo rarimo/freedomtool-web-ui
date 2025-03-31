@@ -1,4 +1,4 @@
-import { TextFieldProps as NumberFieldProps, TextField } from '@mui/material'
+import { TextField, TextFieldProps as NumberFieldProps } from '@mui/material'
 import { forwardRef } from 'react'
 
 import { trimLeadingZeroes } from '@/helpers'

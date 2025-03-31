@@ -78,8 +78,8 @@ export const typography: ExtendedTypographyOptions = {
   },
   subtitle3: {
     fontWeight: FontWeight.Medium,
-    fontSize: toRem(16),
-    lineHeight: toRem(22),
+    fontSize: toRem(32),
+    lineHeight: toRem(36),
   },
   subtitle4: {
     fontWeight: FontWeight.Medium,
@@ -87,6 +87,16 @@ export const typography: ExtendedTypographyOptions = {
     lineHeight: toRem(20),
   },
   subtitle5: {
+    fontWeight: FontWeight.Medium,
+    fontSize: toRem(12),
+    lineHeight: toRem(18),
+  },
+  subtitle6: {
+    fontWeight: FontWeight.Medium,
+    fontSize: toRem(14),
+    lineHeight: toRem(20),
+  },
+  subtitle7: {
     fontWeight: FontWeight.Medium,
     fontSize: toRem(12),
     lineHeight: toRem(18),
@@ -108,6 +118,11 @@ export const typography: ExtendedTypographyOptions = {
     lineHeight: toRem(20),
   },
   body4: {
+    fontWeight: FontWeight.Regular,
+    fontSize: toRem(14),
+    lineHeight: toRem(20),
+  },
+  body5: {
     fontWeight: FontWeight.Regular,
     fontSize: toRem(12),
     lineHeight: toRem(18),

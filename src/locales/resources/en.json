@@ -1,16 +1,16 @@
 {
   "validations": {
     "field-error-required": "Please fill out this field",
-    "field-error-min-length": "This field must contain minimum {{min}} symbols",
-    "field-error-max-length": "This field must contain maximum {{max}} symbols",
-    "field-error-min-array-length": "This field must contain at least {{min}} item",
-    "field-error-max-array-length": "This field must contain maximum {{max}} items",
-    "field-error-number-type-mismatch": "This field must be a number",
-    "field-error-type-mismatch": "This field must be a {{type}}",
-    "field-error-more-than": "This field must be greater than {{more}}",
-    "field-error-single-word": "This field must contain only one word",
-    "field-error-integer": "This field must be an integer",
-    "field-error-max-value": "This field must be less than or equal to {{max}}"
+    "field-error-min-length": "Must contain minimum {{min}} symbols",
+    "field-error-max-length": "Must contain maximum {{max}} symbols",
+    "field-error-min-array-length": "Must contain at least {{min}} item",
+    "field-error-max-array-length": "Must contain maximum {{max}} items",
+    "field-error-number-type-mismatch": "Must be a number",
+    "field-error-type-mismatch": "Must be a {{type}}",
+    "field-error-more-than": "Must be greater than {{more}}",
+    "field-error-single-word": "Must contain only one word",
+    "field-error-integer": "Must be an integer",
+    "field-error-max-value": "Must be less than or equal to {{max}}"
   },
   "check-vote-input": {
     "calculate-eth-btn": "Calculate"
@@ -93,8 +93,8 @@
     "option-lbl": "Option #{{order}}",
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
-    "votes-count-lbl": "Votes count",
-    "amount-lbl": "Amount",
+    "votes-count-lbl": "Participants",
+    "amount-lbl": "Available",
     "success-msg": "You have successfully created a poll!",
     "proposal-title-plh": "Approve this change?",
     "proposal-description-plh": "This poll outlines key points...",
@@ -123,7 +123,8 @@
     "show-poll-option-title-2": "After completion",
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
     "show-poll-title": "Show poll results:",
-    "vote-params-error": "Invalid vote parameters"
+    "vote-params-error": "Invalid vote parameters",
+    "max-btn": "MAX"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

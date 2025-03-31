@@ -93,6 +93,7 @@ export enum Icons {
   SealCheck1 = 'seal-check-1',
   SealCheck = 'seal-check',
   Share1 = 'share-1',
+  EqualLine = 'equal-line',
   Share = 'share',
   ShieldCheck = 'shield-check',
   SlidersHorizontal = 'sliders-horizontal',

@@ -33,7 +33,7 @@ export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
 
   const [votesAmount, setVotesAmount] = useState<BigNumberish>('0')
   const [votesCount, setVotesCount] = useState<BigNumberish>('0')
-  const [isEnoughBalance, setIsEnoughBalance] = useState<boolean>(false)
+  const [isEnoughBalance, setIsEnoughBalance] = useState<boolean>(true)
 
   const { balance } = useWeb3Context()
 
@@ -123,7 +123,7 @@ export const VoteParamsProvider = ({ children }: { children: ReactNode }) => {
   const resetParamsState = () => {
     setVotesAmount('0')
     setVotesCount('0')
-    setIsEnoughBalance(false)
+    setIsEnoughBalance(true)
   }
 
   return (

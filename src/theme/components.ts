@@ -205,7 +205,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       fullWidth: true,
     },
   },
-
   MuiPaper: {
     defaultProps: {
       variant: 'elevation',
@@ -243,7 +242,9 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiTextField: {
-    defaultProps: { InputLabelProps: { shrink: true } },
+    defaultProps: {
+      InputLabelProps: { shrink: true },
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         '& .MuiInputBase-root, & .MuiInputBase-sizeMedium': typography.body3,
@@ -290,7 +291,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiFormHelperText: {
     styleOverrides: {
       root: ({ theme }) => ({
-        ...typography.body4,
+        ...typography.subtitle7,
         marginTop: theme.spacing(1),
         marginLeft: 0,
       }),
