@@ -45,6 +45,8 @@ export const getVotesCount = (id: string) => {
 }
 
 /**
+ * Overload I
+ *
  * Predicts the token amount based on the number of votes.
  * @param params - Object containing vote count and optional proposal ID.
  * @returns An object with the predicted token amount.
@@ -56,6 +58,8 @@ export async function predictVoteParams(params: {
 }): Promise<{ amount_predict: string }>
 
 /**
+ * Overload II
+ *
  * Predicts the number of votes based on the token amount.
  * @param params - Object containing the token amount and optional proposal ID.
  * @returns An object with the predicted vote count.
