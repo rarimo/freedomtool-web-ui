@@ -10,7 +10,7 @@ export default function VoteParamsResult() {
   const { votesAmount } = useVoteParamsContext()
   const { palette } = useTheme()
   return (
-    <Stack minWidth={300} alignItems='flex-end'>
+    <Stack minWidth={250} alignItems='flex-end'>
       <Stack spacing={1} color={palette.text.secondary} direction='row' alignItems='center'>
         <Typography variant='body4'>Fee:</Typography>
         {/* TODO: Replace with subtitle6 after merge */}

@@ -1,4 +1,13 @@
-import { Box, Paper, Radio, RadioGroup, Stack, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { formatUnits } from 'ethers'
 import { debounce } from 'lodash'
 import { memo, useEffect } from 'react'
@@ -20,7 +29,9 @@ export default function SettingsSection() {
     setValue,
     clearErrors,
   } = useFormContext<CreatePollSchema>()
-  const { palette } = useTheme()
+  const { palette, breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
+  const { t } = useTranslation()
   const { updateVoteParams, isCalculating, votesAmount, votesCount } = useVoteParamsContext()
 
   /*
@@ -79,71 +90,93 @@ export default function SettingsSection() {
       <Stack spacing={10}>
         <ShowPollResultWithMemo />
 
-        <Box
-          sx={{
-            position: 'relative',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gridAutoFlow: 'row',
-          }}
-          bgcolor={palette.action.active}
-          p={4}
-          borderRadius={5}
-        >
-          <Controller
-            name='settings.amount'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiCheckAmountInput
-                {...field}
-                disabled={isSubmitting || isCalculating}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                onChange={e => {
-                  field.onChange(e)
-                  debouncedCheckAmount()
-                }}
-              />
-            )}
-          />
-
+        <Stack spacing={4}>
+          <Typography variant='subtitle5'>{t('create-poll.budget-title')}</Typography>
           <Stack
+            bgcolor={palette.info.lighter}
+            color={palette.info.darker}
+            borderRadius={4}
+            p={3}
+            maxWidth={{ md: 620 }}
+            spacing={3}
+            direction='row'
             alignItems='center'
-            justifyContent='center'
-            sx={{
-              position: 'absolute',
-              color: palette.text.secondary,
-              background: palette.background.paper,
-              p: 4,
-              borderRadius: '100%',
-              width: 42,
-              height: 42,
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              border: `2px solid ${palette.action.active}`,
-            }}
+            role='alert'
           >
-            <UiIcon size={5} name={Icons.EqualLine} />
+            {isMdUp && <UiIcon sx={{ ml: 1 }} size={5} name={Icons.InformationLine} />}
+            <Typography
+              color={palette.info.darker}
+              variant='body4'
+              typography={{ xs: 'body5', md: 'body4' }}
+              alignSelf='start'
+            >
+              {t('create-poll.fee-alert')}
+            </Typography>
           </Stack>
-
-          <Controller
-            name='settings.votesCount'
-            control={control}
-            render={({ field, fieldState }) => (
-              <UiCheckVoteInput
-                {...field}
-                disabled={isSubmitting || isCalculating}
-                error={Boolean(fieldState.error)}
-                helperText={fieldState.error?.message}
-                onChange={e => {
-                  field.onChange(e)
-                  debouncedCheckVotesCount()
-                }}
-              />
-            )}
-          />
-        </Box>
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridAutoFlow: 'row',
+            }}
+            bgcolor={palette.action.active}
+            p={4}
+            borderRadius={5}
+          >
+            <Controller
+              name='settings.amount'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiCheckAmountInput
+                  {...field}
+                  disabled={isSubmitting || isCalculating}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  onChange={e => {
+                    field.onChange(e)
+                    debouncedCheckAmount()
+                  }}
+                />
+              )}
+            />
+            <Stack
+              alignItems='center'
+              justifyContent='center'
+              sx={{
+                position: 'absolute',
+                color: palette.text.secondary,
+                background: palette.background.paper,
+                p: 4,
+                borderRadius: '100%',
+                width: 42,
+                height: 42,
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                border: `2px solid ${palette.action.active}`,
+              }}
+            >
+              <UiIcon size={5} name={Icons.EqualLine} />
+            </Stack>
+            <Controller
+              name='settings.votesCount'
+              control={control}
+              render={({ field, fieldState }) => (
+                <UiCheckVoteInput
+                  {...field}
+                  disabled={isSubmitting || isCalculating}
+                  error={Boolean(fieldState.error)}
+                  helperText={fieldState.error?.message}
+                  onChange={e => {
+                    field.onChange(e)
+                    debouncedCheckVotesCount()
+                  }}
+                />
+              )}
+            />
+          </Box>
+        </Stack>
       </Stack>
     </Stack>
   )

@@ -43,8 +43,13 @@ export default function SectionsController({ sections, isDisabled }: ISectionsCo
 
       {body}
 
-      <Stack direction='row' spacing={10} flexWrap='wrap' alignItems='center'>
-        <Stack flex={1} spacing={10} direction='row'>
+      <Stack
+        direction={{ xs: 'column-reverse', md: 'row' }}
+        spacing={10}
+        flexWrap='wrap'
+        alignItems='center'
+      >
+        <Stack width={1} flex={1} spacing={10} direction='row'>
           {currentIndex !== 0 && (
             <IconButton
               sx={{ width: 48, height: 48 }}
@@ -67,9 +72,11 @@ export default function SectionsController({ sections, isDisabled }: ISectionsCo
             </Button>
           )}
         </Stack>
-        <Stack ml='auto' flex={0}>
-          {footer}
-        </Stack>
+        {footer && (
+          <Stack ml='auto' flex={0}>
+            {footer}
+          </Stack>
+        )}
       </Stack>
     </Stack>
   )

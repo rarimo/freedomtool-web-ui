@@ -124,7 +124,9 @@
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
     "show-poll-title": "Show poll results:",
     "vote-params-error": "Invalid vote parameters",
-    "max-btn": "MAX"
+    "max-btn": "MAX",
+    "budget-title": "Budget & Participants:",
+    "fee-alert": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up."
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

@@ -62,6 +62,7 @@ export enum Icons {
   ImageFill = 'image-fill',
   Infinite = 'infinite',
   Info = 'info',
+  InformationLine = 'information-line',
   Information2Line = 'information-2-line',
   Instagram = 'instagram',
   Ion = 'ion',
