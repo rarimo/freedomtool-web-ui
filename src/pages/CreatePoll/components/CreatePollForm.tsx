@@ -16,7 +16,8 @@ import {
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
   prepareVotingWhitelistData,
-  uploadToIpfs,
+  uploadImageToIpfs,
+  uploadJsonToIpfs,
 } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
@@ -56,16 +57,22 @@ export default function CreatePollForm() {
       if (!isEnoughBalance) return
 
       const {
-        criterias: { minAge, nationalities, uniqueness },
-        details: { title, description, startDate, endDate },
+        details: { title, description, startDate, endDate, image },
+        criterias: { minAge, nationalities, maxAge, sex },
         questions,
       } = formData
 
+      let imageCid
+      if (image) {
+        imageCid = (await uploadImageToIpfs(image)).data.hash
+      }
+
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
-      const response = await uploadToIpfs({
+      const response = await uploadJsonToIpfs({
         title,
         description,
         acceptedOptions: acceptedOptionsIpfs,
+        ...(imageCid && { imageCid }),
       })
       const cid = response.data.hash
 
@@ -76,9 +83,10 @@ export default function CreatePollForm() {
       const duration = endTimestamp - startTimestamp
 
       const votingWhitelistData = prepareVotingWhitelistData({
+        maxAge: Number(maxAge),
         minAge: Number(minAge),
+        sex,
         nationalities,
-        uniqueness,
         startTimestamp,
       })
 

@@ -40,6 +40,11 @@ export const createPollSchema = zod
           },
           t('create-poll.image-size-error', { size: 5 }),
         )
+        .transform(file => {
+          if (file instanceof File) {
+            return file
+          }
+        })
         .optional(),
       title: zod.string().min(1).max(50),
       description: zod.string().min(1).max(200),

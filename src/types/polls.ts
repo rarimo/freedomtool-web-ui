@@ -21,6 +21,7 @@ export interface IVoteIpfs {
   title: string
   description: string
   acceptedOptions: IQuestionIpfs[]
+  imageCid?: string
 }
 
 export interface IUploadData {

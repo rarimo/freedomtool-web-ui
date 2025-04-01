@@ -1,9 +1,8 @@
 import { time } from '@distributedlab/tools'
-import { AbiCoder } from 'ethers'
+import { AbiCoder, hexlify } from 'ethers'
 import { stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
-import { MAX_UINT32 } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 import {
@@ -11,6 +10,7 @@ import {
   IParsedProposal,
   IUploadData,
   IVoteIpfs,
+  type SEX_OPTIONS,
   VoteAmountOverload,
   VoteCountOverload,
   VoteParamsInput,
@@ -23,6 +23,44 @@ export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questi
     variants: question.options.map(option => option.text),
   }))
 
+export function calculateProposalSelector(opts: {
+  nationalities: boolean
+  uniqueness: boolean
+  minAge: boolean
+  maxAge: boolean
+  sex: boolean
+  expiration: boolean
+}): string {
+  // Query proof selector:
+  // https://github.com/rarimo/passport-zk-circuits?tab=readme-ov-file#selector
+  const flags = [
+    true, // nullifier
+    false, // birth date
+    false, // expiration date
+    false, // name
+    false, // nationality
+    opts.nationalities, // nationalities
+    opts.sex, // sex
+    false, // document number
+    false, // timestamp lowerbound
+    opts.uniqueness, // timestamp upperbound
+    false, // identity counter lowerbound
+    opts.uniqueness, // identity counter upperbound
+    opts.expiration, // passport expiration lowerbound
+    false, // passport expiration upperbound
+    opts.maxAge, // birth date lowerbound
+    opts.minAge, // birth date upperbound
+    false, // verify citizenship mask as a whitelist
+    false, // verify citizenship mask as a blacklist
+  ]
+
+  const bits = flags.map(value => Number(value))
+  const binaryString = bits.reverse().join('')
+  const hexString = BigInt(`0b${binaryString}`).toString(16).toUpperCase()
+
+  return `0x${hexString}`
+}
+
 // The array [3, 7] indicates that there are
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
 export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['questions']) => {
@@ -33,7 +71,7 @@ export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['qu
   })
 }
 
-export const uploadToIpfs = (vote: IVoteIpfs) => {
+export const uploadJsonToIpfs = (vote: IVoteIpfs) => {
   return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
     body: {
       data: {
@@ -43,6 +81,15 @@ export const uploadToIpfs = (vote: IVoteIpfs) => {
         },
       },
     },
+  })
+}
+
+export const uploadImageToIpfs = (image: File) => {
+  const formData = new FormData()
+  formData.append('image', image)
+
+  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload-file`, {
+    body: formData,
   })
 }
 
@@ -123,37 +170,56 @@ export const getCountProgress = (totalCount: number, count: number) =>
   totalCount > 0 ? (count / totalCount) * 100 : 0
 
 export const prepareVotingWhitelistData = (config: {
+  maxAge?: number | null
   minAge?: number | null
   nationalities: INationality[]
-  uniqueness: boolean
+  sex: (typeof SEX_OPTIONS)[number]
   startTimestamp: number
 }) => {
-  const { minAge, startTimestamp, nationalities, uniqueness } = config
-
+  const { minAge, maxAge, startTimestamp, nationalities, sex: _sex } = config
   const formattedNationalities = nationalities
     .flatMap(({ codes }) => codes)
     .map(code => stringToHex(code))
 
   const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
-  const uniquenessFlag = uniqueness ? 1 : MAX_UINT32
+  const identityCounterUpperBound = 1
 
   const birthDateUpperbound = stringToHex(
     time()
       .subtract(minAge ? minAge : 1, minAge ? 'years' : 'day')
       .format('YYMMDD'),
   )
+  const birthDateLowerbound = stringToHex(time().format('YYMMDD'))
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
+  const hasSpecificSex = _sex !== 'any'
+  // "male" | "female" -> "M" | "F"
+  const sex = hasSpecificSex ? hexlify(_sex[0].toUpperCase()) : 0
+
+  const selector = calculateProposalSelector({
+    expiration: true, // always true
+    nationalities: formattedNationalities.length > 0,
+    uniqueness: true, // always true
+    minAge: Boolean(minAge),
+    maxAge: Boolean(maxAge),
+    sex: hasSpecificSex,
+  })
 
   const params = [
+    selector,
     formattedNationalities,
     identityCreationTimestampUpperBound,
-    uniquenessFlag,
+    identityCounterUpperBound,
+    sex,
+    birthDateLowerbound,
     birthDateUpperbound,
     expirationDateLowerBound,
   ]
 
   const abiCoder = AbiCoder.defaultAbiCoder()
 
-  return abiCoder.encode(['tuple(uint256[],uint256,uint256,uint256,uint256)'], [params])
+  return abiCoder.encode(
+    ['tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'],
+    [params],
+  )
 }
