@@ -5,7 +5,7 @@ import { useWeb3Context } from '@/contexts/web3-context'
 
 import CreatePollForm from './components/CreatePollForm'
 
-export default function C() {
+export default function CreatePoll() {
   const { isConnected } = useWeb3Context()
 
   return (

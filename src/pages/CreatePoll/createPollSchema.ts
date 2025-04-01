@@ -31,12 +31,12 @@ export const createPollSchema = zod
       image: zod
         .any()
         .refine(
-          file => ALLOWED_IMAGE_MIME_TYPES.includes(file.type),
+          file => ALLOWED_IMAGE_MIME_TYPES.includes(file?.type),
           t('create-poll.image-format-error'),
         )
         .refine(
           file => {
-            return file.size <= MAX_BANNER_SIZE
+            return file?.size <= MAX_BANNER_SIZE
           },
           t('create-poll.image-size-error', { size: 5 }),
         )

@@ -553,21 +553,23 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiAlert: {
     styleOverrides: {
       root: ({ theme }) => ({
-        borderRadius: theme.spacing(3),
+        width: '100%',
+        borderRadius: theme.spacing(4),
+        backgroundColor: theme.palette.background.paper,
+        color: alpha(theme.palette.text.primary, 0.7),
+        boxShadow: '0px 8px 16px 0px rgba(0, 0, 0, 0.04)',
       }),
-      standardInfo: ({ theme }) => ({
-        color: theme.palette.info.darker,
-      }),
-      icon: ({ theme, ownerState }) => {
-        const color: Record<AlertColor, string> = {
+      icon: ({ ownerState, theme }) => {
+        const severityToBgColor: Record<AlertColor, string> = {
           success: alpha(theme.palette.success.main, 0.2),
           warning: alpha(theme.palette.warning.main, 0.2),
           error: alpha(theme.palette.error.main, 0.2),
-          info: theme.palette.info.darker as string,
+          info: alpha(theme.palette.info.main, 0.2),
         }
 
         return {
-          color: color[ownerState.severity ?? 'info'],
+          backgroundColor: severityToBgColor[ownerState.severity ?? 'info'],
+          marginRight: theme.spacing(4),
           marginTop: 'auto',
           marginBottom: 'auto',
           padding: theme.spacing(2),
@@ -575,8 +577,8 @@ export const components: Components<Omit<Theme, 'components'>> = {
         }
       },
       message: ({ theme }) => ({
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
       }),
     },
   },
@@ -753,7 +755,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
           margin: 0,
         },
         '& .MuiPickersCalendarHeader-label': {
-          ...typography.subtitle3,
+          ...typography.subtitle4,
         },
         '& .MuiYearCalendar-root': {
           width: '100%',

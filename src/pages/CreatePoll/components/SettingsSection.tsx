@@ -78,12 +78,14 @@ export default function SettingsSection() {
 
   useEffect(() => {
     setValue('settings.votesCount', Number(votesCount))
-  }, [votesAmount, setValue, votesCount])
 
-  useEffect(() => {
     const formattedAmount = Number(formatUnits(votesAmount, 18)).toFixed(4)
     setValue('settings.amount', parseFloat(formattedAmount))
-  }, [votesCount, setValue, votesAmount])
+
+    setTimeout(() => {
+      clearErrors('settings')
+    }, 0)
+  }, [votesCount, setValue, votesAmount, clearErrors])
 
   return (
     <Stack component={Paper}>

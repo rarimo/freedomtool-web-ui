@@ -17,12 +17,12 @@ import { formatBalance } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
-const MAX_DECIMALS = 4
+const MAX_VISIBLE_DECIMALS = 4
 
 type AmountInputProps = { decimals?: number } & TextFieldProps
 
 const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
-  ({ decimals = MAX_DECIMALS, ...textFieldProps }, ref) => {
+  ({ decimals = MAX_VISIBLE_DECIMALS, ...textFieldProps }, ref) => {
     const { t } = useTranslation()
     const { palette, typography, breakpoints } = useTheme()
     const isMdUp = useMediaQuery(breakpoints.up('md'))

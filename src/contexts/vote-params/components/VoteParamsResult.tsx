@@ -13,14 +13,13 @@ export default function VoteParamsResult() {
     <Stack minWidth={250} alignItems='flex-end'>
       <Stack spacing={1} color={palette.text.secondary} direction='row' alignItems='center'>
         <Typography variant='body4'>Fee:</Typography>
-        {/* TODO: Replace with subtitle6 after merge */}
         {/* TODO: Add gas estimate */}
-        <Typography variant='subtitle5'>0.000000000000000007 ETH</Typography>
+        <Typography variant='subtitle6'>0.000000000000000007 ETH</Typography>
       </Stack>
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>Total:</Typography>
         <Typography variant='subtitle4'>
-          {formatBalance(BN.fromBigInt(votesAmount).value)} {NATIVE_CURRENCY}
+          {formatBalance(BN.fromBigInt(votesAmount ?? '0').value)} {NATIVE_CURRENCY}
         </Typography>
       </Stack>
     </Stack>

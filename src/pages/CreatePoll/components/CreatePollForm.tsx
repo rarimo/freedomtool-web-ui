@@ -120,22 +120,22 @@ export default function CreatePollForm() {
         <Stack spacing={3} width='100%' pb={{ md: 10 }}>
           <VoteParamsProvider>
             <SectionsController
-              isDisabled={form.formState.isValid || form.formState.disabled}
+              isDisabled={form.formState.disabled}
               sections={[
                 {
                   title: t('create-poll.titles.details'),
                   body: <DetailsSection />,
-                  onContinue: () => form.trigger('details'),
+                  onContinue: () => form.trigger(['details']),
                 },
                 {
                   title: t('create-poll.titles.criterias'),
                   body: <CriteriasSection />,
-                  onContinue: () => form.trigger('criterias'),
+                  onContinue: () => form.trigger(['criterias']),
                 },
                 {
                   title: t('create-poll.titles.questions'),
                   body: <QuestionsSection />,
-                  onContinue: () => form.trigger('questions'),
+                  onContinue: () => form.trigger(['questions']),
                 },
                 {
                   title: t('create-poll.titles.settings'),

@@ -1,4 +1,9 @@
-// TODO: Remove and replace with context when main form is ready
+/*
+ * TODO: Remove and replace with context when main form
+ * is ready AND TopUpForm is implementing.
+ *
+ * This logic is in VoteParamsContext now
+ */
 import { BN } from '@distributedlab/tools'
 import { BigNumberish, formatEther } from 'ethers'
 import { t } from 'i18next'
