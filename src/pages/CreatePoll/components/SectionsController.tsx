@@ -59,7 +59,7 @@ export default function SectionsController({ sections, isDisabled }: ISectionsCo
             </IconButton>
           )}
           {isLastStep ? (
-            <Button disabled={isDisabled} type='submit'>
+            <Button key='submit-button' disabled={isDisabled} type='submit'>
               {t('create-poll.submit-btn')}
             </Button>
           ) : (

@@ -1,7 +1,7 @@
 import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -47,9 +47,11 @@ export default function CreatePollForm() {
   const { updateVoteParams } = useCheckVoteAmount()
   const navigate = useNavigate()
 
+  const { getValues, reset, trigger, handleSubmit } = form
+
   const submit = async (formData: CreatePollSchema) => {
     try {
-      const votesCount = String(form.getValues('settings.votesCount'))
+      const votesCount = String(getValues('settings.votesCount'))
       const { isEnoughBalance, votesAmount } = await updateVoteParams({
         type: 'vote_predict_amount',
         votesCount,
@@ -104,7 +106,7 @@ export default function CreatePollForm() {
       bus.emit(BusEvents.success, {
         message: t('create-poll.success-msg'),
       })
-      form.reset()
+      reset()
 
       navigate(RoutePaths.Home)
     } catch (error) {
@@ -114,36 +116,38 @@ export default function CreatePollForm() {
     }
   }
 
+  const sections = useMemo(
+    () => [
+      {
+        title: t('create-poll.titles.details'),
+        body: <DetailsSection />,
+        onContinue: () => trigger(['details']),
+      },
+      {
+        title: t('create-poll.titles.criterias'),
+        body: <CriteriasSection />,
+        onContinue: () => trigger(['criterias']),
+      },
+      {
+        title: t('create-poll.titles.questions'),
+        body: <QuestionsSection />,
+        onContinue: () => trigger(['questions']),
+      },
+      {
+        title: t('create-poll.titles.settings'),
+        body: <SettingsSection />,
+        footer: <VoteParamsResult />,
+      },
+    ],
+    [t, trigger],
+  )
+
   return (
     <FormProvider {...form}>
-      <Stack onSubmit={form.handleSubmit(submit)} component='form' width='100%'>
+      <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
         <Stack spacing={3} width='100%' pb={{ md: 10 }}>
           <VoteParamsProvider>
-            <SectionsController
-              isDisabled={form.formState.disabled}
-              sections={[
-                {
-                  title: t('create-poll.titles.details'),
-                  body: <DetailsSection />,
-                  onContinue: () => form.trigger(['details']),
-                },
-                {
-                  title: t('create-poll.titles.criterias'),
-                  body: <CriteriasSection />,
-                  onContinue: () => form.trigger(['criterias']),
-                },
-                {
-                  title: t('create-poll.titles.questions'),
-                  body: <QuestionsSection />,
-                  onContinue: () => form.trigger(['questions']),
-                },
-                {
-                  title: t('create-poll.titles.settings'),
-                  body: <SettingsSection />,
-                  footer: <VoteParamsResult />,
-                },
-              ]}
-            />
+            <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
           </VoteParamsProvider>
         </Stack>
       </Stack>
