@@ -126,7 +126,11 @@
     "vote-params-error": "Invalid vote parameters",
     "max-btn": "MAX",
     "budget-title": "Budget & Participants:",
-    "fee-alert": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up."
+    "fee-alert": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up.",
+    "image-size-error": "Max image size is {{size}}MB.",
+    "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
+    "image-title": "Upload a cover",
+    "image-description": "1300x500px, png or jpeg, webp, max 4mb"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

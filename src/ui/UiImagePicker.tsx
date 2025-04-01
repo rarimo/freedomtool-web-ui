@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   FormControlProps,
   FormLabel,
@@ -10,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, RefObject, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { ALLOWED_IMAGE_MIME_TYPES } from '@/constants'
@@ -20,8 +21,9 @@ import { Transitions } from '@/theme/constants'
 import UiIcon from './UiIcon'
 
 interface Props extends FormControlProps {
-  imageUrl: string
   maxSize?: number
+  title?: string
+  description?: string
   errorMessage?: string
   labelProps?: StackProps
   deleteButtonProps?: IconButtonProps
@@ -30,11 +32,12 @@ interface Props extends FormControlProps {
   onDelete: () => void
 }
 
-const UiImagePicker = forwardRef(
+const UiImagePicker = forwardRef<HTMLInputElement, Props>(
   (
     {
-      imageUrl,
       maxSize,
+      title,
+      description,
       labelProps,
       deleteIconSize,
       errorMessage,
@@ -47,90 +50,129 @@ const UiImagePicker = forwardRef(
     ref,
   ) => {
     const { palette } = useTheme()
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const imageInputId = useMemo(() => `image-input-${uuidv4()}`, [])
+
+    const updatePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+
+      onUpdate(file)
+    }
 
     return (
       <FormControl {...rest}>
-        <Stack
-          component={FormLabel}
-          htmlFor={imageInputId}
-          alignItems='center'
-          justifyContent='center'
-          position='relative'
-          bgcolor={palette.action.active}
-          border={`1px solid ${palette.action.hover}`}
-          {...labelProps}
-          sx={{
-            overflow: 'hidden',
-            cursor: 'pointer',
-            transition: Transitions.Default,
-            '&:hover': {
-              backgroundColor: palette.action.hover,
-            },
-            ...labelProps?.sx,
-          }}
-        >
-          <Box
-            {...ref}
-            component='input'
-            id={imageInputId}
-            type='file'
-            max={maxSize}
-            accept={ALLOWED_IMAGE_MIME_TYPES.join(',')}
-            sx={{
-              clip: 'rect(0 0 0 0)',
-              width: 1,
-              height: 1,
-              overflow: 'hidden',
-              position: 'absolute',
-            }}
-            onChange={e => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              onUpdate(file)
-            }}
-          />
-          {imageUrl ? (
-            <Box
-              component='img'
-              src={imageUrl}
+        <Stack direction='row' spacing={4}>
+          <Stack sx={{ position: 'relative' }}>
+            <Stack
+              component={FormLabel}
+              htmlFor={imageInputId}
+              alignItems='center'
+              borderRadius='100%'
+              justifyContent='center'
+              position='relative'
+              bgcolor={palette.action.active}
+              border={`1px solid ${palette.action.hover}`}
+              {...labelProps}
               sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
+                cursor: 'pointer',
+                transition: Transitions.Default,
+                borderColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: palette.action.hover,
+                },
+                ...labelProps?.sx,
               }}
-            />
-          ) : (
-            children
-          )}
+            >
+              <Box
+                ref={ref}
+                component='input'
+                id={imageInputId}
+                type='file'
+                max={maxSize}
+                accept={ALLOWED_IMAGE_MIME_TYPES.join(',')}
+                sx={{
+                  clip: 'rect(0 0 0 0)',
+                  width: 1,
+                  height: 1,
+                  overflow: 'hidden',
+                  position: 'absolute',
+                }}
+                onChange={e => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  updatePreview(e)
+                }}
+              />
+              {previewUrl ? (
+                <Box
+                  component='img'
+                  src={previewUrl}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    borderRadius: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                children
+              )}
+            </Stack>
+            {previewUrl && (
+              <DeleteIconButton
+                {...deleteButtonProps}
+                iconSize={deleteIconSize}
+                onClick={e => {
+                  e.preventDefault()
+                  setPreviewUrl(null)
+                  onDelete()
+                }}
+              >
+                <UiIcon name={Icons.TrashSimple} size={5} color={palette.error.main} />
+              </DeleteIconButton>
+            )}
+          </Stack>
+
+          <Stack>
+            <Button
+              sx={{ pl: 0 }}
+              variant='text'
+              onClick={() => (ref as RefObject<HTMLInputElement>).current?.click()}
+            >
+              <Stack spacing={1} alignItems='flex-start'>
+                {title && (
+                  <Typography color={palette.text.primary} variant='buttonLarge'>
+                    {title}
+                  </Typography>
+                )}
+                {description && <Typography variant='body4'>{description}</Typography>}
+              </Stack>
+            </Button>
+            {errorMessage && (
+              <Typography
+                variant='caption2'
+                sx={({ palette }) => ({ mt: 1.5, color: palette.error.dark })}
+              >
+                {errorMessage}
+              </Typography>
+            )}
+          </Stack>
         </Stack>
-        {errorMessage && (
-          <Typography
-            variant='caption2'
-            sx={({ palette }) => ({ mt: 1.5, color: palette.error.dark })}
-          >
-            {errorMessage}
-          </Typography>
-        )}
-        {imageUrl && (
-          <DeleteIconButton
-            {...deleteButtonProps}
-            iconSize={deleteIconSize}
-            onClick={e => {
-              e.preventDefault()
-              onDelete()
-            }}
-          >
-            <UiIcon name={Icons.TrashSimple} size={5} color={palette.error.main} />
-          </DeleteIconButton>
-        )}
       </FormControl>
     )
   },
 )
 
 function DeleteIconButton({
-  iconSize = 4,
+  iconSize = 3,
   ...rest
 }: {
   iconSize?: number
@@ -142,8 +184,8 @@ function DeleteIconButton({
       {...rest}
       sx={{
         position: 'absolute',
-        top: 0,
-        right: 0,
+        top: -5,
+        right: -5,
         p: 1,
         backgroundColor: palette.background.paper,
         border: '1px solid',
@@ -155,9 +197,11 @@ function DeleteIconButton({
         ...rest.sx,
       }}
     >
-      <UiIcon name={Icons.TrashSimple} size={iconSize} color={palette.error.main} />
+      <UiIcon name={Icons.DeleteBin6Line} size={iconSize} color={palette.error.main} />
     </IconButton>
   )
 }
+
+UiImagePicker.displayName = 'UiImagePicker'
 
 export default UiImagePicker

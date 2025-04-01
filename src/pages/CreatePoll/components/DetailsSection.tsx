@@ -1,9 +1,12 @@
 import { time } from '@distributedlab/tools'
 import { Paper, Stack, TextField, Typography, useTheme } from '@mui/material'
 import { t } from 'i18next'
+import { useRef } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import UiDatePicker from '@/common/UiDatePicker'
+import { Icons } from '@/enums'
+import { UiIcon, UiImagePicker } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
 
@@ -15,9 +18,37 @@ export default function DetailsSection() {
     control,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
+  const imageInputRef = useRef<HTMLInputElement | null>(null)
 
   return (
     <Stack component={Paper} spacing={6}>
+      <Controller
+        name='details.image'
+        control={control}
+        render={({ field, fieldState }) => (
+          <UiImagePicker
+            ref={imageInputRef}
+            title={t('create-poll.image-title')}
+            description={t('create-poll.image-description')}
+            sx={{ width: 'fit-content' }}
+            labelProps={{
+              width: 48,
+              height: 48,
+            }}
+            disabled={field.disabled}
+            errorMessage={fieldState.error?.message}
+            onUpdate={(image: File) => {
+              field.onChange(image)
+            }}
+            onDelete={() => {
+              field.onChange(null)
+            }}
+          >
+            <UiIcon color={palette.text.primary} name={Icons.UploadCloudLine} />
+          </UiImagePicker>
+        )}
+      />
+
       <Controller
         name='details.title'
         control={control}

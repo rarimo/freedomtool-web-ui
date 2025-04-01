@@ -3,7 +3,12 @@ import { t } from 'i18next'
 import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
-import { MAX_TOKEN_AMOUNT_PER_TX, MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import {
+  ALLOWED_IMAGE_MIME_TYPES,
+  MAX_BANNER_SIZE,
+  MAX_TOKEN_AMOUNT_PER_TX,
+  MAX_VOTE_COUNT_PER_TX,
+} from '@/constants'
 import { SEX_OPTIONS } from '@/types'
 
 export const defaultValues = {
@@ -23,6 +28,19 @@ export const defaultValues = {
 export const createPollSchema = zod
   .object({
     details: zod.object({
+      image: zod
+        .any()
+        .refine(
+          file => ALLOWED_IMAGE_MIME_TYPES.includes(file.type),
+          t('create-poll.image-format-error'),
+        )
+        .refine(
+          file => {
+            return file.size <= MAX_BANNER_SIZE
+          },
+          t('create-poll.image-size-error', { size: 5 }),
+        )
+        .optional(),
       title: zod.string().min(1).max(50),
       description: zod.string().min(1).max(200),
       startDate: zod.string().min(1),
