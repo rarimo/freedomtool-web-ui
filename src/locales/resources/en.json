@@ -122,7 +122,7 @@
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
-    "show-poll-title": "Show poll results:",
+    "show-poll-title": "Show results:",
     "vote-params-error": "Invalid vote parameters",
     "max-btn": "MAX",
     "budget-title": "Budget & Participants:",

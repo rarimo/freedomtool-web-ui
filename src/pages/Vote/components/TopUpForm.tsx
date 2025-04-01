@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { z as zod } from 'zod'
 
-import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { MAX_PARTICIPANTS_PER_POLL } from '@/constants'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
@@ -36,7 +36,7 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: zodResolver(
       zod.object({
-        votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
+        votesCount: zod.coerce.number().int().min(1).max(MAX_PARTICIPANTS_PER_POLL),
       }),
     ),
   })

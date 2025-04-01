@@ -15,6 +15,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useVoteParamsContext } from '@/contexts/vote-params/VoteParamsContext'
+import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
@@ -31,6 +32,7 @@ export default function SettingsSection() {
   } = useFormContext<CreatePollSchema>()
   const { palette, breakpoints } = useTheme()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
+  const { balance } = useWeb3Context()
   const { t } = useTranslation()
   const { updateVoteParams, isCalculating, votesAmount, votesCount } = useVoteParamsContext()
 
@@ -135,6 +137,7 @@ export default function SettingsSection() {
                   disabled={isSubmitting || isCalculating}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
+                  maxValue={balance}
                   onChange={e => {
                     field.onChange(e)
                     debouncedCheckAmount()
@@ -185,8 +188,8 @@ export default function SettingsSection() {
 }
 
 enum ShowResultOptions {
-  REALTIME,
-  AFTEREND,
+  Realtime,
+  Afterend,
 }
 
 function ShowPollResult() {
@@ -195,19 +198,19 @@ function ShowPollResult() {
     {
       title: t('create-poll.show-poll-option-title-1'),
       description: t('create-poll.show-poll-option-description-1'),
-      value: ShowResultOptions.REALTIME,
+      value: ShowResultOptions.Realtime,
     },
     {
       title: t('create-poll.show-poll-option-title-2'),
       description: t('create-poll.show-poll-option-description-2'),
-      value: ShowResultOptions.AFTEREND,
+      value: ShowResultOptions.Afterend,
       isDisabled: true,
     },
   ]
   return (
     <Stack spacing={4}>
       <Typography variant='subtitle5'>{t('create-poll.show-poll-title')}</Typography>
-      <RadioGroup defaultValue={ShowResultOptions.REALTIME}>
+      <RadioGroup defaultValue={ShowResultOptions.Realtime}>
         <Stack spacing={2}>
           {options.map(option => (
             <ShowPollOption {...option} key={option.value} />

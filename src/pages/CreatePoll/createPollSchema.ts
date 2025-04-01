@@ -6,12 +6,12 @@ import { z as zod } from 'zod'
 import {
   ALLOWED_IMAGE_MIME_TYPES,
   MAX_BANNER_SIZE,
-  MAX_TOKEN_AMOUNT_PER_TX,
-  MAX_VOTE_COUNT_PER_TX,
+  MAX_PARTICIPANTS_PER_POLL,
+  MAX_TOKEN_AMOUNT_PER_POLL,
 } from '@/constants'
 import { SEX_OPTIONS } from '@/types'
 
-export const defaultValues = {
+export const createPollDefaultValues: CreatePollSchema = {
   criterias: {
     uniqueness: false,
     nationalities: [],
@@ -20,9 +20,29 @@ export const defaultValues = {
   questions: [
     {
       id: uuidv4(),
-      options: [{ id: uuidv4() }, { id: uuidv4() }],
+      options: [
+        {
+          id: uuidv4(),
+          text: '',
+        },
+        {
+          id: uuidv4(),
+          text: '',
+        },
+      ],
+      text: '',
     },
   ],
+  details: {
+    title: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+  },
+  settings: {
+    votesCount: 0,
+    amount: 0,
+  },
 }
 
 export const createPollSchema = zod
@@ -49,6 +69,7 @@ export const createPollSchema = zod
             return file
           }
         })
+        .nullable()
         .optional(),
       title: zod.string().min(1).max(50),
       description: zod.string().min(1).max(200),
@@ -85,8 +106,8 @@ export const createPollSchema = zod
       )
       .min(1),
     settings: zod.object({
-      votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
-      amount: zod.coerce.number().gt(0).max(MAX_TOKEN_AMOUNT_PER_TX),
+      votesCount: zod.coerce.number().int().min(1).max(MAX_PARTICIPANTS_PER_POLL),
+      amount: zod.coerce.number().gt(0).max(MAX_TOKEN_AMOUNT_PER_POLL),
     }),
   })
   .refine(

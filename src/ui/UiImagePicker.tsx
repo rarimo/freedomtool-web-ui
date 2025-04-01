@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   FormControl,
   FormControlProps,
   FormLabel,
@@ -11,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { forwardRef, RefObject, useMemo, useState } from 'react'
+import { ChangeEvent, forwardRef, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { ALLOWED_IMAGE_MIME_TYPES } from '@/constants'
@@ -53,26 +52,35 @@ const UiImagePicker = forwardRef<HTMLInputElement, Props>(
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const imageInputId = useMemo(() => `image-input-${uuidv4()}`, [])
 
-    const updatePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatePreview = (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (!file) return
 
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+      const previewUrl = URL.createObjectURL(file)
+      setPreviewUrl(previewUrl)
 
       onUpdate(file)
     }
 
+    useEffect(() => {
+      return () => {
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl)
+        }
+      }
+    }, [previewUrl])
+
     return (
       <FormControl {...rest}>
-        <Stack direction='row' spacing={4}>
+        <Stack
+          sx={{ cursor: 'pointer' }}
+          component={FormLabel}
+          htmlFor={imageInputId}
+          direction='row'
+          spacing={4}
+        >
           <Stack sx={{ position: 'relative' }}>
             <Stack
-              component={FormLabel}
-              htmlFor={imageInputId}
               alignItems='center'
               borderRadius='100%'
               justifyContent='center'
@@ -81,7 +89,6 @@ const UiImagePicker = forwardRef<HTMLInputElement, Props>(
               border={`1px solid ${palette.action.hover}`}
               {...labelProps}
               sx={{
-                cursor: 'pointer',
                 transition: Transitions.Default,
                 borderColor: 'transparent',
                 '&:hover': {
@@ -142,20 +149,15 @@ const UiImagePicker = forwardRef<HTMLInputElement, Props>(
           </Stack>
 
           <Stack>
-            <Button
-              sx={{ pl: 0 }}
-              variant='text'
-              onClick={() => (ref as RefObject<HTMLInputElement>).current?.click()}
-            >
-              <Stack spacing={1} alignItems='flex-start'>
-                {title && (
-                  <Typography color={palette.text.primary} variant='buttonLarge'>
-                    {title}
-                  </Typography>
-                )}
-                {description && <Typography variant='body4'>{description}</Typography>}
-              </Stack>
-            </Button>
+            <Stack spacing={1} alignItems='flex-start'>
+              {title && (
+                <Typography color={palette.text.primary} variant='buttonLarge'>
+                  {title}
+                </Typography>
+              )}
+              {description && <Typography variant='body4'>{description}</Typography>}
+            </Stack>
+
             {errorMessage && (
               <Typography
                 variant='caption2'

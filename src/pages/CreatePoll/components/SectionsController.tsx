@@ -1,13 +1,12 @@
 import { Button, IconButton, Stack, Typography } from '@mui/material'
-import { ReactNode, useState } from 'react'
+import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
 
-interface ISection {
+interface ISection extends PropsWithChildren {
   title?: string
-  body: ReactNode
   footer?: ReactNode
   onContinue?: () => Promise<boolean>
 }
@@ -19,7 +18,7 @@ interface ISectionsController {
 
 export default function SectionsController({ sections, isDisabled }: ISectionsController) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const { body, footer, title, onContinue } = sections[currentIndex]
+  const { children, footer, title, onContinue } = sections[currentIndex]
   const { t } = useTranslation()
 
   const isLastStep = currentIndex === sections.length - 1
@@ -41,7 +40,7 @@ export default function SectionsController({ sections, isDisabled }: ISectionsCo
         {title && <Typography variant='h1'>{title}</Typography>}
       </Stack>
 
-      {body}
+      {children}
 
       <Stack
         direction={{ xs: 'column-reverse', md: 'row' }}

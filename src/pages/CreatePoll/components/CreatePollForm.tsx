@@ -23,7 +23,7 @@ import { useCheckVoteAmount, useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
 import { INationality } from '@/types'
 
-import { CreatePollSchema, createPollSchema, defaultValues } from '../createPollSchema'
+import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriasSection from './CriteriasSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
@@ -38,7 +38,7 @@ export default function CreatePollForm() {
   const { createProposal } = useProposalState({ shouldFetchProposals: false })
 
   const form = useForm<CreatePollSchema>({
-    defaultValues,
+    defaultValues: createPollDefaultValues,
     mode: 'onChange',
     resolver: zodResolver(createPollSchema),
   })
@@ -120,22 +120,22 @@ export default function CreatePollForm() {
     () => [
       {
         title: t('create-poll.titles.details'),
-        body: <DetailsSection />,
+        children: <DetailsSection />,
         onContinue: () => trigger(['details']),
       },
       {
         title: t('create-poll.titles.criterias'),
-        body: <CriteriasSection />,
+        children: <CriteriasSection />,
         onContinue: () => trigger(['criterias']),
       },
       {
         title: t('create-poll.titles.questions'),
-        body: <QuestionsSection />,
+        children: <QuestionsSection />,
         onContinue: () => trigger(['questions']),
       },
       {
         title: t('create-poll.titles.settings'),
-        body: <SettingsSection />,
+        children: <SettingsSection />,
         footer: <VoteParamsResult />,
       },
     ],

@@ -4,9 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import UiNumberField from './UiNumberField'
 
-type VoteCountInputProps = {} & TextFieldProps
-
-const UiCheckVoteInput = forwardRef<TextFieldProps, VoteCountInputProps>(
+const UiCheckVoteInput = forwardRef<HTMLInputElement, TextFieldProps>(
   ({ ...textFieldProps }, ref) => {
     const { typography, palette, breakpoints } = useTheme()
     const isMdUp = useMediaQuery(breakpoints.up('md'))

@@ -8,8 +8,6 @@ import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 import {
   INationality,
   IParsedProposal,
-  IUploadData,
-  IVoteIpfs,
   type SEX_OPTIONS,
   VoteAmountOverload,
   VoteCountOverload,
@@ -68,28 +66,6 @@ export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['qu
     const optionsCount = question.options.length
     const bitMask = (1 << optionsCount) - 1
     return bitMask
-  })
-}
-
-export const uploadJsonToIpfs = (vote: IVoteIpfs) => {
-  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
-    body: {
-      data: {
-        type: 'upload_json',
-        attributes: {
-          metadata: vote,
-        },
-      },
-    },
-  })
-}
-
-export const uploadImageToIpfs = (image: File) => {
-  const formData = new FormData()
-  formData.append('image', image)
-
-  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload-file`, {
-    body: formData,
   })
 }
 
@@ -196,10 +172,11 @@ export const prepareVotingWhitelistData = (config: {
   // "male" | "female" -> "M" | "F"
   const sex = hasSpecificSex ? hexlify(_sex[0].toUpperCase()) : 0
 
+  // Uniqueness and passport expiration should be configured for each poll
   const selector = calculateProposalSelector({
-    expiration: true, // always true
+    expiration: true,
     nationalities: formattedNationalities.length > 0,
-    uniqueness: true, // always true
+    uniqueness: true,
     minAge: Boolean(minAge),
     maxAge: Boolean(maxAge),
     sex: hasSpecificSex,

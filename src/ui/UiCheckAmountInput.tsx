@@ -9,26 +9,29 @@ import {
 } from '@mui/material'
 import { formatUnits } from 'ethers'
 import { ChangeEvent, forwardRef } from 'react'
+import { ControllerRenderProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { NATIVE_CURRENCY } from '@/constants'
-import { useWeb3Context } from '@/contexts/web3-context'
 import { formatBalance } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
 const MAX_VISIBLE_DECIMALS = 4
 
-type AmountInputProps = { decimals?: number } & TextFieldProps
+type AmountInputProps = { decimals?: number; value: number; maxValue: string } & Omit<
+  TextFieldProps,
+  'value'
+> &
+  Omit<ControllerRenderProps, 'value'>
 
-const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
-  ({ decimals = MAX_VISIBLE_DECIMALS, ...textFieldProps }, ref) => {
+const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
+  ({ decimals = MAX_VISIBLE_DECIMALS, onChange, error, disabled, value, maxValue }, ref) => {
     const { t } = useTranslation()
     const { palette, typography, breakpoints } = useTheme()
     const isMdUp = useMediaQuery(breakpoints.up('md'))
-    const { balance } = useWeb3Context()
 
-    const trimToDecimals = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const normalizeInput = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       let value = event.target.value
 
       if (value.includes('.')) {
@@ -36,10 +39,7 @@ const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
         value = decimal.length > decimals ? `${integer}.${decimal.slice(0, decimals)}` : value
       }
 
-      textFieldProps.onChange?.({
-        ...event,
-        target: { ...event.target, value },
-      } as ChangeEvent<HTMLInputElement>)
+      onChange(value)
     }
 
     return (
@@ -60,7 +60,7 @@ const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
               minHeight: 'unset',
               height: '100%',
               typography: typography.subtitle3,
-              color: textFieldProps.error ? palette.error.dark : palette.text.primary,
+              color: error ? palette.error.dark : palette.text.primary,
               background: palette.background.paper,
               overflow: 'hidden',
               borderRadius: 4,
@@ -86,11 +86,7 @@ const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
               sx={{ p: 0, position: 'absolute', bottom: 0 }}
               size='small'
               variant='text'
-              onClick={() =>
-                textFieldProps.onChange?.({
-                  target: { value: Number(formatUnits(balance, 18)).toFixed(4) },
-                } as ChangeEvent<HTMLInputElement>)
-              }
+              onClick={() => onChange(Number(formatUnits(maxValue, 18)).toFixed(4))}
             >
               <Stack
                 spacing={2}
@@ -104,7 +100,7 @@ const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
                       {t('create-poll.amount-lbl')}
                     </Typography>
                     <Typography variant='subtitle7' color={palette.text.secondary}>
-                      {formatBalance(balance)} {NATIVE_CURRENCY}
+                      {formatBalance(maxValue)} {NATIVE_CURRENCY}
                     </Typography>
                   </Stack>
                 )}
@@ -113,9 +109,10 @@ const UiCheckAmountInput = forwardRef<TextFieldProps, AmountInputProps>(
             </Button>
           ),
         }}
-        {...textFieldProps}
+        value={value}
+        disabled={disabled}
         inputRef={ref}
-        onChange={e => trimToDecimals(e)}
+        onChange={normalizeInput}
       />
     )
   },
