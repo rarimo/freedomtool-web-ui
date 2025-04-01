@@ -55,7 +55,7 @@ export default function CriteriasSection() {
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
       { key: 'sex', label: t('create-poll.sex-lbl') },
     ],
-    [],
+    [t],
   )
 
   const unselectedCriterias = useMemo(
