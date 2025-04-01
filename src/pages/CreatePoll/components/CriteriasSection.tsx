@@ -14,9 +14,9 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { t } from 'i18next'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import nationalities from '@/locales/resources/countries_en.json'
@@ -33,6 +33,7 @@ interface ICriteria {
 }
 
 export default function CriteriasSection() {
+  const { t } = useTranslation()
   const {
     control,
     formState: { isSubmitting },
@@ -217,8 +218,8 @@ export default function CriteriasSection() {
 interface CriteriasMenuProps {
   anchorEl: HTMLElement | null
   isOpen: boolean
-  onClose: () => void
   unselectedCriterias: ICriteria[]
+  onClose: () => void
   toggleCriteria: (key: CriteriaKey) => void
 }
 

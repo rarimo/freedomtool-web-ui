@@ -28,6 +28,10 @@ export const defaultValues = {
 export const createPollSchema = zod
   .object({
     details: zod.object({
+      /*
+       * Hack to validate image as File and keep its type in project
+       * zod.instanceof(File) is not working properly
+       */
       image: zod
         .any()
         .refine(

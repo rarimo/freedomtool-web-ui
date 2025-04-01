@@ -1,6 +1,6 @@
 /*
  * TODO: Remove and replace with context when main form
- * is ready AND TopUpForm is implementing.
+ * is ready AND TopUpForm is being implementing.
  *
  * This logic is in VoteParamsContext now
  */
