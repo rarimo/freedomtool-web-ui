@@ -193,4 +193,5 @@ export enum Icons {
   ArrowLeftRightLine = 'arrow-left-right-line',
   ArrowUpDownLine = 'arrow-up-down-line',
   ChatNewLine = 'chat-new-line',
+  CalendarLine = 'calendar-line',
 }

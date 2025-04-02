@@ -167,5 +167,18 @@
   "votes": {
     "title": "Polls",
     "create-new-vote-btn": "Create a new poll"
+  },
+  "dashboard": {
+    "active-polls-tab-lbl": "Active polls",
+    "history-polls-tab-lbl": "Finished",
+    "draft-polls-tab-lbl": "Draft",
+    "no-polls-title": "No surveys",
+    "no-polls-description": "You haven't created a survey yet.",
+    "create-poll-btn": "Create a poll",
+    "poll-card": {
+      "progress-lbl": "Progress",
+      "participants-lbl": "{{ currentVotesCount }} / {{ totalVotes }} participants",
+      "retry-btn": "Retry"
+    }
   }
 }

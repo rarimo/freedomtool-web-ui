@@ -91,6 +91,16 @@ export const typography: ExtendedTypographyOptions = {
     fontSize: toRem(12),
     lineHeight: toRem(18),
   },
+  subtitle6: {
+    fontWeight: FontWeight.Medium,
+    fontSize: toRem(14),
+    lineHeight: toRem(20),
+  },
+  subtitle7: {
+    fontWeight: FontWeight.Medium,
+    fontSize: toRem(12),
+    lineHeight: toRem(18),
+  },
 
   body1: {
     fontWeight: FontWeight.Regular,
