@@ -1,16 +1,16 @@
 {
   "validations": {
     "field-error-required": "Please fill out this field",
-    "field-error-min-length": "This field must contain minimum {{min}} symbols",
-    "field-error-max-length": "This field must contain maximum {{max}} symbols",
-    "field-error-min-array-length": "This field must contain at least {{min}} item",
-    "field-error-max-array-length": "This field must contain maximum {{max}} items",
-    "field-error-number-type-mismatch": "This field must be a number",
-    "field-error-type-mismatch": "This field must be a {{type}}",
-    "field-error-more-than": "This field must be greater than {{more}}",
-    "field-error-single-word": "This field must contain only one word",
-    "field-error-integer": "This field must be an integer",
-    "field-error-max-value": "This field must be less than or equal to {{max}}"
+    "field-error-min-length": "Must contain minimum {{min}} symbols",
+    "field-error-max-length": "Must contain maximum {{max}} symbols",
+    "field-error-min-array-length": "Must contain at least {{min}} item",
+    "field-error-max-array-length": "Must contain maximum {{max}} items",
+    "field-error-number-type-mismatch": "Must be a number",
+    "field-error-type-mismatch": "Must be a {{type}}",
+    "field-error-more-than": "Must be greater than {{more}}",
+    "field-error-single-word": "Must contain only one word",
+    "field-error-integer": "Must be an integer",
+    "field-error-max-value": "Must be less than or equal to {{max}}"
   },
   "check-vote-input": {
     "calculate-eth-btn": "Calculate"
@@ -82,7 +82,7 @@
     "retry-btn": "Retry",
     "no-data-title": "No data"
   },
-  "create-vote": {
+  "create-poll": {
     "end-date-error": "End Date must be after Start Date",
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
@@ -93,15 +93,45 @@
     "option-lbl": "Option #{{order}}",
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
-    "votes-count-lbl": "Votes count",
+    "votes-count-lbl": "Participants",
+    "amount-lbl": "Available",
     "success-msg": "You have successfully created a poll!",
     "proposal-title-plh": "Approve this change?",
     "proposal-description-plh": "This poll outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
-    "uniqueness-lbl": "Uniqueness",
-    "min-age-lbl": "Min age to participate",
-    "nationalities-lbl": "Nationalities"
+    "min-age-lbl": "Minimum age (Optional)",
+    "nationalities-lbl": "Nationalities",
+    "step-counter": "Step {{current}}/{{total}}",
+    "continue-btn": "Continue",
+    "max-age-lbl": "Maximum age (Optional)",
+    "max-age-error": "Max age should be greater or equal than min age",
+    "sex-lbl": "Sex",
+    "sex-male": "Male",
+    "sex-female": "Female",
+    "sex-any": "Any",
+    "age-lbl": "Age",
+    "titles": {
+      "details": "Poll details",
+      "criterias": "Criterias",
+      "questions": "Questions",
+      "settings": "Settings"
+    },
+    "add-criteria": "Add a criteria",
+    "show-poll-option-title-1": "Real time",
+    "show-poll-option-description-1": "The results will be available to participants during the voting",
+    "show-poll-option-title-2": "After completion",
+    "show-poll-option-description-2": "The results will be shown only after the voting ends",
+    "show-poll-title": "Show results:",
+    "vote-params-error": "Invalid vote parameters",
+    "max-btn": "MAX",
+    "budget-title": "Budget & Participants:",
+    "fee-alert": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up.",
+    "image-size-error": "Max image size is {{size}}MB.",
+    "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
+    "image-title": "Upload a cover",
+    "image-description": "1300x500px, png or jpeg, webp, max 5mb",
+    "amount-error": "Amount must be more than 0"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -126,7 +156,6 @@
     "accepted-options-title": "Accepted options",
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
-    "amount-lbl": "Amount",
     "success-msg": "You have successfully added funds to your voting contract",
     "remaining-votes": "Remaining votes:",
     "votes-count_one": "{{count}} vote",

@@ -2,7 +2,7 @@ import { Box, FormLabel, FormLabelProps } from '@mui/material'
 import { forwardRef, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { MAX_AVATAR_SIZE } from '@/constants'
+import { MAX_BANNER_SIZE } from '@/constants'
 
 interface Props extends FormLabelProps {
   onUpdate: (file: File) => void
@@ -28,7 +28,7 @@ const AvatarInput = forwardRef(({ onUpdate, children, ...rest }: Props, ref) => 
         component='input'
         id={fileInputId}
         type='file'
-        max={MAX_AVATAR_SIZE}
+        max={MAX_BANNER_SIZE}
         accept='image/png, image/jpeg, image/webp'
         sx={{
           clip: 'rect(0 0 0 0)',

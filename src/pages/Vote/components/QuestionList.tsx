@@ -149,7 +149,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
           variant='caption1'
           sx={{
             position: 'absolute',
-            color: palette.primary.darker,
+            color: palette.text.secondary,
             zIndex: 1,
             right: 15,
             top: '50%',
@@ -166,7 +166,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
             variant='buttonSmall'
             sx={{
               position: 'absolute',
-              color: palette.primary.darker,
+              color: palette.text.primary,
               zIndex: 1,
               left: 15,
               top: '50%',
@@ -176,7 +176,7 @@ function LinearProgressWithLabel({ title, progress }: { title: string; progress:
             {title}
           </Typography>
         </Tooltip>
-        <LinearProgress variant='determinate' value={progress} color='secondary' />
+        <LinearProgress variant='determinate' value={progress} color='primary' />
       </Stack>
     </Stack>
   )

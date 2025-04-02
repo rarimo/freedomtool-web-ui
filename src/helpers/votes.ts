@@ -1,40 +1,64 @@
 import { time } from '@distributedlab/tools'
-import { AbiCoder } from 'ethers'
+import { AbiCoder, hexlify } from 'ethers'
 import { stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
-import { MAX_UINT32 } from '@/constants'
 import { ApiServicePaths } from '@/enums'
-import { CreateVoteSchema } from '@/pages/CreateVote/createVoteSchema'
-import { INationality, IParsedProposal, IUploadData, IVoteIpfs } from '@/types'
+import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+import { INationality, IParsedProposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-export const prepareAcceptedOptionsToIpfs = (questions: CreateVoteSchema['questions']) =>
+export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
   questions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
   }))
 
+export function calculateProposalSelector(opts: {
+  nationalities: boolean
+  uniqueness: boolean
+  minAge: boolean
+  maxAge: boolean
+  sex: boolean
+  expiration: boolean
+}): string {
+  // Query proof selector:
+  // https://github.com/rarimo/passport-zk-circuits?tab=readme-ov-file#selector
+  const flags = [
+    true, // nullifier
+    false, // birth date
+    false, // expiration date
+    false, // name
+    false, // nationality
+    opts.nationalities, // nationalities
+    opts.sex, // sex
+    false, // document number
+    false, // timestamp lowerbound
+    opts.uniqueness, // timestamp upperbound
+    false, // identity counter lowerbound
+    opts.uniqueness, // identity counter upperbound
+    opts.expiration, // passport expiration lowerbound
+    false, // passport expiration upperbound
+    opts.maxAge, // birth date lowerbound
+    opts.minAge, // birth date upperbound
+    false, // verify citizenship mask as a whitelist
+    false, // verify citizenship mask as a blacklist
+  ]
+
+  const bits = flags.map(value => Number(value))
+  const binaryString = bits.reverse().join('')
+  const hexString = BigInt(`0b${binaryString}`).toString(16).toUpperCase()
+
+  return `0x${hexString}`
+}
+
 // The array [3, 7] indicates that there are
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
-export const prepareAcceptedOptionsToContract = (questions: CreateVoteSchema['questions']) => {
+export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['questions']) => {
   return questions.map(question => {
     const optionsCount = question.options.length
     const bitMask = (1 << optionsCount) - 1
     return bitMask
-  })
-}
-
-export const uploadToIpfs = (vote: IVoteIpfs) => {
-  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
-    body: {
-      data: {
-        type: 'upload_json',
-        attributes: {
-          metadata: vote,
-        },
-      },
-    },
   })
 }
 
@@ -44,21 +68,48 @@ export const getVotesCount = (id: string) => {
   )
 }
 
-export const predictVoteAmount = (votesCount: string, proposalId?: number) => {
-  return api.post<{ amount_predict: string }>(
+export const getPredictedVotesCount = async (
+  amount: string,
+  proposalId?: string,
+): Promise<{ count_tx_predict: string; amount_predict: string }> => {
+  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
+    {
+      body: {
+        data: {
+          type: 'vote_predict_count_tx',
+          attributes: {
+            amount,
+            ...(proposalId && { voting_id: proposalId }),
+          },
+        },
+      },
+    },
+  )
+
+  return response.data
+}
+
+export const getPredictedVotesAmount = async (
+  votesCount: string,
+  proposalId?: string,
+): Promise<{ count_tx_predict: string; amount_predict: string }> => {
+  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
       body: {
         data: {
           type: 'vote_predict_amount',
           attributes: {
-            count_tx: String(votesCount),
-            ...(proposalId && { voting_id: Number(proposalId) }),
+            count_tx: votesCount,
+            ...(proposalId && { voting_id: proposalId }),
           },
         },
       },
     },
   )
+
+  return response.data
 }
 
 export const parseProposalFromContract = (
@@ -78,37 +129,55 @@ export const getCountProgress = (totalCount: number, count: number) =>
   totalCount > 0 ? (count / totalCount) * 100 : 0
 
 export const prepareVotingWhitelistData = (config: {
+  maxAge?: number | null
   minAge?: number | null
   nationalities: INationality[]
-  uniqueness: boolean
+  sex: Sex
   startTimestamp: number
 }) => {
-  const { minAge, startTimestamp, nationalities, uniqueness } = config
-
+  const { minAge, maxAge, startTimestamp, nationalities, sex: _sex } = config
   const formattedNationalities = nationalities
     .flatMap(({ codes }) => codes)
     .map(code => stringToHex(code))
 
   const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
-  const uniquenessFlag = uniqueness ? 1 : MAX_UINT32
+  const identityCounterUpperBound = 1
 
   const birthDateUpperbound = stringToHex(
     time()
       .subtract(minAge ? minAge : 1, minAge ? 'years' : 'day')
       .format('YYMMDD'),
   )
+  const birthDateLowerbound = stringToHex(time().format('YYMMDD'))
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
+  const sex = _sex ? hexlify(_sex) : 0
+
+  // Uniqueness and passport expiration should be configured for each poll
+  const selector = calculateProposalSelector({
+    expiration: true,
+    nationalities: formattedNationalities.length > 0,
+    uniqueness: true,
+    minAge: Boolean(minAge),
+    maxAge: Boolean(maxAge),
+    sex: Boolean(sex),
+  })
 
   const params = [
+    selector,
     formattedNationalities,
     identityCreationTimestampUpperBound,
-    uniquenessFlag,
+    identityCounterUpperBound,
+    sex,
+    birthDateLowerbound,
     birthDateUpperbound,
     expirationDateLowerBound,
   ]
 
   const abiCoder = AbiCoder.defaultAbiCoder()
 
-  return abiCoder.encode(['tuple(uint256[],uint256,uint256,uint256,uint256)'], [params])
+  return abiCoder.encode(
+    ['tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'],
+    [params],
+  )
 }

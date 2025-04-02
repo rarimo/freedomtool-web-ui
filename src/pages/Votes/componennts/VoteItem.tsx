@@ -94,7 +94,7 @@ export default function VoteItem({
         onClick={() => navigate(generatePath(RoutePaths.Vote, { id: String(id) }))}
       >
         <Stack spacing={1}>
-          <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='subtitle3'>
+          <Typography maxWidth={200} noWrap textOverflow='ellipsis' variant='h4'>
             {data?.title || t('vote-item.no-title')}
           </Typography>
           <Typography

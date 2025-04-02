@@ -4,7 +4,7 @@ import { RoutePaths } from '@/enums'
 
 import { ErrorBoundaryFallback } from './common'
 import MainLayout from './layouts/MainLayout'
-import CreateVote from './pages/CreateVote'
+import CreatePoll from './pages/CreatePoll'
 import Vote from './pages/Vote'
 import Votes from './pages/Votes'
 
@@ -30,7 +30,7 @@ export const createRouter = () => {
           },
           {
             path: RoutePaths.VotesNew,
-            element: <CreateVote />,
+            element: <CreatePoll />,
           },
           {
             path: RoutePaths.Vote,

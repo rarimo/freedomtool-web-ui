@@ -3,15 +3,15 @@ import { Stack } from '@mui/material'
 import AuthBlock from '@/common/AuthBlock'
 import { useWeb3Context } from '@/contexts/web3-context'
 
-import CreateVoteForm from './components/CreateVoteForm'
+import CreatePollForm from './components/CreatePollForm'
 
-export default function CreateVote() {
+export default function CreatePoll() {
   const { isConnected } = useWeb3Context()
 
   return (
     <Stack mx={{ md: 'auto' }} minWidth={{ md: 620 }}>
       {isConnected ? (
-        <CreateVoteForm />
+        <CreatePollForm />
       ) : (
         <Stack minWidth={350}>
           <AuthBlock />
