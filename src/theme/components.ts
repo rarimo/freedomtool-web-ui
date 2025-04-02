@@ -401,7 +401,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
             color: theme.palette.common.white,
             transform: `translateX(${theme.spacing(4)})`,
             '& + .MuiSwitch-track': {
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.dark,
               boxShadow: 'none',
               opacity: 1,
               border: 0,
@@ -426,7 +426,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
         '& .MuiSwitch-track': {
           borderRadius: theme.spacing(10),
-          backgroundColor: theme.palette.action.active,
+          backgroundColor: theme.palette.action.hover,
           opacity: 1,
           transition: Transitions.Default,
         },

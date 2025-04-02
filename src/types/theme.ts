@@ -8,6 +8,8 @@ export interface ExtendedTypographyOptions extends TypographyOptions {
   subtitle3: CSSProperties
   subtitle4: CSSProperties
   subtitle5: CSSProperties
+  subtitle6: CSSProperties
+  subtitle7: CSSProperties
 
   body3: CSSProperties
   body4: CSSProperties
@@ -24,9 +26,6 @@ export interface ExtendedTypographyOptions extends TypographyOptions {
   overline1: CSSProperties
   overline2: CSSProperties
   overline3: CSSProperties
-
-  subtitle6: CSSProperties
-  subtitle7: CSSProperties
 }
 
 declare module '@mui/material/Typography/Typography' {

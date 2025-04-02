@@ -1,40 +1,65 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
+import DashboardLayout from '@/layouts/DashboardLayout'
+import MainLayout from '@/layouts/MainLayout'
+import ActivePolls from '@/pages/Dashboard/ActivePolls'
+import DraftPolls from '@/pages/Dashboard/DraftPolls'
+import FinishedPolls from '@/pages/Dashboard/FinishedPolls'
 
 import { ErrorBoundaryFallback } from './common'
-import MainLayout from './layouts/MainLayout'
 import CreatePoll from './pages/CreatePoll'
 import Vote from './pages/Vote'
-import Votes from './pages/Votes'
 
 export const createRouter = () => {
   return createBrowserRouter(
     [
       {
         path: RoutePaths.Home,
-        element: (
-          <MainLayout>
-            <Outlet />
-          </MainLayout>
-        ),
-        ErrorBoundary: () => <ErrorBoundaryFallback onReset={() => window.location.reload()} />,
+        element: <Outlet />,
+        errorElement: <ErrorBoundaryFallback onReset={() => window.location.reload()} />,
         children: [
           {
-            index: true,
-            element: <Navigate to={RoutePaths.Votes} replace />,
+            element: (
+              <DashboardLayout>
+                <Outlet />
+              </DashboardLayout>
+            ),
+            children: [
+              {
+                index: true,
+                element: <Navigate to={RoutePaths.DashboardActive} replace />,
+              },
+              {
+                path: RoutePaths.DashboardActive,
+                element: <ActivePolls />,
+              },
+              {
+                path: RoutePaths.DashboardHistory,
+                element: <FinishedPolls />,
+              },
+              {
+                path: RoutePaths.DashboardDraft,
+                element: <DraftPolls />,
+              },
+            ],
           },
           {
-            path: RoutePaths.Votes,
-            element: <Votes />,
-          },
-          {
-            path: RoutePaths.VotesNew,
-            element: <CreatePoll />,
-          },
-          {
-            path: RoutePaths.Vote,
-            element: <Vote />,
+            element: (
+              <MainLayout>
+                <Outlet />
+              </MainLayout>
+            ),
+            children: [
+              {
+                path: RoutePaths.VotesNew,
+                element: <CreatePoll />,
+              },
+              {
+                path: RoutePaths.Vote,
+                element: <Vote />,
+              },
+            ],
           },
         ],
       },
