@@ -11,12 +11,12 @@ interface ISection extends PropsWithChildren {
   onContinue?: () => Promise<boolean>
 }
 
-interface ISectionsController {
+interface SectionsControllerProps {
   sections: ISection[]
   isDisabled: boolean
 }
 
-export default function SectionsController({ sections, isDisabled }: ISectionsController) {
+export default function SectionsController({ sections, isDisabled }: SectionsControllerProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const { children, footer, title, onContinue } = sections[currentIndex]
   const { t } = useTranslation()
