@@ -13,7 +13,7 @@ import { ControllerRenderProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { NATIVE_CURRENCY } from '@/constants'
-import { formatBalance } from '@/helpers'
+import { formatAmount } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
@@ -100,7 +100,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
                       {t('create-poll.amount-lbl')}
                     </Typography>
                     <Typography variant='subtitle7' color={palette.text.secondary}>
-                      {formatBalance(maxValue)} {NATIVE_CURRENCY}
+                      {formatAmount(maxValue)} {NATIVE_CURRENCY}
                     </Typography>
                   </Stack>
                 )}
