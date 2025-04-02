@@ -1,4 +1,12 @@
-import { BN, BnConfigLike, BnFormatConfig, BnLike, time, TimeDate } from '@distributedlab/tools'
+import {
+  BN,
+  BnConfigLike,
+  BnFormatConfig,
+  BnLike,
+  DECIMALS,
+  time,
+  TimeDate,
+} from '@distributedlab/tools'
 // Date
 export function formatDateMY(date: TimeDate) {
   return time(date).format('MM / YYYY')
@@ -160,6 +168,15 @@ export function formatBalance(
   }
 }
 
+export const formatInput = (value: string) => {
+  if (!value.includes('.') || value.charAt(value.length - 1) === '.') {
+    return value
+  }
+  const inputDecimals =
+    value.split('.')[1].length < DECIMALS.WEI ? value.split('.')[1].length : DECIMALS.WEI
+  return BN.fromRaw(value, inputDecimals).toString()
+}
+
 export function formatAmountShort(value: BnLike): string {
   const numericValue = Number(value)
 
@@ -194,8 +211,8 @@ export function formatAmountShort(value: BnLike): string {
   return formatAmount(bigIntValue, 18)
 }
 
-export function formatAddress(address?: string) {
-  return address ? `${address.slice(0, 8)}...${address.slice(-8)}` : '–'
+export function formatAddress(address?: string, length: number = 8) {
+  return address ? `${address.slice(0, length)}...${address.slice(-length)}` : '–'
 }
 
 type Labels = {

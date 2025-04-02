@@ -21,6 +21,7 @@ export interface IVoteIpfs {
   title: string
   description: string
   acceptedOptions: IQuestionIpfs[]
+  imageCid?: string
 }
 
 export interface IUploadData {
@@ -47,3 +48,21 @@ export interface INationality {
   codes: string[]
   flag: string
 }
+
+export enum Sex {
+  Male = 'M',
+  Female = 'F',
+  Any = '',
+}
+
+export type VoteAmountOverload = {
+  type: 'vote_predict_amount'
+  votesCount: string
+  proposalId?: string
+}
+export type VoteCountOverload = {
+  type: 'vote_predict_count_tx'
+  amount: string
+  proposalId?: string
+}
+export type VoteParamsInput = VoteAmountOverload | VoteCountOverload

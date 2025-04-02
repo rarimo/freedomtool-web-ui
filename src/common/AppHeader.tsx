@@ -101,7 +101,7 @@ function ThemeButton() {
   }, [palette.mode])
 
   return (
-    <IconButton key={palette.mode} onClick={uiStore.togglePaletteMode}>
+    <IconButton key={palette.mode} color='secondary' onClick={uiStore.togglePaletteMode}>
       <motion.div
         key={palette.mode}
         initial={{ opacity: 0 }}

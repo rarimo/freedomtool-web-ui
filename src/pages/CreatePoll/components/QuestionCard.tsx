@@ -20,11 +20,11 @@ import { MAX_OPTIONS_PER_QUESTION } from '@/constants'
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
 
-import { CreateVoteSchema } from '../createVoteSchema'
+import { CreatePollSchema } from '../createPollSchema'
 
 interface IQuestionForm {
-  question: FieldArrayWithId<CreateVoteSchema, 'questions', 'id'>
-  control: Control<CreateVoteSchema, unknown>
+  question: FieldArrayWithId<CreatePollSchema, 'questions', 'id'>
+  control: Control<CreatePollSchema, unknown>
   index: number
   canDelete: boolean
   isDisabled: boolean
@@ -75,7 +75,7 @@ export default function QuestionCard(props: IQuestionCard) {
             whiteSpace: 'nowrap',
           }}
         >
-          {questionText || t('create-vote.question-lbl', { order: index + 1 })}
+          {questionText || t('create-poll.question-lbl', { order: index + 1 })}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -99,7 +99,7 @@ function QuestionForm(props: IQuestionForm) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              placeholder={t('create-vote.question-lbl', { order: index + 1 })}
+              placeholder={t('create-poll.question-lbl', { order: index + 1 })}
               size='medium'
               error={Boolean(fieldState.error)}
               helperText={fieldState.error?.message}
@@ -125,7 +125,7 @@ function OptionsForm({
   control,
   questionIndex,
 }: {
-  control: Control<CreateVoteSchema, unknown>
+  control: Control<CreatePollSchema, unknown>
   questionIndex: number
 }) {
   const { t } = useTranslation()
@@ -148,12 +148,12 @@ function OptionsForm({
                   {...field}
                   size='small'
                   variant='outlined'
-                  placeholder={t('create-vote.option-lbl', { order: index + 1 })}
+                  placeholder={t('create-poll.option-lbl', { order: index + 1 })}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
                   InputProps={{
                     endAdornment: fields.length > 2 && (
-                      <IconButton onClick={() => remove(index)} color='error'>
+                      <IconButton color='secondary' onClick={() => remove(index)}>
                         <UiIcon name={Icons.DeleteBin6Line} size={4} />
                       </IconButton>
                     ),
@@ -173,7 +173,7 @@ function OptionsForm({
         disabled={fields.length === MAX_OPTIONS_PER_QUESTION}
         onClick={() => append({ id: uuidv4(), text: '' })}
       >
-        {t('create-vote.add-option-lbl')}
+        {t('create-poll.add-option-lbl')}
       </Button>
     </Stack>
   )

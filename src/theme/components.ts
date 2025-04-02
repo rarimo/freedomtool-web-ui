@@ -205,7 +205,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       fullWidth: true,
     },
   },
-
   MuiPaper: {
     defaultProps: {
       variant: 'elevation',
@@ -243,7 +242,9 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiTextField: {
-    defaultProps: { InputLabelProps: { shrink: true } },
+    defaultProps: {
+      InputLabelProps: { shrink: true },
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         '& .MuiInputBase-root, & .MuiInputBase-sizeMedium': typography.body3,
@@ -290,7 +291,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiFormHelperText: {
     styleOverrides: {
       root: ({ theme }) => ({
-        ...typography.body4,
+        ...typography.subtitle7,
         marginTop: theme.spacing(1),
         marginLeft: 0,
       }),
@@ -330,7 +331,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: {
-        padding: 0,
         borderRadius: '1000px',
         transition: Transitions.Default,
         '&:hover': {
@@ -339,6 +339,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
       },
       colorPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
+        background: theme.palette.action.active,
+        '&:hover': {
+          background: theme.palette.action.hover,
+        },
       }),
       colorSecondary: ({ theme }) => ({
         color: theme.palette.text.secondary,
@@ -397,7 +401,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
             color: theme.palette.common.white,
             transform: `translateX(${theme.spacing(4)})`,
             '& + .MuiSwitch-track': {
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.dark,
               boxShadow: 'none',
               opacity: 1,
               border: 0,
@@ -422,7 +426,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
         '& .MuiSwitch-track': {
           borderRadius: theme.spacing(10),
-          backgroundColor: theme.palette.action.active,
+          backgroundColor: theme.palette.action.hover,
           opacity: 1,
           transition: Transitions.Default,
         },
@@ -751,7 +755,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
           margin: 0,
         },
         '& .MuiPickersCalendarHeader-label': {
-          ...typography.subtitle3,
+          ...typography.subtitle4,
         },
         '& .MuiYearCalendar-root': {
           width: '100%',

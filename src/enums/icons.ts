@@ -63,6 +63,7 @@ export enum Icons {
   ImageFill = 'image-fill',
   Infinite = 'infinite',
   Info = 'info',
+  InformationLine = 'information-line',
   Information2Line = 'information-2-line',
   Instagram = 'instagram',
   Ion = 'ion',
@@ -94,6 +95,7 @@ export enum Icons {
   SealCheck1 = 'seal-check-1',
   SealCheck = 'seal-check',
   Share1 = 'share-1',
+  EqualLine = 'equal-line',
   Share = 'share',
   ShieldCheck = 'shield-check',
   SlidersHorizontal = 'sliders-horizontal',
@@ -194,4 +196,7 @@ export enum Icons {
   ArrowLeftRightLine = 'arrow-left-right-line',
   ArrowUpDownLine = 'arrow-up-down-line',
   ChatNewLine = 'chat-new-line',
+  CalendarLine = 'calendar-line',
+  AddFill = 'add-fill',
+  Ethereum = 'ethereum',
 }
