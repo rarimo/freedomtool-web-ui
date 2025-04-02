@@ -1,3 +1,4 @@
+import { BN } from '@distributedlab/tools'
 import {
   Box,
   Paper,
@@ -8,15 +9,15 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { useDebounceFn } from '@reactuses/core'
 import { formatUnits } from 'ethers'
-import { debounce } from 'lodash'
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { useVoteParamsContext } from '@/contexts/vote-params/VoteParamsContext'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
+import { ErrorHandler, getPredictedVotesAmount, getPredictedVotesCount } from '@/helpers'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
@@ -26,6 +27,7 @@ export default function SettingsSection() {
   const {
     control,
     getValues,
+    getFieldState,
     formState: { isSubmitting },
     setValue,
     clearErrors,
@@ -34,60 +36,51 @@ export default function SettingsSection() {
   const isMdUp = useMediaQuery(breakpoints.up('md'))
   const { balance } = useWeb3Context()
   const { t } = useTranslation()
-  const { updateVoteParams, isCalculating, votesAmount, votesCount } = useVoteParamsContext()
+  const [isCalculating, setIsCalculating] = useState(false)
 
-  /*
-   * Base function for "settings" fields that updates both fields and its mirrored counterpart
-   * (votesAmount and votesCount) if the input field is valid.
-   *
-   * The generic types <T, M> ensure type safety because
-   * React Hook Form does not accept plain strings
-   * for field names in this case.
-   */
-  const debouncedCheckField = debounce(
-    <T extends keyof CreatePollSchema['settings'], M extends keyof CreatePollSchema['settings']>(
-      field: `settings.${T}`,
-      mirrorField: `settings.${M}`,
-      updateFn: () => void,
-    ) => {
-      const isValid = !control._formState.errors.settings?.[field.split('.')[1] as T]
+  const { run: debouncedCountUpdate } = useDebounceFn(async () => {
+    const isValid = !getFieldState('settings.amount').invalid
 
-      // Clear the mirror field error for better UX
-      if (!isValid) return
+    if (isValid) {
+      try {
+        setIsCalculating(true)
+        const { count_tx_predict } = await getPredictedVotesCount(
+          BN.fromRaw(getValues('settings.amount')).value,
+        )
+        clearErrors('settings.votesCount')
+        setValue('settings.votesCount', Number(count_tx_predict))
+      } catch (error) {
+        ErrorHandler.process(error)
+      } finally {
+        setIsCalculating(false)
+      }
+    }
+  }, 500)
 
-      clearErrors(mirrorField)
+  const { run: debouncedAmountUpdate } = useDebounceFn(async () => {
+    const isValid = !getFieldState('settings.votesCount').invalid
 
-      updateFn()
-    },
-    500,
-  )
-
-  const debouncedCheckVotesCount = () =>
-    debouncedCheckField('settings.votesCount', 'settings.amount', () =>
-      updateVoteParams({
-        type: 'vote_predict_amount',
-        votesCount: String(getValues('settings.votesCount')),
-      }),
-    )
-
-  const debouncedCheckAmount = () =>
-    debouncedCheckField('settings.amount', 'settings.votesCount', () =>
-      updateVoteParams({
-        type: 'vote_predict_count_tx',
-        amount: String(getValues('settings.amount')),
-      }),
-    )
+    if (isValid) {
+      try {
+        setIsCalculating(true)
+        const { amount_predict } = await getPredictedVotesAmount(
+          String(getValues('settings.votesCount')),
+        )
+        clearErrors('settings.amount')
+        setValue('settings.amount', formatUnits(amount_predict, 18))
+      } catch (error) {
+        ErrorHandler.process(error)
+      } finally {
+        setIsCalculating(false)
+      }
+    }
+  }, 500)
 
   useEffect(() => {
-    setValue('settings.votesCount', Number(votesCount))
-
-    const formattedAmount = Number(formatUnits(votesAmount, 18)).toFixed(4)
-    setValue('settings.amount', parseFloat(formattedAmount))
-
     setTimeout(() => {
       clearErrors('settings')
     }, 0)
-  }, [votesCount, setValue, votesAmount, clearErrors])
+  }, [setValue, clearErrors])
 
   return (
     <Stack component={Paper}>
@@ -140,7 +133,7 @@ export default function SettingsSection() {
                   maxValue={balance}
                   onChange={e => {
                     field.onChange(e)
-                    debouncedCheckAmount()
+                    debouncedCountUpdate()
                   }}
                 />
               )}
@@ -175,7 +168,7 @@ export default function SettingsSection() {
                   helperText={fieldState.error?.message}
                   onChange={e => {
                     field.onChange(e)
-                    debouncedCheckVotesCount()
+                    debouncedAmountUpdate()
                   }}
                 />
               )}

@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import nationalities from '@/locales/resources/countries_en.json'
-import { SEX_OPTIONS } from '@/types'
+import { Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
@@ -43,11 +43,23 @@ export default function CriteriasSection() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(['nationalities'])
 
-  const sexLabels: Record<(typeof SEX_OPTIONS)[number], string> = {
-    male: t('create-poll.sex-male'),
-    female: t('create-poll.sex-female'),
-    any: t('create-poll.sex-any'),
-  }
+  const sexOptions = useMemo(
+    () => [
+      {
+        label: t('create-poll.sex-male'),
+        value: Sex.Male,
+      },
+      {
+        label: t('create-poll.sex-female'),
+        value: Sex.Female,
+      },
+      {
+        label: t('create-poll.sex-any'),
+        value: Sex.Any,
+      },
+    ],
+    [t],
+  )
 
   const criteriaOptions: ICriteria[] = useMemo(
     () => [
@@ -170,7 +182,7 @@ export default function CriteriasSection() {
         <Stack direction='row' alignItems='center' gap={6}>
           <Controller
             name='criterias.sex'
-            defaultValue={SEX_OPTIONS[2]}
+            defaultValue={Sex.Any}
             control={control}
             render={({ field }) => (
               <FormControl>
@@ -178,9 +190,9 @@ export default function CriteriasSection() {
                   {t('create-poll.sex-lbl')}
                 </InputLabel>
                 <Select {...field} disabled={isSubmitting}>
-                  {SEX_OPTIONS.map(option => (
-                    <MenuItem key={option} value={option}>
-                      {sexLabels[option]}
+                  {sexOptions.map(({ label, value }) => (
+                    <MenuItem key={value} value={value}>
+                      {label}
                     </MenuItem>
                   ))}
                 </Select>

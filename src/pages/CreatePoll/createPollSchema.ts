@@ -3,19 +3,14 @@ import { t } from 'i18next'
 import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
-import {
-  ALLOWED_IMAGE_MIME_TYPES,
-  MAX_BANNER_SIZE,
-  MAX_PARTICIPANTS_PER_POLL,
-  MAX_TOKEN_AMOUNT_PER_POLL,
-} from '@/constants'
-import { SEX_OPTIONS } from '@/types'
+import { ALLOWED_IMAGE_MIME_TYPES, MAX_BANNER_SIZE, MAX_PARTICIPANTS_PER_POLL } from '@/constants'
+import { Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
   criterias: {
     uniqueness: false,
     nationalities: [],
-    sex: SEX_OPTIONS[2],
+    sex: Sex.Any,
   },
   questions: [
     {
@@ -41,7 +36,7 @@ export const createPollDefaultValues: CreatePollSchema = {
   },
   settings: {
     votesCount: 0,
-    amount: 0,
+    amount: '0',
   },
 }
 
@@ -78,7 +73,7 @@ export const createPollSchema = zod
     }),
     criterias: zod.object({
       uniqueness: zod.boolean(),
-      sex: zod.enum(SEX_OPTIONS),
+      sex: zod.nativeEnum(Sex),
       minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
       maxAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
       nationalities: zod.array(
@@ -107,7 +102,12 @@ export const createPollSchema = zod
       .min(1),
     settings: zod.object({
       votesCount: zod.coerce.number().int().min(1).max(MAX_PARTICIPANTS_PER_POLL),
-      amount: zod.coerce.number().gt(0).max(MAX_TOKEN_AMOUNT_PER_POLL),
+      amount: zod
+        .string()
+        .min(1)
+        .refine(value => Number(value) > 0, {
+          message: t('create-poll.amount-error'),
+        }),
     }),
   })
   .refine(

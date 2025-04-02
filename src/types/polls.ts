@@ -49,7 +49,11 @@ export interface INationality {
   flag: string
 }
 
-export const SEX_OPTIONS = ['male', 'female', 'any'] as const
+export enum Sex {
+  Male = 'M',
+  Female = 'F',
+  Any = '',
+}
 
 export type VoteAmountOverload = {
   type: 'vote_predict_amount'

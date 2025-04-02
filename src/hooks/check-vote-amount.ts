@@ -12,7 +12,7 @@ import { useState } from 'react'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents } from '@/enums'
-import { bus, ErrorHandler, predictVoteParams } from '@/helpers'
+import { bus, ErrorHandler, getPredictedVotesAmount, getPredictedVotesCount } from '@/helpers'
 import { VoteAmountOverload, VoteCountOverload } from '@/types'
 
 type VoteParamsResult = { isEnoughBalance: boolean; votesCount: string; votesAmount: string }
@@ -69,11 +69,7 @@ export const useCheckVoteAmount = () => {
       throw new Error(t('errors.invalid-vote-count'))
     }
 
-    const { amount_predict } = await predictVoteParams({
-      type: 'vote_predict_amount',
-      votesCount,
-      proposalId,
-    })
+    const { amount_predict } = await getPredictedVotesAmount(votesCount, proposalId)
 
     return amount_predict
   }
@@ -86,11 +82,7 @@ export const useCheckVoteAmount = () => {
       throw new Error(t('errors.invalid-vote-count'))
     }
 
-    const { count_tx_predict } = await predictVoteParams({
-      type: 'vote_predict_count_tx',
-      amount: BN.fromRaw(amount).value,
-      proposalId,
-    })
+    const { count_tx_predict } = await getPredictedVotesCount(amount, proposalId)
 
     return count_tx_predict
   }

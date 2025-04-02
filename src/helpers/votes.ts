@@ -5,14 +5,7 @@ import { stringToHex } from 'viem'
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
-import {
-  INationality,
-  IParsedProposal,
-  type SEX_OPTIONS,
-  VoteAmountOverload,
-  VoteCountOverload,
-  VoteParamsInput,
-} from '@/types'
+import { INationality, IParsedProposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
 export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
@@ -75,50 +68,40 @@ export const getVotesCount = (id: string) => {
   )
 }
 
-/**
- * Overload I
- *
- * Predicts the token amount based on the number of votes.
- * @param params - Object containing vote count and optional proposal ID.
- * @returns An object with the predicted token amount.
- */
-export async function predictVoteParams(
-  params: VoteAmountOverload,
-): Promise<{ amount_predict: string }>
-
-/**
- * Overload II
- *
- * Predicts the number of votes based on the token amount.
- * @param params - Object containing the token amount and optional proposal ID.
- * @returns An object with the predicted vote count.
- */
-export async function predictVoteParams(
-  params: VoteCountOverload,
-): Promise<{ count_tx_predict: string }>
-
-// Implementation
-export async function predictVoteParams(params: VoteParamsInput) {
-  const { type, proposalId, ...rest } = params
-
-  let attributes: { count_tx: string } | { amount: string } | undefined
-
-  if (type === 'vote_predict_amount' && 'votesCount' in rest) {
-    attributes = { count_tx: rest.votesCount }
-  }
-
-  if (type === 'vote_predict_count_tx' && 'amount' in rest) {
-    attributes = { amount: rest.amount }
-  }
-
-  const response = await api.post<{ amount_predict: string } | { count_tx_predict: string }>(
+export const getPredictedVotesCount = async (
+  amount: string,
+  proposalId?: string,
+): Promise<{ count_tx_predict: string; amount_predict: string }> => {
+  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
       body: {
         data: {
-          type,
+          type: 'vote_predict_count_tx',
           attributes: {
-            ...attributes,
+            amount,
+            ...(proposalId && { voting_id: proposalId }),
+          },
+        },
+      },
+    },
+  )
+
+  return response.data
+}
+
+export const getPredictedVotesAmount = async (
+  votesCount: string,
+  proposalId?: string,
+): Promise<{ count_tx_predict: string; amount_predict: string }> => {
+  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
+    {
+      body: {
+        data: {
+          type: 'vote_predict_amount',
+          attributes: {
+            count_tx: votesCount,
             ...(proposalId && { voting_id: proposalId }),
           },
         },
@@ -149,7 +132,7 @@ export const prepareVotingWhitelistData = (config: {
   maxAge?: number | null
   minAge?: number | null
   nationalities: INationality[]
-  sex: (typeof SEX_OPTIONS)[number]
+  sex: Sex
   startTimestamp: number
 }) => {
   const { minAge, maxAge, startTimestamp, nationalities, sex: _sex } = config
@@ -168,9 +151,7 @@ export const prepareVotingWhitelistData = (config: {
   const birthDateLowerbound = stringToHex(time().format('YYMMDD'))
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
-  const hasSpecificSex = _sex !== 'any'
-  // "male" | "female" -> "M" | "F"
-  const sex = hasSpecificSex ? hexlify(_sex[0].toUpperCase()) : 0
+  const sex = _sex ? hexlify(_sex) : 0
 
   // Uniqueness and passport expiration should be configured for each poll
   const selector = calculateProposalSelector({
@@ -179,7 +160,7 @@ export const prepareVotingWhitelistData = (config: {
     uniqueness: true,
     minAge: Boolean(minAge),
     maxAge: Boolean(maxAge),
-    sex: hasSpecificSex,
+    sex: Boolean(sex),
   })
 
   const params = [

@@ -8,7 +8,8 @@ import { UiIcon } from '@/ui'
 interface ISection extends PropsWithChildren {
   title?: string
   footer?: ReactNode
-  onContinue?: () => Promise<boolean>
+  validate?: () => Promise<boolean>
+  onContinue?: () => void
 }
 
 interface SectionsControllerProps {
@@ -18,16 +19,17 @@ interface SectionsControllerProps {
 
 export default function SectionsController({ sections, isDisabled }: SectionsControllerProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const { children, footer, title, onContinue } = sections[currentIndex]
+  const { children, footer, title, validate, onContinue } = sections[currentIndex]
   const { t } = useTranslation()
 
   const isLastStep = currentIndex === sections.length - 1
 
   const goNext = async () => {
     if (onContinue) {
-      const isValid = await onContinue()
+      const isValid = await validate?.()
       if (!isValid) return
     }
+    onContinue?.()
     setCurrentIndex(prev => prev + 1)
   }
 

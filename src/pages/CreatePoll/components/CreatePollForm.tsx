@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
-import { VoteParamsProvider } from '@/contexts/vote-params/VoteParamsContext'
 import { BusEvents, RoutePaths } from '@/enums'
 import {
   bus,
@@ -19,7 +18,7 @@ import {
   uploadImageToIpfs,
   uploadJsonToIpfs,
 } from '@/helpers'
-import { useCheckVoteAmount, useProposalState } from '@/hooks'
+import { useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
 import { INationality } from '@/types'
 
@@ -44,24 +43,17 @@ export default function CreatePollForm() {
   })
 
   const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
-  const { updateVoteParams } = useCheckVoteAmount()
   const navigate = useNavigate()
 
-  const { getValues, reset, trigger, handleSubmit } = form
+  const { reset, trigger, handleSubmit } = form
 
   const submit = async (formData: CreatePollSchema) => {
     try {
-      const votesCount = String(getValues('settings.votesCount'))
-      const { isEnoughBalance, votesAmount } = await updateVoteParams({
-        type: 'vote_predict_amount',
-        votesCount,
-      })
-      if (!isEnoughBalance) return
-
       const {
         details: { title, description, startDate, endDate, image },
         criterias: { minAge, nationalities, maxAge, sex },
         questions,
+        settings: { amount },
       } = formData
 
       let imageCid
@@ -98,7 +90,7 @@ export default function CreatePollForm() {
         votingWhitelistData,
         acceptedOptions,
         description: cid,
-        amount: votesAmount,
+        amount,
         startTimestamp,
         duration,
       })
@@ -121,17 +113,17 @@ export default function CreatePollForm() {
       {
         title: t('create-poll.titles.details'),
         children: <DetailsSection />,
-        onContinue: () => trigger(['details']),
+        validate: () => trigger(['details']),
       },
       {
         title: t('create-poll.titles.criterias'),
         children: <CriteriasSection />,
-        onContinue: () => trigger(['criterias']),
+        validate: () => trigger(['criterias']),
       },
       {
         title: t('create-poll.titles.questions'),
         children: <QuestionsSection />,
-        onContinue: () => trigger(['questions']),
+        validate: () => trigger(['questions']),
       },
       {
         title: t('create-poll.titles.settings'),
@@ -146,9 +138,7 @@ export default function CreatePollForm() {
     <FormProvider {...form}>
       <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
         <Stack spacing={3} width='100%' pb={{ md: 10 }}>
-          <VoteParamsProvider>
-            <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
-          </VoteParamsProvider>
+          <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
         </Stack>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />

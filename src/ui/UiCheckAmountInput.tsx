@@ -1,3 +1,4 @@
+import { BN, DECIMALS, isFixedPointString } from '@distributedlab/tools'
 import {
   Button,
   Divider,
@@ -8,39 +9,49 @@ import {
   useTheme,
 } from '@mui/material'
 import { formatUnits } from 'ethers'
-import { ChangeEvent, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { ControllerRenderProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { NATIVE_CURRENCY } from '@/constants'
-import { formatAmount } from '@/helpers'
+import { formatAmount, formatInput, trimLeadingZeroes } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
-const MAX_VISIBLE_DECIMALS = 4
-
-type AmountInputProps = { decimals?: number; value: number; maxValue: string } & Omit<
-  TextFieldProps,
-  'value'
-> &
+type AmountInputProps = { value: string; maxValue: string } & Omit<TextFieldProps, 'value'> &
   Omit<ControllerRenderProps, 'value'>
 
 const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
-  ({ decimals = MAX_VISIBLE_DECIMALS, onChange, error, disabled, value, maxValue }, ref) => {
+  ({ onChange, error, disabled, value, maxValue }, ref) => {
     const { t } = useTranslation()
     const { palette, typography, breakpoints } = useTheme()
     const isMdUp = useMediaQuery(breakpoints.up('md'))
 
-    const normalizeInput = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      let value = event.target.value
+    const maxValueBN = BN.fromBigInt(maxValue, DECIMALS.WEI)
 
-      if (value.includes('.')) {
-        const [integer, decimal] = value.split('.')
-        value = decimal.length > decimals ? `${integer}.${decimal.slice(0, decimals)}` : value
+    const handleOnChange = (_value: string) => {
+      const newValue = formatInput(normalizeRange(normalizeNumber(_value)))
+      onChange(newValue)
+    }
+
+    const normalizeRange = (value: string): string => {
+      if (!isFixedPointString(value)) {
+        return value
       }
 
-      onChange(value)
+      if (BN.fromRaw(value, DECIMALS.WEI).lt(BN.fromRaw(0, DECIMALS.WEI))) {
+        return '0'
+      }
+
+      if (value && BN.fromRaw(value, DECIMALS.WEI).gt(maxValueBN)) {
+        return maxValueBN.toDecimals(2).toString()
+      }
+
+      return value
     }
+
+    const normalizeNumber = (_value: string) =>
+      isNaN(Number(_value)) ? value || '0' : trimLeadingZeroes(_value)
 
     return (
       <UiNumberField
@@ -70,7 +81,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
           },
           input: {
             position: 'absolute',
-            width: '90%',
+            width: '80%',
             py: 0,
             pl: 1,
           },
@@ -112,7 +123,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
         value={value}
         disabled={disabled}
         inputRef={ref}
-        onChange={normalizeInput}
+        onChange={e => handleOnChange(e.target.value)}
       />
     )
   },
