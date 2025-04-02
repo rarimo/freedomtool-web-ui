@@ -36,7 +36,7 @@ export default function PollCard({
   } = useIpfsLoading<IVoteIpfs>(cid)
   const [attempts, setAttempts] = useState(0)
 
-  const shouldStopRefetching = data || attempts >= MAX_FETCH_TRIES || isIpfsError
+  const shouldStopRefetching = data !== null || attempts >= MAX_FETCH_TRIES || isIpfsError
 
   const currentPollParticipants = Math.max(
     ...voteResults.map(results => results.reduce((sum, value) => sum + Number(value), 0)),
