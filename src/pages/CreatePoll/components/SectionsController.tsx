@@ -25,8 +25,8 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
   const isLastStep = currentIndex === sections.length - 1
 
   const goNext = async () => {
-    if (onContinue) {
-      const isValid = await validate?.()
+    if (validate) {
+      const isValid = await validate()
       if (!isValid) return
     }
     onContinue?.()
