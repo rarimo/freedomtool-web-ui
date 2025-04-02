@@ -1,6 +1,7 @@
 import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Stack } from '@mui/material'
+import { parseUnits } from 'ethers'
 import { useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -90,7 +91,7 @@ export default function CreatePollForm() {
         votingWhitelistData,
         acceptedOptions,
         description: cid,
-        amount,
+        amount: parseUnits(amount, 18).toString(),
         startTimestamp,
         duration,
       })
