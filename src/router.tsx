@@ -8,7 +8,7 @@ import DraftPolls from '@/pages/Dashboard/DraftPolls'
 import FinishedPolls from '@/pages/Dashboard/FinishedPolls'
 
 import { ErrorBoundaryFallback } from './common'
-import CreateVote from './pages/CreateVote'
+import CreatePoll from './pages/CreatePoll'
 import Vote from './pages/Vote'
 
 export const createRouter = () => {
@@ -53,7 +53,7 @@ export const createRouter = () => {
             children: [
               {
                 path: RoutePaths.VotesNew,
-                element: <CreateVote />,
+                element: <CreatePoll />,
               },
               {
                 path: RoutePaths.Vote,

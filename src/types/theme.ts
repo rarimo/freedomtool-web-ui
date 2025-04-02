@@ -13,6 +13,7 @@ export interface ExtendedTypographyOptions extends TypographyOptions {
 
   body3: CSSProperties
   body4: CSSProperties
+  body5: CSSProperties
 
   buttonLarge: CSSProperties
   buttonMedium: CSSProperties
@@ -40,6 +41,7 @@ declare module '@mui/material/Typography/Typography' {
 
     body3: true
     body4: true
+    body5: true
 
     buttonLarge: true
     buttonMedium: true

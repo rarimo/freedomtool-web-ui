@@ -1,4 +1,12 @@
-import { BN, BnConfigLike, BnFormatConfig, BnLike, time, TimeDate } from '@distributedlab/tools'
+import {
+  BN,
+  BnConfigLike,
+  BnFormatConfig,
+  BnLike,
+  DECIMALS,
+  time,
+  TimeDate,
+} from '@distributedlab/tools'
 // Date
 export function formatDateMY(date: TimeDate) {
   return time(date).format('MM / YYYY')
@@ -158,6 +166,15 @@ export function formatBalance(
   } catch {
     return '0'
   }
+}
+
+export const formatInput = (value: string) => {
+  if (!value.includes('.') || value.charAt(value.length - 1) === '.') {
+    return value
+  }
+  const inputDecimals =
+    value.split('.')[1].length < DECIMALS.WEI ? value.split('.')[1].length : DECIMALS.WEI
+  return BN.fromRaw(value, inputDecimals).toString()
 }
 
 export function formatAmountShort(value: BnLike): string {

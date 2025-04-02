@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { z as zod } from 'zod'
 
-import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
+import { MAX_PARTICIPANTS_PER_POLL } from '@/constants'
 import { BusEvents } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useCheckVoteAmount, useProposalState } from '@/hooks'
@@ -21,7 +21,7 @@ const defaultValues = { votesCount: 0 }
 export default function TopUpForm() {
   const { t } = useTranslation()
   const { id } = useParams()
-  const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
+  const { isCalculating, helperText, resetHelperText, updateVoteParams } = useCheckVoteAmount()
 
   const { addFundsToProposal } = useProposalState({ shouldFetchProposals: false })
 
@@ -36,7 +36,7 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: zodResolver(
       zod.object({
-        votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
+        votesCount: zod.coerce.number().int().min(1).max(MAX_PARTICIPANTS_PER_POLL),
       }),
     ),
   })
@@ -44,7 +44,11 @@ export default function TopUpForm() {
   const submit = useCallback(async () => {
     try {
       const votesCount = String(getValues('votesCount'))
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount, id)
+      const { isEnoughBalance, votesAmount } = await updateVoteParams({
+        type: 'vote_predict_amount',
+        votesCount,
+        proposalId: String(id),
+      })
       if (!isEnoughBalance || !id) return
 
       await addFundsToProposal(id, votesAmount)
@@ -55,7 +59,7 @@ export default function TopUpForm() {
       reset()
       resetHelperText?.()
     }
-  }, [addFundsToProposal, getValues, getVoteAmountDetails, id, reset, resetHelperText, t])
+  }, [addFundsToProposal, getValues, updateVoteParams, id, reset, resetHelperText, t])
 
   const isDisabled = isSubmitting || isCalculating
 
@@ -70,8 +74,7 @@ export default function TopUpForm() {
             disabled={field.disabled || isDisabled}
             error={Boolean(fieldState.error)}
             helperText={fieldState.error?.message || helperText}
-            label={t('create-vote.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(String(getValues('votesCount')), id)}
+            label={t('create-poll.votes-count-lbl')}
             onChange={e => {
               field.onChange(e)
               resetHelperText?.()
