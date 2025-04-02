@@ -1,6 +1,7 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import AppLogo from '@/common/AppLogo'
 import { Icons, RoutePaths } from '@/enums'
@@ -13,11 +14,14 @@ export default function DashboardHeader() {
   const { palette, spacing, typography, breakpoints } = useTheme()
   const { t } = useTranslation()
 
+  const navigate = useNavigate()
+
   const isMdUp = useMediaQuery(breakpoints.up('md'))
 
   const { proposals } = useProposalState({
     shouldFetchProposals: true,
   })
+
   const activePollsCount = useMemo(
     () =>
       proposals.filter(
@@ -79,7 +83,7 @@ export default function DashboardHeader() {
               sx={{
                 typography: typography.subtitle6,
               }}
-              onClick={() => {}}
+              onClick={() => navigate(RoutePaths.VotesNew)}
             >
               Create a poll
             </Button>
@@ -90,7 +94,7 @@ export default function DashboardHeader() {
                 backgroundColor: palette.primary.main,
                 color: palette.common.black,
               }}
-              onClick={() => {}}
+              onClick={() => navigate(RoutePaths.VotesNew)}
             >
               <UiIcon name={Icons.AddLine} size={5} />
             </IconButton>
