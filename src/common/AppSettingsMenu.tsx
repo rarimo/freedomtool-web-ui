@@ -29,10 +29,6 @@ export default function AppSettingsMenu() {
 
   const menuItemSx: SxProps = { minHeight: 40, p: 2, m: 0, gap: 3 }
 
-  const handleThemeChange = useCallback(() => {
-    uiStore.togglePaletteMode()
-  }, [])
-
   return (
     <>
       <Stack
@@ -84,7 +80,7 @@ export default function AppSettingsMenu() {
                 {t('app-header.dark-mode-switch-lbl')}
               </Typography>
             </Stack>
-            <UiSwitch checked={palette.mode === 'dark'} onChange={handleThemeChange} />
+            <UiSwitch checked={palette.mode === 'dark'} onChange={uiStore.togglePaletteMode} />
           </Stack>
           <MenuItem sx={menuItemSx} onClick={() => disconnect()}>
             <UiIcon name={Icons.LogoutCircleRLine} size={5} color={palette.error.dark} />
