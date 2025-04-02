@@ -16,7 +16,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         height={vh(100)}
         width='100%'
         sx={{
-          backgroundColor: palette.background.default,
+          backgroundColor: palette.background.light,
           [breakpoints.down('md')]: {
             flexDirection: 'column',
             gap: 0,

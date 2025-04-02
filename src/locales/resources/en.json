@@ -211,5 +211,15 @@
       "participants-lbl": "{{ currentVotesCount }} / {{ totalVotes }} participants",
       "retry-btn": "Retry"
     }
+  },
+  "poll-preview": {
+    "title": "Preview",
+    "criteria-subtitle": "Criteria",
+    "max-age-criteria": "{age} and below",
+    "sex-male": "Male",
+    "sex-female": "Female",
+    "age-criteria-item": "Age: {{value}}",
+    "nationalities-criteria-item": "Citizen of {{value}}",
+    "sex-criteria-item": "{{value}} only"
   }
 }
