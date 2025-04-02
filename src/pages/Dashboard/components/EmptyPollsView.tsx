@@ -1,10 +1,11 @@
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
 
-import { Icons } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
 import { UiIcon } from '@/ui'
 
-export default function NoPollsData({ onPollCreate }: { onPollCreate: () => void }) {
+export default function EmptyPollsView() {
   const { t } = useTranslation()
   const { palette } = useTheme()
 
@@ -24,9 +25,10 @@ export default function NoPollsData({ onPollCreate }: { onPollCreate: () => void
         </Typography>
       </Stack>
       <Button
+        component={NavLink}
         size='large'
-        onClick={onPollCreate}
-        startIcon={<UiIcon name={Icons.AddLine} size={5} />}
+        startIcon={<UiIcon name={Icons.AddFill} size={5} />}
+        to={RoutePaths.VotesNew}
       >
         {t('dashboard.create-poll-btn')}
       </Button>

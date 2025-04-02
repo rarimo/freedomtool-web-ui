@@ -1,0 +1,114 @@
+import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
+
+import { AppSettingsMenu } from '@/common'
+import AppLogo from '@/common/AppLogo'
+import { useWeb3Context } from '@/contexts/web3-context'
+import { Icons, RoutePaths } from '@/enums'
+import { ProposalStatus } from '@/enums/proposals'
+import { useProposalState } from '@/hooks'
+import PollsTabs, { PollTab } from '@/pages/Dashboard/components/PollsTabs'
+import { UiIcon } from '@/ui'
+
+export default function PollsHeader() {
+  const { palette, spacing, typography, breakpoints } = useTheme()
+  const { t } = useTranslation()
+  const { isConnected } = useWeb3Context()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
+
+  const { proposals } = useProposalState({
+    shouldFetchProposals: true,
+  })
+
+  const activePollsCount = useMemo(
+    () =>
+      proposals.filter(
+        proposal =>
+          Number(proposal.proposal.status) === ProposalStatus.Started ||
+          Number(proposal.proposal.status) === ProposalStatus.Waiting,
+      ).length,
+    [proposals],
+  )
+
+  const historyPollsCount = useMemo(
+    () =>
+      proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended)
+        .length,
+    [proposals],
+  )
+
+  const dashboardTabs: PollTab[] = [
+    {
+      route: RoutePaths.DashboardActive,
+      label: t('dashboard.active-polls-tab-lbl'),
+      count: activePollsCount,
+    },
+    {
+      route: RoutePaths.DashboardHistory,
+      label: t('dashboard.history-polls-tab-lbl'),
+      count: historyPollsCount,
+    },
+    {
+      route: RoutePaths.DashboardDraft,
+      label: t('dashboard.draft-polls-tab-lbl'),
+      count: 0,
+    },
+  ]
+
+  return (
+    <Stack
+      px={4}
+      pt={5}
+      width='100%'
+      bgcolor={palette.background.light}
+      sx={{
+        borderBottomLeftRadius: spacing(4),
+        borderBottomRightRadius: spacing(4),
+      }}
+    >
+      <Stack width='100%' maxWidth={1136} mx='auto'>
+        <Stack
+          direction='row'
+          alignItems='center'
+          justifyContent='space-between'
+          width='100%'
+          mb={5}
+        >
+          <AppLogo />
+          <Stack direction='row' spacing={3} alignItems='center'>
+            {isMdUp ? (
+              <Button
+                component={NavLink}
+                size='small'
+                startIcon={<UiIcon name={Icons.AddFill} size={4} />}
+                sx={{
+                  typography: typography.subtitle6,
+                }}
+                to={RoutePaths.VotesNew}
+              >
+                {t('dashboard.create-poll-btn')}
+              </Button>
+            ) : (
+              <IconButton
+                component={NavLink}
+                sx={{
+                  p: 1.5,
+                  backgroundColor: palette.primary.main,
+                  color: palette.common.black,
+                }}
+                to={RoutePaths.VotesNew}
+              >
+                <UiIcon name={Icons.AddFill} size={5} />
+              </IconButton>
+            )}
+            {isConnected && <AppSettingsMenu />}
+          </Stack>
+        </Stack>
+        <Divider flexItem />
+        <PollsTabs tabs={dashboardTabs} />
+      </Stack>
+    </Stack>
+  )
+}

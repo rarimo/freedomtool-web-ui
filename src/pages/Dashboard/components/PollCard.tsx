@@ -103,8 +103,8 @@ export default function PollCard({
             <Typography variant='subtitle6'>
               {t('dashboard.poll-card.participants-lbl', {
                 // TODO: fix progress count
-                currentVotesCount: 5,
-                totalVotes: currentPollParticipants,
+                currentVotesCount: currentPollParticipants,
+                totalVotes: 10,
               })}
             </Typography>
           </Stack>

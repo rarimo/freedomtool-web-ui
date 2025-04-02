@@ -1,18 +1,14 @@
 import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
 import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { InfiniteList } from '@/common'
-import { RoutePaths } from '@/enums'
 import { ProposalStatus } from '@/enums/proposals'
 import { useProposalState } from '@/hooks'
-import NoPollsData from '@/pages/Dashboard/components/NoPollsData'
+import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
 import PollCard from '@/pages/Dashboard/components/PollCard'
 
 export default function FinishedPolls() {
-  const navigate = useNavigate()
-
   const { proposals, proposalsLoadingState, loadNextProposals, reloadProposals } = useProposalState(
     {
       shouldFetchProposals: true,
@@ -31,7 +27,7 @@ export default function FinishedPolls() {
       onRetry={reloadProposals}
       onLoadNext={loadNextProposals}
       slots={{
-        noData: <NoPollsData onPollCreate={() => navigate(RoutePaths.VotesNew)} />,
+        noData: <EmptyPollsView />,
       }}
     >
       <Box

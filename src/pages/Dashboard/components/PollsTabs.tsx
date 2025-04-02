@@ -5,10 +5,10 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 import { Transitions } from '@/theme/constants'
 
-type PollTab = {
-  pollsAmount: number
+export type PollTab = {
+  route: string
   label: string
-  href: string
+  count: number
   isExact?: boolean
 }
 
@@ -33,20 +33,20 @@ export default function PollsTabs({ tabs }: PollTabsProps) {
   )
 }
 
-function PollsTab({ pollsAmount, label, href, isExact = false }: PollTab) {
+function PollsTab({ count, label, route, isExact = false }: PollTab) {
   const location = useLocation()
   const { palette } = useTheme()
 
   const isRouteActive = useMemo(() => {
-    return isExact ? location.pathname === href : location.pathname.includes(href)
-  }, [isExact, location.pathname, href])
+    return isExact ? location.pathname === route : location.pathname.includes(route)
+  }, [isExact, location.pathname, route])
 
   return (
     <Stack
       component={NavLink}
       justifyContent='center'
       alignItems='center'
-      to={href}
+      to={route}
       sx={{
         position: 'relative',
         pt: 1.5,
@@ -75,7 +75,7 @@ function PollsTab({ pollsAmount, label, href, isExact = false }: PollTab) {
             zIndex: 2,
           }}
         >
-          {pollsAmount}
+          {count}
         </Typography>
         <Typography
           variant='buttonLarge'

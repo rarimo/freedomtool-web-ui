@@ -194,8 +194,8 @@ export function formatAmountShort(value: BnLike): string {
   return formatAmount(bigIntValue, 18)
 }
 
-export function formatAddress(address?: string) {
-  return address ? `${address.slice(0, 8)}...${address.slice(-8)}` : '–'
+export function formatAddress(address?: string, length: number = 8) {
+  return address ? `${address.slice(0, length)}...${address.slice(-length)}` : '–'
 }
 
 type Labels = {

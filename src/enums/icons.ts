@@ -194,4 +194,6 @@ export enum Icons {
   ArrowUpDownLine = 'arrow-up-down-line',
   ChatNewLine = 'chat-new-line',
   CalendarLine = 'calendar-line',
+  AddFill = 'add-fill',
+  Ethereum = 'ethereum',
 }

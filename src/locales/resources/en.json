@@ -158,7 +158,9 @@
   "app-header": {
     "title": "FT v2.0",
     "connect-btn": "Connect",
-    "disconnect-tooltip": "Disconnect"
+    "disconnect-tooltip": "Disconnect",
+    "disconnect-btn": "Disconnect",
+    "dark-mode-switch-lbl": "Dark Mode"
   },
   "check-vote": {
     "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",
