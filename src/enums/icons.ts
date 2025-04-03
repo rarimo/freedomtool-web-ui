@@ -200,4 +200,5 @@ export enum Icons {
   Ethereum = 'ethereum',
   ShareLine = 'share-line',
   DownloadLine = 'download-line',
+  DraftLine = 'draft-line',
 }
