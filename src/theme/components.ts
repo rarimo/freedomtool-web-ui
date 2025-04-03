@@ -343,6 +343,12 @@ export const components: Components<Omit<Theme, 'components'>> = {
         '&:hover': {
           background: theme.palette.action.hover,
         },
+        '&:focus': {
+          background: theme.palette.action.focus,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
+        },
       }),
       colorSecondary: ({ theme }) => ({
         color: theme.palette.text.secondary,
@@ -351,21 +357,42 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
       }),
       colorSuccess: ({ theme }) => ({
-        color: theme.palette.success.main,
+        color: theme.palette.success.dark,
+        background: theme.palette.success.lighter,
         '&:hover': {
-          color: theme.palette.success.dark,
+          background: theme.palette.success.light,
+        },
+        '&:focus': {
+          background: theme.palette.success.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
       colorError: ({ theme }) => ({
-        color: theme.palette.error.main,
+        color: theme.palette.error.dark,
+        background: theme.palette.error.lighter,
         '&:hover': {
-          color: theme.palette.error.dark,
+          background: theme.palette.error.light,
+        },
+        '&:focus': {
+          background: theme.palette.error.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
       colorWarning: ({ theme }) => ({
-        color: theme.palette.warning.main,
+        color: theme.palette.warning.dark,
+        background: theme.palette.warning.lighter,
         '&:hover': {
-          color: theme.palette.warning.dark,
+          background: theme.palette.warning.light,
+        },
+        '&:focus': {
+          background: theme.palette.warning.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
     },
@@ -619,6 +646,17 @@ export const components: Components<Omit<Theme, 'components'>> = {
         border: 0,
         [theme.breakpoints.down('md')]: {
           padding: 0,
+        },
+      }),
+    },
+  },
+  MuiDialogTitle: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(6),
+        borderBottom: `1px solid ${theme.palette.action.active}`,
+        [theme.breakpoints.down('md')]: {
+          padding: theme.spacing(5, 4),
         },
       }),
     },
