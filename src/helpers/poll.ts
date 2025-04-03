@@ -1,12 +1,15 @@
+import { JsonApiClientRequestOpts } from '@distributedlab/jac'
 import { time } from '@distributedlab/tools'
-import { AbiCoder, hexlify } from 'ethers'
+import { AbiCoder } from 'ethers'
 import { stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
-import { INationality, IParsedProposal, Sex } from '@/types'
+import { INationality, IParsedProposal, IProposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
+
+const ZERO_DATE = '0x303030303030'
 
 export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
   questions.map(question => ({
@@ -125,7 +128,7 @@ export const parseProposalFromContract = (
 export const getTotalVotesPerQuestion = (proposal: IParsedProposal, questionIndex: number) =>
   proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0n) || 0n
 
-export const getCountProgress = (totalCount: number, count: number) =>
+export const getCountProgress = (count: number, totalCount: number) =>
   totalCount > 0 ? (count / totalCount) * 100 : 0
 
 export const prepareVotingWhitelistData = (config: {
@@ -143,15 +146,13 @@ export const prepareVotingWhitelistData = (config: {
   const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
   const identityCounterUpperBound = 1
 
-  const birthDateUpperbound = stringToHex(
-    time()
-      .subtract(minAge ? minAge : 1, minAge ? 'years' : 'day')
-      .format('YYMMDD'),
-  )
-  const birthDateLowerbound = stringToHex(time().format('YYMMDD'))
+  const birthDateUpperbound = minAge
+    ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
+    : ZERO_DATE
+  const birthDateLowerbound = maxAge ? stringToHex(time(maxAge).format('YYMMDD')) : ZERO_DATE
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
-  const sex = _sex ? hexlify(_sex) : 0
+  const sex = _sex ? stringToHex(_sex) : 0
 
   // Uniqueness and passport expiration should be configured for each poll
   const selector = calculateProposalSelector({
@@ -180,4 +181,13 @@ export const prepareVotingWhitelistData = (config: {
     ['tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'],
     [params],
   )
+}
+
+export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {
+  const data = await api.get<IProposal[]>(
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/voting-info`,
+    opts,
+  )
+
+  return data
 }

@@ -1,31 +1,35 @@
 import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
-import { useMemo } from 'react'
 
 import { InfiniteList } from '@/common'
-import { ProposalStatus } from '@/enums/proposals'
-import { useProposalState } from '@/hooks'
+import { getProposals } from '@/helpers'
+import { useMultiPageLoading } from '@/hooks'
 import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
 import PollCard from '@/pages/Dashboard/components/PollCard'
+import { IProposalStatuses } from '@/types'
 
 export default function FinishedPolls() {
-  const { proposals, proposalsLoadingState, loadNextProposals, reloadProposals } = useProposalState(
-    {
-      shouldFetchProposals: true,
-    },
-  )
-
-  const finishedPolls = useMemo(
-    () => proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended),
-    [proposals],
+  const {
+    data: proposals,
+    loadingState,
+    reload,
+    loadNext,
+  } = useMultiPageLoading(() =>
+    getProposals({
+      query: {
+        filter: {
+          status: IProposalStatuses.Ended,
+        },
+      },
+    }),
   )
 
   return (
     <InfiniteList
       items={proposals}
-      loadingState={proposalsLoadingState}
-      onRetry={reloadProposals}
-      onLoadNext={loadNextProposals}
+      loadingState={loadingState}
+      onRetry={reload}
+      onLoadNext={loadNext}
       slots={{
         noData: <EmptyPollsView />,
       }}
@@ -38,9 +42,9 @@ export default function FinishedPolls() {
           gap: 4,
         }}
       >
-        {finishedPolls.map(({ id, proposal }) => (
+        {proposals.map(proposal => (
           <motion.div
-            key={id}
+            key={proposal.id}
             initial='hidden'
             animate='visible'
             variants={{
@@ -53,7 +57,7 @@ export default function FinishedPolls() {
             }}
             custom={Math.random() * 0.5}
           >
-            <PollCard proposal={proposal} id={id} />
+            <PollCard proposal={proposal} />
           </motion.div>
         ))}
       </Box>

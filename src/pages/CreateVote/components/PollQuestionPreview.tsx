@@ -1,10 +1,11 @@
 import { ButtonBase, Divider, Stack, Typography, useTheme } from '@mui/material'
 
-import { CreateVoteSchema } from '../createVoteSchema'
+import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+
 import PreviewLayout from './PreviewLayout'
 
 interface Props {
-  question?: CreateVoteSchema['questions'][0]
+  question?: CreatePollSchema['questions'][0]
 }
 
 export default function PollQuestionPreview({ question }: Props) {
