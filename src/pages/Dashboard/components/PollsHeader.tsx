@@ -77,7 +77,7 @@ export default function PollsHeader() {
           mb={5}
         >
           <AppLogo />
-          <Stack direction='row' spacing={3} alignItems='center'>
+          <Stack direction='row' spacing={3} alignItems='center' minHeight={isMdUp ? 52 : 44}>
             {isMdUp ? (
               <Button
                 component={NavLink}
@@ -86,7 +86,7 @@ export default function PollsHeader() {
                 sx={{
                   typography: typography.subtitle6,
                 }}
-                to={RoutePaths.VotesNew}
+                to={RoutePaths.CreatePoll}
               >
                 {t('dashboard.create-poll-btn')}
               </Button>
@@ -98,7 +98,7 @@ export default function PollsHeader() {
                   backgroundColor: palette.primary.main,
                   color: palette.common.black,
                 }}
-                to={RoutePaths.VotesNew}
+                to={RoutePaths.CreatePoll}
               >
                 <UiIcon name={Icons.AddFill} size={5} />
               </IconButton>

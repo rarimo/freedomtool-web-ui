@@ -625,15 +625,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
       root: ({ theme }) => ({
         borderRadius: 250,
         height: theme.spacing(10),
-        backgroundColor: theme.palette.action.active,
+        backgroundColor: theme.palette.background.paper,
       }),
       barColorPrimary: ({ theme }) => ({
-        borderRadius: 250,
         backgroundColor: theme.palette.primary.main,
       }),
       barColorSecondary: ({ theme }) => ({
-        backgroundColor: theme.palette.primary.light,
-        borderRadius: 250,
+        backgroundColor: theme.palette.action.active,
       }),
     },
   },

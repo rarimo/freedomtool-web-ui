@@ -153,7 +153,6 @@
     "status": "Status:",
     "start-date": "Start date:",
     "end-date": "End date:",
-    "accepted-options-title": "Accepted options",
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
     "success-msg": "You have successfully added funds to your voting contract",
@@ -167,7 +166,6 @@
     },
     "show-all-options-btn": "Show all options",
     "hide-options-btn": "Collapse options",
-    "question-name": "Question name",
     "promo": {
       "title": "Vote with RariMe",
       "description": "Use RariMe app to participate in this voting",
@@ -223,6 +221,13 @@
     "sex-criteria-item": "{{value}} only"
   },
   "poll": {
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "participants_one": "{{ count }} Participant",
+    "participants_other": "{{ count }} Participants",
+    "remaining-votes": "Remaining votes:",
+    "votes-count_one": "{{count}} vote",
+    "votes-count_other": "{{count}} votes",
     "qr-code-panel": {
       "modal-title": "QR Codes",
       "qr-scan-count-lbl_one": "{{ count }} scan",

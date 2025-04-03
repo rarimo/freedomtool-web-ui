@@ -28,7 +28,7 @@ export default function EmptyPollsView() {
         component={NavLink}
         size='large'
         startIcon={<UiIcon name={Icons.AddFill} size={5} />}
-        to={RoutePaths.VotesNew}
+        to={RoutePaths.CreatePoll}
       >
         {t('dashboard.create-poll-btn')}
       </Button>

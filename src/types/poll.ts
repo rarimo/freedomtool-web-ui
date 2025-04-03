@@ -17,13 +17,6 @@ export interface IQuestionIpfs {
   variants: string[]
 }
 
-export interface IVoteIpfs {
-  title: string
-  description: string
-  acceptedOptions: IQuestionIpfs[]
-  imageCid?: string
-}
-
 export interface IUploadData {
   id: string
   type: string
@@ -40,7 +33,9 @@ export interface IParsedProposal {
   status: ProposalStatus
   startTimestamp: number
   duration: number
-  voteResults: bigint[][]
+  voteResults: number[][]
+  votingWhitelistData: DecodedWhitelistData
+  rawProposal: ProposalsState.ProposalInfoStructOutput
 }
 
 export interface INationality {
@@ -99,4 +94,15 @@ export interface IProposalMetadata {
 export interface IProposalOption {
   title: string
   variants: string[]
+}
+
+export type DecodedWhitelistData = {
+  selector: bigint
+  nationalities: string[]
+  identityCreationTimestampUpperBound: number
+  identityCounterUpperBound: number
+  sex: Sex
+  birthDateLowerbound: string
+  birthDateUpperbound: string
+  expirationDateLowerBound: string
 }

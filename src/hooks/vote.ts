@@ -1,3 +1,4 @@
+import { time } from '@distributedlab/tools'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,13 +7,12 @@ import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
 import {
   ErrorHandler,
-  formatDateTime,
   generateQrCodeUrl,
   getVotesCount,
   parseProposalFromContract,
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { IVoteIpfs } from '@/types'
+import { IProposalMetadata } from '@/types'
 
 export function useVote(id?: string) {
   const { t } = useTranslation()
@@ -32,7 +32,7 @@ export function useVote(id?: string) {
     data: proposalMetadata,
     isLoading: metadataLoading,
     isLoadingError: metadataError,
-  } = useIpfsLoading<IVoteIpfs>(proposal?.cid as string)
+  } = useIpfsLoading<IProposalMetadata>(proposal?.cid as string)
 
   const {
     data: voteCount,
@@ -53,29 +53,10 @@ export function useVote(id?: string) {
     { silentError: true },
   )
 
-  const voteDetails = useMemo(() => {
-    if (!proposal) return []
-    const { duration, startTimestamp, status } = proposal
-
-    return [
-      {
-        title: t('vote.status'),
-        description: ProposalStatus[status],
-      },
-      {
-        title: t('vote.remaining-votes'),
-        description: voteCount,
-      },
-      {
-        title: t('vote.start-date'),
-        description: formatDateTime(startTimestamp),
-      },
-      {
-        title: t('vote.end-date'),
-        description: formatDateTime(startTimestamp + duration),
-      },
-    ]
-  }, [t, voteCount, proposal])
+  const formattedStartDate = time(proposal?.startTimestamp).format('MM/DD/YYYY HH:mm')
+  const formattedEndDate = time((proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0)).format(
+    'MM/DD/YYYY HH:mm',
+  )
 
   const isLoading =
     isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
@@ -90,6 +71,37 @@ export function useVote(id?: string) {
     proposal_id: id ?? '',
   })
 
+  const participantsAmount = useMemo(() => {
+    if (proposal?.voteResults) {
+      return Math.max(
+        ...proposal.voteResults.map(results =>
+          results.reduce((sum, value) => sum + Number(value), 0),
+        ),
+        0,
+      )
+    }
+
+    return 0
+  }, [proposal?.voteResults])
+
+  const voteDetails = useMemo(() => {
+    if (!proposal) return []
+    return [
+      {
+        title: t('poll.start-date'),
+        description: formattedStartDate,
+      },
+      {
+        title: t('poll.end-date'),
+        description: formattedEndDate,
+      },
+      {
+        title: t('poll.remaining-votes'),
+        description: voteCount,
+      },
+    ]
+  }, [proposal, t, formattedStartDate, formattedEndDate, voteCount])
+
   return {
     isLoading,
     isError,
@@ -98,5 +110,10 @@ export function useVote(id?: string) {
     proposalMetadata,
     isTopUpAllowed,
     qrCodeUrl,
+
+    formattedStartDate,
+    formattedEndDate,
+
+    participantsAmount,
   }
 }

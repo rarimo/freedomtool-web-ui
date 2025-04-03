@@ -10,7 +10,7 @@ export default function VoteDetails({ list }: { list: IVoteDetails[] }) {
   const { palette } = useTheme()
 
   return (
-    <Stack spacing={{ xs: 1, md: 2 }}>
+    <Stack width='100%' spacing={{ xs: 1, md: 2 }}>
       {list.map(({ title, description }, index) => (
         <Stack direction='row' justifyContent='space-between' key={index}>
           <Typography

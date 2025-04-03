@@ -12,3 +12,8 @@ export const MAX_PARTICIPANTS_PER_POLL = 10_000
 export const MAX_TOKEN_AMOUNT_PER_POLL = 10_000
 
 export const MAX_UINT32 = 4294967295
+
+export const WHITELIST_DATA_SIGNATURE =
+  'tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'
+
+export const ZERO_DATE = '0x303030303030'

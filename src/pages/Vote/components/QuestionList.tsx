@@ -1,21 +1,9 @@
-import {
-  Button,
-  Divider,
-  LinearProgress,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material'
-import { useState } from 'react'
+import { Divider, LinearProgress, Stack, Tooltip, Typography, useTheme } from '@mui/material'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
 import { IParsedProposal, IQuestionIpfs } from '@/types'
-
-const MAX_VISIBLE_OPTIONS = 4
-const OPTION_HEIGHT = 46
 
 export default function QuestionList({
   proposal,
@@ -24,13 +12,10 @@ export default function QuestionList({
   questions: IQuestionIpfs[]
   proposal: IParsedProposal | null
 }) {
-  const { t } = useTranslation()
-
   if (!proposal) return null
 
   return (
     <Stack spacing={6}>
-      <Typography variant='subtitle3'>{t('vote.accepted-options-title')}</Typography>
       <Stack spacing={4}>
         {questions?.map(({ title, variants }, qIndex) => (
           <QuestionItem
@@ -46,11 +31,6 @@ export default function QuestionList({
   )
 }
 
-import { motion } from 'framer-motion'
-
-import { useScrollWithShadow } from '@/hooks'
-import { hiddenScrollbar } from '@/theme/constants'
-
 function QuestionItem({
   title,
   variants,
@@ -60,124 +40,113 @@ function QuestionItem({
   title: string
   variants: string[]
   totalCount: number
-  voteResults: bigint[]
+  voteResults: number[]
 }) {
   const { palette } = useTheme()
-  const { t } = useTranslation()
-  const [isExpanded, setIsExpanded] = useState(false)
-  const { shadowScrollStyle, onScrollHandler } = useScrollWithShadow()
+
+  const maxIndex = useMemo(() => {
+    if (!voteResults || voteResults.length === 0) return -1
+
+    const _voteResults = voteResults.map(Number)
+
+    const maxValue = Math.max(..._voteResults)
+    const count = _voteResults.filter(option => option === maxValue).length
+
+    return count === 1 ? _voteResults.indexOf(maxValue) : -1
+  }, [voteResults])
 
   return (
-    <Stack
-      component={Paper}
-      padding={0}
-      border={`1px solid ${palette.action.active}`}
-      boxShadow='0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)'
-    >
+    <Stack padding={0} bgcolor={palette.action.active} borderRadius={5}>
       <Stack spacing={2} p={{ xs: 1, md: 6 }}>
-        <Typography color={palette.text.secondary} variant='caption3'>
-          {t('vote.question-name')}
-        </Typography>
         <Typography
           title={title}
+          color={palette.text.primary}
           width={{ xs: 250, md: 500 }}
           noWrap
           textOverflow='ellipsis'
-          variant='h5'
+          variant='body3'
         >
           {title}
         </Typography>
 
         <Stack
-          component={motion.div}
-          initial={false}
           justifyContent='flex-start'
-          animate={{
-            height: isExpanded
-              ? 'auto'
-              : OPTION_HEIGHT * Math.min(variants.length, MAX_VISIBLE_OPTIONS),
-          }}
-          transition={{ duration: 0.3 }}
-          sx={{
-            overflow: 'auto',
-            ...hiddenScrollbar,
-            ...(variants.length > MAX_VISIBLE_OPTIONS && !isExpanded ? shadowScrollStyle : {}),
-          }}
-          spacing={2}
           mt={3}
-          onScroll={onScrollHandler}
+          divider={<Divider flexItem />}
+          sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
         >
           {variants.map((variant, oIndex) => (
             <LinearProgressWithLabel
               title={variant}
-              progress={getCountProgress(totalCount, Number(voteResults[oIndex] || 0))}
+              isLeading={maxIndex === oIndex}
+              count={voteResults[oIndex] || 0}
+              progress={getCountProgress(totalCount, voteResults[oIndex] || 0)}
               key={oIndex}
             />
           ))}
         </Stack>
       </Stack>
-      <Divider sx={{ my: { xs: 4, md: 0 } }} />
-      <Stack direction='row' justifyContent='space-between' alignItems='center'>
-        <Typography p={{ xs: 1, md: 6 }} variant='buttonSmall'>
-          {t('vote.votes-count', {
-            count: totalCount,
-          })}
-        </Typography>
-        {variants.length > MAX_VISIBLE_OPTIONS && (
-          <Button
-            size='small'
-            variant='text'
-            sx={{ mr: { xs: 0, md: 3 } }}
-            onClick={() => setIsExpanded(prev => !prev)}
-          >
-            {isExpanded ? t('vote.hide-options-btn') : t('vote.show-all-options-btn')}
-          </Button>
-        )}
-      </Stack>
     </Stack>
   )
 }
 
-function LinearProgressWithLabel({ title, progress }: { title: string; progress: number }) {
+function LinearProgressWithLabel({
+  title,
+  progress,
+  isLeading,
+  count,
+}: {
+  title: string
+  progress: number
+  isLeading: boolean
+  count: number
+}) {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
   return (
-    <Stack>
-      <Stack sx={{ position: 'relative' }}>
+    <Stack sx={{ position: 'relative' }}>
+      <Stack
+        alignItems='flex-end'
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          right: 15,
+          top: '50%',
+          transform: 'translateY(-50%)',
+        }}
+      >
+        <Typography variant='subtitle5'>
+          {t('formats.percent', { value: progress.toFixed(2) })}
+        </Typography>
+        <Typography variant='body5' color={palette.text.secondary}>
+          {t('poll.participants', { count })}
+        </Typography>
+      </Stack>
+      <Tooltip title={title}>
         <Typography
-          variant='caption1'
+          maxWidth={{ xs: 150, md: 280 }}
+          noWrap
+          textOverflow='ellipsis'
+          variant='body4'
           sx={{
             position: 'absolute',
-            color: palette.text.secondary,
+            color: palette.text.primary,
             zIndex: 1,
-            right: 15,
+            left: 15,
             top: '50%',
             transform: 'translateY(-50%)',
           }}
         >
-          {t('formats.percent', { value: progress.toFixed(2) })}
+          {title}
         </Typography>
-        <Tooltip title={title}>
-          <Typography
-            maxWidth={{ xs: 150, md: 280 }}
-            noWrap
-            textOverflow='ellipsis'
-            variant='buttonSmall'
-            sx={{
-              position: 'absolute',
-              color: palette.text.primary,
-              zIndex: 1,
-              left: 15,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            {title}
-          </Typography>
-        </Tooltip>
-        <LinearProgress variant='determinate' value={progress} color='primary' />
-      </Stack>
+      </Tooltip>
+      <LinearProgress
+        sx={{ borderRadius: 0, height: 56 }}
+        variant='determinate'
+        value={progress}
+        color={isLeading ? 'primary' : 'secondary'}
+      />
     </Stack>
   )
 }

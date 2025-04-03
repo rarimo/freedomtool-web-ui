@@ -20,10 +20,10 @@ import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import nationalities from '@/locales/resources/countries_en.json'
-import { Sex } from '@/types'
+import { INationality, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
-import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
+import { CreatePollSchema } from '../createPollSchema'
 
 type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
@@ -36,8 +36,6 @@ export default function CriteriasSection() {
   const { t } = useTranslation()
   const {
     control,
-    setValue,
-    clearErrors,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
 
@@ -78,23 +76,7 @@ export default function CriteriasSection() {
   )
 
   const toggleCriteria = (key: CriteriaKey) => {
-    setSelectedKey(prev => {
-      const newSelectedKey = prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
-      const criterias = createPollDefaultValues.criterias
-      switch (key) {
-        case 'age':
-          setValue(`criterias.maxAge`, criterias.maxAge)
-          setValue(`criterias.minAge`, criterias.minAge)
-          clearErrors(`criterias.maxAge`)
-          clearErrors(`criterias.minAge`)
-          break
-        default:
-          setValue(`criterias.${key}`, criterias[key])
-          break
-      }
-
-      return newSelectedKey
-    })
+    setSelectedKey(prev => (prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]))
   }
 
   useEffect(() => {
@@ -113,6 +95,10 @@ export default function CriteriasSection() {
                 <Autocomplete
                   multiple
                   limitTags={2}
+                  value={field.value}
+                  isOptionEqualToValue={(option, value) =>
+                    option.flag === value.flag && option.name === value.name
+                  }
                   disableCloseOnSelect
                   disabled={field.disabled || isSubmitting}
                   sx={{ maxWidth: 516 }}
@@ -138,6 +124,9 @@ export default function CriteriasSection() {
                       label={t('create-poll.nationalities-lbl')}
                     />
                   )}
+                  onChange={(_, newValue: INationality[] | null) => {
+                    field.onChange(newValue)
+                  }}
                 />
                 <FormHelperText>{fieldState.error?.message}</FormHelperText>
               </FormControl>

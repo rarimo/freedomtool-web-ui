@@ -25,3 +25,12 @@ export const sanitizeNumberString = (value: string): string => {
     value.split('.')[1].length < DECIMALS.WEI ? value.split('.')[1].length : DECIMALS.WEI
   return BN.fromRaw(value, inputDecimals).toString()
 }
+
+export const hexToAscii = (hex: string) => {
+  const str = hex.replace(/^0x/, '')
+  let result = ''
+  for (let i = 0; i < str.length; i += 2) {
+    result += String.fromCharCode(parseInt(str.slice(i, i + 2), 16))
+  }
+  return result
+}
