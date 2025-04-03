@@ -82,17 +82,17 @@ export const lightPalette: PaletteOptions = {
   divider: alpha('#000000', 0.05),
   additional: {
     // additional/gradient1
-    gradient1: 'background: linear-gradient(180deg, #9AFE8A 0%, #8AFECC 100%)',
+    gradient1: 'linear-gradient(180deg, #9AFE8A 0%, #8AFECC 100%)',
     // additional/gradient2
-    gradient2: 'background: linear-gradient(180deg, #CBE7EC 0%, #F2F8EE 100%)',
+    gradient2: 'linear-gradient(180deg, #CBE7EC 0%, #F2F8EE 100%)',
     // additional/gradient3
-    gradient3: 'background: linear-gradient(187.48deg, #F4F3F0 3.99%, #DFFCC4 94.19%)',
+    gradient3: 'linear-gradient(187.48deg, #F4F3F0 3.99%, #DFFCC4 94.19%)',
     // additional/gradient4
-    gradient4: 'background: linear-gradient(180deg, #FCE3FC 0%, #D3D1EF 100%)',
+    gradient4: 'linear-gradient(180deg, #FCE3FC 0%, #D3D1EF 100%)',
     // additional/gradient5
-    gradient5: 'background: linear-gradient(180deg, #D5FEC8 0%, #80ED99 100%)',
+    gradient5: 'linear-gradient(180deg, #D5FEC8 0%, #80ED99 100%)',
     // additional/gradient6
-    gradient6: 'background: linear-gradient(87.63deg, #45C45C -1.41%, #39CDA0 113.73%)',
+    gradient6: 'linear-gradient(87.63deg, #45C45C -1.41%, #39CDA0 113.73%)',
   },
   inverted: {
     light: '#FFFFFF', // inverted/dark
@@ -175,17 +175,17 @@ export const darkPalette: PaletteOptions = {
   divider: alpha('#ffffff', 0.05),
   additional: {
     // additional/gradient1
-    gradient1: 'background: linear-gradient(180deg, #9AFE8A 0%, #8AFECC 100%)',
+    gradient1: 'linear-gradient(180deg, #9AFE8A 0%, #8AFECC 100%)',
     // additional/gradient2
-    gradient2: 'background: linear-gradient(180deg, #CBE7EC 0%, #F2F8EE 100%)',
+    gradient2: 'linear-gradient(180deg, #CBE7EC 0%, #F2F8EE 100%)',
     // additional/gradient3
-    gradient3: 'background: linear-gradient(187.48deg, #F4F3F0 3.99%, #DFFCC4 94.19%)',
+    gradient3: 'linear-gradient(187.48deg, #F4F3F0 3.99%, #DFFCC4 94.19%)',
     // additional/gradient4
-    gradient4: 'background: linear-gradient(180deg, #FCE3FC 0%, #D3D1EF 100%)',
+    gradient4: 'linear-gradient(180deg, #FCE3FC 0%, #D3D1EF 100%)',
     // additional/gradient5
-    gradient5: 'background: linear-gradient(180deg, #D5FEC8 0%, #80ED99 100%)',
+    gradient5: 'linear-gradient(180deg, #D5FEC8 0%, #80ED99 100%)',
     // additional/gradient6
-    gradient6: 'background: linear-gradient(87.63deg, #45C45C -1.41%, #39CDA0 113.73%)',
+    gradient6: 'linear-gradient(87.63deg, #45C45C -1.41%, #39CDA0 113.73%)',
   },
   inverted: {
     light: '#000000', // inverted/light

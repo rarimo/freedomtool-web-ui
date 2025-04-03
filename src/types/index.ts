@@ -1,4 +1,4 @@
 export * from './base'
 export * from './bus'
-export * from './polls'
+export * from './poll'
 export * from './theme'

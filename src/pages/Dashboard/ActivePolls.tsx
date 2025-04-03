@@ -1,36 +1,36 @@
 import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
-import { useMemo } from 'react'
 
 import { InfiniteList } from '@/common'
-import { ProposalStatus } from '@/enums/proposals'
-import { useProposalState } from '@/hooks'
+import { getProposals } from '@/helpers'
+import { useMultiPageLoading } from '@/hooks'
 import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
-import PollCard from '@/pages/Dashboard/components/PollCard'
+import { IProposalStatuses } from '@/types'
+
+import PollCard from './components/PollCard'
 
 export default function ActivePolls() {
-  const { proposals, proposalsLoadingState, loadNextProposals, reloadProposals } = useProposalState(
-    {
-      shouldFetchProposals: true,
-    },
-  )
-
-  const activePolls = useMemo(
-    () =>
-      proposals.filter(
-        proposal =>
-          Number(proposal.proposal.status) === ProposalStatus.Started ||
-          Number(proposal.proposal.status) === ProposalStatus.Waiting,
-      ),
-    [proposals],
+  const {
+    data: proposals,
+    loadingState: pollsLoadingState,
+    reload: reloadPolls,
+    loadNext,
+  } = useMultiPageLoading(() =>
+    getProposals({
+      query: {
+        filter: {
+          status: [IProposalStatuses.Started, IProposalStatuses.Waiting].join(','),
+        },
+      },
+    }),
   )
 
   return (
     <InfiniteList
       items={proposals}
-      loadingState={proposalsLoadingState}
-      onRetry={reloadProposals}
-      onLoadNext={loadNextProposals}
+      loadingState={pollsLoadingState}
+      onRetry={reloadPolls}
+      onLoadNext={loadNext}
       slots={{
         noData: <EmptyPollsView />,
       }}
@@ -43,9 +43,9 @@ export default function ActivePolls() {
           gap: 4,
         }}
       >
-        {activePolls.map(({ id, proposal }) => (
+        {proposals.map(proposal => (
           <motion.div
-            key={id}
+            key={proposal.id}
             initial='hidden'
             animate='visible'
             variants={{
@@ -58,7 +58,7 @@ export default function ActivePolls() {
             }}
             custom={Math.random() * 0.5}
           >
-            <PollCard proposal={proposal} id={id} />
+            <PollCard proposal={proposal} />
           </motion.div>
         ))}
       </Box>

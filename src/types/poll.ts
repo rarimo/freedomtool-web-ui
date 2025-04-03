@@ -55,6 +55,7 @@ export enum Sex {
   Any = '',
 }
 
+// TODO: Remove with hook
 export type VoteAmountOverload = {
   type: 'vote_predict_amount'
   votesCount: string
@@ -66,3 +67,36 @@ export type VoteCountOverload = {
   proposalId?: string
 }
 export type VoteParamsInput = VoteAmountOverload | VoteCountOverload
+
+// New types
+export interface IProposal {
+  type: 'proposals'
+  metadata: IProposalMetadata
+  id: string
+  owner: string
+  status: IProposalStatuses
+  total_balance: string
+  remaining_balance: string
+  start_timestamp: number
+  end_timestamp: number
+  votes_count: number
+  remaining_votes_count: number
+}
+
+export enum IProposalStatuses {
+  Waiting = 'waiting',
+  Started = 'started',
+  Ended = 'ended',
+}
+
+export interface IProposalMetadata {
+  title: string
+  description: string
+  imageCid?: string
+  acceptedOptions: IProposalOption[]
+}
+
+export interface IProposalOption {
+  title: string
+  variants: string[]
+}

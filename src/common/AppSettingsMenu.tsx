@@ -61,7 +61,7 @@ export default function AppSettingsMenu() {
         }}
         onClose={() => setAnchorEl(null)}
       >
-        <Stack divider={<Divider flexItem />}>
+        <Stack spacing={1.5} divider={<Divider flexItem />}>
           {!isMdUp && (
             <Typography
               variant='subtitle6'

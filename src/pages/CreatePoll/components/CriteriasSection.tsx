@@ -23,7 +23,7 @@ import nationalities from '@/locales/resources/countries_en.json'
 import { Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
-import { CreatePollSchema } from '../createPollSchema'
+import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
 
 type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
@@ -36,6 +36,8 @@ export default function CriteriasSection() {
   const { t } = useTranslation()
   const {
     control,
+    setValue,
+    clearErrors,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
 
@@ -76,7 +78,23 @@ export default function CriteriasSection() {
   )
 
   const toggleCriteria = (key: CriteriaKey) => {
-    setSelectedKey(prev => (prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]))
+    setSelectedKey(prev => {
+      const newSelectedKey = prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
+      const criterias = createPollDefaultValues.criterias
+      switch (key) {
+        case 'age':
+          setValue(`criterias.maxAge`, criterias.maxAge)
+          setValue(`criterias.minAge`, criterias.minAge)
+          clearErrors(`criterias.maxAge`)
+          clearErrors(`criterias.minAge`)
+          break
+        default:
+          setValue(`criterias.${key}`, criterias[key])
+          break
+      }
+
+      return newSelectedKey
+    })
   }
 
   useEffect(() => {
