@@ -15,9 +15,8 @@ import { useTranslation } from 'react-i18next'
 import { LazyImage } from '@/common'
 import { RARIME_APP_STORE_URL, RARIME_GOOGLE_PLAY_URL } from '@/constants'
 import { Icons } from '@/enums'
+import { QRCodeBlock } from '@/pages/Poll/components/QrCodePanel'
 import { UiDialogContent, UiIcon } from '@/ui'
-
-import { QRCodeBlock } from './VoteQrCode'
 
 export default function VoteBlock({ qrCodeUrl }: { qrCodeUrl: string }) {
   const { palette, breakpoints } = useTheme()

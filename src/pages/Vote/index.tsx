@@ -6,13 +6,13 @@ import { useParams } from 'react-router-dom'
 import { ErrorView } from '@/common'
 import { useRouteTitleContext } from '@/contexts'
 import { useVote } from '@/hooks/vote'
+import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { lineClamp } from '@/theme/helpers'
 
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
 import VoteBlock from './components/VoteBlock'
 import VoteDetails from './components/VoteDetails'
-import VoteQrCode from './components/VoteQrCode'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Vote() {
@@ -152,7 +152,7 @@ export default function Vote() {
                     top: 80,
                   }}
                 >
-                  <VoteQrCode qrCodeUrl={qrCodeUrl} />
+                  <QrCodePanel qrCodeUrl={qrCodeUrl} />
                   {isTopUpAllowed && <TopUpForm />}
                 </Stack>
               </motion.div>
