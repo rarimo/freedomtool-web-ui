@@ -228,7 +228,7 @@
       "qr-scan-count-lbl_one": "{{ count }} scan",
       "qr-scan-count-lbl_other": "{{ count }} scans",
       "headers": {
-        "qr-code-lbl": "Qr code",
+        "qr-code-lbl": "QR code",
         "creation-time-lbl": "Creation time",
         "actions-lbl": "Actions"
       },

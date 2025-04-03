@@ -18,7 +18,7 @@ import { DotDivider } from '@/common'
 import { Icons } from '@/enums'
 import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
-export const qrCodeModalGridTemplateColumns = '1.7fr 1.3fr 1fr'
+const qrCodeModalGridTemplateColumns = '1.7fr 1.3fr 1fr'
 
 export default function QrCodePanel({ qrCodeUrl }: { qrCodeUrl: string }) {
   const { palette } = useTheme()
@@ -104,13 +104,13 @@ function QrCodeModal({ open, onClose, ...rest }: DialogProps) {
     t('poll.qr-code-panel.headers.actions-lbl'),
   ]
 
-  const handleShareQrCode = () => {}
+  const shareQrCode = () => {}
 
-  const handleDownloadQrCode = () => {}
+  const downloadQrCode = () => {}
 
-  const handleDeleteQrCode = () => {}
+  const deleteQrCode = () => {}
 
-  const handleGenerateNewQrCode = () => {}
+  const generateNewQrCode = () => {}
 
   return (
     <Dialog
@@ -120,13 +120,14 @@ function QrCodeModal({ open, onClose, ...rest }: DialogProps) {
       PaperProps={{
         ...rest.PaperProps,
         sx: {
-          width: spacing(153),
+          width: '100%',
+          maxWidth: spacing(153),
           borderRadius: spacing(3),
         },
         position: 'relative',
       }}
     >
-      <UiDialogTitle onClose={onClose}>QR Codes</UiDialogTitle>
+      <UiDialogTitle onClose={onClose}>{t('poll.qr-code-panel.modal-title')}</UiDialogTitle>
       <UiDialogContent component={Stack} gap={{ xs: 4, md: 5 }}>
         {isMdUp ? (
           <>
@@ -167,13 +168,13 @@ function QrCodeModal({ open, onClose, ...rest }: DialogProps) {
               </Stack>
               <Typography variant='subtitle6'>13/08/25 10:21AM</Typography>
               <Stack direction='row' alignItems='center' spacing={3}>
-                <IconButton sx={{ p: 3 }} onClick={() => handleShareQrCode}>
+                <IconButton sx={{ p: 3 }} onClick={shareQrCode}>
                   <UiIcon name={Icons.ShareLine} size={4} />
                 </IconButton>
-                <IconButton sx={{ p: 3 }} onClick={() => handleDownloadQrCode}>
+                <IconButton sx={{ p: 3 }} onClick={downloadQrCode}>
                   <UiIcon name={Icons.DownloadLine} size={4} />
                 </IconButton>
-                <IconButton color='error' sx={{ p: 3 }} onClick={() => handleDeleteQrCode}>
+                <IconButton color='error' sx={{ p: 3 }} onClick={deleteQrCode}>
                   <UiIcon name={Icons.DeleteBin6Line} size={4} />
                 </IconButton>
               </Stack>
@@ -184,13 +185,13 @@ function QrCodeModal({ open, onClose, ...rest }: DialogProps) {
             <Stack direction='row' justifyContent='space-between'>
               <QRCodeBlock size={12} innerPadding={2.5} url='http://localhost:8000' />
               <Stack direction='row' alignItems='center' spacing={3}>
-                <IconButton sx={{ p: 3 }} onClick={() => handleShareQrCode}>
+                <IconButton sx={{ p: 3 }} onClick={shareQrCode}>
                   <UiIcon name={Icons.ShareLine} size={4} />
                 </IconButton>
-                <IconButton sx={{ p: 3 }} onClick={() => handleDownloadQrCode}>
+                <IconButton sx={{ p: 3 }} onClick={downloadQrCode}>
                   <UiIcon name={Icons.DownloadLine} size={4} />
                 </IconButton>
-                <IconButton color='error' sx={{ p: 3 }} onClick={() => handleDeleteQrCode}>
+                <IconButton color='error' sx={{ p: 3 }} onClick={deleteQrCode}>
                   <UiIcon name={Icons.DeleteBin6Line} size={4} />
                 </IconButton>
               </Stack>
@@ -219,7 +220,7 @@ function QrCodeModal({ open, onClose, ...rest }: DialogProps) {
             height: 'fit-content',
             p: 0,
           }}
-          onClick={handleGenerateNewQrCode}
+          onClick={generateNewQrCode}
         >
           {t('poll.qr-code-panel.generate-qr-code-btn')}
         </Button>
