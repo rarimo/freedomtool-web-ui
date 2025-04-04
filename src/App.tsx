@@ -11,6 +11,7 @@ import { ErrorHandler } from '@/helpers'
 import { useSystemPaletteMode, useViewportSizes } from '@/hooks'
 import { useLocalizedZodSchema } from '@/hooks/zod'
 import { createRouter } from '@/router'
+import { authStore } from '@/store'
 import { createTheme } from '@/theme'
 
 const router = createRouter()
@@ -18,7 +19,12 @@ const router = createRouter()
 const App = () => {
   const [isAppInitialized, setIsAppInitialized] = useState(false)
 
-  const { isInitialized: isWeb3Initialized, isCorrectNetwork } = useWeb3Context()
+  const {
+    address,
+    isConnected,
+    isInitialized: isWeb3Initialized,
+    isCorrectNetwork,
+  } = useWeb3Context()
   const paletteMode = useSystemPaletteMode()
   const { close } = useAppKit()
   const { open: isOpen, loading: isLoading } = useAppKitState()
@@ -40,6 +46,11 @@ const App = () => {
   }, [init])
 
   const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
+
+  useEffect(() => {
+    if ((!address && isConnected) || !isConnected) return
+    authStore.verifyToken(address || '')
+  }, [address, isConnected])
 
   useEffect(() => {
     const handleCloseModal = async () => {

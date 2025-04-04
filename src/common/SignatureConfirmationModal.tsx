@@ -1,8 +1,10 @@
 import { Dialog, DialogProps, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
+import { Icons } from '@/enums'
 import { UiDialogContent } from '@/ui'
 
+import UiCircledBadge from '../ui/UiCircledBadge'
 import DotsLoader from './DotsLoader'
 
 function SignatureConfirmationModal(props: DialogProps) {
@@ -24,11 +26,24 @@ function SignatureConfirmationModal(props: DialogProps) {
         flexDirection='column'
         alignItems='center'
         gap={6}
-        p={{ xs: 4, md: 6 }}
+        px={6}
+        py={8}
         textAlign='center'
       >
-        <Stack spacing={2} alignItems='center'>
-          <Typography variant='subtitle2'>{t('signature-confirmation-modal.title')}</Typography>
+        <UiCircledBadge
+          iconProps={{
+            name: Icons.DraftLine,
+            color: palette.primary.dark,
+            size: 10,
+          }}
+          sx={{
+            background: palette.primary.lighter,
+            width: 96,
+            height: 96,
+          }}
+        />
+        <Stack spacing={4} alignItems='center'>
+          <Typography variant='h3'>{t('signature-confirmation-modal.title')}</Typography>
           <Typography
             whiteSpace='pre-wrap'
             variant='body3'

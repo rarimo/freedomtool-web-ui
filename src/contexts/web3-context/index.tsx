@@ -31,6 +31,7 @@ import { getNetworkByChainId, NETWORK_NAME, NetworkConfig, networkConfigsMap } f
 import { ErrorHandler } from '@/helpers'
 import { wagmiAdapter } from '@/main'
 import QueryProvider from '@/query'
+import { authStore } from '@/store'
 
 import { clientToSigner } from './helpers/providers'
 
@@ -209,6 +210,9 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (appKitEvent?.data.event === 'INITIALIZE') {
       setIsInitialized(true)
+    }
+    if (appKitEvent?.data.event === 'DISCONNECT_SUCCESS') {
+      authStore.signOut()
     }
   }, [appKitEvent, status])
 

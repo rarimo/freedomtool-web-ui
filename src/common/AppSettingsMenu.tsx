@@ -15,7 +15,7 @@ import { AppMenu } from '@/common/index'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { formatAddress, formatBalance } from '@/helpers'
-import { uiStore } from '@/store'
+import { authStore, uiStore } from '@/store'
 import { UiIcon, UiSwitch } from '@/ui'
 
 export default function AppSettingsMenu() {
@@ -43,7 +43,11 @@ export default function AppSettingsMenu() {
           <Typography variant='subtitle6'>{formatBalance(balance)}</Typography>
           <Divider orientation='vertical' flexItem />
           {isMdUp && <Typography variant='subtitle6'>{formatAddress(address, 5)}</Typography>}
-          <IconButton color='secondary' onClick={event => setAnchorEl(event.currentTarget)}>
+          <IconButton
+            color='secondary'
+            sx={{ p: 0 }}
+            onClick={event => setAnchorEl(event.currentTarget)}
+          >
             <UiIcon name={Icons.ArrowDownSLine} size={4} />
           </IconButton>
         </Stack>
@@ -82,7 +86,13 @@ export default function AppSettingsMenu() {
             </Stack>
             <UiSwitch checked={palette.mode === 'dark'} onChange={uiStore.togglePaletteMode} />
           </Stack>
-          <MenuItem sx={menuItemSx} onClick={() => disconnect()}>
+          <MenuItem
+            sx={menuItemSx}
+            onClick={() => {
+              disconnect()
+              authStore.signOut()
+            }}
+          >
             <UiIcon name={Icons.LogoutCircleRLine} size={5} color={palette.error.dark} />
             <Typography variant='buttonMedium' color={palette.error.dark}>
               {t('app-header.disconnect-btn')}

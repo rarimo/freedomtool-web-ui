@@ -644,6 +644,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.light,
         boxShadow: `inset 0 0 0 1px ${theme.palette.action.active}`,
         border: 0,
+        borderRadius: theme.spacing(3),
         [theme.breakpoints.down('md')]: {
           padding: 0,
         },

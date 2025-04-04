@@ -25,6 +25,11 @@
     "description": "Don’t get lost! Please switch to {{chainName}} to continue",
     "submit-lbl": "Switch"
   },
+  "install-metamask-modal": {
+    "title": "Install Metamask",
+    "description": "To create a poll and embark on a journey into decentralized, anonymous voting, you need a wallet. Please install it to get started!",
+    "install-lbl": "Try MetaMask"
+  },
   "theme-switcher": {
     "theme-option-light": "Light",
     "theme-option-dark": "Dark"
