@@ -9,7 +9,7 @@ import DarkGradient from '@/common/DarkGradient'
 import { useRouteTitleContext } from '@/contexts'
 import { Icons } from '@/enums'
 import { getIpfsImageSrc } from '@/helpers'
-import { useVote } from '@/hooks/vote'
+import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
@@ -41,7 +41,7 @@ export default function Poll() {
     formattedStartDate,
 
     participantsAmount,
-  } = useVote(id)
+  } = useProposal(id)
 
   useEffect(() => {
     setTitle(proposalMetadata?.title ?? '')

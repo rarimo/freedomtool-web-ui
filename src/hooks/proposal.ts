@@ -17,7 +17,7 @@ import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { IPollDetails } from '@/pages/Vote/components/PollDetails'
 import { IProposalMetadata } from '@/types'
 
-export function useVote(id?: string) {
+export function useProposal(id?: string) {
   const { t } = useTranslation()
   const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
   const { address } = useWeb3Context()
