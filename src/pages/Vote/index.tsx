@@ -14,9 +14,9 @@ import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
+import PollDetails from './components/PollDetails'
 import QuestionList from './components/QuestionList'
 import VoteBlock from './components/VoteBlock'
-import VoteDetails from './components/VoteDetails'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Poll() {
@@ -29,7 +29,9 @@ export default function Poll() {
     isLoading,
     isError,
 
-    voteDetails,
+    criterias,
+
+    pollDetails,
     proposal,
     proposalMetadata,
     isTopUpAllowed,
@@ -206,7 +208,7 @@ export default function Poll() {
                 >
                   {/* TODO: Update it and uncomment */}
                   {/* <TopUpForm /> */}
-                  <VoteDetails list={voteDetails} />
+                  <PollDetails list={pollDetails} criterias={criterias} />
                 </Stack>
               </motion.div>
             )}
@@ -231,7 +233,7 @@ export default function Poll() {
                   <QrCodePanel qrCodeUrl={qrCodeUrl} />
                   {/* TODO: Update it and uncomment */}
                   {/* {isTopUpAllowed && <TopUpForm />} */}
-                  <VoteDetails list={voteDetails} />
+                  <PollDetails list={pollDetails} criterias={criterias} />
                 </Stack>
               </motion.div>
             )}

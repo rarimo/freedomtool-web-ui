@@ -1,18 +1,26 @@
 import { Stack, Typography, useTheme } from '@mui/material'
 import { ReactNode } from 'react'
 
-export interface IVoteDetails {
+import PollCriteriaList, { PollCriteriaListProps } from './PollCriteriaList'
+
+export interface IPollDetails {
   title: ReactNode
   description: ReactNode
 }
 
-export default function VoteDetails({ list }: { list: IVoteDetails[] }) {
+export default function PollDetails({
+  list,
+  criterias,
+}: {
+  list: IPollDetails[]
+  criterias?: PollCriteriaListProps
+}) {
   const { palette } = useTheme()
 
   return (
     <Stack width='100%' spacing={{ xs: 1, md: 2 }}>
       {list.map(({ title, description }, index) => (
-        <Stack direction='row' justifyContent='space-between' key={index}>
+        <Stack direction='row' justifyContent='space-between' key={index} spacing={5}>
           <Typography
             variant='body3'
             typography={{ xs: 'body4', md: 'body3' }}
@@ -20,11 +28,16 @@ export default function VoteDetails({ list }: { list: IVoteDetails[] }) {
           >
             {title}
           </Typography>
-          <Typography variant='body3' typography={{ xs: 'body4', md: 'body3' }}>
+          <Typography
+            textAlign='right'
+            variant='subtitle6'
+            typography={{ xs: 'body4', md: 'subtitle6' }}
+          >
             {description}
           </Typography>
         </Stack>
       ))}
+      <PollCriteriaList {...criterias} />
     </Stack>
   )
 }

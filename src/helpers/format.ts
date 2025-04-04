@@ -7,6 +7,9 @@ import {
   time,
   TimeDate,
 } from '@distributedlab/tools'
+import { t } from 'i18next'
+
+import { Sex } from '@/types'
 // Date
 export function formatDateMY(date: TimeDate) {
   return time(date).format('MM / YYYY')
@@ -300,4 +303,53 @@ export function formatNumberShort(value: BnLike): string {
 
   // 0-999 => "123"
   return formatAmount(bigIntValue, 18)
+}
+
+export const formatAgeRange = ({
+  birthDateUpperboundAge,
+  birthDateLowerBoundAge,
+}: {
+  birthDateUpperboundAge?: number | null
+  birthDateLowerBoundAge?: number | null
+}): string | null => {
+  if (birthDateUpperboundAge && !birthDateLowerBoundAge) {
+    return `${birthDateUpperboundAge}+`
+  }
+
+  if (birthDateLowerBoundAge && !birthDateUpperboundAge) {
+    return t('formats.age.lte', {
+      birthDateLowerBoundAge,
+    })
+  }
+
+  if (birthDateUpperboundAge && birthDateLowerBoundAge) {
+    return t('formats.age.gte-and-lte', {
+      birthDateUpperboundAge,
+      birthDateLowerBoundAge,
+    })
+  }
+
+  return null
+}
+
+export const formatSex = (value?: Sex | null) => {
+  switch (value) {
+    case Sex.Female:
+      return t('format.sex.female')
+    case Sex.Male:
+      return t('format.sex.male')
+    default:
+      return null
+  }
+}
+
+export const formatCountry = (countryKey: string, options?: { withFlag?: boolean }): string => {
+  const withFlag = options?.withFlag ?? false
+
+  // eslint-disable-next-line react-i18n/no-dynamic-translation-keys
+  const name = t(`countries.names.${countryKey}`)
+  // eslint-disable-next-line react-i18n/no-dynamic-translation-keys
+  const flag = t(`countries.flags.${countryKey}`)
+
+  return withFlag ? `${flag} ${name}` : name
 }

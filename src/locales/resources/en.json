@@ -35,7 +35,11 @@
     "button-lbl": "Reload page"
   },
   "formats": {
-    "percent": "{{value}}%"
+    "percent": "{{value}}%",
+    "age": {
+      "lte": "less than or equal {{birthDateLowerBoundAge}}",
+      "gte-and-lte": "{{birthDateUpperboundAge}}-{{birthDateLowerBoundAge}} y.o. only"
+    }
   },
   "errors": {
     "no-provider-address": "No provider address",
@@ -228,6 +232,12 @@
     "remaining-votes": "Remaining votes:",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
+    "criterias-list": {
+      "sex": "Sex",
+      "minAge": "Minimum age to participate",
+      "maxAge": "Maximum age to participate",
+      "allowed-nationalities_other": "All allowed nationalities ({{count}})"
+    },
     "qr-code-panel": {
       "modal-title": "QR Codes",
       "qr-scan-count-lbl_one": "{{ count }} scan",
@@ -238,6 +248,13 @@
         "actions-lbl": "Actions"
       },
       "generate-qr-code-btn": "Generate a new QR code"
+    },
+    "criterias": "Criterias"
+  },
+  "format": {
+    "sex": {
+      "female": "Females",
+      "male": "Males"
     }
   }
 }

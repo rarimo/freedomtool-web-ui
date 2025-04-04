@@ -19,7 +19,8 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
-import nationalities from '@/locales/resources/countries_en.json'
+import { formatCountry } from '@/helpers'
+import countries from '@/locales/resources/countries_en.json'
 import { INationality, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
@@ -102,8 +103,8 @@ export default function CriteriasSection() {
                   disableCloseOnSelect
                   disabled={field.disabled || isSubmitting}
                   sx={{ maxWidth: 516 }}
-                  options={nationalities}
-                  getOptionLabel={({ name, flag }) => `${flag} ${name}`}
+                  options={countries}
+                  getOptionLabel={({ codes }) => formatCountry(codes.join('_'), { withFlag: true })}
                   renderInput={params => (
                     <TextField
                       {...params}

@@ -2,16 +2,19 @@ import { time } from '@distributedlab/tools'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { VOTE_QR_BASE_URL } from '@/constants'
+import { VOTE_QR_BASE_URL, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
 import {
   ErrorHandler,
+  formatCountry,
+  formatSex,
   generateQrCodeUrl,
   getVotesCount,
   parseProposalFromContract,
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
+import { IPollDetails } from '@/pages/Vote/components/PollDetails'
 import { IProposalMetadata } from '@/types'
 
 export function useVote(id?: string) {
@@ -39,9 +42,9 @@ export function useVote(id?: string) {
   } = useIpfsLoading<IProposalMetadata>(proposal?.cid as string)
 
   const {
-    data: voteCount,
-    isLoading: isVoteCountLoading,
-    isLoadingError: isCountLoadingError,
+    data: remainingVotesCount,
+    isLoading: isRemainingVotesCountLoading,
+    isLoadingError: isRemainingVotesCountLoadingError,
   } = useLoading(
     null,
     async () => {
@@ -63,9 +66,13 @@ export function useVote(id?: string) {
   )
 
   const isLoading =
-    isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
+    isProposalLoading ||
+    metadataLoading ||
+    !proposal ||
+    !proposalMetadata ||
+    isRemainingVotesCountLoading
 
-  const isError = metadataError || isCountLoadingError || isProposalLoadingError
+  const isError = metadataError || isRemainingVotesCountLoadingError || isProposalLoadingError
 
   const isTopUpAllowed =
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
@@ -89,7 +96,35 @@ export function useVote(id?: string) {
     return 0
   }, [proposal?.voteResults])
 
-  const voteDetails = useMemo(() => {
+  const criterias = useMemo(() => {
+    const _criterias = proposal?.votingWhitelistData
+
+    // Countries as a criteria string if exists -> ["Ukraine, Georgia"]
+    const formattedNationalitiesArray = _criterias?.nationalities
+      ? _criterias.nationalities.map(country => formatCountry(country, { withFlag: true }))
+      : null
+
+    const birthDateUpperboundAge =
+      _criterias?.birthDateUpperbound && _criterias.birthDateUpperbound !== ZERO_DATE
+        ? time().diff(time(_criterias.birthDateUpperbound, 'YYMMDD'), 'year')
+        : null
+
+    const birthDateLowerBoundAge =
+      _criterias?.birthDateLowerbound && _criterias.birthDateLowerbound !== ZERO_DATE
+        ? time().diff(time(_criterias.birthDateLowerbound, 'YYMMDD'), 'year')
+        : null
+
+    const formattedSex = formatSex(_criterias?.sex)
+
+    return {
+      formattedNationalitiesArray,
+      birthDateUpperboundAge,
+      birthDateLowerBoundAge,
+      formattedSex,
+    }
+  }, [proposal?.votingWhitelistData])
+
+  const pollDetails = useMemo<IPollDetails[]>(() => {
     if (!proposal) return []
     return [
       {
@@ -102,16 +137,18 @@ export function useVote(id?: string) {
       },
       {
         title: t('poll.remaining-votes'),
-        description: voteCount,
+        description: `${participantsAmount}/${remainingVotesCount}`,
       },
     ]
-  }, [proposal, t, formattedStartDate, formattedEndDate, voteCount])
+  }, [proposal, t, formattedStartDate, formattedEndDate, participantsAmount, remainingVotesCount])
 
   return {
     isLoading,
     isError,
 
-    voteDetails,
+    criterias,
+
+    pollDetails,
     proposal,
     proposalMetadata,
     isTopUpAllowed,

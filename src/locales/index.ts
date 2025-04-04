@@ -1,7 +1,8 @@
 import { use } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import resources from './resources'
+import _resources from './resources'
+import countries from './resources/countries_en.json'
 
 const STORAGE_KEY = 'freedom-tool-app-locale'
 export const ENGLISH_LOCALE = 'en-US'
@@ -12,6 +13,32 @@ declare module 'i18next' {
   interface CustomTypeOptions {
     returnNull: false
   }
+}
+
+export function transformCountriesToI18nResources() {
+  return countries.reduce(
+    (acc, { name, flag, codes }) => {
+      const key = codes.join('_')
+      acc.names[key] = name
+      acc.flags[key] = flag
+      return acc
+    },
+    {
+      names: {} as Record<string, string>,
+      flags: {} as Record<string, string>,
+    },
+  )
+}
+
+export const countriesEn = transformCountriesToI18nResources()
+
+const resources = {
+  en: {
+    translation: {
+      ..._resources.en.translation,
+      countries: countriesEn,
+    },
+  },
 }
 
 // for configuration options read: https://www.i18next.com/overview/configuration-options
