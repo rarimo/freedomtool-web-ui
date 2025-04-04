@@ -44,6 +44,7 @@ const UiCheckVoteInput = forwardRef<HTMLInputElement, TextFieldProps>(
             py: 0,
             pl: isMdUp ? 6 : 0,
           },
+          ...textFieldProps.sx,
         }}
         InputProps={{
           startAdornment: (

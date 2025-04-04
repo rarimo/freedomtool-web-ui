@@ -1,6 +1,7 @@
-import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { ErrorView, LazyImage } from '@/common'
@@ -8,7 +9,7 @@ import AbstractBackground from '@/common/AbstractBackground'
 import DarkGradient from '@/common/DarkGradient'
 import { useRouteTitleContext } from '@/contexts'
 import { Icons } from '@/enums'
-import { getIpfsImageSrc } from '@/helpers'
+import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { lineClamp } from '@/theme/helpers'
@@ -16,6 +17,7 @@ import { UiIcon } from '@/ui'
 
 import PollDetails from './components/PollDetails'
 import QuestionList from './components/QuestionList'
+import TopUpForm from './components/TopUpForm'
 import VoteBlock from './components/VoteBlock'
 import VoteSkeleton from './components/VoteSkeleton'
 
@@ -41,6 +43,7 @@ export default function Poll() {
     formattedStartDate,
 
     participantsAmount,
+    remainingVotesCount,
   } = useProposal(id)
 
   useEffect(() => {
@@ -85,7 +88,7 @@ export default function Poll() {
             sx={{
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' },
-              gap: 3,
+              gap: { xs: 6, md: 10 },
             }}
           >
             <motion.div
@@ -94,7 +97,7 @@ export default function Poll() {
               transition={{ duration: 0.2 }}
             >
               {isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}
-              <Stack sx={{ padding: 10, height: 'fit-content', mb: { md: 15 } }} spacing={5}>
+              <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} pt={5} spacing={5}>
                 <Stack spacing={3}>
                   <Stack
                     sx={{
@@ -206,8 +209,7 @@ export default function Poll() {
                     top: 80,
                   }}
                 >
-                  {/* TODO: Update it and uncomment */}
-                  {/* <TopUpForm /> */}
+                  <TopUpForm />
                   <PollDetails list={pollDetails} criterias={criterias} />
                 </Stack>
               </motion.div>
@@ -220,7 +222,9 @@ export default function Poll() {
                 transition={{ duration: 0.2, delay: 0.2 }}
               >
                 <Stack
-                  spacing={10}
+                  pt={5}
+                  spacing={6}
+                  divider={<Divider orientation='horizontal' flexItem />}
                   sx={{
                     textAlign: 'center',
                     alignItems: 'center',
@@ -231,8 +235,14 @@ export default function Poll() {
                   }}
                 >
                   <QrCodePanel qrCodeUrl={qrCodeUrl} />
-                  {/* TODO: Update it and uncomment */}
-                  {/* {isTopUpAllowed && <TopUpForm />} */}
+
+                  <Stack spacing={6} width='100%'>
+                    <VotesLeftProgress
+                      remainingVotes={remainingVotesCount ?? 0}
+                      totalVotes={participantsAmount}
+                    />
+                    {isTopUpAllowed && <TopUpForm />}
+                  </Stack>
                   <PollDetails list={pollDetails} criterias={criterias} />
                 </Stack>
               </motion.div>
@@ -241,5 +251,49 @@ export default function Poll() {
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+function VotesLeftProgress({
+  remainingVotes,
+  totalVotes,
+}: {
+  remainingVotes: number
+  totalVotes: number
+}) {
+  const { palette } = useTheme()
+  const { t } = useTranslation()
+  return (
+    <Stack spacing={2} width='100%'>
+      <Stack width='100%' direction='row' alignItems='center' justifyContent='space-between'>
+        <Typography variant='body4' color={palette.text.secondary}>
+          {t('dashboard.poll-card.progress-lbl')}
+        </Typography>
+        <Typography variant='subtitle6'>
+          {t('dashboard.poll-card.participants-lbl', {
+            currentVotesCount: totalVotes ?? 0,
+            totalVotes: remainingVotes ?? 0, // TODO: Replace
+          })}
+        </Typography>
+      </Stack>
+      <Stack
+        position='relative'
+        width='100%'
+        height={12}
+        borderRadius={1000}
+        bgcolor={palette.action.active}
+        overflow='hidden'
+      >
+        <Stack
+          position='absolute'
+          top={0}
+          left={0}
+          height='100%'
+          // TODO: Replace remainingVotes
+          width={`${getCountProgress(remainingVotes, totalVotes)}%`}
+          bgcolor={palette.primary.main}
+        />
+      </Stack>
+    </Stack>
   )
 }

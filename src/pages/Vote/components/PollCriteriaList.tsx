@@ -32,9 +32,12 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
   const formattedAge = formatAgeRange({ birthDateUpperboundAge, birthDateLowerBoundAge })
 
   const hasNationalitiesList =
-    formattedNationalitiesArray?.length && formattedNationalitiesArray.length > 1
+    Array.isArray(formattedNationalitiesArray) && formattedNationalitiesArray.length > 0
+
   const nationalitiesPreview = hasNationalitiesList
-    ? `${formattedNationalitiesArray[0]} +${formattedNationalitiesArray.length - 1}`
+    ? formattedNationalitiesArray.length === 1
+      ? formattedNationalitiesArray[0]
+      : `${formattedNationalitiesArray[0]} +${formattedNationalitiesArray.length - 1}`
     : null
 
   const previewString = [nationalitiesPreview, formattedSex, formattedAge]
@@ -55,6 +58,8 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
       value: formatAgeRange({ birthDateLowerBoundAge }),
     },
   ]
+
+  const hasCriteriaList = criteriaList.every(criteria => criteria.value)
 
   return (
     <>
@@ -79,36 +84,40 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <UiDialogTitle>{t('poll.criterias')}</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
-          <Stack spacing={2}>
-            {criteriaList.map(
-              (item, index) =>
-                item.value && (
-                  <Stack
-                    key={index}
-                    direction='row'
-                    width={1}
-                    alignItems='center'
-                    justifyContent='space-between'
-                  >
-                    <Typography
-                      variant='body3'
-                      typography={{ xs: 'body4', md: 'body3' }}
-                      color={palette.text.secondary}
-                    >
-                      {item.label}
-                    </Typography>
-                    <Typography
-                      textAlign='right'
-                      variant='subtitle6'
-                      typography={{ xs: 'body4', md: 'subtitle6' }}
-                    >
-                      {item.value}
-                    </Typography>
-                  </Stack>
-                ),
-            )}
-          </Stack>
-          <Divider flexItem orientation='horizontal' sx={{ my: 5 }} />
+          {hasCriteriaList && (
+            <>
+              <Stack spacing={2}>
+                {criteriaList.map(
+                  (item, index) =>
+                    item.value && (
+                      <Stack
+                        key={index}
+                        direction='row'
+                        width={1}
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <Typography
+                          variant='body3'
+                          typography={{ xs: 'body4', md: 'body3' }}
+                          color={palette.text.secondary}
+                        >
+                          {item.label}
+                        </Typography>
+                        <Typography
+                          textAlign='right'
+                          variant='subtitle6'
+                          typography={{ xs: 'body4', md: 'subtitle6' }}
+                        >
+                          {item.value}
+                        </Typography>
+                      </Stack>
+                    ),
+                )}
+              </Stack>
+              <Divider flexItem orientation='horizontal' sx={{ my: 5 }} />
+            </>
+          )}
 
           {formattedNationalitiesArray?.length && (
             <Stack>

@@ -57,7 +57,7 @@ function QuestionItem({
 
   return (
     <Stack padding={0} bgcolor={palette.action.active} borderRadius={5}>
-      <Stack spacing={2} p={{ xs: 1, md: 6 }}>
+      <Stack spacing={2} p={{ xs: 3, md: 6 }}>
         <Typography
           title={title}
           color={palette.text.primary}

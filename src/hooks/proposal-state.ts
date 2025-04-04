@@ -1,111 +1,19 @@
 import { BigNumberish } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
 import { config } from '@/config'
-import { ZERO_PROPOSAL_SMT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { createContract, ErrorHandler } from '@/helpers'
-import { IProposalWithId } from '@/types'
+import { createContract } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-import { useLoading } from './loading'
-import { useProposalMultiPageLoading } from './proposal-multi-page-loading'
-
-interface UseProposalStateOptions {
-  shouldFetchProposals?: boolean
-}
-
-const LAST_VALID_PROPOSAL_ID = 1
-
-export const useProposalState = ({ shouldFetchProposals = true }: UseProposalStateOptions) => {
+export const useProposalState = () => {
   const { contractConnector } = useWeb3Context()
 
   const contract = useMemo(() => {
     if (!contractConnector) return null
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
-
-  const [lastProposalId, setLastProposalId] = useState<number | null>(null)
-  const [loadedProposals, setLoadedProposals] = useState<Set<number>>(new Set())
-
-  const { data: _lastProposalId } = useLoading(
-    null,
-    async () => {
-      const id = await contract?.contractInstance.lastProposalId()
-      const parsedId = Number(id)
-
-      return parsedId >= 0 ? parsedId : 0
-    },
-    { silentError: true, loadOnMount: true },
-  )
-
-  const fetchProposals = useCallback(
-    async (page: number, pageLimit: number) => {
-      if (!lastProposalId) return []
-
-      const startId = lastProposalId - (page - 1) * pageLimit
-      const endId = Math.max(startId - pageLimit + 1, LAST_VALID_PROPOSAL_ID)
-      const ids: number[] = []
-
-      // Unique proposal ids
-      for (let id = startId; id >= endId; id--) {
-        if (!loadedProposals.has(id)) {
-          ids.push(id)
-        }
-      }
-
-      if (ids.length === 0) return []
-
-      // If the proposal contains invalid data, getProposalInfo will throw an error.
-      // However, if the proposal with the given ID doesn't exist,
-      // it will return a valid but empty proposal.
-      const proposalsData = await Promise.allSettled(
-        ids.map(async id => {
-          try {
-            const proposal = await contract?.contractInstance.getProposalInfo(id)
-            return { id, proposal }
-          } catch (error) {
-            ErrorHandler.process(error)
-            return { id, proposal: null }
-          }
-        }),
-      )
-
-      const successfulProposals = proposalsData
-        .filter(
-          (result): result is PromiseFulfilledResult<IProposalWithId> =>
-            // Filtering out rejected values and empty proposals (with empty SMT)
-            result.status === 'fulfilled' && result.value.proposal?.[0] !== ZERO_PROPOSAL_SMT,
-        )
-        .map(result => result.value)
-        .toSorted((a, b) => b.id - a.id)
-
-      const newLoadedProposals = new Set(loadedProposals)
-      successfulProposals.forEach(proposal => newLoadedProposals.add(proposal.id))
-      setLoadedProposals(newLoadedProposals)
-
-      if (successfulProposals.length > LAST_VALID_PROPOSAL_ID) {
-        setLastProposalId(successfulProposals[successfulProposals.length - 1].id)
-      }
-
-      return successfulProposals
-    },
-    [contract, lastProposalId, loadedProposals],
-  )
-
-  const {
-    data: proposals,
-    loadingState: proposalsLoadingState,
-    hasNext: hasNextProposals,
-    loadNext: loadNextProposals,
-    reload: reloadProposals,
-  } = useProposalMultiPageLoading<IProposalWithId>(fetchProposals, {
-    loadOnMount: Boolean(shouldFetchProposals && contract && lastProposalId),
-    loadArgs: [lastProposalId],
-    pageLimit: DEFAULT_PAGE_LIMIT,
-  })
 
   const createProposal = useCallback(
     async (
@@ -154,19 +62,7 @@ export const useProposalState = ({ shouldFetchProposals = true }: UseProposalSta
     [contract],
   )
 
-  useEffect(() => {
-    if (lastProposalId === null && _lastProposalId !== null) {
-      setLastProposalId(_lastProposalId)
-    }
-  }, [_lastProposalId, lastProposalId])
-
   return {
-    proposals,
-    proposalsLoadingState,
-    hasNextProposals,
-    loadNextProposals,
-    reloadProposals,
-
     createProposal,
     addFundsToProposal,
     getProposalInfo,

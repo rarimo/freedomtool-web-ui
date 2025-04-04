@@ -35,7 +35,7 @@ nationalities satisfies INationality[]
 export default function CreatePollForm() {
   const { t } = useTranslation()
 
-  const { createProposal } = useProposalState({ shouldFetchProposals: false })
+  const { createProposal } = useProposalState()
 
   const form = useForm<CreatePollSchema>({
     defaultValues: createPollDefaultValues,

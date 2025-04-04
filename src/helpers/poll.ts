@@ -1,6 +1,6 @@
 import { JsonApiClientRequestOpts } from '@distributedlab/jac'
 import { time } from '@distributedlab/tools'
-import { AbiCoder } from 'ethers'
+import { AbiCoder, toBeHex } from 'ethers'
 import { decodeAbiParameters, stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
@@ -156,13 +156,13 @@ export const decodeWhitelistData = (whitelistDataHex: string) => {
 
   const decodedData: DecodedWhitelistData = {
     selector: _decodedData.selector,
-    nationalities: _decodedData.nationalities.map(item => hexToAscii(item.toString(16))),
+    nationalities: _decodedData.nationalities.map(item => hexToAscii(toBeHex(item))),
     identityCreationTimestampUpperBound: Number(_decodedData.identityCreationTimestampUpperBound),
     identityCounterUpperBound: Number(_decodedData.identityCounterUpperBound),
-    sex: hexToAscii(_decodedData.sex.toString(16)) as Sex,
-    birthDateLowerbound: hexToAscii(_decodedData.birthDateLowerbound.toString(16)),
-    birthDateUpperbound: hexToAscii(_decodedData.birthDateUpperbound.toString(16)),
-    expirationDateLowerBound: hexToAscii(_decodedData.expirationDateLowerBound.toString(16)),
+    sex: hexToAscii(toBeHex(_decodedData.sex)) as Sex,
+    birthDateLowerbound: toBeHex(_decodedData.birthDateLowerbound),
+    birthDateUpperbound: toBeHex(_decodedData.birthDateUpperbound),
+    expirationDateLowerBound: hexToAscii(toBeHex(_decodedData.expirationDateLowerBound)),
   }
 
   return decodedData

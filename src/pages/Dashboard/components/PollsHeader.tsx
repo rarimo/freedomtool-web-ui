@@ -1,5 +1,4 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
@@ -7,53 +6,50 @@ import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
-import { ProposalStatus } from '@/enums/proposals'
-import { useProposalState } from '@/hooks'
-import PollsTabs, { PollTab } from '@/pages/Dashboard/components/PollsTabs'
+import PollsTabs, { IPollTab } from '@/pages/Dashboard/components/PollsTabs'
 import { UiIcon } from '@/ui'
 
+// FIXME: Get proposals count from another source
 export default function PollsHeader() {
   const { palette, spacing, typography, breakpoints } = useTheme()
   const { t } = useTranslation()
   const { isConnected } = useWeb3Context()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
 
-  const { proposals } = useProposalState({
-    shouldFetchProposals: true,
-  })
+  // const { getProposalInfo } = useProposalState()
 
-  const activePollsCount = useMemo(
-    () =>
-      proposals.filter(
-        proposal =>
-          Number(proposal.proposal.status) === ProposalStatus.Started ||
-          Number(proposal.proposal.status) === ProposalStatus.Waiting,
-      ).length,
-    [proposals],
-  )
+  // const activePollsCount = useMemo(
+  //   () =>
+  //     proposals.filter(
+  //       proposal =>
+  //         Number(proposal.proposal.status) === ProposalStatus.Started ||
+  //         Number(proposal.proposal.status) === ProposalStatus.Waiting,
+  //     ).length,
+  //   [proposals],
+  // )
 
-  const historyPollsCount = useMemo(
-    () =>
-      proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended)
-        .length,
-    [proposals],
-  )
+  // const historyPollsCount = useMemo(
+  //   () =>
+  //     proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended)
+  //       .length,
+  //   [proposals],
+  // )
 
-  const dashboardTabs: PollTab[] = [
+  const dashboardTabs: IPollTab[] = [
     {
       route: RoutePaths.DashboardActive,
       label: t('dashboard.active-polls-tab-lbl'),
-      count: activePollsCount,
+      // count: activePollsCount,
     },
     {
       route: RoutePaths.DashboardHistory,
       label: t('dashboard.history-polls-tab-lbl'),
-      count: historyPollsCount,
+      // count: historyPollsCount,
     },
     {
       route: RoutePaths.DashboardDraft,
       label: t('dashboard.draft-polls-tab-lbl'),
-      count: 0,
+      // count: 0,
     },
   ]
 

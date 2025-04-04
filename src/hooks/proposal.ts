@@ -11,6 +11,7 @@ import {
   formatSex,
   generateQrCodeUrl,
   getVotesCount,
+  hexToAscii,
   parseProposalFromContract,
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
@@ -19,7 +20,7 @@ import { IProposalMetadata } from '@/types'
 
 export function useProposal(id?: string) {
   const { t } = useTranslation()
-  const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
+  const { getProposalInfo } = useProposalState()
   const { address } = useWeb3Context()
 
   const {
@@ -54,7 +55,7 @@ export function useProposal(id?: string) {
         return response.data.vote_count || 0
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
-        return '–'
+        return 0
       }
     },
     { silentError: true },
@@ -106,12 +107,12 @@ export function useProposal(id?: string) {
 
     const birthDateUpperboundAge =
       _criterias?.birthDateUpperbound && _criterias.birthDateUpperbound !== ZERO_DATE
-        ? time().diff(time(_criterias.birthDateUpperbound, 'YYMMDD'), 'year')
+        ? time().diff(time(hexToAscii(_criterias.birthDateUpperbound), 'YYMMDD'), 'year')
         : null
 
     const birthDateLowerBoundAge =
       _criterias?.birthDateLowerbound && _criterias.birthDateLowerbound !== ZERO_DATE
-        ? time().diff(time(_criterias.birthDateLowerbound, 'YYMMDD'), 'year')
+        ? time().diff(time(hexToAscii(_criterias.birthDateLowerbound), 'YYMMDD'), 'year')
         : null
 
     const formattedSex = formatSex(_criterias?.sex)
@@ -158,5 +159,6 @@ export function useProposal(id?: string) {
     formattedEndDate,
 
     participantsAmount,
+    remainingVotesCount,
   }
 }

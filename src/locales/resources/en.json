@@ -160,7 +160,7 @@
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
     "success-msg": "You have successfully added funds to your voting contract",
-    "remaining-votes": "Remaining votes:",
+    "remaining-votes": "Participants",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
     "form": {
@@ -225,18 +225,18 @@
     "sex-criteria-item": "{{value}} only"
   },
   "poll": {
-    "start-date": "Start Date",
-    "end-date": "End Date",
+    "start-date": "Start Date:",
+    "end-date": "End Date:",
     "participants_one": "{{ count }} Participant",
     "participants_other": "{{ count }} Participants",
-    "remaining-votes": "Remaining votes:",
+    "remaining-votes": "Participants:",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
     "criterias-list": {
-      "sex": "Sex",
-      "minAge": "Minimum age to participate",
-      "maxAge": "Maximum age to participate",
-      "allowed-nationalities_other": "All allowed nationalities ({{count}})"
+      "sex": "Sex:",
+      "minAge": "Minimum age to participate:",
+      "maxAge": "Maximum age to participate:",
+      "allowed-nationalities": "All allowed nationalities ({{count}})"
     },
     "qr-code-panel": {
       "modal-title": "QR Codes",
@@ -249,7 +249,7 @@
       },
       "generate-qr-code-btn": "Generate a new QR code"
     },
-    "criterias": "Criterias"
+    "criterias": "Criterias:"
   },
   "format": {
     "sex": {
