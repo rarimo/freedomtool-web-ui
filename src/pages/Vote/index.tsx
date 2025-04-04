@@ -28,6 +28,7 @@ export default function Poll() {
   const {
     isLoading,
     isError,
+
     voteDetails,
     proposal,
     proposalMetadata,
@@ -46,7 +47,7 @@ export default function Poll() {
 
   return (
     <AnimatePresence mode='popLayout'>
-      {isLoading && (
+      {isLoading && !isError && (
         <motion.div
           key='loading'
           initial={{ opacity: 0.2 }}

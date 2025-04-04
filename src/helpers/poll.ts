@@ -158,7 +158,7 @@ export const decodeWhitelistData = (whitelistDataHex: string) => {
     selector: _decodedData.selector,
     nationalities: _decodedData.nationalities.map(item => hexToAscii(item.toString(16))),
     identityCreationTimestampUpperBound: Number(_decodedData.identityCreationTimestampUpperBound),
-    identityCounterUpperBound: Number(_decodedData.identityCreationTimestampUpperBound),
+    identityCounterUpperBound: Number(_decodedData.identityCounterUpperBound),
     sex: hexToAscii(_decodedData.sex.toString(16)) as Sex,
     birthDateLowerbound: hexToAscii(_decodedData.birthDateLowerbound.toString(16)),
     birthDateUpperbound: hexToAscii(_decodedData.birthDateUpperbound.toString(16)),

@@ -19,7 +19,11 @@ export function useVote(id?: string) {
   const { getProposalInfo } = useProposalState({ shouldFetchProposals: false })
   const { address } = useWeb3Context()
 
-  const { data: proposal, isLoading: isProposalLoading } = useLoading(null, async () => {
+  const {
+    data: proposal,
+    isLoading: isProposalLoading,
+    isLoadingError: isProposalLoadingError,
+  } = useLoading(null, async () => {
     if (!id) return null
     const proposalFromContract = await getProposalInfo(Number(id))
     if (proposalFromContract) {
@@ -60,7 +64,8 @@ export function useVote(id?: string) {
 
   const isLoading =
     isProposalLoading || metadataLoading || !proposal || !proposalMetadata || isVoteCountLoading
-  const isError = metadataError || isCountLoadingError
+
+  const isError = metadataError || isCountLoadingError || isProposalLoadingError
 
   const isTopUpAllowed =
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
@@ -105,6 +110,7 @@ export function useVote(id?: string) {
   return {
     isLoading,
     isError,
+
     voteDetails,
     proposal,
     proposalMetadata,
