@@ -21,7 +21,7 @@ import {
 } from '@/helpers'
 import { useProposalState } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
-import { INationality } from '@/types'
+import { Nationality } from '@/types'
 
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriasSection from './CriteriasSection'
@@ -30,7 +30,7 @@ import QuestionsSection from './QuestionsSection'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
 
-nationalities satisfies INationality[]
+nationalities satisfies Nationality[]
 
 export default function CreatePollForm() {
   const { t } = useTranslation()

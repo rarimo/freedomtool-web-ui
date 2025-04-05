@@ -18,9 +18,10 @@ declare module 'i18next' {
 export function transformCountriesToI18nResources() {
   return countries.reduce(
     (acc, { name, flag, codes }) => {
-      const key = codes.join('_')
-      acc.names[key] = name
-      acc.flags[key] = flag
+      codes.forEach(code => {
+        acc.names[code] = name
+        acc.flags[code] = flag
+      })
       return acc
     },
     {

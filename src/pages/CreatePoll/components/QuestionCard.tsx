@@ -22,7 +22,7 @@ import { UiIcon } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
 
-interface IQuestionForm {
+interface QuestionFormProps {
   question: FieldArrayWithId<CreatePollSchema, 'questions', 'id'>
   control: Control<CreatePollSchema, unknown>
   index: number
@@ -31,12 +31,12 @@ interface IQuestionForm {
   onDelete: () => void
 }
 
-interface IQuestionCard extends IQuestionForm {
+interface QuestionCardProps extends QuestionFormProps {
   isEditing: boolean
   onEdit: () => void
 }
 
-export default function QuestionCard(props: IQuestionCard) {
+export default function QuestionCard(props: QuestionCardProps) {
   const { t } = useTranslation()
   const { palette } = useTheme()
   const { index, control, isDisabled } = props
@@ -86,7 +86,7 @@ export default function QuestionCard(props: IQuestionCard) {
   )
 }
 
-function QuestionForm(props: IQuestionForm) {
+function QuestionForm(props: QuestionFormProps) {
   const { question, index, canDelete, control, onDelete } = props
   const { t } = useTranslation()
 

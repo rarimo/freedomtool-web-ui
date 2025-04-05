@@ -3,14 +3,14 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
-import { IParsedProposal, IQuestionIpfs } from '@/types'
+import { ParsedProposal, QuestionIpfs } from '@/types'
 
 export default function QuestionList({
   proposal,
   questions,
 }: {
-  questions: IQuestionIpfs[]
-  proposal: IParsedProposal | null
+  questions: QuestionIpfs[]
+  proposal: ParsedProposal | null
 }) {
   if (!proposal) return null
 

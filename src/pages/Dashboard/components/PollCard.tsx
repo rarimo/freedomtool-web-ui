@@ -8,10 +8,10 @@ import AbstractBackground from '@/common/AbstractBackground'
 import { Icons, RoutePaths } from '@/enums'
 import { formatDateDM, getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { lineClamp } from '@/theme/helpers'
-import { IProposal } from '@/types'
+import { Proposal } from '@/types'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
 
-export default function PollCard({ proposal }: { proposal: IProposal }) {
+export default function PollCard({ proposal }: { proposal: Proposal }) {
   const navigate = useNavigate()
 
   const { palette } = useTheme()

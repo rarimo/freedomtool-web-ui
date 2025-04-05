@@ -13,7 +13,18 @@ export const MAX_TOKEN_AMOUNT_PER_POLL = 10_000
 
 export const MAX_UINT32 = 4294967295
 
-export const WHITELIST_DATA_SIGNATURE =
-  'tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'
-
 export const ZERO_DATE = '0x303030303030'
+
+export const WHITELIST_DATA_SIGNATURE = {
+  type: 'tuple',
+  components: [
+    { name: 'selector', type: 'uint256' },
+    { name: 'nationalities', type: 'uint256[]' },
+    { name: 'identityCreationTimestampUpperBound', type: 'uint256' },
+    { name: 'identityCounterUpperBound', type: 'uint256' },
+    { name: 'sex', type: 'uint256' },
+    { name: 'birthDateLowerbound', type: 'uint256' },
+    { name: 'birthDateUpperbound', type: 'uint256' },
+    { name: 'expirationDateLowerBound', type: 'uint256' },
+  ],
+} as const

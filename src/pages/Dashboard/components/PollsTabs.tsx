@@ -5,18 +5,18 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 import { Transitions } from '@/theme/constants'
 
-export interface IPollTab {
+export interface PollTabProps {
   route: string
   label: string
   count?: number
   isExact?: boolean
 }
 
-interface IPollTabsProps {
-  tabs: IPollTab[]
+interface PollTabsProps {
+  tabs: PollTabProps[]
 }
 
-export default function PollsTabs({ tabs }: IPollTabsProps) {
+export default function PollsTabs({ tabs }: PollTabsProps) {
   return (
     <Stack
       direction='row'
@@ -33,7 +33,7 @@ export default function PollsTabs({ tabs }: IPollTabsProps) {
   )
 }
 
-function PollsTab({ count, label, route, isExact = false }: IPollTab) {
+function PollsTab({ count, label, route, isExact = false }: PollTabProps) {
   const location = useLocation()
   const { palette } = useTheme()
 

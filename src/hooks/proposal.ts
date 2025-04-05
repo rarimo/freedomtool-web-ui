@@ -16,7 +16,7 @@ import {
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { IPollDetails } from '@/pages/Vote/components/PollDetails'
-import { IProposalMetadata } from '@/types'
+import { ProposalMetadata } from '@/types'
 
 export function useProposal(id?: string) {
   const { t } = useTranslation()
@@ -40,7 +40,7 @@ export function useProposal(id?: string) {
     data: proposalMetadata,
     isLoading: metadataLoading,
     isLoadingError: metadataError,
-  } = useIpfsLoading<IProposalMetadata>(proposal?.cid as string)
+  } = useIpfsLoading<ProposalMetadata>(proposal?.cid as string)
 
   const {
     data: remainingVotesCount,
@@ -102,7 +102,11 @@ export function useProposal(id?: string) {
 
     // Countries as a criteria string if exists -> ["Ukraine, Georgia"]
     const formattedNationalitiesArray = _criterias?.nationalities
-      ? _criterias.nationalities.map(country => formatCountry(country, { withFlag: true }))
+      ? [
+          ...new Set(
+            _criterias.nationalities.map(country => formatCountry(country, { withFlag: true })),
+          ),
+        ]
       : null
 
     const birthDateUpperboundAge =

@@ -6,7 +6,7 @@ import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
-import PollsTabs, { IPollTab } from '@/pages/Dashboard/components/PollsTabs'
+import PollsTabs, { PollTabProps } from '@/pages/Dashboard/components/PollsTabs'
 import { UiIcon } from '@/ui'
 
 // FIXME: Get proposals count from another source
@@ -35,7 +35,7 @@ export default function PollsHeader() {
   //   [proposals],
   // )
 
-  const dashboardTabs: IPollTab[] = [
+  const dashboardTabs: PollTabProps[] = [
     {
       route: RoutePaths.DashboardActive,
       label: t('dashboard.active-polls-tab-lbl'),

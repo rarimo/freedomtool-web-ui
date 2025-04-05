@@ -1,10 +1,10 @@
 import { api } from '@/api/clients'
 import { config } from '@/config'
 import { ApiServicePaths } from '@/enums'
-import { IProposalMetadata, IUploadData } from '@/types'
+import { ProposalMetadata, UploadedDataIpfs } from '@/types'
 
-export const uploadJsonToIpfs = (vote: IProposalMetadata) => {
-  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
+export const uploadJsonToIpfs = (vote: ProposalMetadata) => {
+  return api.post<UploadedDataIpfs>(`${ApiServicePaths.Ipfs}/v1/public/upload`, {
     body: {
       data: {
         type: 'upload_json',
@@ -20,7 +20,7 @@ export const uploadImageToIpfs = (image: File) => {
   const formData = new FormData()
   formData.append('image', image)
 
-  return api.post<IUploadData>(`${ApiServicePaths.Ipfs}/v1/public/upload-file`, {
+  return api.post<UploadedDataIpfs>(`${ApiServicePaths.Ipfs}/v1/public/upload-file`, {
     body: formData,
   })
 }

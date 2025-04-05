@@ -21,14 +21,14 @@ import { useTranslation } from 'react-i18next'
 import { Icons } from '@/enums'
 import { formatCountry } from '@/helpers'
 import countries from '@/locales/resources/countries_en.json'
-import { INationality, Sex } from '@/types'
+import { Nationality, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
 
 type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
-interface ICriteria {
+interface CriteriaOptions {
   key: CriteriaKey
   label: string
 }
@@ -62,7 +62,7 @@ export default function CriteriasSection() {
     [t],
   )
 
-  const criteriaOptions: ICriteria[] = useMemo(
+  const criteriaOptions: CriteriaOptions[] = useMemo(
     () => [
       { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
@@ -104,7 +104,7 @@ export default function CriteriasSection() {
                   disabled={field.disabled || isSubmitting}
                   sx={{ maxWidth: 516 }}
                   options={countries}
-                  getOptionLabel={({ codes }) => formatCountry(codes.join('_'), { withFlag: true })}
+                  getOptionLabel={({ codes }) => formatCountry(codes[0], { withFlag: true })}
                   renderInput={params => (
                     <TextField
                       {...params}
@@ -125,7 +125,7 @@ export default function CriteriasSection() {
                       label={t('create-poll.nationalities-lbl')}
                     />
                   )}
-                  onChange={(_, newValue: INationality[] | null) => {
+                  onChange={(_, newValue: Nationality[] | null) => {
                     field.onChange(newValue)
                   }}
                 />
@@ -238,7 +238,7 @@ export default function CriteriasSection() {
 interface CriteriasMenuProps {
   anchorEl: HTMLElement | null
   isOpen: boolean
-  unselectedCriterias: ICriteria[]
+  unselectedCriterias: CriteriaOptions[]
   onClose: () => void
   toggleCriteria: (key: CriteriaKey) => void
 }
