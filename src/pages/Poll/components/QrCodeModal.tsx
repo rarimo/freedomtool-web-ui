@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { QrCodeLink as QRCodeType } from '@/api/modules/qr-code'
 import { DotDivider, InfiniteList } from '@/common'
 import { Icons, LoadingStates } from '@/enums'
-import { formatCroppedString, formatDateTime } from '@/helpers'
+import { formatCroppedString, formatDateTime, generatePollQrCodeUrl } from '@/helpers'
 import { QRCodeBlock, qrCodeModalGridTemplateColumns } from '@/pages/Poll/components/QrCodePanel'
 import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
@@ -111,7 +111,11 @@ export default function QrCodeModal({
                   alignItems='center'
                 >
                   <Stack direction='row' alignItems='center' spacing={3}>
-                    <QRCodeBlock size={12} innerPadding={2.5} url={qrCode.url} />
+                    <QRCodeBlock
+                      size={12}
+                      innerPadding={2.5}
+                      url={generatePollQrCodeUrl(qrCode.url)}
+                    />
                     <Stack alignItems='flex-start'>
                       <Typography variant='subtitle6'>{formatCroppedString(qrCode.id)}</Typography>
                       <Typography variant='body4' color={palette.text.secondary}>
@@ -140,7 +144,11 @@ export default function QrCodeModal({
             {qrCodes.map(qrCode => (
               <Stack key={qrCode.id} spacing={2}>
                 <Stack direction='row' justifyContent='space-between'>
-                  <QRCodeBlock size={12} innerPadding={2.5} url={qrCode.url} />
+                  <QRCodeBlock
+                    size={12}
+                    innerPadding={2.5}
+                    url={generatePollQrCodeUrl(qrCode.url)}
+                  />
                   <QRCodeListItemActions
                     qrCode={qrCode}
                     onShare={onShare}

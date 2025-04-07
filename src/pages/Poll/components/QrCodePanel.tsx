@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
 import { createQRCode, deleteQRCode, getQrCodeLinks } from '@/api/modules/qr-code'
 import { Icons, LoadingStates } from '@/enums'
-import { ErrorHandler, formatCroppedString } from '@/helpers'
+import { ErrorHandler, formatCroppedString, generatePollQrCodeUrl } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
 import QrCodeModal from '@/pages/Poll/components/QrCodeModal'
 import { QrCodePanelSkeleton } from '@/pages/Poll/components/QrCodePanelSkeleton'
@@ -92,7 +92,7 @@ export default function QrCodePanel() {
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
       <Stack direction='row' alignItems='center' spacing={1}>
-        <QRCodeBlock url={firstActiveQRCode?.url || ''} />
+        <QRCodeBlock url={generatePollQrCodeUrl(firstActiveQRCode?.url || '')} />
         <Stack alignItems='flex-start' spacing={2}>
           <Typography variant='subtitle5'>
             {formatCroppedString(firstActiveQRCode?.id || '')}
