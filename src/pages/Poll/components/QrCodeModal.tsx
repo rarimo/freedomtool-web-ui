@@ -23,23 +23,26 @@ interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
   isOpen: boolean
   onClose: () => void
   qrCodes: QRCodeType[]
-  qrCodesActions: {
-    qrCodeLoadingState: LoadingStates
-    reloadQrCodes: () => Promise<void>
-    loadNextQrCodes: () => Promise<void>
-    updateQrCodes: () => Promise<void>
-    onShare: () => void
-    onDownload: () => void
-    onCreate: () => Promise<void>
-    onDelete: (id: string) => void
-  }
+  qrCodeLoadingState: LoadingStates
+  onReload: () => Promise<void>
+  onLoadNext: () => Promise<void>
+  onShare: () => void
+  onDownload: () => void
+  onCreate: () => Promise<void>
+  onDelete: (id: string) => void
 }
 
 export default function QrCodeModal({
-  qrCodes,
-  qrCodesActions,
   isOpen,
   onClose,
+  qrCodes,
+  qrCodeLoadingState,
+  onReload,
+  onLoadNext,
+  onShare,
+  onDownload,
+  onCreate,
+  onDelete,
   ...rest
 }: QrCodeModalProps) {
   const { palette, spacing, breakpoints } = useTheme()
@@ -96,9 +99,9 @@ export default function QrCodeModal({
             <Divider flexItem />
             <InfiniteList
               items={qrCodes}
-              loadingState={qrCodesActions.qrCodeLoadingState}
-              onRetry={qrCodesActions.reloadQrCodes}
-              onLoadNext={qrCodesActions.loadNextQrCodes}
+              loadingState={qrCodeLoadingState}
+              onRetry={onReload}
+              onLoadNext={onLoadNext}
             >
               {qrCodes.map(qrCode => (
                 <Box
@@ -119,9 +122,9 @@ export default function QrCodeModal({
                   <Typography variant='subtitle6'>{formatDateTime(qrCode.created_at)}</Typography>
                   <QRCodeListItemActions
                     qrCode={qrCode}
-                    onShare={qrCodesActions.onShare}
-                    onDownload={qrCodesActions.onDownload}
-                    onDelete={qrCodesActions.onDelete}
+                    onShare={onShare}
+                    onDownload={onDownload}
+                    onDelete={onDelete}
                   />
                 </Box>
               ))}
@@ -130,9 +133,9 @@ export default function QrCodeModal({
         ) : (
           <InfiniteList
             items={qrCodes}
-            loadingState={qrCodesActions.qrCodeLoadingState}
-            onRetry={qrCodesActions.reloadQrCodes}
-            onLoadNext={qrCodesActions.loadNextQrCodes}
+            loadingState={qrCodeLoadingState}
+            onRetry={onReload}
+            onLoadNext={onLoadNext}
           >
             {qrCodes.map(qrCode => (
               <Stack key={qrCode.id} spacing={2}>
@@ -140,9 +143,9 @@ export default function QrCodeModal({
                   <QRCodeBlock size={12} innerPadding={2.5} url={qrCode.url} />
                   <QRCodeListItemActions
                     qrCode={qrCode}
-                    onShare={qrCodesActions.onShare}
-                    onDownload={qrCodesActions.onDownload}
-                    onDelete={qrCodesActions.onDelete}
+                    onShare={onShare}
+                    onDownload={onDownload}
+                    onDelete={onDelete}
                   />
                 </Stack>
                 <Stack>
@@ -171,7 +174,7 @@ export default function QrCodeModal({
             height: 'fit-content',
             p: 0,
           }}
-          onClick={qrCodesActions.onCreate}
+          onClick={onCreate}
         >
           {t('poll.qr-code-panel.generate-qr-code-btn')}
         </Button>

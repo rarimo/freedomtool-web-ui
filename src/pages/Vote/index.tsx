@@ -94,7 +94,6 @@ export default function Poll() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              {/*{isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}*/}
               <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} pt={5} spacing={5}>
                 <Stack spacing={3}>
                   <Stack

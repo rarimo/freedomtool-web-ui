@@ -9,7 +9,7 @@ import { createQRCode, deleteQRCode, getQrCodeLinks } from '@/api/modules/qr-cod
 import { Icons, LoadingStates } from '@/enums'
 import { ErrorHandler, formatCroppedString } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
-import QrCodeModal from '@/pages/Poll/components/QrCodeModalProps'
+import QrCodeModal from '@/pages/Poll/components/QrCodeModal'
 import { QrCodePanelSkeleton } from '@/pages/Poll/components/QrCodePanelSkeleton'
 import { UiIcon } from '@/ui'
 
@@ -86,17 +86,6 @@ export default function QrCodePanel() {
     return activeCodes.length > 0 ? activeCodes[0] : null
   }, [qrCodes])
 
-  const qrCodesActions = {
-    qrCodeLoadingState,
-    reloadQrCodes,
-    loadNextQrCodes,
-    updateQrCodes,
-    onShare: shareQrCode,
-    onDownload: downloadQrCode,
-    onCreate: generateNewQrCode,
-    onDelete: deleteQrCode,
-  }
-
   if ([LoadingStates.Initial, LoadingStates.Loading].includes(qrCodeLoadingState))
     return <QrCodePanelSkeleton />
 
@@ -125,10 +114,16 @@ export default function QrCodePanel() {
         <UiIcon name={Icons.ArrowRightSLine} size={5} />
       </IconButton>
       <QrCodeModal
-        qrCodes={qrCodes}
-        qrCodesActions={qrCodesActions}
         isOpen={isQrModalOpen}
         onClose={() => setIsQrModalOpen(false)}
+        qrCodes={qrCodes}
+        qrCodeLoadingState={qrCodeLoadingState}
+        onReload={reloadQrCodes}
+        onLoadNext={loadNextQrCodes}
+        onShare={shareQrCode}
+        onDownload={downloadQrCode}
+        onCreate={generateNewQrCode}
+        onDelete={deleteQrCode}
       />
     </Stack>
   )
