@@ -214,7 +214,7 @@ export const prepareVotingWhitelistData = (config: {
 
 export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {
   const data = await api.get<Proposal[]>(
-    `${ApiServicePaths.ProofVerificationRelayer}/v2/voting-info`,
+    `${ApiServicePaths.ProofVerificationRelayer}/v2/proposals`,
     opts,
   )
 

@@ -18,7 +18,6 @@ import { UiIcon } from '@/ui'
 import PollDetails from './components/PollDetails'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
-import VoteBlock from './components/VoteBlock'
 import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Poll() {
@@ -37,7 +36,6 @@ export default function Poll() {
     proposal,
     proposalMetadata,
     isTopUpAllowed,
-    qrCodeUrl,
 
     formattedEndDate,
     formattedStartDate,
@@ -96,7 +94,6 @@ export default function Poll() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              {isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}
               <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} pt={5} spacing={5}>
                 <Stack spacing={3}>
                   <Stack
@@ -234,8 +231,7 @@ export default function Poll() {
                     top: 80,
                   }}
                 >
-                  <QrCodePanel qrCodeUrl={qrCodeUrl} />
-
+                  <QrCodePanel />
                   <Stack spacing={6} width='100%'>
                     <VotesLeftProgress
                       remainingVotes={remainingVotesCount ?? 0}

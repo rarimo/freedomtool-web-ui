@@ -17,7 +17,6 @@ export enum Icons {
   Bell = 'bell',
   BlueCheckMark = 'blue-check-mark',
   CalendarBlank = 'calendar-blank',
-  CalendarLine = 'calendar-line',
   CalendarEventFill = 'calendar-event-fill',
   CardholderFill = 'cardholder-fill',
   Cardholder = 'cardholder',
@@ -201,4 +200,5 @@ export enum Icons {
   ShareLine = 'share-line',
   DownloadLine = 'download-line',
   DraftLine = 'draft-line',
+  CalendarLine = 'calendar-line',
 }

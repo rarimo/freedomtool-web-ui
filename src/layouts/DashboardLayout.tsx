@@ -26,7 +26,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
       <UiContainer
         id='main-content'
         sx={{
-          mt: 8,
+          my: 8,
           maxWidth: 1136,
           transition: Transitions.Default,
 

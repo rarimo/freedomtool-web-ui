@@ -2,14 +2,13 @@ import { time } from '@distributedlab/tools'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { VOTE_QR_BASE_URL, ZERO_DATE } from '@/constants'
+import { ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
 import {
   ErrorHandler,
   formatCountry,
   formatSex,
-  generateQrCodeUrl,
   getVotesCount,
   hexToAscii,
   parseProposalFromContract,
@@ -78,11 +77,6 @@ export function useProposal(id?: string) {
   const isTopUpAllowed =
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
     address
-
-  const qrCodeUrl = generateQrCodeUrl(VOTE_QR_BASE_URL, {
-    type: 'voting',
-    proposal_id: id ?? '',
-  })
 
   const participantsAmount = useMemo(() => {
     if (proposal?.voteResults) {
@@ -157,7 +151,6 @@ export function useProposal(id?: string) {
     proposal,
     proposalMetadata,
     isTopUpAllowed,
-    qrCodeUrl,
 
     formattedStartDate,
     formattedEndDate,

@@ -126,8 +126,8 @@ export function formatNumber(value: string | number, formatConfig?: BnFormatConf
   }
 }
 
-export function formatNullifier(value: string) {
-  return value.slice(0, 4) + '...' + value.slice(-4)
+export function formatCroppedString(value: string, length = 6) {
+  return value.slice(0, length) + '...' + value.slice(-length)
 }
 
 export function formatAmount(
