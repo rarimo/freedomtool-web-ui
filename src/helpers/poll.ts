@@ -195,31 +195,21 @@ export const prepareVotingWhitelistData = (config: {
     sex: Boolean(sex),
   })
 
-  const params: readonly [
-    {
-      selector: bigint
-      nationalities: readonly bigint[]
-      identityCreationTimestampUpperBound: bigint
-      identityCounterUpperBound: bigint
-      sex: bigint
-      birthDateLowerbound: bigint
-      birthDateUpperbound: bigint
-      expirationDateLowerBound: bigint
-    },
-  ] = [
-    {
-      selector: BigInt(selector),
-      nationalities: formattedNationalities.map(BigInt),
-      identityCreationTimestampUpperBound: BigInt(identityCreationTimestampUpperBound),
-      identityCounterUpperBound: BigInt(identityCounterUpperBound),
-      sex: BigInt(sex),
-      birthDateLowerbound: BigInt(birthDateLowerbound),
-      birthDateUpperbound: BigInt(birthDateUpperbound),
-      expirationDateLowerBound: BigInt(expirationDateLowerBound),
-    },
-  ]
-
-  return encodeAbiParameters([WHITELIST_DATA_ABI_TYPE], params)
+  return encodeAbiParameters(
+    [WHITELIST_DATA_ABI_TYPE],
+    [
+      {
+        selector: BigInt(selector),
+        nationalities: formattedNationalities.map(BigInt),
+        identityCreationTimestampUpperBound: BigInt(identityCreationTimestampUpperBound),
+        identityCounterUpperBound: BigInt(identityCounterUpperBound),
+        sex: BigInt(sex),
+        birthDateLowerbound: BigInt(birthDateLowerbound),
+        birthDateUpperbound: BigInt(birthDateUpperbound),
+        expirationDateLowerBound: BigInt(expirationDateLowerBound),
+      },
+    ],
+  )
 }
 
 export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {
