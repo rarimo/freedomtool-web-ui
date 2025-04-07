@@ -1,4 +1,4 @@
-export interface QRCode {
+export interface QrCodeLink {
   id: string
   type: 'links'
   resource_id: string

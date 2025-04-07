@@ -1,15 +1,15 @@
 import { IconButton, Stack, Typography, useTheme } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
-import { getQRCodes } from '@/api/modules/qr-code'
+import { createQRCode, deleteQRCode, getQrCodeLinks } from '@/api/modules/qr-code'
 import { Icons, LoadingStates } from '@/enums'
-import { formatCroppedString } from '@/helpers'
+import { ErrorHandler, formatCroppedString } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
-import QrCodeModal from '@/pages/Poll/components/QRCodeModal'
+import QrCodeModal from '@/pages/Poll/components/QrCodeModalProps'
 import { QrCodePanelSkeleton } from '@/pages/Poll/components/QrCodePanelSkeleton'
 import { UiIcon } from '@/ui'
 
@@ -21,7 +21,7 @@ export default function QrCodePanel() {
   const { t } = useTranslation()
   const { id } = useParams()
 
-  const [isQrModalShown, setIsQrModalShown] = useState(false)
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false)
 
   const {
     data: qrCodes,
@@ -31,7 +31,7 @@ export default function QrCodePanel() {
     update: updateQrCodes,
   } = useMultiPageLoading(
     () =>
-      getQRCodes({
+      getQrCodeLinks({
         query: {
           page: {
             limit: QR_CODES_LIST_LIMIT,
@@ -43,8 +43,45 @@ export default function QrCodePanel() {
       }),
     { pageLimit: DEFAULT_PAGE_LIMIT },
   )
+  // TODO: need to impl
+  const shareQrCode = () => {}
 
-  const lastFreshQRCode = useMemo(() => {
+  // TODO: need to impl
+  const downloadQrCode = () => {}
+
+  const deleteQrCode = useCallback(
+    async (qrCodeId: string) => {
+      try {
+        await deleteQRCode(qrCodeId)
+        await updateQrCodes()
+      } catch (error) {
+        ErrorHandler.process(error)
+      }
+    },
+    [updateQrCodes],
+  )
+
+  const generateNewQrCode = useCallback(async () => {
+    try {
+      if (!id) return
+
+      await createQRCode({
+        type: 'links',
+        attributes: {
+          resource_id: id,
+          metadata: {
+            proposal_id: Number(id),
+          },
+        },
+      })
+
+      await updateQrCodes()
+    } catch (error) {
+      ErrorHandler.process(error)
+    }
+  }, [id, updateQrCodes])
+
+  const firstActiveQRCode = useMemo(() => {
     const activeCodes = qrCodes.filter(qrCode => qrCode.active)
     return activeCodes.length > 0 ? activeCodes[0] : null
   }, [qrCodes])
@@ -54,6 +91,10 @@ export default function QrCodePanel() {
     reloadQrCodes,
     loadNextQrCodes,
     updateQrCodes,
+    onShare: shareQrCode,
+    onDownload: downloadQrCode,
+    onCreate: generateNewQrCode,
+    onDelete: deleteQrCode,
   }
 
   if ([LoadingStates.Initial, LoadingStates.Loading].includes(qrCodeLoadingState))
@@ -62,13 +103,15 @@ export default function QrCodePanel() {
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
       <Stack direction='row' alignItems='center' spacing={1}>
-        <QRCodeBlock url={lastFreshQRCode?.url || ''} />
+        <QRCodeBlock url={firstActiveQRCode?.url || ''} />
         <Stack alignItems='flex-start' spacing={2}>
           <Typography variant='subtitle5'>
-            {formatCroppedString(lastFreshQRCode?.id || '')}
+            {formatCroppedString(firstActiveQRCode?.id || '')}
           </Typography>
           <Typography variant='body4' color={palette.text.secondary}>
-            {t('poll.qr-code-panel.qr-scan-count-lbl', { count: lastFreshQRCode?.scan_count || 0 })}
+            {t('poll.qr-code-panel.qr-scan-count-lbl', {
+              count: firstActiveQRCode?.scan_count || 0,
+            })}
           </Typography>
         </Stack>
       </Stack>
@@ -77,15 +120,15 @@ export default function QrCodePanel() {
           p: 2.5,
           backgroundColor: palette.action.active,
         }}
-        onClick={() => setIsQrModalShown(true)}
+        onClick={() => setIsQrModalOpen(true)}
       >
         <UiIcon name={Icons.ArrowRightSLine} size={5} />
       </IconButton>
       <QrCodeModal
         qrCodes={qrCodes}
         qrCodesActions={qrCodesActions}
-        open={isQrModalShown}
-        onClose={() => setIsQrModalShown(false)}
+        isOpen={isQrModalOpen}
+        onClose={() => setIsQrModalOpen(false)}
       />
     </Stack>
   )

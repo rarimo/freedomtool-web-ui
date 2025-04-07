@@ -10,37 +10,40 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
 
-import { createQRCode, deleteQRCode, QRCode as QRCodeType } from '@/api/modules/qr-code'
+import { QrCodeLink as QRCodeType } from '@/api/modules/qr-code'
 import { DotDivider, InfiniteList } from '@/common'
 import { Icons, LoadingStates } from '@/enums'
-import { ErrorHandler, formatCroppedString, formatDateTime } from '@/helpers'
+import { formatCroppedString, formatDateTime } from '@/helpers'
 import { QRCodeBlock, qrCodeModalGridTemplateColumns } from '@/pages/Poll/components/QrCodePanel'
 import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
-type QrCodeModal = {
+interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
+  isOpen: boolean
+  onClose: () => void
   qrCodes: QRCodeType[]
   qrCodesActions: {
     qrCodeLoadingState: LoadingStates
     reloadQrCodes: () => Promise<void>
     loadNextQrCodes: () => Promise<void>
     updateQrCodes: () => Promise<void>
+    onShare: () => void
+    onDownload: () => void
+    onCreate: () => Promise<void>
+    onDelete: (id: string) => void
   }
-} & DialogProps
+}
 
 export default function QrCodeModal({
   qrCodes,
   qrCodesActions,
-  open,
+  isOpen,
   onClose,
   ...rest
-}: QrCodeModal) {
+}: QrCodeModalProps) {
   const { palette, spacing, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const { id } = useParams()
 
   const isMdUp = useMediaQuery(breakpoints.up('md'))
 
@@ -50,46 +53,10 @@ export default function QrCodeModal({
     t('poll.qr-code-panel.headers.actions-lbl'),
   ]
 
-  const shareQrCode = () => {}
-
-  const downloadQrCode = () => {}
-
-  const deleteQrCode = useCallback(
-    async (qrCodeId: string) => {
-      try {
-        await deleteQRCode(qrCodeId)
-        await qrCodesActions.updateQrCodes()
-      } catch (error) {
-        ErrorHandler.process(error)
-      }
-    },
-    [qrCodesActions],
-  )
-
-  const generateNewQrCode = useCallback(async () => {
-    try {
-      if (!id) return
-
-      await createQRCode({
-        type: 'links',
-        attributes: {
-          resource_id: id,
-          metadata: {
-            proposal_id: Number(id),
-          },
-        },
-      })
-
-      await qrCodesActions.updateQrCodes()
-    } catch (error) {
-      ErrorHandler.process(error)
-    }
-  }, [id, qrCodesActions])
-
   return (
     <Dialog
       {...rest}
-      open={open}
+      open={isOpen}
       onClose={onClose}
       PaperProps={{
         ...rest.PaperProps,
@@ -152,9 +119,9 @@ export default function QrCodeModal({
                   <Typography variant='subtitle6'>{formatDateTime(qrCode.created_at)}</Typography>
                   <QRCodeListItemActions
                     qrCode={qrCode}
-                    onShare={shareQrCode}
-                    onDownload={downloadQrCode}
-                    onDelete={deleteQrCode}
+                    onShare={qrCodesActions.onShare}
+                    onDownload={qrCodesActions.onDownload}
+                    onDelete={qrCodesActions.onDelete}
                   />
                 </Box>
               ))}
@@ -173,9 +140,9 @@ export default function QrCodeModal({
                   <QRCodeBlock size={12} innerPadding={2.5} url={qrCode.url} />
                   <QRCodeListItemActions
                     qrCode={qrCode}
-                    onShare={shareQrCode}
-                    onDownload={downloadQrCode}
-                    onDelete={deleteQrCode}
+                    onShare={qrCodesActions.onShare}
+                    onDownload={qrCodesActions.onDownload}
+                    onDelete={qrCodesActions.onDelete}
                   />
                 </Stack>
                 <Stack>
@@ -204,7 +171,7 @@ export default function QrCodeModal({
             height: 'fit-content',
             p: 0,
           }}
-          onClick={generateNewQrCode}
+          onClick={qrCodesActions.onCreate}
         >
           {t('poll.qr-code-panel.generate-qr-code-btn')}
         </Button>

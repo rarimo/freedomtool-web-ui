@@ -19,7 +19,7 @@ export function QrCodePanelSkeleton() {
   )
 }
 
-export function QrCodeModalListItem() {
+export function QrCodeModalListItemSkeleton() {
   const { breakpoints } = useTheme()
 
   const isMdUp = useMediaQuery(breakpoints.up('md'))
