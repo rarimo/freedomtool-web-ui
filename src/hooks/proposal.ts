@@ -38,8 +38,8 @@ export function useProposal(id?: string) {
 
   const {
     data: proposalMetadata,
-    isLoading: metadataLoading,
-    isLoadingError: metadataError,
+    isLoading: isMetadataLoading,
+    isLoadingError: isMetadataError,
   } = useIpfsLoading<ProposalMetadata>(proposal?.cid as string)
 
   const {
@@ -68,12 +68,12 @@ export function useProposal(id?: string) {
 
   const isLoading =
     isProposalLoading ||
-    metadataLoading ||
+    isMetadataLoading ||
     !proposal ||
     !proposalMetadata ||
     isRemainingVotesCountLoading
 
-  const isError = metadataError || isRemainingVotesCountLoadingError || isProposalLoadingError
+  const isError = isMetadataError || isRemainingVotesCountLoadingError || isProposalLoadingError
 
   const isTopUpAllowed =
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
