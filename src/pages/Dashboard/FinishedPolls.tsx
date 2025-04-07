@@ -6,7 +6,7 @@ import { getProposals } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
 import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
 import PollCard from '@/pages/Dashboard/components/PollCard'
-import { IProposalStatuses } from '@/types'
+import { PollStatus } from '@/types'
 
 export default function FinishedPolls() {
   const {
@@ -18,7 +18,7 @@ export default function FinishedPolls() {
     getProposals({
       query: {
         filter: {
-          status: IProposalStatuses.Ended,
+          status: PollStatus.Ended,
         },
       },
     }),

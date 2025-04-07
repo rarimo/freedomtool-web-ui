@@ -1,15 +1,16 @@
 import { JsonApiClientRequestOpts } from '@distributedlab/jac'
 import { time } from '@distributedlab/tools'
-import { AbiCoder } from 'ethers'
-import { stringToHex } from 'viem'
+import { toBeHex } from 'ethers'
+import { decodeAbiParameters, encodeAbiParameters, stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
+import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
-import { INationality, IParsedProposal, IProposal, Sex } from '@/types'
+import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-const ZERO_DATE = '0x303030303030'
+import { hexToAscii } from './text'
 
 export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
   questions.map(question => ({
@@ -117,16 +118,44 @@ export const getPredictedVotesAmount = async (
 
 export const parseProposalFromContract = (
   proposal: ProposalsState.ProposalInfoStructOutput,
-): IParsedProposal => ({
-  cid: proposal[2][4],
-  status: Number(proposal[1]),
-  startTimestamp: Number(proposal[2].startTimestamp),
-  duration: Number(proposal[2].duration),
-  voteResults: proposal[3],
-})
+): ParsedProposal => {
+  const rawWhitelistData = proposal[2][6].toString()
 
-export const getTotalVotesPerQuestion = (proposal: IParsedProposal, questionIndex: number) =>
-  proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0n) || 0n
+  const votingWhitelistData = decodeWhitelistData(rawWhitelistData)
+
+  return {
+    cid: proposal[2][4],
+    status: Number(proposal[1]),
+    startTimestamp: Number(proposal[2].startTimestamp),
+    duration: Number(proposal[2].duration),
+    voteResults: proposal[3].map(bigIntArray => bigIntArray.map(Number)),
+    votingWhitelistData,
+    rawProposal: proposal,
+  }
+}
+
+export const decodeWhitelistData = (whitelistDataHex: string) => {
+  const _decodedData = decodeAbiParameters(
+    [WHITELIST_DATA_ABI_TYPE],
+    whitelistDataHex as `0x${string}`,
+  )[0]
+
+  const decodedData: DecodedWhitelistData = {
+    selector: _decodedData.selector,
+    nationalities: _decodedData.nationalities.map(item => hexToAscii(toBeHex(item))),
+    identityCreationTimestampUpperBound: Number(_decodedData.identityCreationTimestampUpperBound),
+    identityCounterUpperBound: Number(_decodedData.identityCounterUpperBound),
+    sex: hexToAscii(toBeHex(_decodedData.sex)) as Sex,
+    birthDateLowerbound: toBeHex(_decodedData.birthDateLowerbound),
+    birthDateUpperbound: toBeHex(_decodedData.birthDateUpperbound),
+    expirationDateLowerBound: hexToAscii(toBeHex(_decodedData.expirationDateLowerBound)),
+  }
+
+  return decodedData
+}
+
+export const getTotalVotesPerQuestion = (proposal: ParsedProposal, questionIndex: number) =>
+  proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0) || 0
 
 export const getCountProgress = (count: number, totalCount: number) =>
   totalCount > 0 ? (count / totalCount) * 100 : 0
@@ -134,7 +163,7 @@ export const getCountProgress = (count: number, totalCount: number) =>
 export const prepareVotingWhitelistData = (config: {
   maxAge?: number | null
   minAge?: number | null
-  nationalities: INationality[]
+  nationalities: Nationality[]
   sex: Sex
   startTimestamp: number
 }) => {
@@ -149,7 +178,9 @@ export const prepareVotingWhitelistData = (config: {
   const birthDateUpperbound = minAge
     ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
     : ZERO_DATE
-  const birthDateLowerbound = maxAge ? stringToHex(time(maxAge).format('YYMMDD')) : ZERO_DATE
+  const birthDateLowerbound = maxAge
+    ? stringToHex(time().subtract(maxAge, 'years').format('YYMMDD'))
+    : ZERO_DATE
 
   const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
   const sex = _sex ? stringToHex(_sex) : 0
@@ -164,27 +195,25 @@ export const prepareVotingWhitelistData = (config: {
     sex: Boolean(sex),
   })
 
-  const params = [
-    selector,
-    formattedNationalities,
-    identityCreationTimestampUpperBound,
-    identityCounterUpperBound,
-    sex,
-    birthDateLowerbound,
-    birthDateUpperbound,
-    expirationDateLowerBound,
-  ]
-
-  const abiCoder = AbiCoder.defaultAbiCoder()
-
-  return abiCoder.encode(
-    ['tuple(uint256,uint256[],uint256,uint256,uint256,uint256,uint256,uint256)'],
-    [params],
+  return encodeAbiParameters(
+    [WHITELIST_DATA_ABI_TYPE],
+    [
+      {
+        selector: BigInt(selector),
+        nationalities: formattedNationalities.map(BigInt),
+        identityCreationTimestampUpperBound: BigInt(identityCreationTimestampUpperBound),
+        identityCounterUpperBound: BigInt(identityCounterUpperBound),
+        sex: BigInt(sex),
+        birthDateLowerbound: BigInt(birthDateLowerbound),
+        birthDateUpperbound: BigInt(birthDateUpperbound),
+        expirationDateLowerBound: BigInt(expirationDateLowerBound),
+      },
+    ],
   )
 }
 
 export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {
-  const data = await api.get<IProposal[]>(
+  const data = await api.get<Proposal[]>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/voting-info`,
     opts,
   )

@@ -5,7 +5,7 @@ import { InfiniteList } from '@/common'
 import { getProposals } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
 import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
-import { IProposalStatuses } from '@/types'
+import { PollStatus } from '@/types'
 
 import PollCard from './components/PollCard'
 
@@ -19,7 +19,7 @@ export default function ActivePolls() {
     getProposals({
       query: {
         filter: {
-          status: [IProposalStatuses.Started, IProposalStatuses.Waiting].join(','),
+          status: [PollStatus.Started, PollStatus.Waiting].join(','),
         },
       },
     }),

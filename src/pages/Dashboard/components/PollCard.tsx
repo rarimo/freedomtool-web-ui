@@ -1,17 +1,17 @@
 import { Button, Divider, Skeleton, Stack, Typography, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { generatePath, useNavigate } from 'react-router-dom'
 
 import { LazyImage } from '@/common'
 import AbstractBackground from '@/common/AbstractBackground'
-import { config } from '@/config'
 import { Icons, RoutePaths } from '@/enums'
-import { formatDateDM, getCountProgress } from '@/helpers'
+import { formatDateDM, getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { lineClamp } from '@/theme/helpers'
-import { IProposal } from '@/types'
+import { Proposal } from '@/types'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
 
-export default function PollCard({ proposal }: { proposal: IProposal }) {
+export default function PollCard({ proposal }: { proposal: Proposal }) {
   const navigate = useNavigate()
 
   const { palette } = useTheme()
@@ -28,6 +28,7 @@ export default function PollCard({ proposal }: { proposal: IProposal }) {
 
   return (
     <Stack
+      component={motion.div}
       justifyContent='flex-end'
       position='relative'
       border='1px solid'
@@ -35,11 +36,15 @@ export default function PollCard({ proposal }: { proposal: IProposal }) {
       borderRadius={5}
       overflow='hidden'
       height={390}
-      onClick={() => navigate(generatePath(RoutePaths.Vote, { id: String(id) }))}
+      sx={{ cursor: 'pointer' }}
+      whileFocus={{ scale: 0.95 }}
+      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 0.95 }}
+      onClick={() => navigate(generatePath(RoutePaths.Poll, { id: String(id) }))}
     >
       {imageCid ? (
         <LazyImage
-          src={`${config.IPFS_NODE_URL}/ipfs/${imageCid}`}
+          src={getIpfsImageSrc(imageCid)}
           alt={title ?? 'Poll image'}
           width='100%'
           height='60%'
@@ -50,6 +55,11 @@ export default function PollCard({ proposal }: { proposal: IProposal }) {
         />
       ) : (
         <AbstractBackground
+          backgrounds={[
+            palette.additional.gradient2,
+            palette.additional.gradient3,
+            palette.additional.gradient4,
+          ]}
           sx={{
             position: 'absolute',
             top: 0,

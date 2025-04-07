@@ -17,6 +17,7 @@ export enum Icons {
   Bell = 'bell',
   BlueCheckMark = 'blue-check-mark',
   CalendarBlank = 'calendar-blank',
+  CalendarLine = 'calendar-line',
   CalendarEventFill = 'calendar-event-fill',
   CardholderFill = 'cardholder-fill',
   Cardholder = 'cardholder',

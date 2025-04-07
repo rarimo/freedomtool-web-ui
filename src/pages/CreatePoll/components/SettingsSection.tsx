@@ -1,4 +1,3 @@
-import { BN } from '@distributedlab/tools'
 import {
   Box,
   Paper,
@@ -9,15 +8,13 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { useDebounceFn } from '@reactuses/core'
-import { formatUnits } from 'ethers'
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
-import { ErrorHandler, getPredictedVotesAmount, getPredictedVotesCount } from '@/helpers'
+import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
@@ -26,61 +23,29 @@ import { CreatePollSchema } from '../createPollSchema'
 export default function SettingsSection() {
   const {
     control,
-    getValues,
-    getFieldState,
     formState: { isSubmitting },
-    setValue,
-    clearErrors,
   } = useFormContext<CreatePollSchema>()
   const { palette, breakpoints } = useTheme()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
   const { balance } = useWeb3Context()
   const { t } = useTranslation()
-  const [isCalculating, setIsCalculating] = useState(false)
 
-  const { run: debouncedCountUpdate } = useDebounceFn(async () => {
-    const isValid = !getFieldState('settings.amount').invalid
+  const { getValues, getFieldState, setValue, clearErrors } = useFormContext<CreatePollSchema>()
 
-    if (isValid) {
-      try {
-        setIsCalculating(true)
-        const { count_tx_predict } = await getPredictedVotesCount(
-          BN.fromRaw(getValues('settings.amount')).value,
-        )
-        clearErrors('settings.votesCount')
-        setValue('settings.votesCount', Number(count_tx_predict))
-      } catch (error) {
-        ErrorHandler.process(error)
-      } finally {
-        setIsCalculating(false)
-      }
-    }
-  }, 500)
-
-  const { run: debouncedAmountUpdate } = useDebounceFn(async () => {
-    const isValid = !getFieldState('settings.votesCount').invalid
-
-    if (isValid) {
-      try {
-        setIsCalculating(true)
-        const { amount_predict } = await getPredictedVotesAmount(
-          String(getValues('settings.votesCount')),
-        )
-        clearErrors('settings.amount')
-        setValue('settings.amount', formatUnits(amount_predict, 18))
-      } catch (error) {
-        ErrorHandler.process(error)
-      } finally {
-        setIsCalculating(false)
-      }
-    }
-  }, 500)
-
-  useEffect(() => {
-    setTimeout(() => {
-      clearErrors('settings')
-    }, 0)
-  }, [setValue, clearErrors])
+  const { isCalculating, updateFromAmount, updateFromVotes } = useProposalBalanceForm<
+    CreatePollSchema,
+    'settings.amount',
+    'settings.votesCount'
+  >(
+    {
+      getValues,
+      getFieldState,
+      setValue,
+      clearErrors,
+    },
+    'settings.amount',
+    'settings.votesCount',
+  )
 
   return (
     <Stack component={Paper}>
@@ -133,7 +98,7 @@ export default function SettingsSection() {
                   maxValue={balance}
                   onChange={e => {
                     field.onChange(e)
-                    debouncedCountUpdate()
+                    updateFromAmount()
                   }}
                 />
               )}
@@ -168,7 +133,7 @@ export default function SettingsSection() {
                   helperText={fieldState.error?.message}
                   onChange={e => {
                     field.onChange(e)
-                    debouncedAmountUpdate()
+                    updateFromVotes()
                   }}
                 />
               )}

@@ -7,7 +7,7 @@ import { ALLOWED_IMAGE_MIME_TYPES, MAX_BANNER_SIZE, MAX_PARTICIPANTS_PER_POLL } 
 import { Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
-  criterias: {
+  criteria: {
     uniqueness: false,
     nationalities: [],
     sex: Sex.Any,
@@ -71,7 +71,7 @@ export const createPollSchema = zod
       startDate: zod.string().min(1),
       endDate: zod.string().min(1),
     }),
-    criterias: zod.object({
+    criteria: zod.object({
       uniqueness: zod.boolean(),
       sex: zod.nativeEnum(Sex),
       minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional().nullable(),
@@ -117,9 +117,9 @@ export const createPollSchema = zod
       path: ['details', 'endDate'],
     },
   )
-  .refine(({ criterias: { maxAge, minAge } }) => (maxAge && minAge ? maxAge >= minAge : true), {
+  .refine(({ criteria: { maxAge, minAge } }) => (maxAge && minAge ? maxAge >= minAge : true), {
     message: t('create-poll.max-age-error'),
-    path: ['criterias', 'maxAge'],
+    path: ['criteria', 'maxAge'],
   })
 
 export type CreatePollSchema = zod.infer<typeof createPollSchema>

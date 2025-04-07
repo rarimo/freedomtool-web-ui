@@ -40,7 +40,11 @@
     "button-lbl": "Reload page"
   },
   "formats": {
-    "percent": "{{value}}%"
+    "percent": "{{value}}%",
+    "age": {
+      "lte": "less than or equal {{maxAge}}",
+      "gte-and-lte": "{{minAge}}-{{maxAge}} y.o. only"
+    }
   },
   "errors": {
     "no-provider-address": "No provider address",
@@ -118,7 +122,7 @@
     "age-lbl": "Age",
     "titles": {
       "details": "Poll details",
-      "criterias": "Criterias",
+      "criteria": "Criteria",
       "questions": "Questions",
       "settings": "Settings"
     },
@@ -158,11 +162,10 @@
     "status": "Status:",
     "start-date": "Start date:",
     "end-date": "End date:",
-    "accepted-options-title": "Accepted options",
     "qr-code-subtitle": "Scan to participate",
     "amount-btn": "Top up balance",
     "success-msg": "You have successfully added funds to your voting contract",
-    "remaining-votes": "Remaining votes:",
+    "remaining-votes": "Participants",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
     "form": {
@@ -172,7 +175,6 @@
     },
     "show-all-options-btn": "Show all options",
     "hide-options-btn": "Collapse options",
-    "question-name": "Question name",
     "promo": {
       "title": "Vote with RariMe",
       "description": "Use RariMe app to participate in this voting",
@@ -228,6 +230,19 @@
     "sex-criteria-item": "{{value}} only"
   },
   "poll": {
+    "start-date": "Start Date:",
+    "end-date": "End Date:",
+    "participants_one": "{{ count }} Participant",
+    "participants_other": "{{ count }} Participants",
+    "remaining-votes": "Participants:",
+    "votes-count_one": "{{count}} vote",
+    "votes-count_other": "{{count}} votes",
+    "criteria-list": {
+      "sex": "Sex:",
+      "minAge": "Minimum age:",
+      "maxAge": "Maximum age:",
+      "allowed-nationalities": "All allowed nationalities ({{count}})"
+    },
     "qr-code-panel": {
       "modal-title": "QR Codes",
       "qr-scan-count-lbl_one": "{{ count }} scan",
@@ -238,6 +253,16 @@
         "actions-lbl": "Actions"
       },
       "generate-qr-code-btn": "Generate a new QR code"
+    },
+    "criteria": "Criteria:",
+    "top-up-form": {
+      "add-funds": "Add funds"
+    }
+  },
+  "format": {
+    "sex": {
+      "female": "Females",
+      "male": "Males"
     }
   }
 }
