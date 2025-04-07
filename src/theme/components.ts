@@ -405,7 +405,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         backgroundColor: theme.palette.divider,
-        borderRadius: theme.spacing(4),
       }),
       rounded: ({ theme }) => ({
         borderRadius: theme.spacing(6),

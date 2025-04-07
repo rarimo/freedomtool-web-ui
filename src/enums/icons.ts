@@ -200,4 +200,5 @@ export enum Icons {
   ShareLine = 'share-line',
   DownloadLine = 'download-line',
   DraftLine = 'draft-line',
+  CalendarLine = 'calendar-line',
 }

@@ -11,7 +11,6 @@ import { lineClamp } from '@/theme/helpers'
 
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
-import VoteBlock from './components/VoteBlock'
 import VoteDetails from './components/VoteDetails'
 import VoteSkeleton from './components/VoteSkeleton'
 
@@ -21,7 +20,7 @@ export default function Vote() {
   const { setTitle } = useRouteTitleContext()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
 
-  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed, qrCodeUrl } =
+  const { isLoading, isError, voteDetails, proposal, proposalMetadata, isTopUpAllowed } =
     useVote(id)
 
   useEffect(() => {
@@ -74,7 +73,7 @@ export default function Vote() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              {isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}
+              {/*{isMdDown && <VoteBlock qrCodeUrl={qrCodeUrl} />}*/}
               <Stack
                 component={Paper}
                 sx={{ padding: 10, height: 'fit-content', mb: { md: 15 } }}
@@ -152,7 +151,7 @@ export default function Vote() {
                     top: 80,
                   }}
                 >
-                  <QrCodePanel qrCodeUrl={qrCodeUrl} />
+                  <QrCodePanel />
                   {isTopUpAllowed && <TopUpForm />}
                 </Stack>
               </motion.div>

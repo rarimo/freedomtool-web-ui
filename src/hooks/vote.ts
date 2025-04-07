@@ -1,16 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { VOTE_QR_BASE_URL } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposals'
-import {
-  ErrorHandler,
-  formatDateTime,
-  generateQrCodeUrl,
-  getVotesCount,
-  parseProposalFromContract,
-} from '@/helpers'
+import { ErrorHandler, formatDateTime, getVotesCount, parseProposalFromContract } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
 import { IVoteIpfs } from '@/types'
 
@@ -85,11 +78,6 @@ export function useVote(id?: string) {
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
     address
 
-  const qrCodeUrl = generateQrCodeUrl(VOTE_QR_BASE_URL, {
-    type: 'voting',
-    proposal_id: id ?? '',
-  })
-
   return {
     isLoading,
     isError,
@@ -97,6 +85,5 @@ export function useVote(id?: string) {
     proposal,
     proposalMetadata,
     isTopUpAllowed,
-    qrCodeUrl,
   }
 }
