@@ -1,16 +1,25 @@
 import { Box, Stack, StackProps, useTheme } from '@mui/material'
 import { PropsWithChildren, useMemo } from 'react'
 
-export default function AbstractBackground({ children, ...rest }: PropsWithChildren & StackProps) {
+export default function AbstractBackground({
+  children,
+  backgrounds,
+  ...rest
+}: PropsWithChildren & StackProps & { backgrounds?: string[] }) {
   const { palette } = useTheme()
 
   const gradients = useMemo(
-    () => [
-      palette.additional.gradient2,
-      palette.additional.gradient3,
-      palette.additional.gradient4,
-    ],
-    [palette],
+    () =>
+      backgrounds ?? [
+        palette.additional.gradient1,
+        palette.additional.gradient2,
+        palette.additional.gradient3,
+        palette.additional.gradient3,
+        palette.additional.gradient4,
+        palette.additional.gradient5,
+        palette.additional.gradient6,
+      ],
+    [backgrounds, palette],
   )
 
   const randomGradient = useMemo(() => {

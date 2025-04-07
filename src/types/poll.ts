@@ -1,49 +1,39 @@
-import { ProposalStatus } from '@/enums/proposals'
+import { ProposalStatus } from '@/enums/proposal'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
-export interface IOption {
+export interface CreatePollOption {
   id: string
   text: string
 }
 
-export interface IQuestion {
+export interface CreatePollQuestion {
   id: string
   text: string
-  options: IOption[]
+  options: CreatePollOption[]
 }
 
-export interface IQuestionIpfs {
+export interface QuestionIpfs {
   title: string
   variants: string[]
 }
 
-export interface IVoteIpfs {
-  title: string
-  description: string
-  acceptedOptions: IQuestionIpfs[]
-  imageCid?: string
-}
-
-export interface IUploadData {
+export interface UploadedDataIpfs {
   id: string
   type: string
   hash: string
 }
 
-export interface IProposalWithId {
-  id: number
-  proposal: ProposalsState.ProposalInfoStructOutput
-}
-
-export interface IParsedProposal {
+export interface ParsedProposal {
   cid: string
   status: ProposalStatus
   startTimestamp: number
   duration: number
-  voteResults: bigint[][]
+  voteResults: number[][]
+  votingWhitelistData: DecodedWhitelistData
+  rawProposal: ProposalsState.ProposalInfoStructOutput
 }
 
-export interface INationality {
+export interface Nationality {
   name: string
   codes: string[]
   flag: string
@@ -55,26 +45,13 @@ export enum Sex {
   Any = '',
 }
 
-// TODO: Remove with hook
-export type VoteAmountOverload = {
-  type: 'vote_predict_amount'
-  votesCount: string
-  proposalId?: string
-}
-export type VoteCountOverload = {
-  type: 'vote_predict_count_tx'
-  amount: string
-  proposalId?: string
-}
-export type VoteParamsInput = VoteAmountOverload | VoteCountOverload
-
 // New types
-export interface IProposal {
+export interface Proposal {
   type: 'proposals'
-  metadata: IProposalMetadata
+  metadata: ProposalMetadata
   id: string
   owner: string
-  status: IProposalStatuses
+  status: PollStatus
   total_balance: string
   remaining_balance: string
   start_timestamp: number
@@ -83,20 +60,26 @@ export interface IProposal {
   remaining_votes_count: number
 }
 
-export enum IProposalStatuses {
+export enum PollStatus {
   Waiting = 'waiting',
   Started = 'started',
   Ended = 'ended',
 }
 
-export interface IProposalMetadata {
+export interface ProposalMetadata {
   title: string
   description: string
   imageCid?: string
-  acceptedOptions: IProposalOption[]
+  acceptedOptions: QuestionIpfs[]
 }
 
-export interface IProposalOption {
-  title: string
-  variants: string[]
+export interface DecodedWhitelistData {
+  selector: bigint
+  nationalities: string[]
+  identityCreationTimestampUpperBound: number
+  identityCounterUpperBound: number
+  sex: Sex
+  birthDateLowerbound: string
+  birthDateUpperbound: string
+  expirationDateLowerBound: string
 }

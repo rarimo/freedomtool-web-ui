@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import { formatDateTime } from '@/helpers'
-import { INationality } from '@/types'
+import { Nationality } from '@/types'
 import { UiIcon } from '@/ui'
 
 import PreviewLayout from './PreviewLayout'
@@ -17,7 +17,7 @@ interface PollDetailsProps {
 
 interface Props extends PollDetailsProps {
   imageSrc?: string
-  nationalities: INationality[]
+  nationalities: Nationality[]
   minimumAge?: number
   maximumAge?: number
   sex?: string

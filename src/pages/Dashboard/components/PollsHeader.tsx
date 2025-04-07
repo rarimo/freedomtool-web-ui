@@ -1,5 +1,4 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
@@ -7,53 +6,50 @@ import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
-import { ProposalStatus } from '@/enums/proposals'
-import { useProposalState } from '@/hooks'
-import PollsTabs, { PollTab } from '@/pages/Dashboard/components/PollsTabs'
+import PollsTabs, { PollTabProps } from '@/pages/Dashboard/components/PollsTabs'
 import { UiIcon } from '@/ui'
 
+// FIXME: Get proposals count from another source
 export default function PollsHeader() {
   const { palette, spacing, typography, breakpoints } = useTheme()
   const { t } = useTranslation()
   const { isConnected } = useWeb3Context()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
 
-  const { proposals } = useProposalState({
-    shouldFetchProposals: true,
-  })
+  // const { getProposalInfo } = useProposalState()
 
-  const activePollsCount = useMemo(
-    () =>
-      proposals.filter(
-        proposal =>
-          Number(proposal.proposal.status) === ProposalStatus.Started ||
-          Number(proposal.proposal.status) === ProposalStatus.Waiting,
-      ).length,
-    [proposals],
-  )
+  // const activePollsCount = useMemo(
+  //   () =>
+  //     proposals.filter(
+  //       proposal =>
+  //         Number(proposal.proposal.status) === ProposalStatus.Started ||
+  //         Number(proposal.proposal.status) === ProposalStatus.Waiting,
+  //     ).length,
+  //   [proposals],
+  // )
 
-  const historyPollsCount = useMemo(
-    () =>
-      proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended)
-        .length,
-    [proposals],
-  )
+  // const historyPollsCount = useMemo(
+  //   () =>
+  //     proposals.filter(proposal => Number(proposal.proposal.status) === ProposalStatus.Ended)
+  //       .length,
+  //   [proposals],
+  // )
 
-  const dashboardTabs: PollTab[] = [
+  const dashboardTabs: PollTabProps[] = [
     {
       route: RoutePaths.DashboardActive,
       label: t('dashboard.active-polls-tab-lbl'),
-      count: activePollsCount,
+      // count: activePollsCount,
     },
     {
       route: RoutePaths.DashboardHistory,
       label: t('dashboard.history-polls-tab-lbl'),
-      count: historyPollsCount,
+      // count: historyPollsCount,
     },
     {
       route: RoutePaths.DashboardDraft,
       label: t('dashboard.draft-polls-tab-lbl'),
-      count: 0,
+      // count: 0,
     },
   ]
 
@@ -77,7 +73,7 @@ export default function PollsHeader() {
           mb={5}
         >
           <AppLogo />
-          <Stack direction='row' spacing={3} alignItems='center'>
+          <Stack direction='row' spacing={3} alignItems='center' minHeight={isMdUp ? 52 : 44}>
             {isMdUp ? (
               <Button
                 component={NavLink}
@@ -86,7 +82,7 @@ export default function PollsHeader() {
                 sx={{
                   typography: typography.subtitle6,
                 }}
-                to={RoutePaths.VotesNew}
+                to={RoutePaths.CreatePoll}
               >
                 {t('dashboard.create-poll-btn')}
               </Button>
@@ -98,7 +94,7 @@ export default function PollsHeader() {
                   backgroundColor: palette.primary.main,
                   color: palette.common.black,
                 }}
-                to={RoutePaths.VotesNew}
+                to={RoutePaths.CreatePoll}
               >
                 <UiIcon name={Icons.AddFill} size={5} />
               </IconButton>

@@ -30,8 +30,8 @@ export function RouteTitleContextProvider({ children }: PropsWithChildren) {
 
   const routePathToTitle: Partial<Record<RoutePaths, ReactNode>> = useMemo(
     () => ({
-      [RoutePaths.Votes]: t('routes.vote'),
-      [RoutePaths.VotesNew]: t('routes.create-new-proposal'),
+      [RoutePaths.Polls]: t('routes.vote'),
+      [RoutePaths.CreatePoll]: t('routes.create-new-proposal'),
     }),
     [t],
   )

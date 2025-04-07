@@ -88,8 +88,8 @@ export const typography: ExtendedTypographyOptions = {
   },
   subtitle5: {
     fontWeight: FontWeight.Medium,
-    fontSize: toRem(12),
-    lineHeight: toRem(18),
+    fontSize: toRem(16),
+    lineHeight: toRem(22),
   },
   subtitle6: {
     fontWeight: FontWeight.Medium,

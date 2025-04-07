@@ -19,25 +19,24 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
-import nationalities from '@/locales/resources/countries_en.json'
-import { Sex } from '@/types'
+import { formatCountry } from '@/helpers'
+import countries from '@/locales/resources/countries_en.json'
+import { Nationality, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
-import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
+import { CreatePollSchema } from '../createPollSchema'
 
 type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
-interface ICriteria {
+interface CriteriaOptions {
   key: CriteriaKey
   label: string
 }
 
-export default function CriteriasSection() {
+export default function CriteriaSection() {
   const { t } = useTranslation()
   const {
     control,
-    setValue,
-    clearErrors,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
 
@@ -63,7 +62,7 @@ export default function CriteriasSection() {
     [t],
   )
 
-  const criteriaOptions: ICriteria[] = useMemo(
+  const criteriaOptions: CriteriaOptions[] = useMemo(
     () => [
       { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
@@ -72,52 +71,40 @@ export default function CriteriasSection() {
     [t],
   )
 
-  const unselectedCriterias = useMemo(
+  const unselectedCriteria = useMemo(
     () => criteriaOptions.filter(({ key }) => !selectedKey.includes(key)),
     [criteriaOptions, selectedKey],
   )
 
   const toggleCriteria = (key: CriteriaKey) => {
-    setSelectedKey(prev => {
-      const newSelectedKey = prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
-      const criterias = createPollDefaultValues.criterias
-      switch (key) {
-        case 'age':
-          setValue(`criterias.maxAge`, criterias.maxAge)
-          setValue(`criterias.minAge`, criterias.minAge)
-          clearErrors(`criterias.maxAge`)
-          clearErrors(`criterias.minAge`)
-          break
-        default:
-          setValue(`criterias.${key}`, criterias[key])
-          break
-      }
-
-      return newSelectedKey
-    })
+    setSelectedKey(prev => (prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]))
   }
 
   useEffect(() => {
-    if (unselectedCriterias.length === 0) setAnchorEl(null)
-  }, [unselectedCriterias])
+    if (unselectedCriteria.length === 0) setAnchorEl(null)
+  }, [unselectedCriteria])
 
   return (
     <Stack component={Paper} spacing={6}>
       {selectedKey.includes('nationalities') && (
         <Stack spacing={6} direction='row'>
           <Controller
-            name='criterias.nationalities'
+            name='criteria.nationalities'
             control={control}
             render={({ field, fieldState }) => (
               <FormControl error={Boolean(fieldState.error)}>
                 <Autocomplete
                   multiple
                   limitTags={2}
+                  value={field.value}
+                  isOptionEqualToValue={(option, value) =>
+                    option.flag === value.flag && option.name === value.name
+                  }
                   disableCloseOnSelect
                   disabled={field.disabled || isSubmitting}
                   sx={{ maxWidth: 516 }}
-                  options={nationalities}
-                  getOptionLabel={({ name, flag }) => `${flag} ${name}`}
+                  options={countries}
+                  getOptionLabel={({ codes }) => formatCountry(codes[0], { withFlag: true })}
                   renderInput={params => (
                     <TextField
                       {...params}
@@ -138,6 +125,9 @@ export default function CriteriasSection() {
                       label={t('create-poll.nationalities-lbl')}
                     />
                   )}
+                  onChange={(_, newValue: Nationality[] | null) => {
+                    field.onChange(newValue)
+                  }}
                 />
                 <FormHelperText>{fieldState.error?.message}</FormHelperText>
               </FormControl>
@@ -163,7 +153,7 @@ export default function CriteriasSection() {
             }
           >
             <Controller
-              name='criterias.minAge'
+              name='criteria.minAge'
               control={control}
               render={({ field, fieldState }) => (
                 <UiNumberField
@@ -177,7 +167,7 @@ export default function CriteriasSection() {
               )}
             />
             <Controller
-              name='criterias.maxAge'
+              name='criteria.maxAge'
               control={control}
               render={({ field, fieldState }) => (
                 <UiNumberField
@@ -199,7 +189,7 @@ export default function CriteriasSection() {
       {selectedKey.includes('sex') && (
         <Stack direction='row' alignItems='center' gap={6}>
           <Controller
-            name='criterias.sex'
+            name='criteria.sex'
             defaultValue={Sex.Any}
             control={control}
             render={({ field }) => (
@@ -223,7 +213,7 @@ export default function CriteriasSection() {
         </Stack>
       )}
 
-      {unselectedCriterias.length !== 0 && (
+      {unselectedCriteria.length !== 0 && (
         <Button
           size='small'
           variant='text'
@@ -234,35 +224,35 @@ export default function CriteriasSection() {
           {t('create-poll.add-criteria')}
         </Button>
       )}
-      <CriteriasMenu
+      <CriteriaMenu
         anchorEl={anchorEl}
         isOpen={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
-        unselectedCriterias={unselectedCriterias}
+        unselectedCriteria={unselectedCriteria}
         toggleCriteria={toggleCriteria}
       />
     </Stack>
   )
 }
 
-interface CriteriasMenuProps {
+interface CriteriaMenuProps {
   anchorEl: HTMLElement | null
   isOpen: boolean
-  unselectedCriterias: ICriteria[]
+  unselectedCriteria: CriteriaOptions[]
   onClose: () => void
   toggleCriteria: (key: CriteriaKey) => void
 }
 
-function CriteriasMenu({
+function CriteriaMenu({
   isOpen,
   anchorEl,
   onClose,
-  unselectedCriterias,
+  unselectedCriteria,
   toggleCriteria,
-}: CriteriasMenuProps) {
+}: CriteriaMenuProps) {
   return (
     <Menu anchorEl={anchorEl} open={isOpen} onClose={onClose}>
-      {unselectedCriterias.map(({ key, label }) => (
+      {unselectedCriteria.map(({ key, label }) => (
         <MenuItem key={key} onClick={() => toggleCriteria(key)}>
           <Typography variant='buttonLarge'>{label}</Typography>
         </MenuItem>

@@ -52,11 +52,11 @@ export const createRouter = () => {
             ),
             children: [
               {
-                path: RoutePaths.VotesNew,
+                path: RoutePaths.CreatePoll,
                 element: <CreatePoll />,
               },
               {
-                path: RoutePaths.Vote,
+                path: RoutePaths.Poll,
                 element: <Vote />,
               },
             ],

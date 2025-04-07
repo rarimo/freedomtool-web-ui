@@ -5,15 +5,15 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 import { Transitions } from '@/theme/constants'
 
-export type PollTab = {
+export interface PollTabProps {
   route: string
   label: string
-  count: number
+  count?: number
   isExact?: boolean
 }
 
-type PollTabsProps = {
-  tabs: PollTab[]
+interface PollTabsProps {
+  tabs: PollTabProps[]
 }
 
 export default function PollsTabs({ tabs }: PollTabsProps) {
@@ -33,7 +33,7 @@ export default function PollsTabs({ tabs }: PollTabsProps) {
   )
 }
 
-function PollsTab({ count, label, route, isExact = false }: PollTab) {
+function PollsTab({ count, label, route, isExact = false }: PollTabProps) {
   const location = useLocation()
   const { palette } = useTheme()
 
@@ -62,21 +62,23 @@ function PollsTab({ count, label, route, isExact = false }: PollTab) {
       }}
     >
       <Stack direction='row' spacing={2} alignItems='center'>
-        <Typography
-          variant='subtitle6'
-          color={isRouteActive ? palette.common.black : palette.text.secondary}
-          sx={{
-            px: 1.5,
-            textAlign: 'center',
-            width: 'fit-content',
-            height: 20,
-            backgroundColor: isRouteActive ? palette.primary.main : palette.action.active,
-            borderRadius: 1000,
-            zIndex: 2,
-          }}
-        >
-          {count}
-        </Typography>
+        {count && (
+          <Typography
+            variant='subtitle6'
+            color={isRouteActive ? palette.common.black : palette.text.secondary}
+            sx={{
+              px: 1.5,
+              textAlign: 'center',
+              width: 'fit-content',
+              height: 20,
+              backgroundColor: isRouteActive ? palette.primary.main : palette.action.active,
+              borderRadius: 1000,
+              zIndex: 2,
+            }}
+          >
+            {count}
+          </Typography>
+        )}
         <Typography
           variant='buttonLarge'
           sx={{
