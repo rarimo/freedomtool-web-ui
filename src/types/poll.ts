@@ -1,4 +1,4 @@
-import { ProposalStatus } from '@/enums/proposals'
+import { ProposalStatus } from '@/enums/proposal'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
 export interface CreatePollOption {

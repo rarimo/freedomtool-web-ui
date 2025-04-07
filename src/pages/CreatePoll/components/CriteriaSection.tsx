@@ -33,7 +33,7 @@ interface CriteriaOptions {
   label: string
 }
 
-export default function CriteriasSection() {
+export default function CriteriaSection() {
   const { t } = useTranslation()
   const {
     control,
@@ -71,7 +71,7 @@ export default function CriteriasSection() {
     [t],
   )
 
-  const unselectedCriterias = useMemo(
+  const unselectedCriteria = useMemo(
     () => criteriaOptions.filter(({ key }) => !selectedKey.includes(key)),
     [criteriaOptions, selectedKey],
   )
@@ -81,15 +81,15 @@ export default function CriteriasSection() {
   }
 
   useEffect(() => {
-    if (unselectedCriterias.length === 0) setAnchorEl(null)
-  }, [unselectedCriterias])
+    if (unselectedCriteria.length === 0) setAnchorEl(null)
+  }, [unselectedCriteria])
 
   return (
     <Stack component={Paper} spacing={6}>
       {selectedKey.includes('nationalities') && (
         <Stack spacing={6} direction='row'>
           <Controller
-            name='criterias.nationalities'
+            name='criteria.nationalities'
             control={control}
             render={({ field, fieldState }) => (
               <FormControl error={Boolean(fieldState.error)}>
@@ -153,7 +153,7 @@ export default function CriteriasSection() {
             }
           >
             <Controller
-              name='criterias.minAge'
+              name='criteria.minAge'
               control={control}
               render={({ field, fieldState }) => (
                 <UiNumberField
@@ -167,7 +167,7 @@ export default function CriteriasSection() {
               )}
             />
             <Controller
-              name='criterias.maxAge'
+              name='criteria.maxAge'
               control={control}
               render={({ field, fieldState }) => (
                 <UiNumberField
@@ -189,7 +189,7 @@ export default function CriteriasSection() {
       {selectedKey.includes('sex') && (
         <Stack direction='row' alignItems='center' gap={6}>
           <Controller
-            name='criterias.sex'
+            name='criteria.sex'
             defaultValue={Sex.Any}
             control={control}
             render={({ field }) => (
@@ -213,7 +213,7 @@ export default function CriteriasSection() {
         </Stack>
       )}
 
-      {unselectedCriterias.length !== 0 && (
+      {unselectedCriteria.length !== 0 && (
         <Button
           size='small'
           variant='text'
@@ -224,35 +224,35 @@ export default function CriteriasSection() {
           {t('create-poll.add-criteria')}
         </Button>
       )}
-      <CriteriasMenu
+      <CriteriaMenu
         anchorEl={anchorEl}
         isOpen={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
-        unselectedCriterias={unselectedCriterias}
+        unselectedCriteria={unselectedCriteria}
         toggleCriteria={toggleCriteria}
       />
     </Stack>
   )
 }
 
-interface CriteriasMenuProps {
+interface CriteriaMenuProps {
   anchorEl: HTMLElement | null
   isOpen: boolean
-  unselectedCriterias: CriteriaOptions[]
+  unselectedCriteria: CriteriaOptions[]
   onClose: () => void
   toggleCriteria: (key: CriteriaKey) => void
 }
 
-function CriteriasMenu({
+function CriteriaMenu({
   isOpen,
   anchorEl,
   onClose,
-  unselectedCriterias,
+  unselectedCriteria,
   toggleCriteria,
-}: CriteriasMenuProps) {
+}: CriteriaMenuProps) {
   return (
     <Menu anchorEl={anchorEl} open={isOpen} onClose={onClose}>
-      {unselectedCriterias.map(({ key, label }) => (
+      {unselectedCriteria.map(({ key, label }) => (
         <MenuItem key={key} onClick={() => toggleCriteria(key)}>
           <Typography variant='buttonLarge'>{label}</Typography>
         </MenuItem>

@@ -4,7 +4,7 @@ import { toBeHex } from 'ethers'
 import { decodeAbiParameters, encodeAbiParameters, stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
-import { WHITELIST_DATA_SIGNATURE, ZERO_DATE } from '@/constants'
+import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
@@ -136,7 +136,7 @@ export const parseProposalFromContract = (
 
 export const decodeWhitelistData = (whitelistDataHex: string) => {
   const _decodedData = decodeAbiParameters(
-    [WHITELIST_DATA_SIGNATURE],
+    [WHITELIST_DATA_ABI_TYPE],
     whitelistDataHex as `0x${string}`,
   )[0]
 
@@ -219,7 +219,7 @@ export const prepareVotingWhitelistData = (config: {
     },
   ]
 
-  return encodeAbiParameters([WHITELIST_DATA_SIGNATURE], params)
+  return encodeAbiParameters([WHITELIST_DATA_ABI_TYPE], params)
 }
 
 export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {

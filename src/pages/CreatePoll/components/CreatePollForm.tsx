@@ -24,7 +24,7 @@ import nationalities from '@/locales/resources/countries_en.json'
 import { Nationality } from '@/types'
 
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
-import CriteriasSection from './CriteriasSection'
+import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
 import SectionsController from './SectionsController'
@@ -52,7 +52,7 @@ export default function CreatePollForm() {
     try {
       const {
         details: { title, description, startDate, endDate, image },
-        criterias: { minAge, nationalities, maxAge, sex },
+        criteria: { minAge, nationalities, maxAge, sex },
         questions,
         settings: { amount },
       } = formData
@@ -117,9 +117,9 @@ export default function CreatePollForm() {
         validate: () => trigger(['details']),
       },
       {
-        title: t('create-poll.titles.criterias'),
-        children: <CriteriasSection />,
-        validate: () => trigger(['criterias']),
+        title: t('create-poll.titles.criteria'),
+        children: <CriteriaSection />,
+        validate: () => trigger(['criteria']),
       },
       {
         title: t('create-poll.titles.questions'),

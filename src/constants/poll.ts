@@ -15,7 +15,7 @@ export const MAX_UINT32 = 4294967295
 
 export const ZERO_DATE = '0x303030303030'
 
-export const WHITELIST_DATA_SIGNATURE = {
+export const WHITELIST_DATA_ABI_TYPE = {
   type: 'tuple',
   components: [
     { name: 'selector', type: 'uint256' },

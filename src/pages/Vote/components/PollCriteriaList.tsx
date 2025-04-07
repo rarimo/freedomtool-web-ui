@@ -1,4 +1,5 @@
 import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
+import { isEmpty } from 'lodash'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,8 +10,8 @@ import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
 export interface PollCriteriaListProps {
   formattedNationalitiesArray: string[] | null
-  birthDateUpperboundAge: number | null
-  birthDateLowerBoundAge: number | null
+  minAge: number | null
+  maxAge: number | null
   formattedSex: string | null
 }
 
@@ -20,16 +21,11 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
   const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  if (!props) return null
+  if (isEmpty(props)) return null
 
-  const {
-    formattedNationalitiesArray,
-    birthDateUpperboundAge,
-    birthDateLowerBoundAge,
-    formattedSex,
-  } = props
+  const { formattedNationalitiesArray, minAge, maxAge, formattedSex } = props
 
-  const formattedAge = formatAgeRange({ birthDateUpperboundAge, birthDateLowerBoundAge })
+  const formattedAge = formatAgeRange({ minAge, maxAge })
 
   const hasNationalitiesList =
     Array.isArray(formattedNationalitiesArray) && formattedNationalitiesArray.length > 0
@@ -46,16 +42,16 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
 
   const criteriaList = [
     {
-      label: t('poll.criterias-list.sex'),
+      label: t('poll.criteria-list.sex'),
       value: formattedSex,
     },
     {
-      label: t('poll.criterias-list.minAge'),
-      value: formatAgeRange({ birthDateUpperboundAge }),
+      label: t('poll.criteria-list.minAge'),
+      value: formatAgeRange({ minAge }),
     },
     {
-      label: t('poll.criterias-list.maxAge'),
-      value: formatAgeRange({ birthDateLowerBoundAge }),
+      label: t('poll.criteria-list.maxAge'),
+      value: formatAgeRange({ maxAge }),
     },
   ]
 
@@ -65,7 +61,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
     <>
       <Stack direction='row' alignItems='center' justifyContent='space-between' spacing={2}>
         <Typography variant='body3' color={palette.text.secondary}>
-          {t('poll.criterias')}
+          {t('poll.criteria')}
         </Typography>
         {hasNationalitiesList ? (
           <Button
@@ -82,7 +78,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
         )}
       </Stack>
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <UiDialogTitle>{t('poll.criterias')}</UiDialogTitle>
+        <UiDialogTitle>{t('poll.criteria')}</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
           {hasCriteriaList && (
             <>
@@ -122,7 +118,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
           {formattedNationalitiesArray?.length && (
             <Stack>
               <Typography variant='subtitle5'>
-                {t('poll.criterias-list.allowed-nationalities', {
+                {t('poll.criteria-list.allowed-nationalities', {
                   count: formattedNationalitiesArray.length,
                 })}
               </Typography>

@@ -306,26 +306,26 @@ export function formatNumberShort(value: BnLike): string {
 }
 
 export const formatAgeRange = ({
-  birthDateUpperboundAge,
-  birthDateLowerBoundAge,
+  minAge,
+  maxAge,
 }: {
-  birthDateUpperboundAge?: number | null
-  birthDateLowerBoundAge?: number | null
+  minAge?: number | null
+  maxAge?: number | null
 }): string | null => {
-  if (birthDateUpperboundAge && !birthDateLowerBoundAge) {
-    return `${birthDateUpperboundAge}+`
+  if (minAge && !maxAge) {
+    return `${minAge}+`
   }
 
-  if (birthDateLowerBoundAge && !birthDateUpperboundAge) {
+  if (maxAge && !minAge) {
     return t('formats.age.lte', {
-      birthDateLowerBoundAge,
+      maxAge,
     })
   }
 
-  if (birthDateUpperboundAge && birthDateLowerBoundAge) {
+  if (minAge && maxAge) {
     return t('formats.age.gte-and-lte', {
-      birthDateUpperboundAge,
-      birthDateLowerBoundAge,
+      minAge,
+      maxAge,
     })
   }
 

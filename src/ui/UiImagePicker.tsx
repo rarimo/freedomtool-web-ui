@@ -22,6 +22,7 @@ import UiIcon from './UiIcon'
 interface Props extends FormControlProps {
   maxSize?: number
   title?: string
+  value?: File | null
   description?: string
   errorMessage?: string
   labelProps?: StackProps
@@ -34,6 +35,7 @@ interface Props extends FormControlProps {
 const UiImagePicker = forwardRef<HTMLInputElement, Props>(
   (
     {
+      value,
       maxSize,
       title,
       description,
@@ -63,12 +65,15 @@ const UiImagePicker = forwardRef<HTMLInputElement, Props>(
     }
 
     useEffect(() => {
+      if (!value) return
+
+      const previewURL = URL.createObjectURL(value)
+      setPreviewUrl(previewURL)
+
       return () => {
-        if (previewUrl) {
-          URL.revokeObjectURL(previewUrl)
-        }
+        URL.revokeObjectURL(previewURL)
       }
-    }, [previewUrl])
+    }, [value])
 
     return (
       <FormControl {...rest}>

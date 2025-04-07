@@ -10,10 +10,10 @@ export interface IPollDetails {
 
 export default function PollDetails({
   list,
-  criterias,
+  criteria,
 }: {
   list: IPollDetails[]
-  criterias?: PollCriteriaListProps
+  criteria?: PollCriteriaListProps
 }) {
   const { palette } = useTheme()
 
@@ -37,7 +37,7 @@ export default function PollDetails({
           </Typography>
         </Stack>
       ))}
-      <PollCriteriaList {...criterias} />
+      <PollCriteriaList {...criteria} />
     </Stack>
   )
 }

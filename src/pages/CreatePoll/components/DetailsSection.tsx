@@ -33,6 +33,7 @@ export default function DetailsSection() {
               width: 48,
               height: 48,
             }}
+            value={field.value}
             disabled={field.disabled}
             errorMessage={fieldState.error?.message}
             onUpdate={image => {

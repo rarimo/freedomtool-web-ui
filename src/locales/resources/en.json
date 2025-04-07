@@ -37,8 +37,8 @@
   "formats": {
     "percent": "{{value}}%",
     "age": {
-      "lte": "less than or equal {{birthDateLowerBoundAge}}",
-      "gte-and-lte": "{{birthDateUpperboundAge}}-{{birthDateLowerBoundAge}} y.o. only"
+      "lte": "less than or equal {{maxAge}}",
+      "gte-and-lte": "{{minAge}}-{{maxAge}} y.o. only"
     }
   },
   "errors": {
@@ -117,7 +117,7 @@
     "age-lbl": "Age",
     "titles": {
       "details": "Poll details",
-      "criterias": "Criterias",
+      "criteria": "Criteria",
       "questions": "Questions",
       "settings": "Settings"
     },
@@ -232,10 +232,10 @@
     "remaining-votes": "Participants:",
     "votes-count_one": "{{count}} vote",
     "votes-count_other": "{{count}} votes",
-    "criterias-list": {
+    "criteria-list": {
       "sex": "Sex:",
-      "minAge": "Minimum age to participate:",
-      "maxAge": "Maximum age to participate:",
+      "minAge": "Minimum age:",
+      "maxAge": "Maximum age:",
       "allowed-nationalities": "All allowed nationalities ({{count}})"
     },
     "qr-code-panel": {
@@ -249,7 +249,10 @@
       },
       "generate-qr-code-btn": "Generate a new QR code"
     },
-    "criterias": "Criterias:"
+    "criteria": "Criteria:",
+    "top-up-form": {
+      "add-funds": "Add funds"
+    }
   },
   "format": {
     "sex": {

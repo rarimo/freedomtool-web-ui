@@ -87,7 +87,7 @@ export default function TopUpForm() {
           setIsOpen(true)
         }}
       >
-        Add funds
+        {t('poll.top-up-form.add-funds')}
       </Button>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <UiDialogTitle onClose={() => setIsOpen(false)}>Title</UiDialogTitle>

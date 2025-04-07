@@ -31,7 +31,7 @@ export default function Poll() {
     isLoading,
     isError,
 
-    criterias,
+    criteria,
 
     pollDetails,
     proposal,
@@ -210,7 +210,7 @@ export default function Poll() {
                   }}
                 >
                   <TopUpForm />
-                  <PollDetails list={pollDetails} criterias={criterias} />
+                  <PollDetails list={pollDetails} criteria={criteria} />
                 </Stack>
               </motion.div>
             )}
@@ -243,7 +243,7 @@ export default function Poll() {
                     />
                     {isTopUpAllowed && <TopUpForm />}
                   </Stack>
-                  <PollDetails list={pollDetails} criterias={criterias} />
+                  <PollDetails list={pollDetails} criteria={criteria} />
                 </Stack>
               </motion.div>
             )}

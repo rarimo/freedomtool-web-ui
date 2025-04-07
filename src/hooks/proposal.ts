@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { VOTE_QR_BASE_URL, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { ProposalStatus } from '@/enums/proposals'
+import { ProposalStatus } from '@/enums/proposal'
 import {
   ErrorHandler,
   formatCountry,
@@ -97,34 +97,34 @@ export function useProposal(id?: string) {
     return 0
   }, [proposal?.voteResults])
 
-  const criterias = useMemo(() => {
-    const _criterias = proposal?.votingWhitelistData
+  const criteria = useMemo(() => {
+    const whitelistData = proposal?.votingWhitelistData
 
     // Countries as a criteria string if exists -> ["Ukraine, Georgia"]
-    const formattedNationalitiesArray = _criterias?.nationalities
+    const formattedNationalitiesArray = whitelistData?.nationalities
       ? [
           ...new Set(
-            _criterias.nationalities.map(country => formatCountry(country, { withFlag: true })),
+            whitelistData.nationalities.map(country => formatCountry(country, { withFlag: true })),
           ),
         ]
       : null
 
-    const birthDateUpperboundAge =
-      _criterias?.birthDateUpperbound && _criterias.birthDateUpperbound !== ZERO_DATE
-        ? time().diff(time(hexToAscii(_criterias.birthDateUpperbound), 'YYMMDD'), 'year')
+    const minAge =
+      whitelistData?.birthDateUpperbound && whitelistData.birthDateUpperbound !== ZERO_DATE
+        ? time().diff(time(hexToAscii(whitelistData.birthDateUpperbound), 'YYMMDD'), 'year')
         : null
 
-    const birthDateLowerBoundAge =
-      _criterias?.birthDateLowerbound && _criterias.birthDateLowerbound !== ZERO_DATE
-        ? time().diff(time(hexToAscii(_criterias.birthDateLowerbound), 'YYMMDD'), 'year')
+    const maxAge =
+      whitelistData?.birthDateLowerbound && whitelistData.birthDateLowerbound !== ZERO_DATE
+        ? time().diff(time(hexToAscii(whitelistData.birthDateLowerbound), 'YYMMDD'), 'year')
         : null
 
-    const formattedSex = formatSex(_criterias?.sex)
+    const formattedSex = formatSex(whitelistData?.sex)
 
     return {
       formattedNationalitiesArray,
-      birthDateUpperboundAge,
-      birthDateLowerBoundAge,
+      minAge,
+      maxAge,
       formattedSex,
     }
   }, [proposal?.votingWhitelistData])
@@ -151,7 +151,7 @@ export function useProposal(id?: string) {
     isLoading,
     isError,
 
-    criterias,
+    criteria,
 
     pollDetails,
     proposal,
