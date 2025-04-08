@@ -29,6 +29,7 @@ import PollQuestionPreview from '@/pages/CreateVote/components/PollQuestionPrevi
 import { hiddenScrollbar } from '@/theme/constants'
 import { Nationality } from '@/types'
 
+import { SectionSelector } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
@@ -127,14 +128,14 @@ export default function CreatePollForm() {
         title: t('create-poll.titles.details'),
         children: <DetailsSection />,
         validate: () => trigger(['details']),
-        onContinue: () => scrollToSelector('#criteria'),
+        onContinue: () => scrollToSelector(`#${SectionSelector.Criteria}`),
       },
       {
         title: t('create-poll.titles.criteria'),
         children: <CriteriaSection />,
         validate: () => trigger(['criteria']),
         onContinue: () => setIsQuestionPreview(true),
-        onBack: () => scrollToSelector('#details'),
+        onBack: () => scrollToSelector(`#${SectionSelector.Details}`),
       },
       {
         title: t('create-poll.titles.questions'),
@@ -142,7 +143,7 @@ export default function CreatePollForm() {
         validate: () => trigger(['questions']),
         onBack: () => {
           setIsQuestionPreview(false)
-          setTimeout(() => scrollToSelector('#criteria'), 100)
+          setTimeout(() => scrollToSelector(`#${SectionSelector.Criteria}`), 100)
         },
       },
       {

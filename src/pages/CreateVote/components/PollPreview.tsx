@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { textWrapAndDirectionStyles } from '@/constants'
 import { Icons } from '@/enums'
 import { formatDateTime } from '@/helpers'
+import { SectionSelector } from '@/pages/CreatePoll/constants'
 import { hiddenScrollbar } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 import { Nationality, Sex } from '@/types'
@@ -89,7 +90,7 @@ export default function PollPreview({
 
   return (
     <>
-      <Stack id='details' />
+      <Stack id={SectionSelector.Details} />
       <PreviewLayout>
         <PollImage imageSrc={imageSrc} />
         <Stack spacing={5} px={3.5} py={5}>
@@ -118,7 +119,7 @@ export default function PollPreview({
                 </Stack>
               </Stack>
             )}
-            <Stack id='criteria' />
+            <Stack id={SectionSelector.Criteria} />
           </Stack>
         </Stack>
       </PreviewLayout>
