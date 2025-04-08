@@ -43,6 +43,34 @@ export const useProposalState = () => {
     [contract],
   )
 
+  const createProposalGasLimit = useCallback(
+    async (
+      proposalConfig: Omit<
+        ProposalsState.ProposalConfigStruct,
+        'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
+      > & { amount: BigNumberish; votingWhitelistData: string },
+    ) => {
+      if (!contract) return
+      const gasLimit = await contract.contractInstance.createProposal.estimateGas(
+        {
+          description: proposalConfig.description,
+          acceptedOptions: proposalConfig.acceptedOptions,
+          startTimestamp: BigInt(proposalConfig.startTimestamp),
+          duration: BigInt(proposalConfig.duration),
+          multichoice: BigInt(0),
+          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+          votingWhitelistData: [proposalConfig.votingWhitelistData],
+        },
+        {
+          value: proposalConfig.amount,
+        },
+      )
+
+      return gasLimit
+    },
+    [contract],
+  )
+
   const getProposalInfo = useCallback(
     (id: number) => {
       if (!contract) return
@@ -66,5 +94,6 @@ export const useProposalState = () => {
     createProposal,
     addFundsToProposal,
     getProposalInfo,
+    createProposalGasLimit,
   }
 }

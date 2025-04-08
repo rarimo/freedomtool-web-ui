@@ -140,7 +140,11 @@
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
     "image-description": "{{width}}x{{height}}px, png or jpeg, webp, max 5mb",
-    "amount-error": "Amount must be more than 0"
+    "amount-error": "Amount must be more than 0",
+    "result": {
+      "fee-lbl": "Fee:",
+      "total": "Total:"
+    }
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

@@ -21,7 +21,7 @@ import UiNumberField from './UiNumberField'
 type AmountInputProps = { value: string; maxValue: string } & Omit<TextFieldProps, 'value'> &
   Omit<ControllerRenderProps, 'value'>
 
-const SCALE_THRESHOLD = 12
+const CHARACTER_LIMIT_FOR_SCALING = 12
 
 const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
   ({ onChange, error, disabled, value, maxValue }, ref) => {
@@ -80,7 +80,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
               borderRadius: 4,
             },
           '.MuiInputBase-input': {
-            transform: value.length > SCALE_THRESHOLD ? 'scale(0.8)' : 'scale(1)',
+            transform: value.length > CHARACTER_LIMIT_FOR_SCALING ? 'scale(0.8)' : 'scale(1)',
             transformOrigin: 'left center',
             transition: 'transform 0.3s ease-in-out',
           },

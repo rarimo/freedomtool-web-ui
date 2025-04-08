@@ -1,4 +1,4 @@
-export enum SectionSelector {
+export enum SectionAnchor {
   Details = 'details',
   Criteria = 'criteria',
   Questions = 'questions',

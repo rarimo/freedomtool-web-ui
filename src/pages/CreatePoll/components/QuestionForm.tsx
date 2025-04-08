@@ -19,16 +19,7 @@ interface QuestionFormProps {
   onDelete: () => void
 }
 
-interface QuestionCardProps extends QuestionFormProps {
-  isEditing: boolean
-  onEdit: () => void
-}
-
-export default function QuestionCard(props: QuestionCardProps) {
-  return <QuestionForm {...props} />
-}
-
-function QuestionForm(props: QuestionFormProps) {
+export default function QuestionForm(props: QuestionFormProps) {
   const { palette } = useTheme()
   const { question, index, canDelete, control, onDelete } = props
   const { t } = useTranslation()

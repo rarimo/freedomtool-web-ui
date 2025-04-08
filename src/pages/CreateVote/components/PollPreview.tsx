@@ -2,11 +2,10 @@ import { Box, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { textWrapAndDirectionStyles } from '@/constants'
 import { Icons } from '@/enums'
 import { formatDateTime } from '@/helpers'
-import { SectionSelector } from '@/pages/CreatePoll/constants'
-import { hiddenScrollbar } from '@/theme/constants'
+import { SectionAnchor } from '@/pages/CreatePoll/constants'
+import { hiddenScrollbar, textWrapAndDirectionStyles } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 import { Nationality, Sex } from '@/types'
 import { UiIcon } from '@/ui'
@@ -23,8 +22,8 @@ interface PollDetailsProps {
 interface Props extends PollDetailsProps {
   image?: File | null
   nationalities: Nationality[]
-  minAge?: number | null | ''
-  maxAge?: number | null | ''
+  minAge?: number | ''
+  maxAge?: number | ''
   sex?: string
 }
 
@@ -38,7 +37,7 @@ export default function PollPreview({
   minAge,
   maxAge,
   sex,
-}: Partial<Props>) {
+}: Props) {
   const { palette } = useTheme()
   const { t } = useTranslation()
   const [imageSrc, setImageSrc] = useState<string>('')
@@ -54,9 +53,9 @@ export default function PollPreview({
     {
       id: 'nationalities',
       text: t('poll-preview.nationalities-criteria-item', {
-        value: nationalities?.map(({ name }) => name).join(', '),
+        value: nationalities.map(({ name }) => name).join(', '),
       }),
-      isHidden: nationalities?.length === 0,
+      isHidden: nationalities.length === 0,
     },
     {
       id: 'age',
@@ -90,7 +89,7 @@ export default function PollPreview({
 
   return (
     <>
-      <Stack id={SectionSelector.Details} />
+      <Stack id={SectionAnchor.Details} />
       <PreviewLayout>
         <PollImage imageSrc={imageSrc} />
         <Stack spacing={5} px={3.5} py={5}>
@@ -119,7 +118,7 @@ export default function PollPreview({
                 </Stack>
               </Stack>
             )}
-            <Stack id={SectionSelector.Criteria} />
+            <Stack id={SectionAnchor.Criteria} />
           </Stack>
         </Stack>
       </PreviewLayout>

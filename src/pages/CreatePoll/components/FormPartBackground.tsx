@@ -1,7 +1,7 @@
 import { Stack, StackProps, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
 
-export default function ContainerLayout({ children, ...rest }: PropsWithChildren & StackProps) {
+export default function FormPartBackground({ children, ...rest }: PropsWithChildren & StackProps) {
   const { palette } = useTheme()
   return (
     <Stack

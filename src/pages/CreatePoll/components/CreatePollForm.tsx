@@ -22,17 +22,17 @@ import {
   uploadJsonToIpfs,
 } from '@/helpers'
 import { useProposalState, useScrollWithShadow } from '@/hooks'
-import SectionLayout from '@/layouts/ContainerLayout'
 import nationalities from '@/locales/resources/countries_en.json'
 import PollPreview from '@/pages/CreateVote/components/PollPreview'
 import PollQuestionPreview from '@/pages/CreateVote/components/PollQuestionPreview'
 import { hiddenScrollbar } from '@/theme/constants'
 import { Nationality } from '@/types'
 
-import { SectionSelector } from '../constants'
+import { SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
+import FormPartBackground from './FormPartBackground'
 import QuestionsSection from './QuestionsSection'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
@@ -128,14 +128,14 @@ export default function CreatePollForm() {
         title: t('create-poll.titles.details'),
         children: <DetailsSection />,
         validate: () => trigger(['details']),
-        onContinue: () => scrollToSelector(`#${SectionSelector.Criteria}`),
+        onContinue: () => scrollToSelector(`#${SectionAnchor.Criteria}`),
       },
       {
         title: t('create-poll.titles.criteria'),
         children: <CriteriaSection />,
         validate: () => trigger(['criteria']),
         onContinue: () => setIsQuestionPreview(true),
-        onBack: () => scrollToSelector(`#${SectionSelector.Details}`),
+        onBack: () => scrollToSelector(`#${SectionAnchor.Details}`),
       },
       {
         title: t('create-poll.titles.questions'),
@@ -143,7 +143,7 @@ export default function CreatePollForm() {
         validate: () => trigger(['questions']),
         onBack: () => {
           setIsQuestionPreview(false)
-          setTimeout(() => scrollToSelector(`#${SectionSelector.Criteria}`), 100)
+          setTimeout(() => scrollToSelector(`#${SectionAnchor.Criteria}`), 100)
         },
       },
       {
@@ -170,14 +170,14 @@ export default function CreatePollForm() {
             position: 'relative',
           }}
         >
-          <SectionLayout>
+          <FormPartBackground>
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
-          </SectionLayout>
+          </FormPartBackground>
 
           {isMdUp && (
             <>
               {isQuestionPreview ? (
-                <SectionLayout>
+                <FormPartBackground>
                   <Stack
                     key='question'
                     height={500}
@@ -191,9 +191,9 @@ export default function CreatePollForm() {
                   >
                     <PollQuestionPreview question={questions[0]} />
                   </Stack>
-                </SectionLayout>
+                </FormPartBackground>
               ) : (
-                <SectionLayout>
+                <FormPartBackground>
                   <Stack
                     height={570}
                     sx={{
@@ -207,7 +207,7 @@ export default function CreatePollForm() {
                   >
                     <PollPreview {...details} {...criteria} {...questions} />
                   </Stack>
-                </SectionLayout>
+                </FormPartBackground>
               )}
             </>
           )}

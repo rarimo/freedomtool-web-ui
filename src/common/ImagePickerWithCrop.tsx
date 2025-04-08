@@ -67,11 +67,11 @@ const ImagePickerWithCrop = forwardRef<HTMLInputElement, Props>(
 
     const imageInputId = useMemo(() => `image-input-${uuidv4()}`, [])
 
-    const updatePreview = (e: ChangeEvent<HTMLInputElement>) => {
+    const processImage = (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (!file) return
 
-      const blob = URL.createObjectURL(file)
+      const blobUrl = URL.createObjectURL(file)
 
       const typeFallback = file.type
 
@@ -79,13 +79,14 @@ const ImagePickerWithCrop = forwardRef<HTMLInputElement, Props>(
 
       reader.onload = e => {
         setImage({
-          src: blob,
+          src: blobUrl,
           type: getMimeType(e.target?.result, typeFallback),
         })
       }
       reader.readAsArrayBuffer(file)
 
       setIsCropperDialogOpen(true)
+      // Clear the event target value to give the possibility to upload the same image:
       e.target.value = ''
     }
 
@@ -153,7 +154,7 @@ const ImagePickerWithCrop = forwardRef<HTMLInputElement, Props>(
                   onChange={e => {
                     const file = e.target.files?.[0]
                     if (!file) return
-                    updatePreview(e)
+                    processImage(e)
                   }}
                 />
                 {previewUrl ? (

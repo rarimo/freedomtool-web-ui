@@ -1,7 +1,7 @@
 import { ButtonBase, Divider, Stack, Typography, useTheme } from '@mui/material'
 
-import { textWrapAndDirectionStyles } from '@/constants'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+import { textWrapAndDirectionStyles } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 
 import PreviewLayout from './PreviewLayout'
