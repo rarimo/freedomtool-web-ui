@@ -13,7 +13,7 @@ import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 
 export default function VoteParamsResult() {
   const { watch, getValues } = useFormContext<CreatePollSchema>()
-  const { createProposalGasLimit } = useProposalState()
+  const { calculateCreateProposalGasLimit } = useProposalState()
   const { palette } = useTheme()
   const { t } = useTranslation()
   const { rawProviderSigner } = useWeb3Context()
@@ -42,7 +42,7 @@ export default function VoteParamsResult() {
 
       const acceptedOptions = prepareAcceptedOptionsToContract(getValues('questions'))
 
-      const gasLimit = await createProposalGasLimit({
+      const gasLimit = await calculateCreateProposalGasLimit({
         votingWhitelistData,
         acceptedOptions,
         description: hexlify(randomBytes(46)),
@@ -66,7 +66,9 @@ export default function VoteParamsResult() {
       <Stack spacing={1} color={palette.text.secondary} direction='row' alignItems='center'>
         <Typography variant='body4'>{t('create-poll.result.fee-lbl')}</Typography>
         {isEstimatingError ? (
-          <Typography color={palette.error.dark}>Error estimating gas</Typography>
+          <Typography color={palette.error.dark}>
+            {t('create-poll.result.estimate-error')}
+          </Typography>
         ) : isEstimating ? (
           <DotsLoader />
         ) : (

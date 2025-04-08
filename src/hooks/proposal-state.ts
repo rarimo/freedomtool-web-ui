@@ -43,7 +43,7 @@ export const useProposalState = () => {
     [contract],
   )
 
-  const createProposalGasLimit = useCallback(
+  const calculateCreateProposalGasLimit = useCallback(
     async (
       proposalConfig: Omit<
         ProposalsState.ProposalConfigStruct,
@@ -94,6 +94,6 @@ export const useProposalState = () => {
     createProposal,
     addFundsToProposal,
     getProposalInfo,
-    createProposalGasLimit,
+    calculateCreateProposalGasLimit,
   }
 }
