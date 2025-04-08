@@ -7,7 +7,6 @@ export default function UiContainer(props: StackProps) {
     <Stack
       {...props}
       sx={{
-        maxWidth: 1192,
         width: '100%',
         mx: 'auto',
         [breakpoints.down('md')]: { px: 4, pt: 18, pb: 20 },

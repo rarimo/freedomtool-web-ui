@@ -1,26 +1,26 @@
-import { useAppKit } from '@reown/appkit/react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
+import { AuthGuardRef } from '@/common/AuthGuard'
 import { ErrorHandler } from '@/helpers'
 
 export const useSignIn = () => {
-  const { open } = useAppKit()
-
   const [isLoading, setIsLoading] = useState(false)
+  const authGuardRef = useRef<AuthGuardRef>(null)
 
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      await open()
+      await authGuardRef.current?.verifyAuth()
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
-    } finally {
-      setIsLoading(false)
     }
+    setIsLoading(false)
   }
 
   return {
-    handleSignIn,
     isLoading,
+    setIsLoading,
+    handleSignIn,
+    authGuardRef,
   }
 }

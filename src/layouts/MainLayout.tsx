@@ -2,13 +2,14 @@ import { Stack, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
 
 import { AppHeader, NetworkWarningProtector } from '@/common'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { RouteTitleContextProvider } from '@/contexts'
 import { Transitions } from '@/theme/constants'
 import { vh } from '@/theme/helpers'
 import { UiContainer } from '@/ui'
 
 const MainLayout = ({ children }: PropsWithChildren) => {
-  const { palette, breakpoints } = useTheme()
+  const { breakpoints } = useTheme()
   return (
     <RouteTitleContextProvider>
       <Stack
@@ -16,7 +17,6 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         height={vh(100)}
         width='100%'
         sx={{
-          backgroundColor: palette.background.default,
           [breakpoints.down('md')]: {
             flexDirection: 'column',
             gap: 0,
@@ -26,8 +26,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         <UiContainer
           id='main-content'
           sx={{
-            pt: { xs: 15, md: 20 },
-            px: { xs: 0, md: 20, lg: 0 },
+            pt: { xs: MOBILE_HEADER_HEIGHT / 4, md: DESKTOP_HEADER_HEIGHT / 4 },
             transition: Transitions.Default,
           }}
         >

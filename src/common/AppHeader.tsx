@@ -1,5 +1,4 @@
 import {
-  alpha,
   Button,
   Divider,
   IconButton,
@@ -30,7 +29,7 @@ export default function AppHeader(props: StackProps) {
   return (
     <Stack
       {...props}
-      bgcolor={alpha(palette.background.default, 0.8)}
+      bgcolor={palette.background.light}
       component='header'
       sx={{
         position: 'fixed',
@@ -102,7 +101,7 @@ function ThemeButton() {
   }, [palette.mode])
 
   return (
-    <IconButton key={palette.mode} onClick={uiStore.togglePaletteMode}>
+    <IconButton key={palette.mode} color='secondary' onClick={uiStore.togglePaletteMode}>
       <motion.div
         key={palette.mode}
         initial={{ opacity: 0 }}

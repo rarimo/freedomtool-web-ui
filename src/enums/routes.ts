@@ -1,8 +1,12 @@
 export enum RoutePaths {
   Home = '/',
 
-  VotesNew = '/new',
+  DashboardActive = '/dashboard/active',
+  DashboardHistory = '/dashboard/history',
+  DashboardDraft = '/dashboard/draft',
 
-  Votes = '/votes',
-  Vote = '/votes/:id',
+  CreatePoll = '/create-poll',
+
+  Polls = '/polls',
+  Poll = '/polls/:id',
 }

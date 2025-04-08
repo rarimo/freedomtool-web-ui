@@ -19,15 +19,15 @@ const AppNavbar = ({ ...rest }: StackProps) => {
   const navbarItems = useMemo<NavbarLinkProps[]>(
     () => [
       {
-        routesList: [RoutePaths.Votes, RoutePaths.Vote],
-        to: RoutePaths.Votes,
+        routesList: [RoutePaths.Polls, RoutePaths.Poll],
+        to: RoutePaths.Polls,
         title: t('routes.vote'),
         icon: Icons.ChartBar,
         activeIcon: Icons.ChartBarFill,
       },
       {
-        routesList: [RoutePaths.VotesNew],
-        to: RoutePaths.VotesNew,
+        routesList: [RoutePaths.CreatePoll],
+        to: RoutePaths.CreatePoll,
         title: t('routes.create-new-proposal'),
         icon: Icons.Plus,
         activeIcon: Icons.Plus,

@@ -8,9 +8,12 @@ export interface ExtendedTypographyOptions extends TypographyOptions {
   subtitle3: CSSProperties
   subtitle4: CSSProperties
   subtitle5: CSSProperties
+  subtitle6: CSSProperties
+  subtitle7: CSSProperties
 
   body3: CSSProperties
   body4: CSSProperties
+  body5: CSSProperties
 
   buttonLarge: CSSProperties
   buttonMedium: CSSProperties
@@ -33,9 +36,12 @@ declare module '@mui/material/Typography/Typography' {
     subtitle3: true
     subtitle4: true
     subtitle5: true
+    subtitle6: true
+    subtitle7: true
 
     body3: true
     body4: true
+    body5: true
 
     buttonLarge: true
     buttonMedium: true
@@ -78,14 +84,12 @@ declare module '@mui/material/styles' {
 
   interface PaletteOptions {
     additional: {
-      popupBackground: string
-      gradient: string
-
-      // TODO: Sync with design palette
-      marketFlashWrapper: string
-      marketFlashHeaderText: string
-      marketFlashProgressThumb: string
-      marketFlashProgressIndicator: string
+      gradient1: string
+      gradient2: string
+      gradient3: string
+      gradient4: string
+      gradient5: string
+      gradient6: string
     }
     inverted: {
       light: string
@@ -99,20 +103,14 @@ declare module '@mui/material/styles' {
 
   interface Palette {
     additional: {
-      popupBackground: string
-      gradient: string
-      layerBorder: string
-      pureBlack: string
+      gradient1: string
+      gradient2: string
+      gradient3: string
+      gradient4: string
+      gradient5: string
+      gradient6: string
+    }
 
-      // TODO: Sync with design palette
-      marketFlashWrapper: string
-      marketFlashHeaderText: string
-      marketFlashProgressThumb: string
-      marketFlashProgressIndicator: string
-    }
-    base: {
-      baseBackground: string
-    }
     inverted: {
       light: string
       dark: string

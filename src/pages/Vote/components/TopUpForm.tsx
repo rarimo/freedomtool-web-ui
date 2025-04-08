@@ -1,87 +1,199 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Stack } from '@mui/material'
-import { useCallback } from 'react'
+import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
+import { parseUnits } from 'ethers'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { z as zod } from 'zod'
 
-import { MAX_VOTE_COUNT_PER_TX } from '@/constants'
-import { BusEvents } from '@/enums'
+import { NATIVE_CURRENCY } from '@/constants'
+import { useWeb3Context } from '@/contexts/web3-context'
+import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useCheckVoteAmount, useProposalState } from '@/hooks'
-import { UiCheckVoteInput } from '@/ui'
+import { useProposalState } from '@/hooks'
+import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
+import { UiCheckVoteInput, UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
+import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
-interface ITopUpForm {
-  votesCount: number
-}
-
-const defaultValues = { votesCount: 0 }
+import { topUpDefaultValues, TopUpSchema, topUpSchema } from './topUpFormSchema'
 
 export default function TopUpForm() {
   const { t } = useTranslation()
   const { id } = useParams()
-  const { isCalculating, helperText, resetHelperText, getVoteAmountDetails } = useCheckVoteAmount()
+  const [isOpen, setIsOpen] = useState(false)
+  const { balance } = useWeb3Context()
 
-  const { addFundsToProposal } = useProposalState({ shouldFetchProposals: false })
+  const { addFundsToProposal } = useProposalState()
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
     getValues,
+    getFieldState,
+    setValue,
+    clearErrors,
+    formState: { isSubmitting },
     reset,
-  } = useForm<ITopUpForm>({
-    defaultValues,
+  } = useForm<TopUpSchema>({
+    defaultValues: topUpDefaultValues,
     mode: 'onChange',
-    resolver: zodResolver(
-      zod.object({
-        votesCount: zod.coerce.number().int().min(1).max(MAX_VOTE_COUNT_PER_TX),
-      }),
-    ),
+    resolver: zodResolver(topUpSchema),
   })
+  const { palette, typography } = useTheme()
 
-  const submit = useCallback(async () => {
+  const { isCalculating, updateFromAmount, updateFromVotes } = useProposalBalanceForm<
+    TopUpSchema,
+    'amount',
+    'votesCount'
+  >(
+    {
+      getValues,
+      getFieldState,
+      setValue,
+      clearErrors,
+    },
+    'amount',
+    'votesCount',
+  )
+
+  const submit = async (formData: TopUpSchema) => {
+    if (!id) return
     try {
-      const votesCount = String(getValues('votesCount'))
-      const { isEnoughBalance, votesAmount } = await getVoteAmountDetails(votesCount, id)
-      if (!isEnoughBalance || !id) return
-
-      await addFundsToProposal(id, votesAmount)
+      const { amount } = formData
+      await addFundsToProposal(id, parseUnits(amount, 18).toString())
       bus.emit(BusEvents.success, { message: t('vote.form.success-msg') })
     } catch (error) {
       ErrorHandler.process(error)
     } finally {
       reset()
-      resetHelperText?.()
     }
-  }, [addFundsToProposal, getValues, getVoteAmountDetails, id, reset, resetHelperText, t])
+  }
 
   const isDisabled = isSubmitting || isCalculating
 
   return (
-    <Stack spacing={4} component='form' width={300} onSubmit={handleSubmit(submit)}>
-      <Controller
-        name='votesCount'
-        control={control}
-        render={({ field, fieldState }) => (
-          <UiCheckVoteInput
-            {...field}
-            disabled={field.disabled || isDisabled}
-            error={Boolean(fieldState.error)}
-            helperText={fieldState.error?.message || helperText}
-            label={t('create-vote.votes-count-lbl')}
-            onCheck={() => getVoteAmountDetails(String(getValues('votesCount')), id)}
-            onChange={e => {
-              field.onChange(e)
-              resetHelperText?.()
-            }}
-          />
-        )}
-      />
-      <Button disabled={isSubmitting} type='submit'>
-        {t('vote.form.top-up-button')}
+    <>
+      <Button
+        fullWidth
+        sx={{
+          background: palette.action.active,
+          '&:hover, &:focus': {
+            background: palette.action.hover,
+          },
+        }}
+        startIcon={<UiIcon name={Icons.Plus} size={4} />}
+        onClick={() => {
+          reset()
+          setIsOpen(true)
+        }}
+      >
+        {t('poll.top-up-form.add-funds')}
       </Button>
-    </Stack>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+        <UiDialogTitle onClose={() => setIsOpen(false)}>Title</UiDialogTitle>
+        <UiDialogContent sx={{ width: { xs: '100%', md: 465 } }}>
+          <Stack spacing={6} component='form' onSubmit={handleSubmit(submit)}>
+            <Box
+              sx={{
+                position: 'relative',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gridAutoFlow: 'row',
+              }}
+              bgcolor={palette.action.active}
+              p={4}
+              borderRadius={5}
+            >
+              <Controller
+                name='amount'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <UiCheckAmountInput
+                    {...field}
+                    disabled={isDisabled}
+                    error={Boolean(fieldState.error)}
+                    helperText={fieldState.error?.message}
+                    maxValue={balance}
+                    onChange={e => {
+                      field.onChange(e)
+                      updateFromAmount()
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                name='votesCount'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <UiCheckVoteInput
+                    {...field}
+                    disabled={isDisabled}
+                    error={Boolean(fieldState.error)}
+                    helperText={fieldState.error?.message}
+                    sx={{
+                      height: 118,
+                      '.MuiTextField-root': {
+                        border: 'none',
+                      },
+                      '.MuiFormHelperText-root': {
+                        position: 'absolute',
+                        right: 0,
+                        maxWidth: 100,
+                        top: 10,
+                      },
+                      '.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl':
+                        {
+                          minHeight: 'unset',
+                          height: '100%',
+                          typography: typography.subtitle3,
+                          color: fieldState.error ? palette.error.dark : palette.text.primary,
+                          overflow: 'hidden',
+                          borderRadius: 4,
+                        },
+                      '.MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                      },
+                      input: {
+                        position: 'absolute',
+                        width: '80%',
+                        mr: 'auto',
+                        overflow: 'hidden',
+                        bottom: 25,
+                        py: 0,
+                        pl: 1,
+                      },
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <Typography
+                          sx={{ position: 'absolute', top: 20, left: 20 }}
+                          variant='overline2'
+                        >
+                          {t('create-poll.votes-count-lbl')}
+                        </Typography>
+                      ),
+                    }}
+                    onChange={e => {
+                      field.onChange(e)
+                      updateFromVotes()
+                    }}
+                  />
+                )}
+              />
+            </Box>
+            <Stack justifyContent='space-between' direction='row'>
+              <Typography color={palette.text.secondary}>Total fee:</Typography>
+              {/* TODO: Add gas estimate */}
+              <Typography color={palette.text.secondary}>0.0007 {NATIVE_CURRENCY}</Typography>
+            </Stack>
+            <Divider />
+            <Button disabled={isSubmitting} type='submit'>
+              {t('vote.form.top-up-button')}
+            </Button>
+          </Stack>
+        </UiDialogContent>
+      </Dialog>
+    </>
   )
 }

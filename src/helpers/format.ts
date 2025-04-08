@@ -1,4 +1,15 @@
-import { BN, BnConfigLike, BnFormatConfig, BnLike, time, TimeDate } from '@distributedlab/tools'
+import {
+  BN,
+  BnConfigLike,
+  BnFormatConfig,
+  BnLike,
+  DECIMALS,
+  time,
+  TimeDate,
+} from '@distributedlab/tools'
+import { t } from 'i18next'
+
+import { Sex } from '@/types'
 // Date
 export function formatDateMY(date: TimeDate) {
   return time(date).format('MM / YYYY')
@@ -9,7 +20,7 @@ export function formatDateDMY(date: TimeDate) {
 }
 
 export function formatDateTime(date: TimeDate) {
-  return time(date).format('DD MMM, YYYY, HH:mm')
+  return time(date).format('MM/DD/YYYY HH:mm')
 }
 
 export function formatDateDM(date: TimeDate) {
@@ -115,8 +126,8 @@ export function formatNumber(value: string | number, formatConfig?: BnFormatConf
   }
 }
 
-export function formatNullifier(value: string) {
-  return value.slice(0, 4) + '...' + value.slice(-4)
+export function formatCroppedString(value: string, length = 6) {
+  return value.slice(0, length) + '...' + value.slice(-length)
 }
 
 export function formatAmount(
@@ -160,6 +171,15 @@ export function formatBalance(
   }
 }
 
+export const formatInput = (value: string) => {
+  if (!value.includes('.') || value.charAt(value.length - 1) === '.') {
+    return value
+  }
+  const inputDecimals =
+    value.split('.')[1].length < DECIMALS.WEI ? value.split('.')[1].length : DECIMALS.WEI
+  return BN.fromRaw(value, inputDecimals).toString()
+}
+
 export function formatAmountShort(value: BnLike): string {
   const numericValue = Number(value)
 
@@ -194,8 +214,8 @@ export function formatAmountShort(value: BnLike): string {
   return formatAmount(bigIntValue, 18)
 }
 
-export function formatAddress(address?: string) {
-  return address ? `${address.slice(0, 8)}...${address.slice(-8)}` : '–'
+export function formatAddress(address?: string, length: number = 8) {
+  return address ? `${address.slice(0, length)}...${address.slice(-length)}` : '–'
 }
 
 type Labels = {
@@ -283,4 +303,53 @@ export function formatNumberShort(value: BnLike): string {
 
   // 0-999 => "123"
   return formatAmount(bigIntValue, 18)
+}
+
+export const formatAgeRange = ({
+  minAge,
+  maxAge,
+}: {
+  minAge?: number | null
+  maxAge?: number | null
+}): string | null => {
+  if (minAge && !maxAge) {
+    return `${minAge}+`
+  }
+
+  if (maxAge && !minAge) {
+    return t('formats.age.lte', {
+      maxAge,
+    })
+  }
+
+  if (minAge && maxAge) {
+    return t('formats.age.gte-and-lte', {
+      minAge,
+      maxAge,
+    })
+  }
+
+  return null
+}
+
+export const formatSex = (value?: Sex | null) => {
+  switch (value) {
+    case Sex.Female:
+      return t('format.sex.female')
+    case Sex.Male:
+      return t('format.sex.male')
+    default:
+      return null
+  }
+}
+
+export const formatCountry = (countryKey: string, options?: { withFlag?: boolean }): string => {
+  const withFlag = options?.withFlag ?? false
+
+  // eslint-disable-next-line react-i18n/no-dynamic-translation-keys
+  const name = t(`countries.names.${countryKey}`)
+  // eslint-disable-next-line react-i18n/no-dynamic-translation-keys
+  const flag = t(`countries.flags.${countryKey}`)
+
+  return withFlag ? `${flag} ${name}` : name
 }

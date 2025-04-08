@@ -205,7 +205,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
       fullWidth: true,
     },
   },
-
   MuiPaper: {
     defaultProps: {
       variant: 'elevation',
@@ -230,28 +229,39 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiAutocomplete: {
     styleOverrides: {
       paper: ({ theme }) => ({
-        padding: 3,
+        padding: 4,
         borderRadius: theme.spacing(2),
         [theme.breakpoints.down('md')]: {
           padding: 0,
         },
       }),
+      option: ({ theme }) => ({
+        ...theme.typography.body4,
+      }),
       noOptions: ({ theme }) => ({
         ...theme.typography.body3,
       }),
-      root: { marginTop: 2 },
+      root: ({ theme }) => ({
+        marginTop: 2,
+        '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiFilledInput-root': {
+          paddingTop: theme.spacing(7),
+          paddingBottom: theme.spacing(2),
+        },
+      }),
     },
   },
   MuiTextField: {
-    defaultProps: { InputLabelProps: { shrink: true } },
+    defaultProps: {
+      variant: 'filled',
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         '& .MuiInputBase-root, & .MuiInputBase-sizeMedium': typography.body3,
         '.MuiInputBase-sizeSmall': typography.body4,
         '& .MuiInputBase-root': {
           '&:not(.MuiInputBase-multiline)': {
-            minHeight: theme.spacing(12),
-            height: theme.spacing(12),
+            minHeight: theme.spacing(14),
+            height: theme.spacing(14),
           },
           '&.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.action.focus,
@@ -276,10 +286,34 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
     },
   },
+  MuiFilledInput: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '.MuiFilledInput-input': {
+          left: 40,
+        },
+        borderRadius: theme.spacing(3),
+        '&:hover': {
+          background: theme.palette.background.default,
+        },
+        background: theme.palette.background.default,
+        '&::before, &::after': {
+          borderBottom: 'none',
+        },
+        '&:hover:not(.Mui-disabled, .Mui-error):before': {
+          borderBottom: 'none',
+        },
+        '&.Mui-focused:after': {
+          borderBottom: 'none',
+        },
+      }),
+    },
+  },
   MuiFormLabel: {
     styleOverrides: {
       root: ({ theme }) => ({
-        ...typography.subtitle4,
+        paddingTop: 2,
+        ...typography.body3,
         color: theme.palette.text.secondary,
         '&.Mui-focused': {
           color: 'inherit',
@@ -290,7 +324,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiFormHelperText: {
     styleOverrides: {
       root: ({ theme }) => ({
-        ...typography.body4,
+        ...typography.body5,
         marginTop: theme.spacing(1),
         marginLeft: 0,
       }),
@@ -308,18 +342,30 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
       root: ({ theme }) => ({
         ...typography.body3,
-        height: theme.spacing(12),
-        borderRadius: theme.spacing(2),
+        minHeight: theme.spacing(14),
+        height: theme.spacing(14),
+        borderRadius: theme.spacing(3),
         '& .MuiOutlinedInput-notchedOutline': {
-          transition: Transitions.Default,
-          borderColor: theme.palette.action.active,
+          border: 'none',
         },
         '&.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
-          borderColor: theme.palette.action.focus,
-          borderWidth: 1,
+          border: 'none',
         },
         '&:hover:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.palette.action.hover,
+        },
+        '&:hover': {
+          background: theme.palette.background.default,
+        },
+        background: theme.palette.background.default,
+        '&::before, &::after': {
+          borderBottom: 'none',
+        },
+        '&:hover:not(.Mui-disabled, .Mui-error):before': {
+          borderBottom: 'none',
+        },
+        '&.Mui-focused:after': {
+          borderBottom: 'none',
         },
       }),
     },
@@ -330,7 +376,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: {
-        padding: 0,
         borderRadius: '1000px',
         transition: Transitions.Default,
         '&:hover': {
@@ -339,6 +384,16 @@ export const components: Components<Omit<Theme, 'components'>> = {
       },
       colorPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
+        background: theme.palette.action.active,
+        '&:hover': {
+          background: theme.palette.action.hover,
+        },
+        '&:focus': {
+          background: theme.palette.action.focus,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
+        },
       }),
       colorSecondary: ({ theme }) => ({
         color: theme.palette.text.secondary,
@@ -347,21 +402,42 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
       }),
       colorSuccess: ({ theme }) => ({
-        color: theme.palette.success.main,
+        color: theme.palette.success.dark,
+        background: theme.palette.success.lighter,
         '&:hover': {
-          color: theme.palette.success.dark,
+          background: theme.palette.success.light,
+        },
+        '&:focus': {
+          background: theme.palette.success.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
       colorError: ({ theme }) => ({
-        color: theme.palette.error.main,
+        color: theme.palette.error.dark,
+        background: theme.palette.error.lighter,
         '&:hover': {
-          color: theme.palette.error.dark,
+          background: theme.palette.error.light,
+        },
+        '&:focus': {
+          background: theme.palette.error.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
       colorWarning: ({ theme }) => ({
-        color: theme.palette.warning.main,
+        color: theme.palette.warning.dark,
+        background: theme.palette.warning.lighter,
         '&:hover': {
-          color: theme.palette.warning.dark,
+          background: theme.palette.warning.light,
+        },
+        '&:focus': {
+          background: theme.palette.warning.light,
+        },
+        '&:disabled': {
+          background: theme.palette.action.disabled,
         },
       }),
     },
@@ -374,7 +450,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
     styleOverrides: {
       root: ({ theme }) => ({
         backgroundColor: theme.palette.divider,
-        borderRadius: theme.spacing(4),
       }),
       rounded: ({ theme }) => ({
         borderRadius: theme.spacing(6),
@@ -397,7 +472,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
             color: theme.palette.common.white,
             transform: `translateX(${theme.spacing(4)})`,
             '& + .MuiSwitch-track': {
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.dark,
               boxShadow: 'none',
               opacity: 1,
               border: 0,
@@ -422,7 +497,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         },
         '& .MuiSwitch-track': {
           borderRadius: theme.spacing(10),
-          backgroundColor: theme.palette.action.active,
+          backgroundColor: theme.palette.action.hover,
           opacity: 1,
           transition: Transitions.Default,
         },
@@ -433,7 +508,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
     defaultProps: {
       componentsProps: {
         typography: {
-          variant: 'subtitle4',
+          variant: 'body3',
         },
       },
     },
@@ -495,6 +570,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiMenuItem: {
     styleOverrides: {
       root: ({ theme }) => ({
+        ...theme.typography.body4,
         borderRadius: theme.spacing(2),
         '&:hover': {
           // TODO: integrate with design system when it's ready
@@ -594,15 +670,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
       root: ({ theme }) => ({
         borderRadius: 250,
         height: theme.spacing(10),
-        backgroundColor: theme.palette.action.active,
+        backgroundColor: theme.palette.background.paper,
       }),
       barColorPrimary: ({ theme }) => ({
-        borderRadius: 250,
         backgroundColor: theme.palette.primary.main,
       }),
       barColorSecondary: ({ theme }) => ({
-        backgroundColor: theme.palette.primary.light,
-        borderRadius: 250,
+        backgroundColor: theme.palette.action.active,
       }),
     },
   },
@@ -613,8 +687,20 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.light,
         boxShadow: `inset 0 0 0 1px ${theme.palette.action.active}`,
         border: 0,
+        borderRadius: theme.spacing(3),
         [theme.breakpoints.down('md')]: {
           padding: 0,
+        },
+      }),
+    },
+  },
+  MuiDialogTitle: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(6),
+        borderBottom: `1px solid ${theme.palette.action.active}`,
+        [theme.breakpoints.down('md')]: {
+          padding: theme.spacing(5, 4),
         },
       }),
     },
@@ -751,7 +837,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
           margin: 0,
         },
         '& .MuiPickersCalendarHeader-label': {
-          ...typography.subtitle3,
+          ...typography.subtitle4,
         },
         '& .MuiYearCalendar-root': {
           width: '100%',
@@ -764,7 +850,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
 
         '& .MuiDateCalendar-root': {
           width: '280px',
-          maxHeight: '260px',
+          maxHeight: '250px',
         },
         '& .MuiMultiSectionDigitalClockSection-item': {
           ...typography.buttonSmall,

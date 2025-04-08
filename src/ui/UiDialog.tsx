@@ -28,20 +28,26 @@ export function UiDialogTitle({ children, onClose, closeButtonIcon, ...rest }: U
       justifyContent='space-between'
       alignItems='center'
       width='100%'
-      p={0}
     >
-      <Typography component='p' typography={{ xs: 'h5', md: 'h4' }}>
+      <Typography component='p' typography='h4'>
         {children}
       </Typography>
-      <IconButton aria-label='close' onClick={e => onClose?.(e, 'backdropClick')}>
-        {closeButtonIcon ?? <UiIcon name={Icons.CloseFill} size={6} />}
+      <IconButton
+        aria-label='close'
+        sx={{
+          p: 0,
+          background: 'transparent',
+        }}
+        onClick={e => onClose?.(e, 'backdropClick')}
+      >
+        {closeButtonIcon ?? <UiIcon name={Icons.CloseFill} size={5} />}
       </IconButton>
     </DialogTitle>
   )
 }
 
 export function UiDialogContent(props: BoxProps) {
-  return <Box p={5} flex={1} overflow='hidden auto' width='100%' {...props} />
+  return <Box p={{ xs: 4, md: 6 }} flex={1} overflow='hidden auto' width='100%' {...props} />
 }
 
 export function UiDialogActions(props: BoxProps) {

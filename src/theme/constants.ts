@@ -1,10 +1,13 @@
 import { keyframes } from '@emotion/react'
 
-export const FONT_FAMILY = "'Roboto Mono', sans-serif"
+export const FONT_FAMILY_MAIN = 'Roboto, sans-serif'
+export const FONT_FAMILY_ACCENT = 'Roboto Slab, serif'
 
 export enum FontWeight {
   Regular = 400,
   Medium = 500,
+  SemiBold = 600,
+  Bold = 700,
 }
 
 export enum Transitions {
@@ -68,3 +71,10 @@ export const bouncingAnimation = keyframes`
     transform: translateY(-30%);
   }
 `
+
+export const textWrapAndDirectionStyles = {
+  wordBreak: 'break-word',
+  whiteSpace: 'pre-wrap',
+  unicodeBidi: 'plaintext',
+  display: 'inline',
+}
