@@ -166,7 +166,7 @@ export default function CreatePollForm() {
             gap: 0.5,
             gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
             width: '100%',
-            height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px)`,
+            height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px - 2px)`,
             position: 'relative',
           }}
         >
