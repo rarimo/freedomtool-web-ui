@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
 
 import { InfiniteList } from '@/common'
+import { useWeb3Context } from '@/contexts/web3-context'
 import { getProposals } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
 import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
@@ -9,6 +10,8 @@ import PollCard from '@/pages/Dashboard/components/PollCard'
 import { PollStatus } from '@/types'
 
 export default function FinishedPolls() {
+  const { address } = useWeb3Context()
+
   const {
     data: proposals,
     loadingState,
@@ -18,6 +21,7 @@ export default function FinishedPolls() {
     getProposals({
       query: {
         filter: {
+          creator: address,
           status: PollStatus.Ended,
         },
       },
