@@ -136,7 +136,7 @@ export function useProposal(id?: string) {
       },
       {
         title: t('poll.remaining-votes'),
-        description: `${participantsAmount}/${remainingVotesCount}`,
+        description: `${participantsAmount}/${remainingVotesCount ?? 0 + participantsAmount}`,
       },
     ]
   }, [proposal, t, formattedStartDate, formattedEndDate, participantsAmount, remainingVotesCount])

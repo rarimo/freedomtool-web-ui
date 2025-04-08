@@ -95,8 +95,8 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
             </Typography>
             <Typography variant='subtitle6'>
               {t('dashboard.poll-card.participants-lbl', {
-                currentVotesCount: remaining_votes_count ?? 0,
-                totalVotes: votes_count ?? 0,
+                currentVotesCount: votes_count ?? 0,
+                totalVotes: remaining_votes_count + votes_count || 0,
               })}
             </Typography>
           </Stack>
@@ -113,7 +113,7 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
               top={0}
               left={0}
               height='100%'
-              width={`${getCountProgress(remaining_votes_count, votes_count)}%`}
+              width={`${getCountProgress(votes_count, votes_count + remaining_votes_count)}%`}
               bgcolor={palette.primary.main}
             />
           </Stack>

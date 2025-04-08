@@ -236,7 +236,7 @@ export default function Poll() {
                     <Stack spacing={6} width='100%'>
                       <VotesLeftProgress
                         remainingVotes={remainingVotesCount ?? 0}
-                        totalVotes={participantsAmount}
+                        participantsAmount={participantsAmount}
                       />
                       {isTopUpAllowed && <TopUpForm />}
                     </Stack>
@@ -254,10 +254,10 @@ export default function Poll() {
 
 function VotesLeftProgress({
   remainingVotes,
-  totalVotes,
+  participantsAmount,
 }: {
   remainingVotes: number
-  totalVotes: number
+  participantsAmount: number
 }) {
   const { palette } = useTheme()
   const { t } = useTranslation()
@@ -269,8 +269,8 @@ function VotesLeftProgress({
         </Typography>
         <Typography variant='subtitle6'>
           {t('dashboard.poll-card.participants-lbl', {
-            currentVotesCount: totalVotes ?? 0,
-            totalVotes: remainingVotes ?? 0, // TODO: Replace
+            currentVotesCount: participantsAmount ?? 0,
+            totalVotes: remainingVotes + participantsAmount || 0,
           })}
         </Typography>
       </Stack>
@@ -287,8 +287,7 @@ function VotesLeftProgress({
           top={0}
           left={0}
           height='100%'
-          // TODO: Replace remainingVotes
-          width={`${getCountProgress(remainingVotes, totalVotes)}%`}
+          width={`${getCountProgress(participantsAmount, participantsAmount + remainingVotes)}%`}
           bgcolor={palette.primary.main}
         />
       </Stack>
