@@ -2,4 +2,4 @@ apiVersion: skaffold/v2beta28
 kind: Config
 build:
   artifacts:
-  - image: freedom-tool-2.0
+  - image: freedomtool-web-ui
