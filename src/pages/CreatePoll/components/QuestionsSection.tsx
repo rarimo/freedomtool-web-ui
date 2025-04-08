@@ -1,4 +1,4 @@
-import { Button, Paper, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useEvent } from '@reactuses/core'
 import { t } from 'i18next'
 import { useEffect, useState } from 'react'
@@ -48,7 +48,7 @@ export default function QuestionsSection() {
 
   return (
     <Stack>
-      <Stack component={Paper} spacing={1}>
+      <Stack spacing={6}>
         {questionFields.map((question, index) => {
           return (
             <QuestionCard
@@ -65,11 +65,11 @@ export default function QuestionsSection() {
           )
         })}
         <Button
-          sx={{ ml: 'auto', mt: 2, pb: 0 }}
-          size='small'
+          sx={{ mr: 'auto', py: 0, pl: 0, height: 'fit-content' }}
+          size='medium'
           variant='text'
           disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
-          startIcon={<UiIcon name={Icons.Plus} size={4} />}
+          startIcon={<UiIcon name={Icons.Plus} size={5} />}
           onClick={addQuestion}
         >
           {t('create-poll.add-question-btn')}

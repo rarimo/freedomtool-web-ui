@@ -99,7 +99,7 @@
     "submit-btn": "Submit new poll",
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
-    "option-lbl": "Option #{{order}}",
+    "option-lbl": "Answer #{{order}}",
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Participants",
@@ -126,7 +126,7 @@
       "questions": "Questions",
       "settings": "Settings"
     },
-    "add-criteria": "Add a criteria",
+    "add-criteria": "Add other criteria",
     "show-poll-option-title-1": "Real time",
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",

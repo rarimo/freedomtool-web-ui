@@ -19,7 +19,7 @@ interface SectionsControllerProps {
 }
 
 export default function SectionsController({ sections, isDisabled }: SectionsControllerProps) {
-  const [currentIndex, setCurrentIndex] = useState(1)
+  const [currentIndex, setCurrentIndex] = useState(2)
   const { children, footer, title, validate, onContinue, onBack } = sections[currentIndex]
   const { t } = useTranslation()
 

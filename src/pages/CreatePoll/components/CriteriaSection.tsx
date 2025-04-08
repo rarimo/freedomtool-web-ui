@@ -298,10 +298,10 @@ export default function CriteriaSection() {
 
       {unselectedCriteria.length !== 0 && (
         <Button
-          size='small'
+          size='large'
           variant='text'
-          sx={{ mr: 'auto', pl: 1, mt: 1 }}
-          startIcon={<UiIcon name={Icons.Plus} size={4} />}
+          sx={{ mr: 'auto', pl: 1, py: 0, height: 'fit-content' }}
+          startIcon={<UiIcon name={Icons.Plus} size={5} />}
           onClick={e => setAnchorEl(e.currentTarget)}
         >
           {t('create-poll.add-criteria')}
