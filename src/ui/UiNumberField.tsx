@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps as NumberFieldProps } from '@mui/material'
+import { TextFieldProps as NumberFieldProps, TextField } from '@mui/material'
 import { forwardRef } from 'react'
 
 import { trimLeadingZeroes } from '@/helpers'
@@ -9,7 +9,7 @@ const UiNumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
       <TextField
         {...props}
         type='number'
-        value={trimLeadingZeroes(String(value))}
+        value={trimLeadingZeroes(String(value ?? ''))}
         onChange={onChange}
         inputRef={ref}
         InputProps={{

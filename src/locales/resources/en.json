@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "1300x500px, png or jpeg, webp, max 5mb",
+    "image-description": "{{width}}x{{height}}px, png or jpeg, webp, max 5mb",
     "amount-error": "Amount must be more than 0"
   },
   "ui-date-picker": {
@@ -264,5 +264,9 @@
       "female": "Females",
       "male": "Males"
     }
+  },
+  "image-picker": {
+    "title": "Edit image",
+    "save-btn": "Save"
   }
 }

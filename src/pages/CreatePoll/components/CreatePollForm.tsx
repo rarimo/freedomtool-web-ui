@@ -1,6 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Stack } from '@mui/material'
+import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { parseUnits } from 'ethers'
 import { useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
 import { BusEvents, RoutePaths } from '@/enums'
 import {
@@ -16,11 +17,16 @@ import {
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
   prepareVotingWhitelistData,
+  scrollToSelector,
   uploadImageToIpfs,
   uploadJsonToIpfs,
 } from '@/helpers'
-import { useProposalState } from '@/hooks'
+import { useProposalState, useScrollWithShadow } from '@/hooks'
+import SectionLayout from '@/layouts/ContainerLayout'
 import nationalities from '@/locales/resources/countries_en.json'
+import PollPreview from '@/pages/CreateVote/components/PollPreview'
+import PollQuestionPreview from '@/pages/CreateVote/components/PollQuestionPreview'
+import { hiddenScrollbar } from '@/theme/constants'
 import { Nationality } from '@/types'
 
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
@@ -34,8 +40,14 @@ nationalities satisfies Nationality[]
 
 export default function CreatePollForm() {
   const { t } = useTranslation()
+  const { breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
 
+  const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(80)
+  const { onScrollHandler: questionScrollHandler, shadowScrollStyle: questionScrollStyle } =
+    useScrollWithShadow(80)
   const { createProposal } = useProposalState()
+  const [isQuestionPreview, setIsQuestionPreview] = useState(false)
 
   const form = useForm<CreatePollSchema>({
     defaultValues: createPollDefaultValues,
@@ -115,16 +127,23 @@ export default function CreatePollForm() {
         title: t('create-poll.titles.details'),
         children: <DetailsSection />,
         validate: () => trigger(['details']),
+        onContinue: () => scrollToSelector('#criteria'),
       },
       {
         title: t('create-poll.titles.criteria'),
         children: <CriteriaSection />,
         validate: () => trigger(['criteria']),
+        onContinue: () => setIsQuestionPreview(true),
+        onBack: () => scrollToSelector('#details'),
       },
       {
         title: t('create-poll.titles.questions'),
         children: <QuestionsSection />,
         validate: () => trigger(['questions']),
+        onBack: () => {
+          setIsQuestionPreview(false)
+          setTimeout(() => scrollToSelector('#criteria'), 100)
+        },
       },
       {
         title: t('create-poll.titles.settings'),
@@ -135,12 +154,63 @@ export default function CreatePollForm() {
     [t, trigger],
   )
 
+  const { details, criteria, questions } = form.watch()
+
   return (
     <FormProvider {...form}>
-      <Stack onSubmit={handleSubmit(submit)} component='form' width='100%'>
-        <Stack spacing={3} width='100%' pb={{ md: 10 }}>
-          <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
-        </Stack>
+      <Stack component='form' width='100%' onSubmit={handleSubmit(submit)}>
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 0.5,
+            gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
+            width: '100%',
+            height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px)`,
+            position: 'relative',
+          }}
+        >
+          <SectionLayout>
+            <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
+          </SectionLayout>
+
+          {isMdUp && (
+            <>
+              {isQuestionPreview ? (
+                <SectionLayout>
+                  <Stack
+                    key='question'
+                    height={500}
+                    sx={{
+                      overflow: 'auto',
+                      ...questionScrollStyle,
+                      position: 'sticky',
+                      top: DESKTOP_HEADER_HEIGHT,
+                    }}
+                    onScroll={questionScrollHandler}
+                  >
+                    <PollQuestionPreview question={questions[0]} />
+                  </Stack>
+                </SectionLayout>
+              ) : (
+                <SectionLayout>
+                  <Stack
+                    height={570}
+                    sx={{
+                      overflow: 'auto',
+                      ...shadowScrollStyle,
+                      ...hiddenScrollbar,
+                      position: 'sticky',
+                      top: DESKTOP_HEADER_HEIGHT,
+                    }}
+                    onScroll={onScrollHandler}
+                  >
+                    <PollPreview {...details} {...criteria} {...questions} />
+                  </Stack>
+                </SectionLayout>
+              )}
+            </>
+          )}
+        </Box>
       </Stack>
       <SignatureConfirmationModal open={isConfirmationModalShown} />
     </FormProvider>

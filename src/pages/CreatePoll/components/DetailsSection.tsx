@@ -1,10 +1,12 @@
 import { time } from '@distributedlab/tools'
-import { Paper, Stack, TextField, Typography, useTheme } from '@mui/material'
+import { Stack, TextField, Typography, useTheme } from '@mui/material'
 import { t } from 'i18next'
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { ImagePickerWithCrop } from '@/common'
+import { BANNER_HEIGHT, BANNER_WIDTH } from '@/constants'
 import { Icons } from '@/enums'
-import { UiIcon, UiImagePicker } from '@/ui'
+import { UiIcon } from '@/ui'
 import UiDatePicker from '@/ui/UiDatePicker'
 
 import { CreatePollSchema } from '../createPollSchema'
@@ -19,15 +21,18 @@ export default function DetailsSection() {
   } = useFormContext<CreatePollSchema>()
 
   return (
-    <Stack component={Paper} spacing={6}>
+    <Stack spacing={6}>
       <Controller
         name='details.image'
         control={control}
         render={({ field, fieldState }) => (
-          <UiImagePicker
+          <ImagePickerWithCrop
             ref={field.ref}
             title={t('create-poll.image-title')}
-            description={t('create-poll.image-description')}
+            description={t('create-poll.image-description', {
+              width: BANNER_WIDTH,
+              height: BANNER_HEIGHT,
+            })}
             sx={{ width: 'fit-content' }}
             labelProps={{
               width: 48,
@@ -44,7 +49,7 @@ export default function DetailsSection() {
             }}
           >
             <UiIcon color={palette.text.primary} name={Icons.UploadCloudLine} />
-          </UiImagePicker>
+          </ImagePickerWithCrop>
         )}
       />
 
@@ -62,28 +67,7 @@ export default function DetailsSection() {
           />
         )}
       />
-      <Controller
-        name='details.description'
-        control={control}
-        render={({ field, fieldState }) => (
-          <TextField
-            {...field}
-            multiline
-            rows={3}
-            disabled={isSubmitting}
-            error={Boolean(fieldState.error)}
-            helperText={fieldState.error?.message}
-            label={t('create-poll.proposal-description-lbl')}
-            placeholder={t('create-poll.proposal-description-plh')}
-            sx={{
-              background: 'transparent',
-              '& .MuiInputBase-root': {
-                height: 'unset',
-              },
-            }}
-          />
-        )}
-      />
+
       <Stack
         direction='row'
         justifyContent='space-between'
@@ -134,6 +118,29 @@ export default function DetailsSection() {
           )}
         />
       </Stack>
+
+      <Controller
+        name='details.description'
+        control={control}
+        render={({ field, fieldState }) => (
+          <TextField
+            {...field}
+            multiline
+            rows={3}
+            disabled={isSubmitting}
+            error={Boolean(fieldState.error)}
+            helperText={fieldState.error?.message}
+            label={t('create-poll.proposal-description-lbl')}
+            placeholder={t('create-poll.proposal-description-plh')}
+            sx={{
+              background: 'transparent',
+              '& .MuiInputBase-root': {
+                height: 'unset',
+              },
+            }}
+          />
+        )}
+      />
     </Stack>
   )
 }

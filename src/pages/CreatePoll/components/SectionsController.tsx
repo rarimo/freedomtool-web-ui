@@ -10,6 +10,7 @@ interface ISection extends PropsWithChildren {
   footer?: ReactNode
   validate?: () => Promise<boolean>
   onContinue?: () => void
+  onBack?: () => void
 }
 
 interface SectionsControllerProps {
@@ -18,8 +19,8 @@ interface SectionsControllerProps {
 }
 
 export default function SectionsController({ sections, isDisabled }: SectionsControllerProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const { children, footer, title, validate, onContinue } = sections[currentIndex]
+  const [currentIndex, setCurrentIndex] = useState(1)
+  const { children, footer, title, validate, onContinue, onBack } = sections[currentIndex]
   const { t } = useTranslation()
 
   const isLastStep = currentIndex === sections.length - 1
@@ -33,8 +34,13 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
     setCurrentIndex(prev => prev + 1)
   }
 
+  const goBack = () => {
+    setCurrentIndex(prev => prev - 1)
+    onBack?.()
+  }
+
   return (
-    <Stack spacing={10}>
+    <Stack spacing={10} width={{ md: 200, lg: 656 }}>
       <Stack spacing={2}>
         <Typography variant='body4'>
           {t('create-poll.step-counter', { total: sections.length, current: currentIndex + 1 })}
@@ -52,10 +58,7 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
       >
         <Stack width={1} flex={1} spacing={10} direction='row'>
           {currentIndex !== 0 && (
-            <IconButton
-              sx={{ width: 48, height: 48 }}
-              onClick={() => setCurrentIndex(prev => prev - 1)}
-            >
+            <IconButton sx={{ width: 48, height: 48 }} onClick={goBack}>
               <UiIcon name={Icons.ArrowLeft} size={5} />
             </IconButton>
           )}
