@@ -850,7 +850,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
 
         '& .MuiDateCalendar-root': {
           width: '280px',
-          maxHeight: '260px',
+          maxHeight: '250px',
         },
         '& .MuiMultiSectionDigitalClockSection-item': {
           ...typography.buttonSmall,

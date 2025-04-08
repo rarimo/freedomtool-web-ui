@@ -66,9 +66,22 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
               maxDate,
               timezone: 'UTC',
               slotProps: {
+                popper: {
+                  placement: 'top-end',
+                },
+                switchViewButton: {
+                  color: 'secondary',
+                },
+                previousIconButton: {
+                  color: 'secondary',
+                },
+                nextIconButton: {
+                  color: 'secondary',
+                },
                 openPickerButton: {
                   color: 'secondary',
                 },
+
                 textField: {
                   error: !!errorMessage || !!internalErrorMessage,
                   helperText: errorMessage || internalErrorMessage,
