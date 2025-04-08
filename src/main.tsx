@@ -9,7 +9,6 @@ import { createAppKit } from '@reown/appkit/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { http } from 'viem'
-import { createConfig } from 'wagmi'
 
 import { config } from '@/config'
 import { NETWORK_NAME, networkConfigsMap } from '@/constants'
@@ -46,13 +45,6 @@ export const wagmiAdapter = new WagmiAdapter({
   projectId,
   transports: {
     [activeNetwork.id]: http(activeNetwork.rpcUrls.default.http[0]),
-  },
-})
-
-export const chainConfig = createConfig({
-  chains: [activeNetwork],
-  transports: {
-    [activeNetwork.id]: http(),
   },
 })
 

@@ -1,15 +1,14 @@
 import { time } from '@distributedlab/tools'
 import { Stack, Typography, useTheme } from '@mui/material'
-import { getGasPrice } from '@wagmi/core'
 import { formatUnits, hexlify, parseUnits, randomBytes } from 'ethers'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DotsLoader } from '@/common'
 import { NATIVE_CURRENCY } from '@/constants'
+import { useWeb3Context } from '@/contexts/web3-context'
 import { prepareAcceptedOptionsToContract, prepareVotingWhitelistData } from '@/helpers'
 import { useLoading, useProposalState } from '@/hooks'
-import { chainConfig } from '@/main'
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
 
 export default function VoteParamsResult() {
@@ -17,6 +16,7 @@ export default function VoteParamsResult() {
   const { createProposalGasLimit } = useProposalState()
   const { palette } = useTheme()
   const { t } = useTranslation()
+  const { rawProviderSigner } = useWeb3Context()
   const amount = watch('settings.amount')
 
   const {
@@ -26,7 +26,7 @@ export default function VoteParamsResult() {
   } = useLoading(
     null,
     async () => {
-      const gasPrice = await getGasPrice(chainConfig)
+      const gasPrice = await rawProviderSigner?.provider.getFeeData()
       const startTimestamp = time(getValues('details.startDate')).timestamp
       const endTimestamp = time(getValues('details.endDate')).timestamp
       const duration = endTimestamp - startTimestamp
@@ -45,12 +45,12 @@ export default function VoteParamsResult() {
       const gasLimit = await createProposalGasLimit({
         votingWhitelistData,
         acceptedOptions,
-        description: hexlify(randomBytes(32)),
+        description: hexlify(randomBytes(46)),
         amount: parseUnits(amount || '0', 18).toString(),
         startTimestamp,
         duration,
       })
-      return formatUnits((gasLimit || 0n) * gasPrice, 18)
+      return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
     },
 
     {
