@@ -3409,6 +3409,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"advanced-cropper@npm:~0.17.1":
+  version: 0.17.1
+  resolution: "advanced-cropper@npm:0.17.1"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 10c0/6e32a7a8c29da96ed707ae5bb1d46b0e4368bd16f60e4d0ad02172fd28be20853122a45525351c5811fce0a3dee5f9015cc89ec6b36067b9aee4f82d3edeed0c
+  languageName: node
+  linkType: hard
+
 "aes-js@npm:4.0.0-beta.5":
   version: 4.0.0-beta.5
   resolution: "aes-js@npm:4.0.0-beta.5"
@@ -6512,6 +6521,7 @@ __metadata:
     postcss: "npm:^8.4.24"
     prettier: "npm:^3.2.5"
     react: "npm:^18.2.0"
+    react-advanced-cropper: "npm:^0.20.1"
     react-confetti-boom: "npm:^1.0.0"
     react-dom: "npm:^18.2.0"
     react-error-boundary: "npm:^4.1.1"
@@ -9844,6 +9854,19 @@ __metadata:
     randombytes: "npm:^2.0.5"
     safe-buffer: "npm:^5.1.0"
   checksum: 10c0/11aeed35515872e8f8a2edec306734e6b74c39c46653607f03c68385ab8030e2adcc4215f76b5e4598e028c4750d820afd5c65202527d831d2a5f207fe2bc87c
+  languageName: node
+  linkType: hard
+
+"react-advanced-cropper@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "react-advanced-cropper@npm:0.20.1"
+  dependencies:
+    advanced-cropper: "npm:~0.17.1"
+    classnames: "npm:^2.2.6"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10c0/e25ca82a00af084ad5f8d015856962797271285d5f74613d0aef9df2ba49bb26d8d2916154de0a0a09b6474cbed943d3a777f186c7769795fe818e02079bafd0
   languageName: node
   linkType: hard
 

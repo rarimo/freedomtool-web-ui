@@ -99,7 +99,7 @@
     "submit-btn": "Submit new poll",
     "add-option-lbl": "Add an option",
     "question-lbl": "Question #{{order}}",
-    "option-lbl": "Option #{{order}}",
+    "option-lbl": "Answer #{{order}}",
     "proposal-title-lbl": "Vote title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Participants",
@@ -126,7 +126,7 @@
       "questions": "Questions",
       "settings": "Settings"
     },
-    "add-criteria": "Add a criteria",
+    "add-criteria": "Add other criteria",
     "show-poll-option-title-1": "Real time",
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
@@ -139,8 +139,13 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "1300x500px, png or jpeg, webp, max 5mb",
-    "amount-error": "Amount must be more than 0"
+    "image-description": "{{width}}x{{height}}px, png or jpeg, webp, max 5mb",
+    "amount-error": "Amount must be more than 0",
+    "result": {
+      "fee-lbl": "Fee:",
+      "total": "Total:",
+      "estimate-error": "Error estimating gas"
+    }
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -264,5 +269,9 @@
       "female": "Females",
       "male": "Males"
     }
+  },
+  "image-picker": {
+    "title": "Edit image",
+    "save-btn": "Save"
   }
 }

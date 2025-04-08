@@ -1,6 +1,8 @@
 import { ButtonBase, Divider, Stack, Typography, useTheme } from '@mui/material'
 
 import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+import { textWrapAndDirectionStyles } from '@/theme/constants'
+import { lineClamp } from '@/theme/helpers'
 
 import PreviewLayout from './PreviewLayout'
 
@@ -14,7 +16,11 @@ export default function PollQuestionPreview({ question }: Props) {
   return (
     <PreviewLayout>
       <Stack spacing={5} px={4} py={5}>
-        <Typography variant='h4' color={palette.text.primary}>
+        <Typography
+          variant='h4'
+          color={palette.text.primary}
+          sx={{ ...textWrapAndDirectionStyles, ...lineClamp(3) }}
+        >
           {question?.text || '--'}
         </Typography>
         <Divider />
@@ -60,7 +66,11 @@ function OptionItem({ text, index }: { text: string; index: number }) {
         {index + 1}
       </Typography>
       <Divider orientation='vertical' flexItem />
-      <Typography variant='subtitle6' color={palette.text.primary}>
+      <Typography
+        variant='subtitle6'
+        color={palette.text.primary}
+        sx={{ ...textWrapAndDirectionStyles, ...lineClamp(3), textAlign: 'left' }}
+      >
         {text}
       </Typography>
     </Stack>

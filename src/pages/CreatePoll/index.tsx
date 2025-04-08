@@ -9,11 +9,11 @@ export default function CreatePoll() {
   const { isAuthorized } = useAuthState()
 
   return (
-    <Stack mx={{ md: 'auto' }} minWidth={{ md: 620 }}>
+    <Stack>
       {isAuthorized ? (
         <CreatePollForm />
       ) : (
-        <Stack minWidth={350}>
+        <Stack minWidth={350} mx='auto' mt={8}>
           <AuthBlock />
         </Stack>
       )}

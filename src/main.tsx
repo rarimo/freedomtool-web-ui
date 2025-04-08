@@ -1,4 +1,5 @@
 import '@/locales'
+import 'react-advanced-cropper/dist/style.css'
 // eslint-disable-next-line import/no-unresolved
 import 'virtual:svg-icons-register'
 

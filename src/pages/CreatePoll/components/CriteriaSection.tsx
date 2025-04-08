@@ -7,8 +7,8 @@ import {
   InputLabel,
   Menu,
   MenuItem,
-  Paper,
   Select,
+  SelectProps,
   Stack,
   TextField,
   Typography,
@@ -24,7 +24,7 @@ import countries from '@/locales/resources/countries_en.json'
 import { Nationality, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
-import { CreatePollSchema } from '../createPollSchema'
+import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
 
 type CriteriaKey = 'age' | 'nationalities' | 'sex'
 
@@ -38,12 +38,20 @@ export default function CriteriaSection() {
   const {
     control,
     formState: { isSubmitting },
+    clearErrors,
+    setValue,
+    getValues,
   } = useFormContext<CreatePollSchema>()
 
-  const { palette } = useTheme()
+  const { palette, typography } = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(['nationalities'])
-
+  const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(
+    [
+      'nationalities',
+      getValues('criteria.sex') === Sex.Any ? null : 'sex',
+      getValues('criteria.minAge') || getValues('criteria.maxAge') ? 'age' : undefined,
+    ].filter(Boolean) as CriteriaKey[],
+  )
   const sexOptions = useMemo(
     () => [
       {
@@ -64,8 +72,8 @@ export default function CriteriaSection() {
 
   const criteriaOptions: CriteriaOptions[] = useMemo(
     () => [
-      { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
+      { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'sex', label: t('create-poll.sex-lbl') },
     ],
     [t],
@@ -77,7 +85,23 @@ export default function CriteriaSection() {
   )
 
   const toggleCriteria = (key: CriteriaKey) => {
-    setSelectedKey(prev => (prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]))
+    setSelectedKey(prev => {
+      const newSelectedKey = prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
+      const criteria = createPollDefaultValues.criteria
+      switch (key) {
+        case 'age':
+          setValue(`criteria.maxAge`, criteria.maxAge)
+          setValue(`criteria.minAge`, criteria.minAge)
+          clearErrors(`criteria.maxAge`)
+          clearErrors(`criteria.minAge`)
+          break
+        default:
+          setValue(`criteria.${key}`, criteria[key])
+          break
+      }
+
+      return newSelectedKey
+    })
   }
 
   useEffect(() => {
@@ -85,7 +109,7 @@ export default function CriteriaSection() {
   }, [unselectedCriteria])
 
   return (
-    <Stack component={Paper} spacing={6}>
+    <Stack spacing={6}>
       {selectedKey.includes('nationalities') && (
         <Stack spacing={6} direction='row'>
           <Controller
@@ -100,9 +124,33 @@ export default function CriteriaSection() {
                   isOptionEqualToValue={(option, value) =>
                     option.flag === value.flag && option.name === value.name
                   }
+                  slotProps={{
+                    popupIndicator: {
+                      color: 'default',
+                      sx: { right: 4 },
+                    },
+                    clearIndicator: {
+                      color: 'default',
+                      sx: { right: 8 },
+                    },
+                  }}
+                  clearIcon={
+                    <UiIcon name={Icons.CloseLine} color={palette.text.primary} size={4} />
+                  }
+                  popupIcon={
+                    <UiIcon name={Icons.ArrowDownSLine} color={palette.text.primary} size={5} />
+                  }
+                  ChipProps={{
+                    deleteIcon: (
+                      <UiIcon size={4} name={Icons.CloseFill} color={palette.text.placeholder} />
+                    ),
+                    sx: {
+                      ...typography.buttonSmall,
+                      background: palette.background.paper,
+                    },
+                  }}
                   disableCloseOnSelect
                   disabled={field.disabled || isSubmitting}
-                  sx={{ maxWidth: 516 }}
                   options={countries}
                   getOptionLabel={({ codes }) => formatCountry(codes[0], { withFlag: true })}
                   renderInput={params => (
@@ -120,7 +168,6 @@ export default function CriteriaSection() {
                       }}
                       InputLabelProps={{
                         ...params.InputLabelProps,
-                        shrink: true,
                       }}
                       label={t('create-poll.nationalities-lbl')}
                     />
@@ -194,10 +241,46 @@ export default function CriteriaSection() {
             control={control}
             render={({ field }) => (
               <FormControl>
-                <InputLabel sx={{ background: palette.background.paper, px: 2 }}>
+                <InputLabel shrink variant='filled'>
                   {t('create-poll.sex-lbl')}
                 </InputLabel>
-                <Select {...field} disabled={isSubmitting}>
+                <Select
+                  {...field}
+                  displayEmpty
+                  sx={{ pt: 4 }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        p: 1,
+                      },
+                    },
+                    MenuListProps: {
+                      sx: {
+                        padding: 0,
+                      },
+                    },
+                  }}
+                  slotProps={{ input: { sx: { pl: 3 } } }}
+                  IconComponent={(props: SelectProps) => {
+                    const iconClass = props.className
+
+                    return (
+                      <UiIcon
+                        name={Icons.ArrowDownSLine}
+                        size={5}
+                        sx={{
+                          mt: 1,
+                          transition: 'transform 0.3s ease',
+                          transform: iconClass?.includes('MuiSelect-iconOpen')
+                            ? 'rotate(180deg)'
+                            : 'rotate(0deg)',
+                        }}
+                        className={iconClass}
+                      />
+                    )
+                  }}
+                  disabled={isSubmitting}
+                >
                   {sexOptions.map(({ label, value }) => (
                     <MenuItem key={value} value={value}>
                       {label}
@@ -215,10 +298,10 @@ export default function CriteriaSection() {
 
       {unselectedCriteria.length !== 0 && (
         <Button
-          size='small'
+          size='large'
           variant='text'
-          sx={{ mr: 'auto', pl: 1, mt: 1 }}
-          startIcon={<UiIcon name={Icons.Plus} size={4} />}
+          sx={{ mr: 'auto', pl: 1, py: 0, height: 'fit-content' }}
+          startIcon={<UiIcon name={Icons.Plus} size={5} />}
           onClick={e => setAnchorEl(e.currentTarget)}
         >
           {t('create-poll.add-criteria')}
@@ -251,9 +334,25 @@ function CriteriaMenu({
   toggleCriteria,
 }: CriteriaMenuProps) {
   return (
-    <Menu anchorEl={anchorEl} open={isOpen} onClose={onClose}>
+    <Menu
+      slotProps={{
+        paper: {
+          sx: { p: 0, width: 172 },
+        },
+      }}
+      anchorEl={anchorEl}
+      open={isOpen}
+      onClose={onClose}
+    >
       {unselectedCriteria.map(({ key, label }) => (
-        <MenuItem key={key} onClick={() => toggleCriteria(key)}>
+        <MenuItem
+          sx={{
+            py: 2.5,
+            pl: 4,
+          }}
+          key={key}
+          onClick={() => toggleCriteria(key)}
+        >
           <Typography variant='buttonLarge'>{label}</Typography>
         </MenuItem>
       ))}

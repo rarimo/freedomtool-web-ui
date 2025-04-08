@@ -7,6 +7,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Icons } from '@/enums'
+
+import UiIcon from './UiIcon'
+
 type Props = {
   errorMessage?: string
   onChange?: (v: string | null) => void
@@ -46,33 +50,50 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
       [t],
     )
 
-    const pickerProps = {
-      ...rest,
-      inputRef: ref,
-      value,
-      onChange: handleChange,
-      onError: handleError,
-      minDate,
-      maxDate,
-      timezone: 'UTC',
-      slotProps: {
-        textField: {
-          error: !!errorMessage || !!internalErrorMessage,
-          helperText: errorMessage || internalErrorMessage,
-          ...rest?.slotProps?.textField,
-        },
-      },
-      ...(hasTime && { ampm: false, minTime, maxTime }),
-    }
-
     const PickerComponent = hasTime ? DateTimePicker : DatePicker
 
     return (
       <Stack spacing={2} flex={1}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <PickerComponent
-            {...pickerProps}
+            {...{
+              ...rest,
+              inputRef: ref,
+              value,
+              onChange: handleChange,
+              onError: handleError,
+              minDate,
+              maxDate,
+              timezone: 'UTC',
+              slotProps: {
+                popper: {
+                  placement: 'top-end',
+                },
+                switchViewButton: {
+                  color: 'secondary',
+                },
+                previousIconButton: {
+                  color: 'secondary',
+                },
+                nextIconButton: {
+                  color: 'secondary',
+                },
+                openPickerButton: {
+                  color: 'secondary',
+                },
+
+                textField: {
+                  error: !!errorMessage || !!internalErrorMessage,
+                  helperText: errorMessage || internalErrorMessage,
+                  ...rest?.slotProps?.textField,
+                },
+              },
+              ...(hasTime && { ampm: false, minTime, maxTime }),
+            }}
             label={label}
+            slots={{
+              openPickerIcon: () => <UiIcon size={5} name={Icons.CalendarLine} />,
+            }}
             sx={{
               '.MuiIconButton-root': {
                 color: palette.text.secondary,

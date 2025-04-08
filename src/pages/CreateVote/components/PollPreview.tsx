@@ -1,9 +1,13 @@
 import { Box, Divider, Stack, Typography, useTheme } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import { formatDateTime } from '@/helpers'
-import { Nationality } from '@/types'
+import { SectionAnchor } from '@/pages/CreatePoll/constants'
+import { hiddenScrollbar, textWrapAndDirectionStyles } from '@/theme/constants'
+import { lineClamp } from '@/theme/helpers'
+import { Nationality, Sex } from '@/types'
 import { UiIcon } from '@/ui'
 
 import PreviewLayout from './PreviewLayout'
@@ -16,31 +20,32 @@ interface PollDetailsProps {
 }
 
 interface Props extends PollDetailsProps {
-  imageSrc?: string
+  image?: File | null
   nationalities: Nationality[]
-  minimumAge?: number
-  maximumAge?: number
+  minAge?: number | ''
+  maxAge?: number | ''
   sex?: string
 }
 
 export default function PollPreview({
   title,
   description,
-  imageSrc,
+  image,
   startDate,
   endDate,
   nationalities,
-  minimumAge,
-  maximumAge,
+  minAge,
+  maxAge,
   sex,
 }: Props) {
   const { palette } = useTheme()
   const { t } = useTranslation()
+  const [imageSrc, setImageSrc] = useState<string>('')
 
   const getAgeValue = () => {
-    if (minimumAge && maximumAge) return `${minimumAge}-${maximumAge}`
-    if (minimumAge) return `${minimumAge}+`
-    if (maximumAge) return t('poll-preview.max-age-criteria', { age: maximumAge })
+    if (minAge && maxAge) return `${minAge}-${maxAge}`
+    if (minAge) return `${minAge}+`
+    if (maxAge) return t('poll-preview.max-age-criteria', { age: maxAge })
     return ''
   }
 
@@ -55,12 +60,12 @@ export default function PollPreview({
     {
       id: 'age',
       text: t('poll-preview.age-criteria-item', { value: getAgeValue() }),
-      isHidden: !minimumAge && !maximumAge,
+      isHidden: !minAge && !maxAge,
     },
     {
       id: 'sex',
       text: t('poll-preview.sex-criteria-item', {
-        value: sex === 'M' ? t('poll-preview.sex-male') : t('poll-preview.sex-female'),
+        value: sex === Sex.Male ? t('poll-preview.sex-male') : t('poll-preview.sex-female'),
       }),
       isHidden: !sex,
     },
@@ -68,32 +73,56 @@ export default function PollPreview({
 
   const hasAnyCriteria = criteriaItems.some(({ isHidden }) => !isHidden)
 
-  return (
-    <PreviewLayout>
-      <PollImage imageSrc={imageSrc} />
-      <Stack spacing={5} px={3.5} py={5}>
-        <PollDetails
-          title={title}
-          startDate={startDate}
-          endDate={endDate}
-          description={description}
-        />
+  useEffect(() => {
+    if (!image) {
+      setImageSrc('')
+      return
+    }
 
-        {hasAnyCriteria && (
-          <Stack spacing={5}>
-            <Divider />
-            <Typography variant='overline3' color={palette.text.placeholder}>
-              {t('poll-preview.criteria-subtitle')}
-            </Typography>
-            <Stack spacing={4}>
-              {criteriaItems.map(
-                ({ id, text, isHidden }) => !isHidden && <CriteriaItem key={id} text={text} />,
-              )}
-            </Stack>
+    const objectUrl = URL.createObjectURL(image)
+    setImageSrc(objectUrl)
+
+    return () => {
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [image])
+
+  return (
+    <>
+      <Stack id={SectionAnchor.Details} />
+      <PreviewLayout>
+        <PollImage imageSrc={imageSrc} />
+        <Stack spacing={5} px={3.5} py={5}>
+          <PollDetails
+            title={title}
+            startDate={startDate}
+            endDate={endDate}
+            description={description}
+          />
+
+          <Stack height={320} spacing={5}>
+            {hasAnyCriteria && (
+              <Stack spacing={5}>
+                <Divider />
+                <Typography variant='overline3' color={palette.text.placeholder}>
+                  {t('poll-preview.criteria-subtitle')}
+                </Typography>
+              </Stack>
+            )}
+            {hasAnyCriteria && (
+              <Stack spacing={5} pb={2} sx={{ overflow: 'auto', ...hiddenScrollbar }}>
+                <Stack spacing={4}>
+                  {criteriaItems.map(
+                    ({ id, text, isHidden }) => !isHidden && <CriteriaItem key={id} text={text} />,
+                  )}
+                </Stack>
+              </Stack>
+            )}
+            <Stack id={SectionAnchor.Criteria} />
           </Stack>
-        )}
-      </Stack>
-    </PreviewLayout>
+        </Stack>
+      </PreviewLayout>
+    </>
   )
 }
 
@@ -128,7 +157,7 @@ function PollImage({ imageSrc }: { imageSrc?: string }) {
   )
 }
 
-function PollDetails({ title, startDate, endDate, description }: PollDetailsProps) {
+function PollDetails({ title, startDate, endDate, description }: Partial<PollDetailsProps>) {
   const { palette } = useTheme()
 
   const formattedStartDate = startDate ? formatDateTime(startDate) : '---'
@@ -136,16 +165,26 @@ function PollDetails({ title, startDate, endDate, description }: PollDetailsProp
 
   return (
     <Stack spacing={2.5}>
-      <Typography variant='h4' color={palette.text.primary}>
+      <Typography
+        title={title}
+        variant='h4'
+        color={palette.text.primary}
+        sx={{ ...textWrapAndDirectionStyles, ...lineClamp(2) }}
+      >
         {title || '---'}
       </Typography>
-      <Stack direction='row' spacing={1.5} color={palette.text.placeholder}>
+      <Stack alignItems='center' direction='row' spacing={1.5} color={palette.text.placeholder}>
         <UiIcon name={Icons.CalendarLine} size={4} />
         <Typography variant='body4'>
-          {startDate || endDate ? `${formattedStartDate} - ${formattedEndDate}` : '----'}
+          {startDate || endDate ? `${formattedStartDate} – ${formattedEndDate}` : '----'}
         </Typography>
       </Stack>
-      <Typography variant='body4' color={palette.text.placeholder}>
+      <Typography
+        variant='body4'
+        title={description}
+        color={palette.text.placeholder}
+        sx={{ ...textWrapAndDirectionStyles, ...lineClamp(3) }}
+      >
         {description || '----'}
       </Typography>
     </Stack>

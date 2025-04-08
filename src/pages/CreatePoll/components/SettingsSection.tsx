@@ -1,13 +1,4 @@
-import {
-  Box,
-  Paper,
-  Radio,
-  RadioGroup,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+import { Box, Radio, RadioGroup, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { memo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -48,7 +39,7 @@ export default function SettingsSection() {
   )
 
   return (
-    <Stack component={Paper}>
+    <Stack>
       <Stack spacing={10}>
         <ShowPollResultWithMemo />
 
@@ -75,11 +66,12 @@ export default function SettingsSection() {
               {t('create-poll.fee-alert')}
             </Typography>
           </Stack>
+
           <Box
             sx={{
               position: 'relative',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: { md: '1fr 1fr' },
               gridAutoFlow: 'row',
             }}
             bgcolor={palette.action.active}

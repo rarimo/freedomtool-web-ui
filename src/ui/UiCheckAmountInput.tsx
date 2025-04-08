@@ -21,6 +21,8 @@ import UiNumberField from './UiNumberField'
 type AmountInputProps = { value: string; maxValue: string } & Omit<TextFieldProps, 'value'> &
   Omit<ControllerRenderProps, 'value'>
 
+const CHARACTER_LIMIT_FOR_SCALING = 12
+
 const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
   ({ onChange, error, disabled, value, maxValue }, ref) => {
     const { t } = useTranslation()
@@ -55,6 +57,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
 
     return (
       <UiNumberField
+        variant='outlined'
         sx={{
           height: 138,
           '.MuiTextField-root': {
@@ -76,12 +79,17 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
               overflow: 'hidden',
               borderRadius: 4,
             },
+          '.MuiInputBase-input': {
+            transform: value.length > CHARACTER_LIMIT_FOR_SCALING ? 'scale(0.8)' : 'scale(1)',
+            transformOrigin: 'left center',
+            transition: 'transform 0.3s ease-in-out',
+          },
           '.MuiOutlinedInput-notchedOutline': {
             border: 'none',
           },
           input: {
             position: 'absolute',
-            width: '80%',
+            width: { md: '90%' },
             py: 0,
             pl: 1,
           },

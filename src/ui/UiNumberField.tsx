@@ -9,7 +9,7 @@ const UiNumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
       <TextField
         {...props}
         type='number'
-        value={trimLeadingZeroes(String(value))}
+        value={trimLeadingZeroes(String(value ?? ''))}
         onChange={onChange}
         inputRef={ref}
         InputProps={{

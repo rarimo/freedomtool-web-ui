@@ -12,6 +12,7 @@ const UiCheckVoteInput = forwardRef<HTMLInputElement, TextFieldProps>(
 
     return (
       <UiNumberField
+        variant='outlined'
         sx={{
           height: 138,
           '.MuiTextField-root': {
