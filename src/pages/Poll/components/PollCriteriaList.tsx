@@ -60,7 +60,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
   return (
     <>
       <Stack direction='row' alignItems='center' justifyContent='space-between' spacing={2}>
-        <Typography variant='body3' color={palette.text.secondary}>
+        <Typography variant='body4' color={palette.text.secondary}>
           {t('poll.criteria')}
         </Typography>
         {hasNationalitiesList ? (

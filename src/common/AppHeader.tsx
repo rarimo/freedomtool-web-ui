@@ -49,8 +49,8 @@ export default function AppHeader(props: StackProps) {
       <Stack
         sx={{
           flexDirection: { xs: 'row' },
-          maxWidth: { md: 1192 },
-          py: { xs: 4, lg: 0 },
+          maxWidth: { md: 1141 },
+          py: { xs: 2, md: 0, lg: 0 },
           justifyContent: 'space-between',
           alignItems: 'center',
           width: 1,

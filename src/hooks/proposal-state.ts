@@ -90,10 +90,24 @@ export const useProposalState = () => {
     [contract],
   )
 
+  const calculateAddFundsToProposalGasLimit = useCallback(
+    async (proposalId: BigNumberish, amount: BigNumberish) => {
+      if (!contract) return
+      const gasLimit = await contract.contractInstance.addFundsToProposal.estimateGas(proposalId, {
+        value: amount,
+      })
+
+      return gasLimit
+    },
+    [contract],
+  )
+
   return {
     createProposal,
     addFundsToProposal,
     getProposalInfo,
+
     calculateCreateProposalGasLimit,
+    calculateAddFundsToProposalGasLimit,
   }
 }

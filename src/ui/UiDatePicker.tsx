@@ -67,7 +67,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
               timezone: 'UTC',
               slotProps: {
                 popper: {
-                  placement: 'top-end',
+                  placement: 'auto-end',
                 },
                 switchViewButton: {
                   color: 'secondary',

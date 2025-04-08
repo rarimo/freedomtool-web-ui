@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { ErrorView, LazyImage } from '@/common'
+import { ErrorView, LazyImage, RoundedBackground } from '@/common'
 import AbstractBackground from '@/common/AbstractBackground'
 import DarkGradient from '@/common/DarkGradient'
 import { useRouteTitleContext } from '@/contexts'
@@ -13,12 +13,12 @@ import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { lineClamp } from '@/theme/helpers'
-import { UiContainer, UiIcon } from '@/ui'
+import { UiIcon } from '@/ui'
 
 import PollDetails from './components/PollDetails'
+import PollSkeleton from './components/PollSkeleton'
 import QuestionList from './components/QuestionList'
 import TopUpForm from './components/TopUpForm'
-import VoteSkeleton from './components/VoteSkeleton'
 
 export default function Poll() {
   const { id } = useParams()
@@ -50,56 +50,66 @@ export default function Poll() {
 
   return (
     <AnimatePresence mode='popLayout'>
-      <UiContainer maxWidth={1137}>
-        {isLoading && !isError && (
-          <motion.div
+      {isLoading && !isError && (
+        <RoundedBackground pt={12.5}>
+          <Stack
+            component={motion.div}
             key='loading'
             initial={{ opacity: 0.2 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <VoteSkeleton />
-          </motion.div>
-        )}
+            <PollSkeleton />
+          </Stack>
+        </RoundedBackground>
+      )}
 
-        {isError && (
-          <motion.div
-            key='error'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
-          </motion.div>
-        )}
+      {isError && (
+        <motion.div
+          key='error'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
+        </motion.div>
+      )}
 
-        {!isLoading && !isError && (
-          <motion.div
-            key='content'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+      {!isLoading && !isError && (
+        <Stack
+          component={motion.div}
+          sx={{ overflowX: 'hidden' }}
+          width='100%'
+          key='content'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              display: 'grid',
+              gap: 0.5,
+              gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
+            }}
           >
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' },
-                gap: { xs: 6, md: 10 },
-              }}
-            >
-              <motion.div
+            <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+              <Stack
+                component={motion.div}
+                maxWidth={{ lg: 656, xl: 720 }}
+                width='100%'
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} pt={5} spacing={5}>
+                <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} spacing={5}>
                   <Stack spacing={3}>
                     <Stack
                       sx={{
-                        aspectRatio: '6 / 2',
+                        aspectRatio: '2.6',
                         borderRadius: 5,
                         overflow: 'hidden',
                         position: 'relative',
@@ -109,8 +119,16 @@ export default function Poll() {
                         <LazyImage
                           width={1}
                           height={1}
+                          imageProps={{
+                            sx: {
+                              objectFit: 'cover',
+                              objectPosition: 'top',
+                              width: '100%',
+                              height: 'auto',
+                            },
+                          }}
                           src={getIpfsImageSrc(proposalMetadata.imageCid)}
-                          alt=''
+                          alt='Poll banner'
                         />
                       ) : (
                         <AbstractBackground
@@ -188,48 +206,54 @@ export default function Poll() {
                     questions={proposalMetadata?.acceptedOptions ?? []}
                   />
                 </Stack>
+              </Stack>
+            </RoundedBackground>
+
+            {isMdDown && isTopUpAllowed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2, delay: 0.2 }}
+              >
+                <Stack
+                  spacing={10}
+                  sx={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    marginBottom: 3,
+                    height: 'fit-content',
+                    position: 'sticky',
+                    top: 80,
+                  }}
+                >
+                  <TopUpForm />
+                  <PollDetails list={pollDetails} criteria={criteria} />
+                </Stack>
               </motion.div>
+            )}
 
-              {isMdDown && isTopUpAllowed && (
-                <motion.div
+            {!isMdDown && (
+              <RoundedBackground sx={{ pl: 13, alignItems: 'flex-start' }}>
+                <Stack
+                  component={motion.div}
+                  sx={{
+                    maxWidth: 368,
+                    height: 'fit-content',
+                    position: 'sticky',
+                    top: 50,
+                    width: '100%',
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.2, delay: 0.2 }}
                 >
                   <Stack
-                    spacing={10}
-                    sx={{
-                      textAlign: 'center',
-                      alignItems: 'center',
-                      marginBottom: 3,
-                      height: 'fit-content',
-                      position: 'sticky',
-                      top: 80,
-                    }}
-                  >
-                    <TopUpForm />
-                    <PollDetails list={pollDetails} criteria={criteria} />
-                  </Stack>
-                </motion.div>
-              )}
-
-              {!isMdDown && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
-                >
-                  <Stack
-                    pt={5}
                     spacing={6}
                     divider={<Divider orientation='horizontal' flexItem />}
                     sx={{
                       textAlign: 'center',
                       alignItems: 'center',
                       marginBottom: 3,
-                      height: 'fit-content',
-                      position: 'sticky',
-                      top: 80,
                     }}
                   >
                     <QrCodePanel />
@@ -242,12 +266,12 @@ export default function Poll() {
                     </Stack>
                     <PollDetails list={pollDetails} criteria={criteria} />
                   </Stack>
-                </motion.div>
-              )}
-            </Box>
-          </motion.div>
-        )}
-      </UiContainer>
+                </Stack>
+              </RoundedBackground>
+            )}
+          </Box>
+        </Stack>
+      )}
     </AnimatePresence>
   )
 }

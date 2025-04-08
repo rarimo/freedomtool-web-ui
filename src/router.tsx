@@ -9,7 +9,7 @@ import FinishedPolls from '@/pages/Dashboard/FinishedPolls'
 
 import { ErrorBoundaryFallback } from './common'
 import CreatePoll from './pages/CreatePoll'
-import Vote from './pages/Vote'
+import Vote from './pages/Poll'
 
 export const createRouter = () => {
   return createBrowserRouter(

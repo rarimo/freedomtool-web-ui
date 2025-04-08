@@ -52,7 +52,6 @@ export default function VoteParamsResult() {
       })
       return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
     },
-
     {
       loadOnMount: Boolean(amount),
       loadArgs: [amount],

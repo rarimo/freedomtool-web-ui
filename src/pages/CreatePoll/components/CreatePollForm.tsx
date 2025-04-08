@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { RoundedBackground } from '@/common'
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
@@ -32,8 +33,8 @@ import { SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
-import FormPartBackground from './FormPartBackground'
 import QuestionsSection from './QuestionsSection'
+import FormPartBackground from './RoundedBackground'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
 
@@ -159,7 +160,12 @@ export default function CreatePollForm() {
 
   return (
     <FormProvider {...form}>
-      <Stack component='form' width='100%' onSubmit={handleSubmit(submit)}>
+      <Stack
+        component='form'
+        width='100%'
+        onSubmit={handleSubmit(submit)}
+        sx={{ overflowX: 'hidden' }}
+      >
         <Box
           sx={{
             display: 'grid',
@@ -170,14 +176,14 @@ export default function CreatePollForm() {
             position: 'relative',
           }}
         >
-          <FormPartBackground>
+          <RoundedBackground>
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
-          </FormPartBackground>
+          </RoundedBackground>
 
           {isMdUp && (
             <>
               {isQuestionPreview ? (
-                <FormPartBackground>
+                <RoundedBackground>
                   <Stack
                     key='question'
                     height={500}
@@ -189,9 +195,9 @@ export default function CreatePollForm() {
                     }}
                     onScroll={questionScrollHandler}
                   >
-                    <PollQuestionPreview question={questions[0]} />
+                    <PollQuestionPreview question={questions[questions.length - 1]} />
                   </Stack>
-                </FormPartBackground>
+                </RoundedBackground>
               ) : (
                 <FormPartBackground>
                   <Stack
@@ -205,7 +211,7 @@ export default function CreatePollForm() {
                     }}
                     onScroll={onScrollHandler}
                   >
-                    <PollPreview {...details} {...criteria} {...questions} />
+                    <PollPreview {...details} {...criteria} />
                   </Stack>
                 </FormPartBackground>
               )}

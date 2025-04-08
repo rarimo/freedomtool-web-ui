@@ -2,7 +2,7 @@ import { Box, Divider, Paper, Skeleton, Stack, useMediaQuery, useTheme } from '@
 
 import UiTypographySkeleton from '@/ui/UiTypographySkeleton'
 
-export default function SkeletonPage() {
+export default function PollSkeleton() {
   const { breakpoints } = useTheme()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
 
