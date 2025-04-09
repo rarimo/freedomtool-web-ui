@@ -1,57 +1,39 @@
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
 
-import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
 import { InfiniteList } from '@/common'
-import AuthBlock from '@/common/AuthBlock'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { getProposals } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
-import EmptyPollsView from '@/pages/Dashboard/components/EmptyPollsView'
-import { useAuthState } from '@/store'
 import { PollStatus } from '@/types'
 
+import EmptyPollsView from './components/EmptyPollsView'
 import PollCard from './components/PollCard'
 
-export default function ActivePolls() {
+export default function FinishedPolls() {
   const { address } = useWeb3Context()
-  const { isAuthorized } = useAuthState()
 
   const {
     data: proposals,
-    loadingState: pollsLoadingState,
-    reload: reloadPolls,
+    loadingState,
+    reload,
     loadNext,
-  } = useMultiPageLoading(
-    () =>
-      getProposals({
-        query: {
-          filter: {
-            creator: address,
-            status: [PollStatus.Started, PollStatus.Waiting].join(','),
-          },
+  } = useMultiPageLoading(() =>
+    getProposals({
+      query: {
+        filter: {
+          creator: address,
+          status: PollStatus.Ended,
         },
-      }),
-    {
-      loadOnMount: Boolean(address),
-      loadArgs: [address],
-      pageLimit: DEFAULT_PAGE_LIMIT,
-    },
+      },
+    }),
   )
-
-  if (!isAuthorized) {
-    return (
-      <Stack minWidth={350} mx='auto' mt={8}>
-        <AuthBlock />
-      </Stack>
-    )
-  }
 
   return (
     <InfiniteList
       items={proposals}
-      loadingState={pollsLoadingState}
-      onRetry={reloadPolls}
+      loadingState={loadingState}
+      onRetry={reload}
       onLoadNext={loadNext}
       slots={{
         noData: <EmptyPollsView />,

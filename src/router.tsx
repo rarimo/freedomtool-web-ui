@@ -1,14 +1,13 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
-import DashboardLayout from '@/layouts/DashboardLayout'
 import MainLayout from '@/layouts/MainLayout'
-import ActivePolls from '@/pages/Dashboard/ActivePolls'
-import DraftPolls from '@/pages/Dashboard/DraftPolls'
-import FinishedPolls from '@/pages/Dashboard/FinishedPolls'
+import PollsLayout from '@/layouts/PollsLayout'
+import ActivePolls from '@/pages/Polls/ActivePolls'
+import FinishedPolls from '@/pages/Polls/FinishedPolls'
 
 import { ErrorBoundaryFallback } from './common'
-import CreatePoll from './pages/CreatePoll'
+import NewPoll from './pages/NewPoll'
 import Poll from './pages/Poll'
 
 export const createRouter = () => {
@@ -21,26 +20,22 @@ export const createRouter = () => {
         children: [
           {
             element: (
-              <DashboardLayout>
+              <PollsLayout>
                 <Outlet />
-              </DashboardLayout>
+              </PollsLayout>
             ),
             children: [
               {
                 index: true,
-                element: <Navigate to={RoutePaths.DashboardActive} replace />,
+                element: <Navigate to={RoutePaths.PollsActive} replace />,
               },
               {
-                path: RoutePaths.DashboardActive,
+                path: RoutePaths.PollsActive,
                 element: <ActivePolls />,
               },
               {
-                path: RoutePaths.DashboardHistory,
+                path: RoutePaths.PollsHistory,
                 element: <FinishedPolls />,
-              },
-              {
-                path: RoutePaths.DashboardDraft,
-                element: <DraftPolls />,
               },
             ],
           },
@@ -52,14 +47,18 @@ export const createRouter = () => {
             ),
             children: [
               {
-                path: RoutePaths.CreatePoll,
-                element: <CreatePoll />,
+                path: RoutePaths.NewPoll,
+                element: <NewPoll />,
               },
               {
                 path: RoutePaths.Poll,
                 element: <Poll />,
               },
             ],
+          },
+          {
+            path: '*',
+            element: <Navigate to={RoutePaths.Home} replace />,
           },
         ],
       },

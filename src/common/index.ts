@@ -1,4 +1,3 @@
-export { default as DashboardHeader } from '../pages/Dashboard/components/PollsHeader'
 export { default as AppHeader } from './AppHeader'
 export { default as AppLoader } from './AppLoader'
 export { default as AppMenu } from './AppMenu'

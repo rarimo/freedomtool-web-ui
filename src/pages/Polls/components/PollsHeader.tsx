@@ -7,8 +7,9 @@ import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
-import PollsTabs, { PollTabProps } from '@/pages/Dashboard/components/PollsTabs'
 import { UiIcon } from '@/ui'
+
+import PollsTabs, { PollTabProps } from './PollsTabs'
 
 // FIXME: Get proposals count from another source
 export default function PollsHeader() {
@@ -36,21 +37,16 @@ export default function PollsHeader() {
   //   [proposals],
   // )
 
-  const dashboardTabs: PollTabProps[] = [
+  const pollsTabs: PollTabProps[] = [
     {
-      route: RoutePaths.DashboardActive,
-      label: t('dashboard.active-polls-tab-lbl'),
+      route: RoutePaths.PollsActive,
+      label: t('polls.active-polls-tab-lbl'),
       // count: activePollsCount,
     },
     {
-      route: RoutePaths.DashboardHistory,
-      label: t('dashboard.history-polls-tab-lbl'),
+      route: RoutePaths.PollsHistory,
+      label: t('polls.history-polls-tab-lbl'),
       // count: historyPollsCount,
-    },
-    {
-      route: RoutePaths.DashboardDraft,
-      label: t('dashboard.draft-polls-tab-lbl'),
-      // count: 0,
     },
   ]
 
@@ -82,9 +78,9 @@ export default function PollsHeader() {
                 sx={{
                   typography: typography.subtitle6,
                 }}
-                to={RoutePaths.CreatePoll}
+                to={RoutePaths.NewPoll}
               >
-                {t('dashboard.create-poll-btn')}
+                {t('polls.create-poll-btn')}
               </Button>
             ) : (
               <IconButton
@@ -94,7 +90,7 @@ export default function PollsHeader() {
                   backgroundColor: palette.primary.main,
                   color: palette.common.black,
                 }}
-                to={RoutePaths.CreatePoll}
+                to={RoutePaths.NewPoll}
               >
                 <UiIcon name={Icons.AddFill} size={5} />
               </IconButton>
@@ -103,7 +99,7 @@ export default function PollsHeader() {
           </Stack>
         </Stack>
         <Divider flexItem />
-        <PollsTabs tabs={dashboardTabs} />
+        <PollsTabs tabs={pollsTabs} />
       </Stack>
     </Stack>
   )

@@ -6521,7 +6521,7 @@ __metadata:
     postcss: "npm:^8.4.24"
     prettier: "npm:^3.2.5"
     react: "npm:^18.2.0"
-    react-advanced-cropper: "npm:^0.20.1"
+    react-advanced-cropper: "npm:0.20.1"
     react-confetti-boom: "npm:^1.0.0"
     react-dom: "npm:^18.2.0"
     react-error-boundary: "npm:^4.1.1"
@@ -9857,7 +9857,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-advanced-cropper@npm:^0.20.1":
+"react-advanced-cropper@npm:0.20.1":
   version: 0.20.1
   resolution: "react-advanced-cropper@npm:0.20.1"
   dependencies:

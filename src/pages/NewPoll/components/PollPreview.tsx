@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
 import { formatDateTime } from '@/helpers'
-import { SectionAnchor } from '@/pages/CreatePoll/constants'
 import { hiddenScrollbar, textWrapAndDirectionStyles } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 import { Nationality, Sex } from '@/types'
 import { UiIcon } from '@/ui'
 
+import { SectionAnchor } from '../constants'
 import PreviewLayout from './PreviewLayout'
 
 interface PollDetailsProps {

@@ -5,7 +5,7 @@ import { useAuthState } from '@/store'
 
 import CreatePollForm from './components/CreatePollForm'
 
-export default function CreatePoll() {
+export default function NewPoll() {
   const { isAuthorized } = useAuthState()
 
   return (

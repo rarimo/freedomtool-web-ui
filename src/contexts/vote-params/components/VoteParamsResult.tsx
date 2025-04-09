@@ -9,7 +9,7 @@ import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { prepareAcceptedOptionsToContract, prepareVotingWhitelistData } from '@/helpers'
 import { useLoading, useProposalState } from '@/hooks'
-import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
 
 export default function VoteParamsResult() {
   const { watch, getValues } = useFormContext<CreatePollSchema>()

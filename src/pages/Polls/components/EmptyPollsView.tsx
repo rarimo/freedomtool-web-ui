@@ -19,18 +19,18 @@ export default function EmptyPollsView() {
         height={200}
       />
       <Stack spacing={4} alignItems='center'>
-        <Typography variant='h3'>{t('dashboard.no-polls-title')}</Typography>
+        <Typography variant='h3'>{t('polls.no-polls-title')}</Typography>
         <Typography variant='body3' color={palette.text.secondary}>
-          {t('dashboard.no-polls-description')}
+          {t('polls.no-polls-description')}
         </Typography>
       </Stack>
       <Button
         component={NavLink}
         size='large'
         startIcon={<UiIcon name={Icons.AddFill} size={5} />}
-        to={RoutePaths.CreatePoll}
+        to={RoutePaths.NewPoll}
       >
-        {t('dashboard.create-poll-btn')}
+        {t('polls.create-poll-btn')}
       </Button>
     </Stack>
   )
