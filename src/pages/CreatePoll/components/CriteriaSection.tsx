@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
@@ -43,7 +44,8 @@ export default function CriteriaSection() {
     getValues,
   } = useFormContext<CreatePollSchema>()
 
-  const { palette, typography } = useTheme()
+  const { palette, typography, breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedKey, setSelectedKey] = useState<CriteriaKey[]>(
     [
@@ -109,9 +111,9 @@ export default function CriteriaSection() {
   }, [unselectedCriteria])
 
   return (
-    <Stack spacing={6}>
+    <Stack gap={{ xs: 4, md: 6 }}>
       {selectedKey.includes('nationalities') && (
-        <Stack spacing={6} direction='row'>
+        <Stack gap={{ xs: 4, md: 6 }} direction='row'>
           <Controller
             name='criteria.nationalities'
             control={control}
@@ -186,17 +188,19 @@ export default function CriteriaSection() {
         </Stack>
       )}
       {selectedKey.includes('age') && (
-        <Stack direction='row' alignItems='center' gap={6}>
+        <Stack direction='row' alignItems='center' gap={{ xs: 4, md: 6 }}>
           <Stack
             flex={1}
-            direction='row'
+            direction={{ md: 'row' }}
             justifyContent='space-between'
             alignItems='center'
             gap={5}
             divider={
-              <Typography variant='body4' color={palette.text.secondary}>
-                –
-              </Typography>
+              isMdUp ? (
+                <Typography variant='body4' color={palette.text.secondary}>
+                  –
+                </Typography>
+              ) : null
             }
           >
             <Controller
@@ -205,7 +209,7 @@ export default function CriteriaSection() {
               render={({ field, fieldState }) => (
                 <UiNumberField
                   {...field}
-                  sx={{ flex: 1 }}
+                  sx={{ flex: 1, width: 1 }}
                   label={t('create-poll.min-age-lbl')}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
@@ -219,7 +223,7 @@ export default function CriteriaSection() {
               render={({ field, fieldState }) => (
                 <UiNumberField
                   {...field}
-                  sx={{ flex: 1 }}
+                  sx={{ flex: 1, width: 1 }}
                   label={t('create-poll.max-age-lbl')}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}

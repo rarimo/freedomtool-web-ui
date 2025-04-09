@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
-import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
 import { BusEvents, RoutePaths } from '@/enums'
 import {
@@ -43,7 +43,7 @@ nationalities satisfies Nationality[]
 export default function CreatePollForm() {
   const { t } = useTranslation()
   const { breakpoints } = useTheme()
-  const isMdUp = useMediaQuery(breakpoints.up('md'))
+  const isLgUp = useMediaQuery(breakpoints.up('lg'))
 
   const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(80)
   const { onScrollHandler: questionScrollHandler, shadowScrollStyle: questionScrollStyle } =
@@ -172,15 +172,17 @@ export default function CreatePollForm() {
             gap: 0.5,
             gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
             width: '100%',
-            height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px - 2px)`,
+            height: { md: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px - 2px)` },
             position: 'relative',
           }}
         >
-          <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+          <RoundedBackground
+            sx={{ alignItems: 'flex-end', pr: { lg: 24.5 }, [breakpoints.down('md')]: { p: 4 } }}
+          >
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
           </RoundedBackground>
 
-          {isMdUp && (
+          {isLgUp && (
             <>
               {isQuestionPreview ? (
                 <RoundedBackground>

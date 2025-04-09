@@ -1,5 +1,5 @@
 import { time } from '@distributedlab/tools'
-import { Stack, TextField, Typography, useTheme } from '@mui/material'
+import { Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { t } from 'i18next'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -14,14 +14,15 @@ import { CreatePollSchema } from '../createPollSchema'
 const minDate = time().utc()
 
 export default function DetailsSection() {
-  const { palette } = useTheme()
+  const { palette, breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
   const {
     control,
     formState: { isSubmitting },
   } = useFormContext<CreatePollSchema>()
 
   return (
-    <Stack spacing={6}>
+    <Stack gap={{ xs: 4, md: 6 }}>
       <Controller
         name='details.image'
         control={control}
@@ -69,14 +70,17 @@ export default function DetailsSection() {
       />
 
       <Stack
-        direction='row'
+        direction={{ md: 'row' }}
         justifyContent='space-between'
         alignItems='center'
-        gap={5}
+        width='100%'
+        gap={{ xs: 4, md: 6 }}
         divider={
-          <Typography variant='body4' color={palette.text.secondary}>
-            –
-          </Typography>
+          isMdUp ? (
+            <Typography variant='body4' color={palette.text.secondary}>
+              –
+            </Typography>
+          ) : null
         }
       >
         <Controller

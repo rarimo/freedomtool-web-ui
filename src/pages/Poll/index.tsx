@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 
 import { ErrorView, LazyImage, RoundedBackground } from '@/common'
 import AbstractBackground from '@/common/AbstractBackground'
+import AuthBlock from '@/common/AuthBlock'
 import DarkGradient from '@/common/DarkGradient'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useRouteTitleContext } from '@/contexts'
@@ -13,6 +14,7 @@ import { Icons } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
+import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
@@ -25,6 +27,7 @@ export default function Poll() {
   const { id } = useParams()
   const { palette, breakpoints } = useTheme()
   const { setTitle } = useRouteTitleContext()
+  const { isAuthorized } = useAuthState()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
 
   const {
@@ -50,229 +53,240 @@ export default function Poll() {
   }, [proposalMetadata?.title, setTitle])
 
   return (
-    <AnimatePresence mode='popLayout'>
-      {isLoading && !isError && (
-        <Stack
-          component={motion.div}
-          key='loading'
-          initial={{ opacity: 0.2 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <PollSkeleton />
-        </Stack>
-      )}
+    <>
+      {isAuthorized ? (
+        <AnimatePresence mode='popLayout'>
+          {isLoading && !isError && (
+            <Stack
+              component={motion.div}
+              key='loading'
+              initial={{ opacity: 0.2 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <PollSkeleton />
+            </Stack>
+          )}
 
-      {isError && (
-        <motion.div
-          key='error'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
-        </motion.div>
-      )}
+          {isError && (
+            <motion.div
+              key='error'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
+            </motion.div>
+          )}
 
-      {!isLoading && !isError && (
-        <Stack
-          component={motion.div}
-          sx={{ overflowX: 'hidden' }}
-          width='100%'
-          key='content'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              display: 'grid',
-              gap: 0.5,
-              gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
-              height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
-            }}
-          >
-            <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
-              <Stack
-                component={motion.div}
-                maxWidth={{ lg: 656, xl: 720 }}
-                width='100%'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
+          {!isLoading && !isError && (
+            <Stack
+              component={motion.div}
+              sx={{ overflowX: 'hidden' }}
+              width='100%'
+              key='content'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'grid',
+                  gap: 0.5,
+                  gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
+                  height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
+                }}
               >
-                <Stack sx={{ height: 'fit-content' }} spacing={5}>
-                  <Stack spacing={3}>
+                <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+                  <Stack
+                    component={motion.div}
+                    maxWidth={{ lg: 656, xl: 720 }}
+                    width='100%'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Stack sx={{ height: 'fit-content' }} spacing={5}>
+                      <Stack spacing={3}>
+                        <Stack
+                          sx={{
+                            aspectRatio: '2.6',
+                            borderRadius: 5,
+                            overflow: 'hidden',
+                            position: 'relative',
+                          }}
+                        >
+                          {proposalMetadata?.imageCid ? (
+                            <LazyImage
+                              width={1}
+                              height={1}
+                              imageProps={{
+                                sx: {
+                                  objectFit: 'cover',
+                                  objectPosition: 'top',
+                                  width: '100%',
+                                  height: 'auto',
+                                },
+                              }}
+                              src={getIpfsImageSrc(proposalMetadata.imageCid)}
+                              alt='Poll banner'
+                            />
+                          ) : (
+                            <AbstractBackground
+                              backgrounds={[
+                                palette.additional.gradient4,
+                                palette.additional.gradient5,
+                              ]}
+                            />
+                          )}
+                          <DarkGradient
+                            sx={{
+                              position: 'absolute',
+                              height: isMdDown ? '100%' : '50%',
+                              bottom: 0,
+                              right: 0,
+                              left: 0,
+                              justifyContent: 'flex-end',
+                              p: 6,
+                              gap: 3.5,
+                            }}
+                          >
+                            <Typography
+                              width={{ xs: 280, md: 500 }}
+                              variant='h3'
+                              title={proposalMetadata?.title}
+                              color={palette.common.white}
+                              typography={{ xs: 'h5', md: 'h3' }}
+                              sx={{ ...lineClamp(2) }}
+                            >
+                              {proposalMetadata?.title}
+                            </Typography>
+                            <Stack direction='row' spacing={6} alignItems='center'>
+                              <Stack
+                                color={palette.common.white}
+                                direction='row'
+                                spacing={1.5}
+                                sx={{ opacity: 0.7 }}
+                                alignItems='center'
+                              >
+                                <UiIcon size={4} name={Icons.CalendarLine} />
+                                <Typography
+                                  variant='body2'
+                                  typography={{ xs: 'body3', md: 'body4' }}
+                                  sx={{ ...lineClamp(5) }}
+                                >
+                                  {formattedStartDate} – {formattedEndDate}
+                                </Typography>
+                              </Stack>
+                              <Stack
+                                color={palette.common.white}
+                                direction='row'
+                                spacing={1.5}
+                                sx={{ opacity: 0.7 }}
+                                alignItems='center'
+                              >
+                                <UiIcon size={4} name={Icons.GroupLine} />
+                                <Typography
+                                  variant='body2'
+                                  typography={{ xs: 'body3', md: 'body4' }}
+                                  sx={{ ...lineClamp(5) }}
+                                >
+                                  {participantsAmount}
+                                </Typography>
+                              </Stack>
+                            </Stack>
+                          </DarkGradient>
+                        </Stack>
+                      </Stack>
+
+                      <Stack px={6} py={3} bgcolor={palette.action.active} sx={{ borderRadius: 5 }}>
+                        <Typography variant='body4' color={palette.text.secondary}>
+                          {proposalMetadata?.description}
+                        </Typography>
+                      </Stack>
+
+                      <QuestionList
+                        proposal={proposal}
+                        questions={proposalMetadata?.acceptedOptions ?? []}
+                      />
+                    </Stack>
+                  </Stack>
+                </RoundedBackground>
+
+                {isMdDown && isTopUpAllowed && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2, delay: 0.2 }}
+                  >
                     <Stack
+                      spacing={10}
                       sx={{
-                        aspectRatio: '2.6',
-                        borderRadius: 5,
-                        overflow: 'hidden',
-                        position: 'relative',
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        marginBottom: 3,
+                        height: 'fit-content',
+                        position: 'sticky',
+                        top: 80,
                       }}
                     >
-                      {proposalMetadata?.imageCid ? (
-                        <LazyImage
-                          width={1}
-                          height={1}
-                          imageProps={{
-                            sx: {
-                              objectFit: 'cover',
-                              objectPosition: 'top',
-                              width: '100%',
-                              height: 'auto',
-                            },
-                          }}
-                          src={getIpfsImageSrc(proposalMetadata.imageCid)}
-                          alt='Poll banner'
-                        />
-                      ) : (
-                        <AbstractBackground
-                          backgrounds={[palette.additional.gradient4, palette.additional.gradient5]}
-                        />
-                      )}
-                      <DarkGradient
+                      <TopUpForm />
+                      <PollDetails list={pollDetails} criteria={criteria} />
+                    </Stack>
+                  </motion.div>
+                )}
+
+                {!isMdDown && (
+                  <RoundedBackground sx={{ pl: 13, alignItems: 'flex-start' }}>
+                    <Stack
+                      component={motion.div}
+                      sx={{
+                        maxWidth: 368,
+                        height: 'fit-content',
+                        position: 'sticky',
+                        top: 50,
+                        width: '100%',
+                      }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2, delay: 0.2 }}
+                    >
+                      <Stack
+                        spacing={6}
+                        divider={<Divider orientation='horizontal' flexItem />}
                         sx={{
-                          position: 'absolute',
-                          height: isMdDown ? '100%' : '50%',
-                          bottom: 0,
-                          right: 0,
-                          left: 0,
-                          justifyContent: 'flex-end',
-                          p: 6,
-                          gap: 3.5,
+                          textAlign: 'center',
+                          alignItems: 'center',
+                          marginBottom: 3,
                         }}
                       >
-                        <Typography
-                          width={{ xs: 280, md: 500 }}
-                          variant='h3'
-                          title={proposalMetadata?.title}
-                          color={palette.common.white}
-                          typography={{ xs: 'h5', md: 'h3' }}
-                          sx={{ ...lineClamp(2) }}
-                        >
-                          {proposalMetadata?.title}
-                        </Typography>
-                        <Stack direction='row' spacing={6} alignItems='center'>
-                          <Stack
-                            color={palette.common.white}
-                            direction='row'
-                            spacing={1.5}
-                            sx={{ opacity: 0.7 }}
-                            alignItems='center'
-                          >
-                            <UiIcon size={4} name={Icons.CalendarLine} />
-                            <Typography
-                              variant='body2'
-                              typography={{ xs: 'body3', md: 'body4' }}
-                              sx={{ ...lineClamp(5) }}
-                            >
-                              {formattedStartDate} – {formattedEndDate}
-                            </Typography>
-                          </Stack>
-                          <Stack
-                            color={palette.common.white}
-                            direction='row'
-                            spacing={1.5}
-                            sx={{ opacity: 0.7 }}
-                            alignItems='center'
-                          >
-                            <UiIcon size={4} name={Icons.GroupLine} />
-                            <Typography
-                              variant='body2'
-                              typography={{ xs: 'body3', md: 'body4' }}
-                              sx={{ ...lineClamp(5) }}
-                            >
-                              {participantsAmount}
-                            </Typography>
-                          </Stack>
+                        <QrCodePanel />
+                        <Stack spacing={6} width='100%'>
+                          <VotesLeftProgress
+                            remainingVotes={remainingVotesCount ?? 0}
+                            participantsAmount={participantsAmount}
+                          />
+                          {isTopUpAllowed && <TopUpForm />}
                         </Stack>
-                      </DarkGradient>
+                        <PollDetails list={pollDetails} criteria={criteria} />
+                      </Stack>
                     </Stack>
-                  </Stack>
-
-                  <Stack px={6} py={3} bgcolor={palette.action.active} sx={{ borderRadius: 5 }}>
-                    <Typography variant='body4' color={palette.text.secondary}>
-                      {proposalMetadata?.description}
-                    </Typography>
-                  </Stack>
-
-                  <QuestionList
-                    proposal={proposal}
-                    questions={proposalMetadata?.acceptedOptions ?? []}
-                  />
-                </Stack>
-              </Stack>
-            </RoundedBackground>
-
-            {isMdDown && isTopUpAllowed && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, delay: 0.2 }}
-              >
-                <Stack
-                  spacing={10}
-                  sx={{
-                    textAlign: 'center',
-                    alignItems: 'center',
-                    marginBottom: 3,
-                    height: 'fit-content',
-                    position: 'sticky',
-                    top: 80,
-                  }}
-                >
-                  <TopUpForm />
-                  <PollDetails list={pollDetails} criteria={criteria} />
-                </Stack>
-              </motion.div>
-            )}
-
-            {!isMdDown && (
-              <RoundedBackground sx={{ pl: 13, alignItems: 'flex-start' }}>
-                <Stack
-                  component={motion.div}
-                  sx={{
-                    maxWidth: 368,
-                    height: 'fit-content',
-                    position: 'sticky',
-                    top: 50,
-                    width: '100%',
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
-                >
-                  <Stack
-                    spacing={6}
-                    divider={<Divider orientation='horizontal' flexItem />}
-                    sx={{
-                      textAlign: 'center',
-                      alignItems: 'center',
-                      marginBottom: 3,
-                    }}
-                  >
-                    <QrCodePanel />
-                    <Stack spacing={6} width='100%'>
-                      <VotesLeftProgress
-                        remainingVotes={remainingVotesCount ?? 0}
-                        participantsAmount={participantsAmount}
-                      />
-                      {isTopUpAllowed && <TopUpForm />}
-                    </Stack>
-                    <PollDetails list={pollDetails} criteria={criteria} />
-                  </Stack>
-                </Stack>
-              </RoundedBackground>
-            )}
-          </Box>
+                  </RoundedBackground>
+                )}
+              </Box>
+            </Stack>
+          )}
+        </AnimatePresence>
+      ) : (
+        <Stack minWidth={350} mx='auto' mt={8}>
+          <AuthBlock />
         </Stack>
       )}
-    </AnimatePresence>
+    </>
   )
 }
 

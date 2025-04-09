@@ -53,7 +53,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
     const PickerComponent = hasTime ? DateTimePicker : DatePicker
 
     return (
-      <Stack spacing={2} flex={1}>
+      <Stack spacing={2} flex={1} width='100%'>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <PickerComponent
             {...{
@@ -81,7 +81,6 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
                 openPickerButton: {
                   color: 'secondary',
                 },
-
                 textField: {
                   error: !!errorMessage || !!internalErrorMessage,
                   helperText: errorMessage || internalErrorMessage,

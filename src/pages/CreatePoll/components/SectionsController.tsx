@@ -1,4 +1,4 @@
-import { Button, IconButton, Stack, Typography } from '@mui/material'
+import { Button, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -22,6 +22,8 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
   const [currentIndex, setCurrentIndex] = useState(0)
   const { children, footer, title, validate, onContinue, onBack } = sections[currentIndex]
   const { t } = useTranslation()
+  const { breakpoints, palette } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
 
   const isLastStep = currentIndex === sections.length - 1
 
@@ -40,7 +42,7 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
   }
 
   return (
-    <Stack spacing={10} width={{ lg: 656, xl: 720 }}>
+    <Stack spacing={{ xs: 6, md: 10 }} width={{ xs: '100%', lg: 656, xl: 720 }}>
       <Stack spacing={2}>
         <Typography variant='body4'>
           {t('create-poll.step-counter', { total: sections.length, current: currentIndex + 1 })}
@@ -48,40 +50,86 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
         {title && <Typography variant='h1'>{title}</Typography>}
       </Stack>
 
-      {children}
+      <Stack width='100%'>
+        {children}
+        {!isMdUp && footer}
+      </Stack>
 
-      <Stack
-        direction={{ xs: 'column-reverse', md: 'row' }}
-        spacing={10}
-        flexWrap='wrap'
-        alignItems='center'
-      >
-        <Stack width={1} flex={1} spacing={10} direction='row'>
-          {currentIndex !== 0 && (
-            <IconButton sx={{ width: 48, height: 48 }} onClick={goBack}>
-              <UiIcon name={Icons.ArrowLeft} size={5} />
-            </IconButton>
-          )}
-          {isLastStep ? (
-            <Button key='submit-button' disabled={isDisabled} type='submit'>
-              {t('create-poll.submit-btn')}
-            </Button>
-          ) : (
-            <Button
-              disabled={isDisabled}
-              endIcon={<UiIcon name={Icons.ArrowRight} size={5} />}
-              onClick={goNext}
-            >
-              {t('create-poll.continue-btn')}
-            </Button>
+      {isMdUp && (
+        <Stack
+          direction={{ xs: 'column-reverse', md: 'row' }}
+          spacing={10}
+          flexWrap='wrap'
+          alignItems='center'
+        >
+          <Stack width={1} flex={1} spacing={10} direction='row'>
+            {currentIndex !== 0 && (
+              <IconButton sx={{ width: 48, height: 48 }} onClick={goBack}>
+                <UiIcon name={Icons.ArrowLeft} size={5} />
+              </IconButton>
+            )}
+            {isLastStep ? (
+              <Button key='submit-button' disabled={isDisabled} type='submit'>
+                {t('create-poll.submit-btn')}
+              </Button>
+            ) : (
+              <Button
+                disabled={isDisabled}
+                endIcon={<UiIcon name={Icons.ArrowRight} size={5} />}
+                onClick={goNext}
+              >
+                {t('create-poll.continue-btn')}
+              </Button>
+            )}
+          </Stack>
+          {footer && (
+            <Stack ml='auto' flex={0}>
+              {footer}
+            </Stack>
           )}
         </Stack>
-        {footer && (
-          <Stack ml='auto' flex={0}>
-            {footer}
+      )}
+
+      {!isMdUp && (
+        <Stack
+          position='fixed'
+          bottom={0}
+          left={0}
+          right={0}
+          sx={{ borderTop: `1px solid ${palette.action.active}`, zIndex: 1 }}
+        >
+          <Stack
+            bgcolor={palette.background.paper}
+            py={2}
+            px={4}
+            width='100%'
+            flex={1}
+            spacing={10}
+            justifyContent='space-between'
+            direction='row'
+          >
+            {currentIndex !== 0 && (
+              <IconButton sx={{ width: 48, height: 48 }} onClick={goBack}>
+                <UiIcon name={Icons.ArrowLeft} size={5} />
+              </IconButton>
+            )}
+            {isLastStep ? (
+              <Button sx={{ ml: 'auto' }} key='submit-button' disabled={isDisabled} type='submit'>
+                {t('create-poll.submit-btn')}
+              </Button>
+            ) : (
+              <Button
+                sx={{ ml: 'auto' }}
+                disabled={isDisabled}
+                endIcon={<UiIcon name={Icons.ArrowRight} size={5} />}
+                onClick={goNext}
+              >
+                {t('create-poll.continue-btn')}
+              </Button>
+            )}
           </Stack>
-        )}
-      </Stack>
+        </Stack>
+      )}
     </Stack>
   )
 }
