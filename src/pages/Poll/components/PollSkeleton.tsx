@@ -1,6 +1,11 @@
-import { Box, Divider, Paper, Skeleton, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Divider, Skeleton, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
 
+import { RoundedBackground } from '@/common'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import UiTypographySkeleton from '@/ui/UiTypographySkeleton'
+
+import { QrCodePanelSkeleton } from './QrCodePanelSkeleton'
 
 export default function PollSkeleton() {
   const { breakpoints } = useTheme()
@@ -9,115 +14,138 @@ export default function PollSkeleton() {
   return (
     <Box
       sx={{
+        width: '100%',
         display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
-        gap: 3,
+        gap: 0.5,
+        gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
+        height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
       }}
     >
-      {isMdDown && <VoteBlockSkeleton />}
-      <Stack
-        component={Paper}
-        sx={{ padding: 10, height: 'fit-content' }}
-        spacing={5}
-        divider={<Divider />}
-      >
-        <Stack spacing={3}>
-          <UiTypographySkeleton variant='h3' typography={{ xs: 'h5', md: 'h3' }} width='60%' />
-          <UiTypographySkeleton variant='body2' width='80%' />
-        </Stack>
-        <VoteDetailsSkeleton />
-        <Stack spacing={6}>
-          <UiTypographySkeleton variant='subtitle3' width={160} />
-          <QuestionItemSkeleton />
-        </Stack>
-      </Stack>
-
-      <Stack
-        component={Paper}
-        spacing={2}
-        sx={{ textAlign: 'center', alignItems: 'center', marginBottom: 3, height: 'fit-content' }}
-      >
-        {!isMdDown && (
-          <Stack spacing={4} alignItems='center'>
-            <Stack
-              sx={{
-                borderRadius: 4,
-                boxShadow:
-                  '0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)',
-              }}
-            >
+      <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+        <Stack
+          component={motion.div}
+          maxWidth={{ lg: 656, xl: 720 }}
+          width='100%'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Stack sx={{ height: 'fit-content' }} spacing={5}>
+            <Stack spacing={5}>
               <Skeleton
                 sx={{
-                  width: 160,
-                  height: 160,
-                  borderRadius: 4,
+                  aspectRatio: '2.6',
+                  height: 'auto',
+                  borderRadius: 5,
                 }}
               />
-            </Stack>
-            <UiTypographySkeleton variant='body3' width='100%' mb={{ xs: 8 }} />
-          </Stack>
-        )}
 
-        <TopUpFormSkeleton />
-      </Stack>
+              <Skeleton width='100%' height={44} sx={{ borderRadius: 5 }} />
+
+              <QuestionItemSkeleton progress={[60, 40]} />
+              <QuestionItemSkeleton progress={[20, 50, 30]} />
+            </Stack>
+          </Stack>
+        </Stack>
+      </RoundedBackground>
+
+      {!isMdDown && (
+        <RoundedBackground sx={{ pl: 13, alignItems: 'flex-start' }}>
+          <Stack
+            component={motion.div}
+            sx={{
+              maxWidth: 368,
+              height: 'fit-content',
+              position: 'sticky',
+              top: 50,
+              width: '100%',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+          >
+            <Stack
+              width='100%'
+              spacing={6}
+              divider={<Divider orientation='horizontal' flexItem />}
+              sx={{
+                textAlign: 'center',
+                alignItems: 'center',
+                marginBottom: 3,
+              }}
+            >
+              <QrCodePanelSkeleton />
+              <Stack spacing={6} width='100%'>
+                <VotesLeftProgressSkeleton />
+                <Skeleton height={48} sx={{ borderRadius: 10 }} />
+              </Stack>
+              <PollDetailsSkeleton />
+            </Stack>
+          </Stack>
+        </RoundedBackground>
+      )}
     </Box>
   )
 }
 
-function VoteBlockSkeleton() {
-  return <Skeleton height={84} sx={{ mb: 1, borderRadius: 6 }} />
-}
-
-function QuestionItemSkeleton() {
+function VotesLeftProgressSkeleton() {
   const { palette } = useTheme()
-
   return (
-    <Stack
-      component={Paper}
-      padding={0}
-      border={`1px solid ${palette.action.active}`}
-      boxShadow='0px 16px 16px 0px rgba(58, 58, 58, 0.05), 0px 4px 4px 0px rgba(58, 58, 58, 0.05),0px 2px 2px 0px rgba(58, 58, 58, 0.05),0px 1px 1px 0px rgba(58, 58, 58, 0.05),0px 0px 0px 0.33px rgba(58, 58, 58, 0.05)'
-    >
-      <Stack spacing={2} p={{ xs: 1, md: 6 }}>
-        <UiTypographySkeleton variant='caption3' width={80} />
-        <UiTypographySkeleton variant='h5' width={150} />
-        <Stack spacing={2} mt={3}>
-          <Skeleton width='100%' sx={{ borderRadius: 100, height: 40 }} />
-          <Skeleton width='100%' sx={{ borderRadius: 100, height: 40 }} />
-        </Stack>
+    <Stack width='100%' spacing={2}>
+      <Stack direction='row' justifyContent='space-between'>
+        <UiTypographySkeleton width={60} variant='body4' />
+        <UiTypographySkeleton width={100} variant='subtitle6' />
       </Stack>
-      <Divider sx={{ my: { xs: 4, md: 0 } }} />
-      <Stack p={{ xs: 1, md: 6 }}>
-        <UiTypographySkeleton width={50} variant='buttonSmall' />
+      <Stack
+        bgcolor={palette.action.active}
+        width='100%'
+        sx={{ borderRadius: 100, overflow: 'hidden' }}
+      >
+        <Skeleton width='80%' height={12} />
       </Stack>
     </Stack>
   )
 }
 
-function VoteDetailsRowSkeleton() {
+function PollDetailsSkeleton() {
   return (
-    <Stack direction='row' justifyContent='space-between'>
-      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='40%' />
-      <UiTypographySkeleton variant='body3' typography={{ xs: 'body4', md: 'body3' }} width='20%' />
-    </Stack>
-  )
-}
-
-function VoteDetailsSkeleton() {
-  return (
-    <Stack spacing={2}>
+    <Stack width='100%' spacing={4}>
       {Array.from({ length: 4 }).map((_, index) => (
-        <VoteDetailsRowSkeleton key={index} />
+        <Stack key={index} direction='row' justifyContent='space-between'>
+          <UiTypographySkeleton variant='body4' width={80} />
+          <UiTypographySkeleton variant='subtitle6' width={115} />
+        </Stack>
       ))}
     </Stack>
   )
 }
 
-function TopUpFormSkeleton() {
+function QuestionItemSkeleton({ progress }: { progress: number[] }) {
+  const { palette } = useTheme()
+
   return (
-    <Stack spacing={4} width={300} alignItems='center'>
-      <Skeleton variant='rectangular' width='100%' height={48} sx={{ borderRadius: 2 }} />
-      <Skeleton variant='rectangular' width='100%' height={48} sx={{ borderRadius: 12 }} />
+    <Stack bgcolor={palette.action.active} borderRadius={5}>
+      <Stack spacing={2} p={{ xs: 3, md: 6 }}>
+        <UiTypographySkeleton width={{ xs: 250, md: 500 }} variant='body3' />
+
+        <Stack justifyContent='flex-start' mt={3}>
+          <PollResultSkeleton progress={progress} />
+        </Stack>
+      </Stack>
+    </Stack>
+  )
+}
+
+function PollResultSkeleton({ progress }: { progress: number[] }) {
+  const { palette } = useTheme()
+  return (
+    <Stack
+      divider={<Divider flexItem orientation='horizontal' />}
+      sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
+    >
+      {progress.map((item, index) => (
+        <Skeleton key={index} height={56} width={`${item}%`} />
+      ))}
     </Stack>
   )
 }

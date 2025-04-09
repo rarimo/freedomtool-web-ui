@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { ErrorView, LazyImage, RoundedBackground } from '@/common'
 import AbstractBackground from '@/common/AbstractBackground'
 import DarkGradient from '@/common/DarkGradient'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useRouteTitleContext } from '@/contexts'
 import { Icons } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
@@ -51,18 +52,16 @@ export default function Poll() {
   return (
     <AnimatePresence mode='popLayout'>
       {isLoading && !isError && (
-        <RoundedBackground pt={12.5}>
-          <Stack
-            component={motion.div}
-            key='loading'
-            initial={{ opacity: 0.2 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <PollSkeleton />
-          </Stack>
-        </RoundedBackground>
+        <Stack
+          component={motion.div}
+          key='loading'
+          initial={{ opacity: 0.2 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <PollSkeleton />
+        </Stack>
       )}
 
       {isError && (
@@ -94,6 +93,7 @@ export default function Poll() {
               display: 'grid',
               gap: 0.5,
               gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
+              height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
             }}
           >
             <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
@@ -105,7 +105,7 @@ export default function Poll() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <Stack sx={{ height: 'fit-content', mb: { md: 15 } }} spacing={5}>
+                <Stack sx={{ height: 'fit-content' }} spacing={5}>
                   <Stack spacing={3}>
                     <Stack
                       sx={{

@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
 
+import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
 import { InfiniteList } from '@/common'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { getProposals } from '@/helpers'
@@ -18,15 +19,21 @@ export default function ActivePolls() {
     loadingState: pollsLoadingState,
     reload: reloadPolls,
     loadNext,
-  } = useMultiPageLoading(() =>
-    getProposals({
-      query: {
-        filter: {
-          creator: address,
-          status: [PollStatus.Started, PollStatus.Waiting].join(','),
+  } = useMultiPageLoading(
+    () =>
+      getProposals({
+        query: {
+          filter: {
+            creator: address,
+            status: [PollStatus.Started, PollStatus.Waiting].join(','),
+          },
         },
-      },
-    }),
+      }),
+    {
+      loadOnMount: Boolean(address),
+      loadArgs: [address],
+      pageLimit: DEFAULT_PAGE_LIMIT,
+    },
   )
 
   return (
