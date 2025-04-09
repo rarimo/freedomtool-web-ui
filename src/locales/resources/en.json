@@ -139,12 +139,12 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "{{width}}x{{height}}px, png or jpeg, webp, max 5mb",
+    "image-description": "{{width}}x{{height}}px, png or jpeg, webp",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
       "total": "Total:",
-      "estimate-error": "Error estimating gas"
+      "estimate-error": "Estimate gas error"
     }
   },
   "ui-date-picker": {
@@ -261,8 +261,12 @@
     },
     "criteria": "Criteria:",
     "top-up-form": {
-      "add-funds": "Add funds"
-    }
+      "add-funds": "Add funds",
+      "total": "Fee:",
+      "estimate-error": "Estimate gas error"
+    },
+    "tab-1-lbl": "Result",
+    "tab-2-lbl": "Details"
   },
   "format": {
     "sex": {

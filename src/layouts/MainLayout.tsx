@@ -28,6 +28,9 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           sx={{
             pt: { xs: MOBILE_HEADER_HEIGHT / 4, md: DESKTOP_HEADER_HEIGHT / 4 },
             transition: Transitions.Default,
+            [breakpoints.down('md')]: {
+              px: 0,
+            },
           }}
         >
           <AppHeader />

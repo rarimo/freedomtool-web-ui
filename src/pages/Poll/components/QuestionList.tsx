@@ -56,8 +56,8 @@ function QuestionItem({
   }, [voteResults])
 
   return (
-    <Stack padding={0} bgcolor={palette.action.active} borderRadius={5}>
-      <Stack spacing={2} p={{ xs: 3, md: 6 }}>
+    <Stack bgcolor={palette.action.active} borderRadius={5}>
+      <Stack spacing={2} p={{ xs: 4, md: 6 }}>
         <Typography
           title={title}
           color={palette.text.primary}
@@ -71,7 +71,7 @@ function QuestionItem({
 
         <Stack
           justifyContent='flex-start'
-          mt={3}
+          mt={{ xs: 2, md: 3 }}
           divider={<Divider flexItem />}
           sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
         >
@@ -116,10 +116,16 @@ function LinearProgressWithLabel({
           transform: 'translateY(-50%)',
         }}
       >
-        <Typography variant='subtitle5'>
+        <Typography
+          variant='subtitle5'
+          color={isLeading ? palette.common.black : palette.text.primary}
+        >
           {t('formats.percent', { value: progress.toFixed(2) })}
         </Typography>
-        <Typography variant='body5' color={palette.text.secondary}>
+        <Typography
+          variant='body5'
+          color={isLeading ? palette.common.black : palette.text.secondary}
+        >
           {t('poll.participants', { count })}
         </Typography>
       </Stack>
@@ -128,10 +134,10 @@ function LinearProgressWithLabel({
           maxWidth={{ xs: 150, md: 280 }}
           noWrap
           textOverflow='ellipsis'
-          variant='body4'
+          variant={isLeading ? 'subtitle5' : 'body4'}
           sx={{
             position: 'absolute',
-            color: palette.text.primary,
+            color: isLeading ? palette.common.black : palette.text.primary,
             zIndex: 1,
             left: 15,
             top: '50%',

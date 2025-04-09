@@ -1,27 +1,39 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
-import { parseUnits } from 'ethers'
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import { formatUnits, parseUnits } from 'ethers'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
+import { DotsLoader } from '@/common'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useProposalState } from '@/hooks'
+import { useLoading, useProposalState } from '@/hooks'
 import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
 import { UiCheckVoteInput, UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
-import { topUpDefaultValues, TopUpSchema, topUpSchema } from './topUpFormSchema'
+import { topUpDefaultValues, TopUpSchema, topUpSchema } from '../topUpFormSchema'
 
 export default function TopUpForm() {
   const { t } = useTranslation()
   const { id } = useParams()
+  const { breakpoints } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
-  const { balance } = useWeb3Context()
+  const { balance, rawProviderSigner } = useWeb3Context()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
 
   const { addFundsToProposal } = useProposalState()
 
@@ -32,6 +44,7 @@ export default function TopUpForm() {
     getFieldState,
     setValue,
     clearErrors,
+    watch,
     formState: { isSubmitting },
     reset,
   } = useForm<TopUpSchema>({
@@ -39,7 +52,33 @@ export default function TopUpForm() {
     mode: 'onChange',
     resolver: zodResolver(topUpSchema),
   })
+  const { calculateAddFundsToProposalGasLimit } = useProposalState()
   const { palette, typography } = useTheme()
+
+  const amount = watch('amount')
+
+  const {
+    data: estimatedGas,
+    isLoading: isEstimating,
+    isLoadingError: isEstimatingError,
+  } = useLoading(
+    null,
+    async () => {
+      if (!id) return
+      const gasPrice = await rawProviderSigner?.provider.getFeeData()
+      const gasLimit = await calculateAddFundsToProposalGasLimit(
+        BigInt(id),
+        parseUnits(amount || '0', 18).toString(),
+      )
+
+      return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
+    },
+
+    {
+      loadOnMount: Boolean(amount),
+      loadArgs: [amount],
+    },
+  )
 
   const { isCalculating, updateFromAmount, updateFromVotes } = useProposalBalanceForm<
     TopUpSchema,
@@ -71,11 +110,40 @@ export default function TopUpForm() {
 
   const isDisabled = isSubmitting || isCalculating
 
+  const total = (parseUnits(amount || '0', 18) + parseUnits(estimatedGas || '0', 18)).toString()
+
+  const renderGasEstimation = () => {
+    if (!isEstimatingError && !isEstimating && !estimatedGas) return null
+
+    return (
+      <Stack
+        width='100%'
+        justifyContent='space-between'
+        spacing={1}
+        color={palette.text.secondary}
+        direction='row'
+        alignItems='center'
+      >
+        <Typography variant='body4'>{t('poll.top-up-form.total')}</Typography>
+        {isEstimatingError ? (
+          <Typography color={palette.error.dark}>{t('poll.top-up-form.estimate-error')}</Typography>
+        ) : isEstimating ? (
+          <DotsLoader />
+        ) : (
+          <Typography color={palette.text.primary} variant='subtitle6'>
+            {formatUnits(total, 18)} {NATIVE_CURRENCY}
+          </Typography>
+        )}
+      </Stack>
+    )
+  }
+
   return (
     <>
       <Button
         fullWidth
         sx={{
+          color: palette.text.primary,
           background: palette.action.active,
           '&:hover, &:focus': {
             background: palette.action.hover,
@@ -89,8 +157,8 @@ export default function TopUpForm() {
       >
         {t('poll.top-up-form.add-funds')}
       </Button>
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        <UiDialogTitle onClose={() => setIsOpen(false)}>Title</UiDialogTitle>
+      <Dialog fullWidth={isMdDown} open={isOpen} onClose={() => setIsOpen(false)}>
+        <UiDialogTitle onClose={() => setIsOpen(false)}>Add Funds</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: '100%', md: 465 } }}>
           <Stack spacing={6} component='form' onSubmit={handleSubmit(submit)}>
             <Box
@@ -114,6 +182,17 @@ export default function TopUpForm() {
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
                     maxValue={balance}
+                    sx={{
+                      height: 112,
+                      input: {
+                        position: 'absolute',
+                        width: { md: '90%' },
+                        py: 0,
+                        pl: 1,
+                        top: 50,
+                      },
+                    }}
+                    endAdornmentSx={{ right: 20, bottom: 0 }}
                     onChange={e => {
                       field.onChange(e)
                       updateFromAmount()
@@ -121,6 +200,30 @@ export default function TopUpForm() {
                   />
                 )}
               />
+
+              <Stack
+                alignItems='center'
+                justifyContent='center'
+                sx={{
+                  position: 'absolute',
+                  color: palette.text.secondary,
+                  background: palette.background.paper,
+                  p: 4,
+                  borderRadius: '100%',
+                  width: 42,
+                  height: 42,
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  border: `2px solid ${palette.action.active}`,
+                }}
+              >
+                {isCalculating ? (
+                  <DotsLoader size={1} />
+                ) : (
+                  <UiIcon size={5} name={Icons.EqualLine} />
+                )}
+              </Stack>
 
               <Controller
                 name='votesCount'
@@ -132,7 +235,7 @@ export default function TopUpForm() {
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
                     sx={{
-                      height: 118,
+                      height: 108,
                       '.MuiTextField-root': {
                         border: 'none',
                       },
@@ -183,9 +286,7 @@ export default function TopUpForm() {
               />
             </Box>
             <Stack justifyContent='space-between' direction='row'>
-              <Typography color={palette.text.secondary}>Total fee:</Typography>
-              {/* TODO: Add gas estimate */}
-              <Typography color={palette.text.secondary}>0.0007 {NATIVE_CURRENCY}</Typography>
+              {renderGasEstimation()}
             </Stack>
             <Divider />
             <Button disabled={isSubmitting} type='submit'>

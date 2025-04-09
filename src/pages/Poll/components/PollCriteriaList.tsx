@@ -60,7 +60,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
   return (
     <>
       <Stack direction='row' alignItems='center' justifyContent='space-between' spacing={2}>
-        <Typography variant='body3' color={palette.text.secondary}>
+        <Typography variant='body4' color={palette.text.secondary}>
           {t('poll.criteria')}
         </Typography>
         {hasNationalitiesList ? (
@@ -78,7 +78,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
         )}
       </Stack>
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <UiDialogTitle>{t('poll.criteria')}</UiDialogTitle>
+        <UiDialogTitle onClose={() => setIsModalOpen(false)}>{t('poll.criteria')}</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
           {hasCriteriaList && (
             <>

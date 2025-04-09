@@ -14,7 +14,7 @@ import {
   parseProposalFromContract,
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { IPollDetails } from '@/pages/Vote/components/PollDetails'
+import { IPollDetails } from '@/pages/Poll/components/PollDetails'
 import { ProposalMetadata } from '@/types'
 
 export function useProposal(id?: string) {

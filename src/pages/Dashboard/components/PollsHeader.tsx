@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
 import PollsTabs, { PollTabProps } from '@/pages/Dashboard/components/PollsTabs'
@@ -56,7 +57,6 @@ export default function PollsHeader() {
   return (
     <Stack
       px={4}
-      pt={5}
       width='100%'
       bgcolor={palette.background.light}
       sx={{
@@ -64,16 +64,16 @@ export default function PollsHeader() {
         borderBottomRightRadius: spacing(4),
       }}
     >
-      <Stack width='100%' maxWidth={1136} mx='auto'>
+      <Stack width='100%' maxWidth={1141} mx='auto'>
         <Stack
+          height={DESKTOP_HEADER_HEIGHT}
           direction='row'
           alignItems='center'
           justifyContent='space-between'
           width='100%'
-          mb={5}
         >
           <AppLogo />
-          <Stack direction='row' spacing={3} alignItems='center' minHeight={isMdUp ? 52 : 44}>
+          <Stack direction='row' spacing={3} alignItems='center'>
             {isMdUp ? (
               <Button
                 component={NavLink}

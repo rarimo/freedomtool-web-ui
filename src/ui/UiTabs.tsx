@@ -1,4 +1,4 @@
-import { Box, Stack, StackProps, Tab, Tabs } from '@mui/material'
+import { Box, Stack, StackProps, Tab, Tabs, useTheme } from '@mui/material'
 import { ReactNode, SyntheticEvent, useCallback, useState } from 'react'
 
 import { Transitions } from '@/theme/constants'
@@ -43,6 +43,7 @@ function CustomTabPanel({
 
 export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
   const [currentTab, setCurrentTab] = useState(0)
+  const { palette } = useTheme()
 
   const handleChange = useCallback((event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue)
@@ -50,42 +51,53 @@ export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
 
   return (
     <Stack {...rest}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={currentTab}
-          textColor='inherit'
-          indicatorColor='primary'
-          onChange={handleChange}
-          aria-label={ariaLabel}
-          sx={{
-            '& .MuiTabs-indicator': {
-              background: ({ palette }) => palette.text.primary,
-              display: 'flex',
+      <Tabs
+        value={currentTab}
+        textColor='inherit'
+        indicatorColor='primary'
+        onChange={handleChange}
+        aria-label={ariaLabel}
+        sx={{
+          background: palette.action.active,
+          alignItems: 'center',
+          px: 0.5,
+          py: 0,
+          width: '100%',
+          height: 40,
+          minHeight: 40,
+          borderRadius: 100,
+          '& .MuiTabs-indicator': {
+            background: ({ palette }) => palette.background.paper,
+            borderRadius: 100,
+            display: 'flex',
+            justifyContent: 'center',
+            height: '100%',
+          },
+        }}
+      >
+        {tabs.map(({ label }, idx) => (
+          <Tab
+            key={idx}
+            label={label}
+            {...a11yProps(idx)}
+            sx={{
+              minWidth: 'unset',
+              alignItems: 'center',
               justifyContent: 'center',
-              height: '1px',
-              pb: 0,
-            },
-          }}
-        >
-          {tabs.map(({ label }, idx) => (
-            <Tab
-              key={idx}
-              label={label}
-              {...a11yProps(idx)}
-              sx={{
-                minWidth: 'unset',
-                paddingInline: 0,
-                paddingBottom: 2,
-                justifyContent: 'flex-end',
-                transition: Transitions.Default,
-                '&[aria-selected="false"]:hover': {
-                  opacity: 1,
-                },
-              }}
-            />
-          ))}
-        </Tabs>
-      </Box>
+              py: 2,
+              flexGrow: 1,
+              zIndex: 1,
+              width: 'max-content',
+              minHeight: 'unset',
+              height: 36,
+              transition: Transitions.Default,
+              '&[aria-selected="false"]:hover': {
+                opacity: 1,
+              },
+            }}
+          />
+        ))}
+      </Tabs>
 
       {tabs.map(({ content }, idx) => (
         <CustomTabPanel key={idx} value={currentTab} index={idx}>

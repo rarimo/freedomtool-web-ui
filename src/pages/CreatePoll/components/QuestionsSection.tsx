@@ -40,8 +40,10 @@ export default function QuestionsSection() {
   })
 
   return (
-    <Stack>
-      <Stack spacing={6}>
+    <Stack
+      pb={{ xs: questionFields.length > 1 || questionFields[0].options.length > 3 ? 20 : 0, md: 0 }}
+    >
+      <Stack spacing={{ xs: 4, md: 6 }}>
         {questionFields.map((question, index) => {
           return (
             <QuestionForm

@@ -27,7 +27,7 @@ export default function AuthBlock() {
         }}
       />
       <Typography variant='h3'>{t('auth-block.title')}</Typography>
-      <Typography variant='body3' color={palette.text.secondary}>
+      <Typography variant='body3' textAlign='center' color={palette.text.secondary}>
         {t('auth-block.description')}
       </Typography>
       <Button

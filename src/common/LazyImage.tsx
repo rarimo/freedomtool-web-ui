@@ -3,14 +3,22 @@ import { useState } from 'react'
 
 import { Transitions } from '@/theme/constants'
 
-type LazyImageProps = {
+interface LazyImageProps extends BoxProps<'img'> {
   src: string
   alt: string
   width: number | string
   height: number | string
-} & BoxProps<'img'>
+  imageProps?: BoxProps<'img'>
+}
 
-export default function LazyImage({ src, alt, width, height, ...rest }: LazyImageProps) {
+export default function LazyImage({
+  imageProps,
+  src,
+  alt,
+  width,
+  height,
+  ...rest
+}: LazyImageProps) {
   const [isLoading, setIsLoading] = useState(true)
 
   return (
@@ -35,7 +43,9 @@ export default function LazyImage({ src, alt, width, height, ...rest }: LazyImag
           objectFit: 'cover',
           width: '100%',
           height: '100%',
+          ...imageProps?.sx,
         }}
+        {...imageProps}
         onLoad={() => setIsLoading(false)}
       />
       <Fade in={isLoading}>

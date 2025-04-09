@@ -52,7 +52,6 @@ export default function VoteParamsResult() {
       })
       return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
     },
-
     {
       loadOnMount: Boolean(amount),
       loadArgs: [amount],
@@ -66,7 +65,7 @@ export default function VoteParamsResult() {
       <Stack spacing={1} color={palette.text.secondary} direction='row' alignItems='center'>
         <Typography variant='body4'>{t('create-poll.result.fee-lbl')}</Typography>
         {isEstimatingError ? (
-          <Typography color={palette.error.dark}>
+          <Typography variant='subtitle6' color={palette.error.dark}>
             {t('create-poll.result.estimate-error')}
           </Typography>
         ) : isEstimating ? (
@@ -83,13 +82,12 @@ export default function VoteParamsResult() {
   const total = (parseUnits(amount || '0', 18) + parseUnits(estimatedGas || '0', 18)).toString()
 
   return (
-    <Stack minWidth={250} alignItems='flex-end'>
+    <Stack minWidth={250} alignItems='flex-end' mt={{ xs: 6, md: 0 }} pb={{ xs: 20, md: 0 }}>
       {renderGasEstimation()}
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>{t('create-poll.result.total')}</Typography>
         <Typography variant='subtitle4'>
-          {formatUnits(total, 18)}
-          {NATIVE_CURRENCY}
+          {formatUnits(total, 18)} {NATIVE_CURRENCY}
         </Typography>
       </Stack>
     </Stack>

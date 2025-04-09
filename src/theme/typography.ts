@@ -114,7 +114,7 @@ export const typography: ExtendedTypographyOptions = {
   },
   body3: {
     fontWeight: FontWeight.Regular,
-    fontSize: toRem(14),
+    fontSize: toRem(16),
     lineHeight: toRem(20),
   },
   body4: {

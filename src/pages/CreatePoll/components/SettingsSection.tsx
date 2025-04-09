@@ -3,6 +3,7 @@ import { memo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { DotsLoader } from '@/common'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
@@ -112,7 +113,7 @@ export default function SettingsSection() {
                 border: `2px solid ${palette.action.active}`,
               }}
             >
-              <UiIcon size={5} name={Icons.EqualLine} />
+              {isCalculating ? <DotsLoader size={1} /> : <UiIcon size={5} name={Icons.EqualLine} />}
             </Stack>
             <Controller
               name='settings.votesCount'

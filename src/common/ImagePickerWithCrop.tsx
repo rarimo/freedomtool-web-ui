@@ -249,7 +249,7 @@ function CropperDialog({ image, isOpen, onClose, onSave }: CropperDialogProps) {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <UiDialogTitle onClose={onClose}>{t('image-picker.title')}</UiDialogTitle>
-      <UiDialogContent width={400} height={400}>
+      <UiDialogContent width={{ md: 400 }} height={400}>
         <Stack spacing={5}>
           <Stack sx={{ borderRadius: 2, overflow: 'hidden' }}>
             <FixedCropper

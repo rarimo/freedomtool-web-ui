@@ -20,75 +20,78 @@ import { uiStore } from '@/store'
 import { UiIcon } from '@/ui'
 
 import AppLogo from './AppLogo'
+import AuthGuard from './AuthGuard'
 export default function AppHeader(props: StackProps) {
   const { palette, zIndex } = useTheme()
-  const { disconnect } = useWeb3Context()
-  const { address } = useWeb3Context()
-  const { handleSignIn, isLoading } = useSignIn()
+  const { disconnect, address } = useWeb3Context()
+  const { handleSignIn, isLoading, authGuardRef } = useSignIn()
 
   return (
-    <Stack
-      {...props}
-      bgcolor={palette.background.light}
-      component='header'
-      sx={{
-        position: 'fixed',
-        py: { xs: 0, md: 5 },
-        px: { xs: 5, lg: 0 },
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: zIndex.appBar,
-        flexDirection: { xs: 'column', md: 'row' },
-        alignItems: 'center',
-        width: 1,
-
-        ...props.sx,
-      }}
-    >
+    <>
       <Stack
+        {...props}
+        bgcolor={palette.background.light}
+        component='header'
         sx={{
-          flexDirection: { xs: 'row' },
-          maxWidth: { md: 1192 },
-          py: { xs: 4, lg: 0 },
-          justifyContent: 'space-between',
+          position: 'fixed',
+          py: { xs: 0, md: 5 },
+          px: { xs: 5, lg: 0 },
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: zIndex.appBar,
+          flexDirection: { xs: 'column', md: 'row' },
           alignItems: 'center',
           width: 1,
-          mx: 'auto',
+
+          ...props.sx,
         }}
       >
-        <AppLogo />
-
         <Stack
-          direction='row'
-          alignItems='center'
-          spacing={4}
-          divider={<Divider flexItem orientation='vertical' />}
+          sx={{
+            flexDirection: { xs: 'row' },
+            maxWidth: { md: 1141 },
+            py: { xs: 2, md: 0, lg: 0 },
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: 1,
+            mx: 'auto',
+          }}
         >
-          <ThemeButton />
-          {address ? (
-            <Stack color={palette.text.secondary} direction='row' alignItems='center' spacing={2}>
-              <Typography title={address} variant='buttonSmall'>
-                {formatAddress(address)}
-              </Typography>
-              <Tooltip title={t('app-header.disconnect-tooltip')}>
-                <IconButton
-                  size='small'
-                  sx={{ px: 1, color: palette.text.secondary }}
-                  onClick={() => disconnect()}
-                >
-                  <UiIcon name={Icons.LogoutCircleRLine} size={4} />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          ) : (
-            <Button size='small' sx={{ height: 34 }} disabled={isLoading} onClick={handleSignIn}>
-              {t('app-header.connect-btn')}
-            </Button>
-          )}
+          <AppLogo />
+
+          <Stack
+            direction='row'
+            alignItems='center'
+            spacing={4}
+            divider={<Divider flexItem orientation='vertical' />}
+          >
+            <ThemeButton />
+            {address ? (
+              <Stack color={palette.text.secondary} direction='row' alignItems='center' spacing={2}>
+                <Typography title={address} variant='buttonSmall'>
+                  {formatAddress(address)}
+                </Typography>
+                <Tooltip title={t('app-header.disconnect-tooltip')}>
+                  <IconButton
+                    size='small'
+                    sx={{ px: 1, color: palette.text.secondary }}
+                    onClick={() => disconnect()}
+                  >
+                    <UiIcon name={Icons.LogoutCircleRLine} size={4} />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            ) : (
+              <Button size='small' sx={{ height: 34 }} disabled={isLoading} onClick={handleSignIn}>
+                {t('app-header.connect-btn')}
+              </Button>
+            )}
+          </Stack>
         </Stack>
       </Stack>
-    </Stack>
+      <AuthGuard ref={authGuardRef} />
+    </>
   )
 }
 

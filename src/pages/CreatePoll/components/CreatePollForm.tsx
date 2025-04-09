@@ -7,8 +7,9 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { RoundedBackground } from '@/common'
 import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
-import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
 import { BusEvents, RoutePaths } from '@/enums'
 import {
@@ -32,7 +33,6 @@ import { SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
-import FormPartBackground from './FormPartBackground'
 import QuestionsSection from './QuestionsSection'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
@@ -42,7 +42,7 @@ nationalities satisfies Nationality[]
 export default function CreatePollForm() {
   const { t } = useTranslation()
   const { breakpoints } = useTheme()
-  const isMdUp = useMediaQuery(breakpoints.up('md'))
+  const isLgUp = useMediaQuery(breakpoints.up('lg'))
 
   const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(80)
   const { onScrollHandler: questionScrollHandler, shadowScrollStyle: questionScrollStyle } =
@@ -159,25 +159,32 @@ export default function CreatePollForm() {
 
   return (
     <FormProvider {...form}>
-      <Stack component='form' width='100%' onSubmit={handleSubmit(submit)}>
+      <Stack
+        component='form'
+        width='100%'
+        onSubmit={handleSubmit(submit)}
+        sx={{ overflowX: 'hidden' }}
+      >
         <Box
           sx={{
             display: 'grid',
             gap: 0.5,
-            gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
+            gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
             width: '100%',
-            height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px - 2px)`,
+            height: { md: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px - 2px)` },
             position: 'relative',
           }}
         >
-          <FormPartBackground>
+          <RoundedBackground
+            sx={{ alignItems: 'flex-end', pr: { lg: 24.5 }, [breakpoints.down('md')]: { p: 4 } }}
+          >
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
-          </FormPartBackground>
+          </RoundedBackground>
 
-          {isMdUp && (
+          {isLgUp && (
             <>
               {isQuestionPreview ? (
-                <FormPartBackground>
+                <RoundedBackground>
                   <Stack
                     key='question'
                     height={500}
@@ -189,13 +196,13 @@ export default function CreatePollForm() {
                     }}
                     onScroll={questionScrollHandler}
                   >
-                    <PollQuestionPreview question={questions[0]} />
+                    <PollQuestionPreview question={questions[questions.length - 1]} />
                   </Stack>
-                </FormPartBackground>
+                </RoundedBackground>
               ) : (
-                <FormPartBackground>
+                <RoundedBackground>
                   <Stack
-                    height={570}
+                    height={500}
                     sx={{
                       overflow: 'auto',
                       ...shadowScrollStyle,
@@ -205,9 +212,9 @@ export default function CreatePollForm() {
                     }}
                     onScroll={onScrollHandler}
                   >
-                    <PollPreview {...details} {...criteria} {...questions} />
+                    <PollPreview {...details} {...criteria} />
                   </Stack>
-                </FormPartBackground>
+                </RoundedBackground>
               )}
             </>
           )}
