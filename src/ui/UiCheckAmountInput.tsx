@@ -1,10 +1,12 @@
 import { BN, DECIMALS, isFixedPointString } from '@distributedlab/tools'
 import {
   Button,
+  ButtonProps,
   Divider,
   Stack,
   TextFieldProps,
   Typography,
+  TypographyProps,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
@@ -18,13 +20,18 @@ import { formatAmount, formatInput, trimLeadingZeroes } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
-type AmountInputProps = { value: string; maxValue: string } & Omit<TextFieldProps, 'value'> &
+type AmountInputProps = {
+  value: string
+  maxValue: string
+  endAdornmentSx?: ButtonProps['sx']
+  startAdornmentSx?: TypographyProps['sx']
+} & Omit<TextFieldProps, 'value'> &
   Omit<ControllerRenderProps, 'value'>
 
 const CHARACTER_LIMIT_FOR_SCALING = 12
 
 const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
-  ({ onChange, error, disabled, value, maxValue }, ref) => {
+  ({ onChange, error, disabled, value, maxValue, startAdornmentSx, endAdornmentSx, sx }, ref) => {
     const { t } = useTranslation()
     const { palette, typography, breakpoints } = useTheme()
     const isMdUp = useMediaQuery(breakpoints.up('md'))
@@ -80,9 +87,10 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
               borderRadius: 4,
             },
           '.MuiInputBase-input': {
-            transform: value.length > CHARACTER_LIMIT_FOR_SCALING ? 'scale(0.8)' : 'scale(1)',
-            transformOrigin: 'left center',
-            transition: 'transform 0.3s ease-in-out',
+            fontSize: value.length > CHARACTER_LIMIT_FOR_SCALING ? '1.6rem' : '2rem',
+            transition: `font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)`,
+            transitionDelay: value.length < CHARACTER_LIMIT_FOR_SCALING ? '0s' : '0.05s',
+            willChange: 'font-size',
           },
           '.MuiOutlinedInput-notchedOutline': {
             border: 'none',
@@ -93,16 +101,20 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
             py: 0,
             pl: 1,
           },
+          ...sx,
         }}
         InputProps={{
           startAdornment: (
-            <Typography sx={{ position: 'absolute', top: 20, left: 20 }} variant='overline2'>
+            <Typography
+              sx={{ position: 'absolute', top: 20, left: 20, ...startAdornmentSx }}
+              variant='overline2'
+            >
               {NATIVE_CURRENCY}
             </Typography>
           ),
           endAdornment: (
             <Button
-              sx={{ p: 0, position: 'absolute', bottom: 0 }}
+              sx={{ p: 0, position: 'absolute', bottom: 0, ...endAdornmentSx }}
               size='small'
               variant='text'
               onClick={() => onChange(Number(formatUnits(maxValue, 18)).toFixed(4))}

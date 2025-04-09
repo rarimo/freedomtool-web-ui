@@ -144,7 +144,7 @@
     "result": {
       "fee-lbl": "Fee:",
       "total": "Total:",
-      "estimate-error": "Error estimating gas"
+      "estimate-error": "Estimate gas error"
     }
   },
   "ui-date-picker": {
@@ -263,7 +263,7 @@
     "top-up-form": {
       "add-funds": "Add funds",
       "total": "Fee:",
-      "estimate-error": "Error estimate gas"
+      "estimate-error": "Estimate gas error"
     }
   },
   "format": {

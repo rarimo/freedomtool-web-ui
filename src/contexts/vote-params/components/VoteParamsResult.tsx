@@ -65,7 +65,7 @@ export default function VoteParamsResult() {
       <Stack spacing={1} color={palette.text.secondary} direction='row' alignItems='center'>
         <Typography variant='body4'>{t('create-poll.result.fee-lbl')}</Typography>
         {isEstimatingError ? (
-          <Typography color={palette.error.dark}>
+          <Typography variant='subtitle6' color={palette.error.dark}>
             {t('create-poll.result.estimate-error')}
           </Typography>
         ) : isEstimating ? (
@@ -87,8 +87,7 @@ export default function VoteParamsResult() {
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>{t('create-poll.result.total')}</Typography>
         <Typography variant='subtitle4'>
-          {formatUnits(total, 18)}
-          {NATIVE_CURRENCY}
+          {formatUnits(total, 18)} {NATIVE_CURRENCY}
         </Typography>
       </Stack>
     </Stack>

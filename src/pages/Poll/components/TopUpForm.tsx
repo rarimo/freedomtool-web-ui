@@ -1,5 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { formatUnits, parseUnits } from 'ethers'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -21,8 +30,10 @@ import { topUpDefaultValues, TopUpSchema, topUpSchema } from '../topUpFormSchema
 export default function TopUpForm() {
   const { t } = useTranslation()
   const { id } = useParams()
+  const { breakpoints } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const { balance, rawProviderSigner } = useWeb3Context()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
 
   const { addFundsToProposal } = useProposalState()
 
@@ -146,7 +157,7 @@ export default function TopUpForm() {
       >
         {t('poll.top-up-form.add-funds')}
       </Button>
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+      <Dialog fullWidth={isMdDown} open={isOpen} onClose={() => setIsOpen(false)}>
         <UiDialogTitle onClose={() => setIsOpen(false)}>Add Funds</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: '100%', md: 465 } }}>
           <Stack spacing={6} component='form' onSubmit={handleSubmit(submit)}>
@@ -171,6 +182,17 @@ export default function TopUpForm() {
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
                     maxValue={balance}
+                    sx={{
+                      height: 112,
+                      input: {
+                        position: 'absolute',
+                        width: { md: '90%' },
+                        py: 0,
+                        pl: 1,
+                        top: 50,
+                      },
+                    }}
+                    endAdornmentSx={{ right: 20, bottom: 0 }}
                     onChange={e => {
                       field.onChange(e)
                       updateFromAmount()
@@ -178,6 +200,30 @@ export default function TopUpForm() {
                   />
                 )}
               />
+
+              <Stack
+                alignItems='center'
+                justifyContent='center'
+                sx={{
+                  position: 'absolute',
+                  color: palette.text.secondary,
+                  background: palette.background.paper,
+                  p: 4,
+                  borderRadius: '100%',
+                  width: 42,
+                  height: 42,
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  border: `2px solid ${palette.action.active}`,
+                }}
+              >
+                {isCalculating ? (
+                  <DotsLoader size={1} />
+                ) : (
+                  <UiIcon size={5} name={Icons.EqualLine} />
+                )}
+              </Stack>
 
               <Controller
                 name='votesCount'
@@ -189,7 +235,7 @@ export default function TopUpForm() {
                     error={Boolean(fieldState.error)}
                     helperText={fieldState.error?.message}
                     sx={{
-                      height: 118,
+                      height: 108,
                       '.MuiTextField-root': {
                         border: 'none',
                       },

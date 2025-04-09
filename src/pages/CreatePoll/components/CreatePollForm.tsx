@@ -170,13 +170,13 @@ export default function CreatePollForm() {
           sx={{
             display: 'grid',
             gap: 0.5,
-            gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' },
+            gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
             width: '100%',
             height: `calc(100vh - ${isMdUp ? DESKTOP_HEADER_HEIGHT : MOBILE_HEADER_HEIGHT}px - 2px)`,
             position: 'relative',
           }}
         >
-          <RoundedBackground>
+          <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
           </RoundedBackground>
 
@@ -201,7 +201,7 @@ export default function CreatePollForm() {
               ) : (
                 <FormPartBackground>
                   <Stack
-                    height={570}
+                    height={500}
                     sx={{
                       overflow: 'auto',
                       ...shadowScrollStyle,

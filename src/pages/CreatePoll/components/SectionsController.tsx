@@ -40,7 +40,7 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
   }
 
   return (
-    <Stack spacing={10} width={{ lg: 656 }}>
+    <Stack spacing={10} width={{ lg: 656, xl: 720 }}>
       <Stack spacing={2}>
         <Typography variant='body4'>
           {t('create-poll.step-counter', { total: sections.length, current: currentIndex + 1 })}
