@@ -23,6 +23,10 @@ export function formatDateTime(date: TimeDate) {
   return time(date).format('MM/DD/YYYY HH:mm')
 }
 
+export function formatUtcDateTime(date: TimeDate) {
+  return formatDateTime(time(date).utc())
+}
+
 export function formatDateDM(date: TimeDate) {
   return time(date).format('D MMM')
 }
@@ -133,7 +137,7 @@ export function formatCroppedString(value: string, length = 6) {
 export function formatAmount(
   amount: BnLike,
   decimalsOrConfig?: BnConfigLike,
-  formatConfig: BnFormatConfig = { decimals: 0 },
+  formatConfig: BnFormatConfig = { decimals: 4 },
 ) {
   try {
     const decimals =

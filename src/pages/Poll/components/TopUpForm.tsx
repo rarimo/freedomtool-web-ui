@@ -290,7 +290,7 @@ export default function TopUpForm() {
             </Stack>
             <Divider />
             <Button disabled={isSubmitting} type='submit'>
-              {t('vote.form.top-up-button')}
+              {t('poll.top-up-btn')}
             </Button>
           </Stack>
         </UiDialogContent>

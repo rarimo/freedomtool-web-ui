@@ -96,16 +96,16 @@
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
     "add-question-btn": "Add a question",
-    "submit-btn": "Submit new poll",
-    "add-option-lbl": "Add an option",
+    "submit-btn": "Publish",
+    "add-option-lbl": "Add an answer",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Answer #{{order}}",
-    "proposal-title-lbl": "Vote title",
+    "proposal-title-lbl": "Title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Participants",
     "amount-lbl": "Available",
     "success-msg": "You have successfully created a poll!",
-    "proposal-title-plh": "Approve this change?",
+    "proposal-title-plh": "Enter a title",
     "proposal-description-plh": "This poll outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
@@ -118,7 +118,7 @@
     "sex-lbl": "Sex",
     "sex-male": "Male",
     "sex-female": "Female",
-    "sex-any": "Any",
+    "sex-any": "Male & Female",
     "age-lbl": "Age",
     "titles": {
       "details": "Poll details",
@@ -126,12 +126,12 @@
       "questions": "Questions",
       "settings": "Settings"
     },
-    "add-criteria": "Add other criteria",
+    "add-criteria": "Add criteria",
     "show-poll-option-title-1": "Real time",
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
-    "show-poll-title": "Show results:",
+    "show-results-title": "Show poll results:",
     "vote-params-error": "Invalid vote parameters",
     "max-btn": "MAX",
     "budget-title": "Budget & Participants:",
@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "{{width}}x{{height}}px, png or jpeg, webp",
+    "image-description": "{{width}}x{{height}}px, PNG, JPEG or WEBP",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
@@ -151,44 +151,9 @@
     "invalid-format-error": "Invalid date format",
     "invalid-date-error": "Invalid date"
   },
-  "vote-item": {
-    "no-title": "No title",
-    "no-description": "No description",
-    "start-date": "Start date: {{date}}",
-    "end-date": "End date: {{date}}",
-    "error-title": "Error occurred",
-    "error-description": "Error while loading this poll"
-  },
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
     "description": "Please confirm your signature to complete the operation. This is required to ensure the security of the transaction."
-  },
-  "vote": {
-    "status": "Status:",
-    "start-date": "Start date:",
-    "end-date": "End date:",
-    "qr-code-subtitle": "Scan to participate",
-    "amount-btn": "Top up balance",
-    "success-msg": "You have successfully added funds to your voting contract",
-    "remaining-votes": "Participants",
-    "votes-count_one": "{{count}} vote",
-    "votes-count_other": "{{count}} votes",
-    "form": {
-      "votes-count-lbl": "Votes count",
-      "success-msg": "Voting successfully topped up!",
-      "top-up-button": "Top up"
-    },
-    "show-all-options-btn": "Show all options",
-    "hide-options-btn": "Collapse options",
-    "promo": {
-      "title": "Vote with RariMe",
-      "description": "Use RariMe app to participate in this voting",
-      "vote-btn": "Vote",
-      "modal-title": "Scan or tap to vote in Rarime",
-      "download-app": "Download the app",
-      "app-store-alt": "Download on the App Store",
-      "play-market-alt": "Get it on Google Play"
-    }
   },
   "app-logo": {
     "title": "Freedom Tool"
@@ -265,7 +230,8 @@
       "estimate-error": "Estimate gas error"
     },
     "tab-1-lbl": "Result",
-    "tab-2-lbl": "Details"
+    "tab-2-lbl": "Details",
+    "top-up-btn": "Top up"
   },
   "format": {
     "sex": {

@@ -160,7 +160,7 @@ function ShowPollResult() {
   ]
   return (
     <Stack spacing={4}>
-      <Typography variant='subtitle5'>{t('create-poll.show-poll-title')}</Typography>
+      <Typography variant='subtitle5'>{t('create-poll.show-results-title')}</Typography>
       <RadioGroup defaultValue={ShowResultOptions.Realtime}>
         <Stack spacing={2}>
           {options.map(option => (

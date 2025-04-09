@@ -61,7 +61,7 @@ function OptionItem({ text, index }: { text: string; index: number }) {
       <Typography
         variant='subtitle7'
         color={palette.text.secondary}
-        sx={{ width: 16, textAlign: 'center' }}
+        sx={{ minWidth: 16, textAlign: 'center' }}
       >
         {index + 1}
       </Typography>
