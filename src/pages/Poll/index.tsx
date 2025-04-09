@@ -8,7 +8,7 @@ import { ErrorView, LazyImage, RoundedBackground } from '@/common'
 import AbstractBackground from '@/common/AbstractBackground'
 import AuthBlock from '@/common/AuthBlock'
 import DarkGradient from '@/common/DarkGradient'
-import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import { useRouteTitleContext } from '@/contexts'
 import { Icons } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
@@ -16,7 +16,7 @@ import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
-import { UiIcon } from '@/ui'
+import { UiIcon, UiTabs } from '@/ui'
 
 import PollDetails from './components/PollDetails'
 import PollSkeleton from './components/PollSkeleton'
@@ -29,6 +29,7 @@ export default function Poll() {
   const { setTitle } = useRouteTitleContext()
   const { isAuthorized } = useAuthState()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
+  const { t } = useTranslation()
 
   const {
     isLoading,
@@ -98,10 +99,21 @@ export default function Poll() {
                   display: 'grid',
                   gap: 0.5,
                   gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
-                  height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
+                  height: { lg: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px - 2px)` },
                 }}
               >
-                <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+                <RoundedBackground
+                  sx={{
+                    alignItems: { lg: 'flex-end' },
+                    pr: { lg: 24.5 },
+                    [breakpoints.down('md')]: {
+                      p: 0,
+                      borderRadius: 0,
+                      m: 0,
+                      pb: 10,
+                    },
+                  }}
+                >
                   <Stack
                     component={motion.div}
                     maxWidth={{ lg: 656, xl: 720 }}
@@ -118,6 +130,10 @@ export default function Poll() {
                             borderRadius: 5,
                             overflow: 'hidden',
                             position: 'relative',
+                            [breakpoints.down('md')]: {
+                              aspectRatio: '1.5',
+                              borderRadius: 0,
+                            },
                           }}
                         >
                           {proposalMetadata?.imageCid ? (
@@ -165,7 +181,7 @@ export default function Poll() {
                             >
                               {proposalMetadata?.title}
                             </Typography>
-                            <Stack direction='row' spacing={6} alignItems='center'>
+                            <Stack direction='row' spacing={6} alignItems='center' flexWrap='wrap'>
                               <Stack
                                 color={palette.common.white}
                                 direction='row'
@@ -175,8 +191,8 @@ export default function Poll() {
                               >
                                 <UiIcon size={4} name={Icons.CalendarLine} />
                                 <Typography
-                                  variant='body2'
-                                  typography={{ xs: 'body3', md: 'body4' }}
+                                  variant='body3'
+                                  typography={{ xs: 'body4', md: 'body3' }}
                                   sx={{ ...lineClamp(5) }}
                                 >
                                   {formattedStartDate} – {formattedEndDate}
@@ -191,8 +207,8 @@ export default function Poll() {
                               >
                                 <UiIcon size={4} name={Icons.GroupLine} />
                                 <Typography
-                                  variant='body2'
-                                  typography={{ xs: 'body3', md: 'body4' }}
+                                  variant='body3'
+                                  typography={{ xs: 'body4', md: 'body3' }}
                                   sx={{ ...lineClamp(5) }}
                                 >
                                   {participantsAmount}
@@ -203,49 +219,77 @@ export default function Poll() {
                         </Stack>
                       </Stack>
 
-                      <Stack px={6} py={3} bgcolor={palette.action.active} sx={{ borderRadius: 5 }}>
+                      <Stack
+                        px={6}
+                        py={3}
+                        mx={{ xs: 4, lg: 0 }}
+                        bgcolor={palette.action.active}
+                        sx={{ borderRadius: 5 }}
+                      >
                         <Typography variant='body4' color={palette.text.secondary}>
                           {proposalMetadata?.description}
                         </Typography>
                       </Stack>
 
-                      <QuestionList
-                        proposal={proposal}
-                        questions={proposalMetadata?.acceptedOptions ?? []}
-                      />
+                      {isMdDown && (
+                        <Stack mx={4}>
+                          <QrCodePanel />
+                        </Stack>
+                      )}
+
+                      {isMdDown && (
+                        <Stack mx={4}>
+                          <UiTabs
+                            tabs={[
+                              {
+                                label: t('poll.tab-1-lbl'),
+                                content: (
+                                  <Stack>
+                                    <Stack spacing={6} width='100%'>
+                                      <VotesLeftProgress
+                                        remainingVotes={remainingVotesCount ?? 0}
+                                        participantsAmount={participantsAmount}
+                                      />
+                                      {isTopUpAllowed && <TopUpForm />}
+                                      <PollDetails list={pollDetails} criteria={criteria} />
+                                    </Stack>
+                                  </Stack>
+                                ),
+                              },
+                              {
+                                label: t('poll.tab-2-lbl'),
+                                content: (
+                                  <Stack>
+                                    <QuestionList
+                                      proposal={proposal}
+                                      questions={proposalMetadata?.acceptedOptions ?? []}
+                                    />
+                                  </Stack>
+                                ),
+                              },
+                            ]}
+                          />
+                        </Stack>
+                      )}
+
+                      {!isMdDown && (
+                        <Stack>
+                          <QuestionList
+                            proposal={proposal}
+                            questions={proposalMetadata?.acceptedOptions ?? []}
+                          />
+                        </Stack>
+                      )}
                     </Stack>
                   </Stack>
                 </RoundedBackground>
-
-                {isMdDown && isTopUpAllowed && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.2, delay: 0.2 }}
-                  >
-                    <Stack
-                      spacing={10}
-                      sx={{
-                        textAlign: 'center',
-                        alignItems: 'center',
-                        marginBottom: 3,
-                        height: 'fit-content',
-                        position: 'sticky',
-                        top: 80,
-                      }}
-                    >
-                      <TopUpForm />
-                      <PollDetails list={pollDetails} criteria={criteria} />
-                    </Stack>
-                  </motion.div>
-                )}
 
                 {!isMdDown && (
                   <RoundedBackground sx={{ pl: 13, alignItems: 'flex-start' }}>
                     <Stack
                       component={motion.div}
                       sx={{
-                        maxWidth: 368,
+                        maxWidth: { lg: 368 },
                         height: 'fit-content',
                         position: 'sticky',
                         top: 50,

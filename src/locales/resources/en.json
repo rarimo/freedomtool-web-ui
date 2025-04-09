@@ -264,7 +264,9 @@
       "add-funds": "Add funds",
       "total": "Fee:",
       "estimate-error": "Estimate gas error"
-    }
+    },
+    "tab-1-lbl": "Result",
+    "tab-2-lbl": "Details"
   },
   "format": {
     "sex": {

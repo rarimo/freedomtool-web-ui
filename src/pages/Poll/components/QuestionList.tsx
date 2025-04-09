@@ -57,7 +57,7 @@ function QuestionItem({
 
   return (
     <Stack bgcolor={palette.action.active} borderRadius={5}>
-      <Stack spacing={2} p={{ xs: 3, md: 6 }}>
+      <Stack spacing={2} p={{ xs: 4, md: 6 }}>
         <Typography
           title={title}
           color={palette.text.primary}
@@ -71,7 +71,7 @@ function QuestionItem({
 
         <Stack
           justifyContent='flex-start'
-          mt={3}
+          mt={{ xs: 2, md: 3 }}
           divider={<Divider flexItem />}
           sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
         >

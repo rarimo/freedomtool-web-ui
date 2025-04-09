@@ -78,7 +78,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
         )}
       </Stack>
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <UiDialogTitle>{t('poll.criteria')}</UiDialogTitle>
+        <UiDialogTitle onClose={() => setIsModalOpen(false)}>{t('poll.criteria')}</UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
           {hasCriteriaList && (
             <>

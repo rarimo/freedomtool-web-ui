@@ -2,7 +2,7 @@ import { Box, Divider, Skeleton, Stack, useMediaQuery, useTheme } from '@mui/mat
 import { motion } from 'framer-motion'
 
 import { RoundedBackground } from '@/common'
-import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import UiTypographySkeleton from '@/ui/UiTypographySkeleton'
 
 import { QrCodePanelSkeleton } from './QrCodePanelSkeleton'
@@ -18,10 +18,21 @@ export default function PollSkeleton() {
         display: 'grid',
         gap: 0.5,
         gridTemplateColumns: { xs: '1fr', lg: '0.63fr 0.37fr' },
-        height: `calc(100vh - ${isMdDown ? MOBILE_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT}px - 2px)`,
+        height: `calc(100vh - ${DESKTOP_HEADER_HEIGHT}px - 2px)`,
       }}
     >
-      <RoundedBackground sx={{ alignItems: 'flex-end', pr: 24.5 }}>
+      <RoundedBackground
+        sx={{
+          alignItems: { lg: 'flex-end' },
+          pr: { lg: 24.5 },
+          [breakpoints.down('md')]: {
+            p: 0,
+            borderRadius: 0,
+            m: 0,
+            pb: 10,
+          },
+        }}
+      >
         <Stack
           component={motion.div}
           maxWidth={{ lg: 656, xl: 720 }}
@@ -37,13 +48,31 @@ export default function PollSkeleton() {
                   aspectRatio: '2.6',
                   height: 'auto',
                   borderRadius: 5,
+                  overflow: 'hidden',
+                  position: 'relative',
+                  [breakpoints.down('md')]: {
+                    aspectRatio: '1.5',
+                    borderRadius: 0,
+                  },
                 }}
               />
 
-              <Skeleton width='100%' height={44} sx={{ borderRadius: 5 }} />
+              <Stack mx={{ xs: 4, md: 0 }} spacing={{ xs: 6, md: 5 }}>
+                <Skeleton width='100%' height={44} sx={{ borderRadius: 5 }} />
+                {isMdDown && <QrCodePanelSkeleton />}
+                <Skeleton width='100%' height={40} sx={{ borderRadius: 5 }} />
 
-              <QuestionItemSkeleton progress={[60, 40]} />
-              <QuestionItemSkeleton progress={[20, 50, 30]} />
+                {isMdDown ? (
+                  <>
+                    <VotesLeftProgressSkeleton />
+                  </>
+                ) : (
+                  <>
+                    <QuestionItemSkeleton progress={[60, 40]} />
+                    <QuestionItemSkeleton progress={[20, 50, 30]} />
+                  </>
+                )}
+              </Stack>
             </Stack>
           </Stack>
         </Stack>
