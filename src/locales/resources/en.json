@@ -299,6 +299,7 @@
       "guide-2-list-item-3": "User data stays on the device, only a zero-knowledge proof is generated",
       "guide-3-title": "Privacy at Max",
       "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
-    }
+    },
+    "how-it-works-section-title": "How it works"
   }
 }

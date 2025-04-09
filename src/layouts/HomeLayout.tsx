@@ -49,7 +49,7 @@ function HomeHeader() {
             component={Link}
             size='small'
             startIcon={<UiIcon size={4} name={Icons.Plus} />}
-            to={RoutePaths.CreatePoll}
+            to={RoutePaths.NewPoll}
           >
             {t('landing.header.create-poll-btn')}
           </Button>

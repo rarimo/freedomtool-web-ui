@@ -1,5 +1,5 @@
 import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -25,63 +25,66 @@ export default function HowItWorksSection() {
   const { t } = useTranslation()
   const { isDarkMode } = useUiState()
 
-  const guideItems: Omit<GuideItemProps, 'order'>[] = [
-    {
-      title: t('landing.how-it-works-section.guide-1-title'),
-      previewSrc: isDarkMode ? 'images/polls-dark.png' : 'images/polls-light.png',
-      list: [
-        {
-          title: t('landing.how-it-works-section.guide-1-list-item-1'),
-          icon: Icons.ShieldCheck,
-        },
-        {
-          title: t('landing.how-it-works-section.guide-1-list-item-2'),
-          icon: Icons.StackLine,
-        },
-        {
-          title: t('landing.how-it-works-section.guide-1-list-item-3'),
-          icon: Icons.Shining2Line,
-        },
-      ],
-    },
-    {
-      title: t('landing.how-it-works-section.guide-1-title'),
-      previewSrc: isDarkMode ? 'images/voting-dark.png' : 'images/voting-light.png',
-      list: [
-        {
-          title: t('landing.how-it-works-section.guide-2-list-item-1'),
-          icon: Icons.QrCodeLine,
-        },
-        {
-          title: t('landing.how-it-works-section.guide-2-list-item-2'),
-          icon: Icons.PassportLine,
-        },
-        {
-          title: t('landing.how-it-works-section.guide-2-list-item-3'),
-          icon: Icons.LockLine,
-        },
-      ],
-      footer: (
-        <Stack direction='row' spacing={4}>
-          <IconButton target='_blank' rel='noopener' component={Link} to={RARIME_APP_STORE_URL}>
-            <UiIcon sx={{ opacity: 0.9 }} name={Icons.Apple} />
-          </IconButton>
-          <IconButton target='_blank' rel='noopener' component={Link} to={RARIME_GOOGLE_PLAY_URL}>
-            <UiIcon sx={{ opacity: 0.9 }} name={Icons.GooglePlay} />
-          </IconButton>
-        </Stack>
-      ),
-    },
-    {
-      title: t('landing.how-it-works-section.guide-3-title'),
-      previewSrc: isDarkMode ? 'images/privacy-dark.png' : 'images/privacy-light.png',
-      footer: (
-        <Typography variant='body3' color={palette.text.primary}>
-          {t('landing.how-it-works-section.guide-3-footer')}
-        </Typography>
-      ),
-    },
-  ]
+  const guideItems: Omit<GuideItemProps, 'order'>[] = useMemo(
+    () => [
+      {
+        title: t('landing.how-it-works-section.guide-1-title'),
+        previewSrc: isDarkMode ? 'images/polls-dark.png' : 'images/polls-light.png',
+        list: [
+          {
+            title: t('landing.how-it-works-section.guide-1-list-item-1'),
+            icon: Icons.ShieldCheck,
+          },
+          {
+            title: t('landing.how-it-works-section.guide-1-list-item-2'),
+            icon: Icons.StackLine,
+          },
+          {
+            title: t('landing.how-it-works-section.guide-1-list-item-3'),
+            icon: Icons.Shining2Line,
+          },
+        ],
+      },
+      {
+        title: t('landing.how-it-works-section.guide-1-title'),
+        previewSrc: isDarkMode ? 'images/voting-dark.png' : 'images/voting-light.png',
+        list: [
+          {
+            title: t('landing.how-it-works-section.guide-2-list-item-1'),
+            icon: Icons.QrCodeLine,
+          },
+          {
+            title: t('landing.how-it-works-section.guide-2-list-item-2'),
+            icon: Icons.PassportLine,
+          },
+          {
+            title: t('landing.how-it-works-section.guide-2-list-item-3'),
+            icon: Icons.LockLine,
+          },
+        ],
+        footer: (
+          <Stack direction='row' spacing={4}>
+            <IconButton target='_blank' rel='noopener' component={Link} to={RARIME_APP_STORE_URL}>
+              <UiIcon sx={{ opacity: 0.9 }} name={Icons.Apple} />
+            </IconButton>
+            <IconButton target='_blank' rel='noopener' component={Link} to={RARIME_GOOGLE_PLAY_URL}>
+              <UiIcon sx={{ opacity: 0.9 }} name={Icons.GooglePlay} />
+            </IconButton>
+          </Stack>
+        ),
+      },
+      {
+        title: t('landing.how-it-works-section.guide-3-title'),
+        previewSrc: isDarkMode ? 'images/privacy-dark.png' : 'images/privacy-light.png',
+        footer: (
+          <Typography variant='body3' color={palette.text.primary}>
+            {t('landing.how-it-works-section.guide-3-footer')}
+          </Typography>
+        ),
+      },
+    ],
+    [isDarkMode, palette, t],
+  )
 
   return (
     <RoundedBackground
@@ -104,7 +107,7 @@ export default function HowItWorksSection() {
           variant='h2'
           typography={{ xs: 'h3', md: 'h2' }}
         >
-          How it works
+          {t('landing.how-it-works-section-title')}
         </Typography>
 
         <Stack
