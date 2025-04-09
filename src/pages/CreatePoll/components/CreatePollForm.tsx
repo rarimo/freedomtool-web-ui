@@ -34,7 +34,6 @@ import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
 import QuestionsSection from './QuestionsSection'
-import FormPartBackground from './RoundedBackground'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
 
@@ -201,7 +200,7 @@ export default function CreatePollForm() {
                   </Stack>
                 </RoundedBackground>
               ) : (
-                <FormPartBackground>
+                <RoundedBackground>
                   <Stack
                     height={500}
                     sx={{
@@ -215,7 +214,7 @@ export default function CreatePollForm() {
                   >
                     <PollPreview {...details} {...criteria} />
                   </Stack>
-                </FormPartBackground>
+                </RoundedBackground>
               )}
             </>
           )}
