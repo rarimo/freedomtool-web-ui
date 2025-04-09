@@ -93,6 +93,7 @@ export default function HowItWorksSection() {
         overflow: 'hidden',
         position: 'relative',
         pt: 20,
+        mt: 0,
         [breakpoints.down('md')]: {
           mx: 0,
           p: 4,

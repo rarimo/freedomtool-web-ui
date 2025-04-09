@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { RoundedBackground } from '@/common'
 import { useUiState } from '@/store'
 
-import { HOME_CONTAINER_WIDTH } from '../constants'
+import { HOME_CONTAINER_WIDTH, HOME_DESKTOP_HEADER_HEIGHT } from '../constants'
 
 export default function HeroSection() {
   const { palette, breakpoints } = useTheme()
@@ -17,6 +17,7 @@ export default function HeroSection() {
         background: palette.background.paper,
         overflow: 'hidden',
         position: 'relative',
+        height: `calc(100vh - ${HOME_DESKTOP_HEADER_HEIGHT}px - 4px)`,
         [breakpoints.down('md')]: {
           mx: 0,
           p: 4,
@@ -27,7 +28,7 @@ export default function HeroSection() {
       <Stack
         maxWidth={HOME_CONTAINER_WIDTH}
         spacing={{ xs: 5 }}
-        mx='auto'
+        m='auto'
         direction={{ xs: 'column-reverse', md: 'row' }}
         justifyContent='space-between'
         width={1}

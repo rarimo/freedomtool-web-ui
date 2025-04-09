@@ -300,6 +300,21 @@
       "guide-3-title": "Privacy at Max",
       "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
     },
-    "how-it-works-section-title": "How it works"
+    "how-it-works-section-title": "How it works",
+    "case-studies-section": {
+      "case-1-title": "Georgia",
+      "case-1-description": "The United Space app, initiated by Georgian opposition activists, aims to facilitate tools for liquid democracy. It offers anonymous polls for Georgian citizens, digital versions of government documents, and tokenization of state assets.",
+      "case-1-link-1-tite": "Georgia opposition debuts civil blockchain project ahead of critical...",
+      "case-1-link-2-title": "How a Georgian opposition party is putting blockchain on the ballot",
+      "case-2-title": "Russia",
+      "case-2-description": "Russia2024 provides a democratic alternative to the 2024 Russian presidential election. The Russia2024 app aims to establish parallel government structures to promote democracy, freedom, and peace in Russia.",
+      "case-2-link-1-title": "Exiled Russian opposition leader Mark Feygin is launching an anonymou...",
+      "case-2-link-2-title": "Pussy Riot lawyer launches blockchain-based poll to challenge legitimacy of Russian elections",
+      "case-3-title": "Iran",
+      "case-3-description": "Launched by Iranian dissidents it enables citizens to protest the presidential election safely. It allows users to cast a vote of no confidence in the Islamic Republic of Iran's presidential candidates and its corrupt electoral system.",
+      "case-3-link-title": "Blockchain voting from Iranians Vote and Freedom Tool",
+      "title": "Case studies",
+      "resources": "Resources:"
+    }
   }
 }
