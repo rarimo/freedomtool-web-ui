@@ -211,7 +211,7 @@
     "title": "Polls",
     "create-new-vote-btn": "Create a new poll"
   },
-  "dashboard": {
+  "polls": {
     "active-polls-tab-lbl": "Active polls",
     "history-polls-tab-lbl": "Finished",
     "draft-polls-tab-lbl": "Draft",

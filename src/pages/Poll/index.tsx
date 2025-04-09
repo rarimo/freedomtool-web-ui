@@ -347,10 +347,10 @@ function VotesLeftProgress({
     <Stack spacing={2} width='100%'>
       <Stack width='100%' direction='row' alignItems='center' justifyContent='space-between'>
         <Typography variant='body4' color={palette.text.secondary}>
-          {t('dashboard.poll-card.progress-lbl')}
+          {t('polls.poll-card.progress-lbl')}
         </Typography>
         <Typography variant='subtitle6'>
-          {t('dashboard.poll-card.participants-lbl', {
+          {t('polls.poll-card.participants-lbl', {
             currentVotesCount: participantsAmount ?? 0,
             totalVotes: remainingVotes + participantsAmount || 0,
           })}

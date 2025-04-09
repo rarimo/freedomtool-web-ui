@@ -6,7 +6,7 @@ import { decodeAbiParameters, encodeAbiParameters, stringToHex } from 'viem'
 import { api } from '@/api/clients'
 import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
-import { CreatePollSchema } from '@/pages/CreatePoll/createPollSchema'
+import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
 import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 

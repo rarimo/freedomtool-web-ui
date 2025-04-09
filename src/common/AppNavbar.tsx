@@ -26,8 +26,8 @@ const AppNavbar = ({ ...rest }: StackProps) => {
         activeIcon: Icons.ChartBarFill,
       },
       {
-        routesList: [RoutePaths.CreatePoll],
-        to: RoutePaths.CreatePoll,
+        routesList: [RoutePaths.NewPoll],
+        to: RoutePaths.NewPoll,
         title: t('routes.create-new-proposal'),
         icon: Icons.Plus,
         activeIcon: Icons.Plus,

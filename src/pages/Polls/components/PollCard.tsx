@@ -91,10 +91,10 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
         <Stack spacing={2}>
           <Stack direction='row' alignItems='center' justifyContent='space-between'>
             <Typography variant='body4' color={palette.text.secondary}>
-              {t('dashboard.poll-card.progress-lbl')}
+              {t('polls.poll-card.progress-lbl')}
             </Typography>
             <Typography variant='subtitle6'>
-              {t('dashboard.poll-card.participants-lbl', {
+              {t('polls.poll-card.participants-lbl', {
                 currentVotesCount: votes_count ?? 0,
                 totalVotes: remaining_votes_count + votes_count || 0,
               })}
@@ -205,7 +205,7 @@ export function PollCardError({ onRetry }: { onRetry: () => void }) {
             width: 'fit-content',
           }}
         >
-          {t('dashboard.poll-card.retry-btn')}
+          {t('polls.poll-card.retry-btn')}
         </Button>
       </Stack>
       <Stack

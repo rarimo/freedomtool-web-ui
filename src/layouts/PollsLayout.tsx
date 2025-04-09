@@ -1,12 +1,13 @@
 import { Stack, useTheme } from '@mui/material'
 import { PropsWithChildren } from 'react'
 
-import { DashboardHeader, NetworkWarningProtector } from '@/common'
+import { NetworkWarningProtector } from '@/common'
+import PollsHeader from '@/pages/Polls/components/PollsHeader'
 import { Transitions } from '@/theme/constants'
 import { vh } from '@/theme/helpers'
 import { UiContainer } from '@/ui'
 
-const DashboardLayout = ({ children }: PropsWithChildren) => {
+const PollsLayout = ({ children }: PropsWithChildren) => {
   const { palette, breakpoints } = useTheme()
 
   return (
@@ -22,7 +23,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
         },
       }}
     >
-      <DashboardHeader />
+      <PollsHeader />
       <UiContainer
         id='main-content'
         sx={{
@@ -41,4 +42,4 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
   )
 }
 
-export default DashboardLayout
+export default PollsLayout

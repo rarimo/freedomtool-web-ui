@@ -54,7 +54,7 @@ export default function AppSettingsMenu() {
       </Stack>
       <AppMenu
         anchorEl={anchorEl}
-        id='dashboard-menu'
+        id='settings-menu'
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         MenuListProps={{
