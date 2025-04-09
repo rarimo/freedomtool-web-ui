@@ -276,5 +276,29 @@
   "image-picker": {
     "title": "Edit image",
     "save-btn": "Save"
+  },
+  "landing": {
+    "header": {
+      "create-poll-btn": "Create a poll"
+    },
+    "hero-section": {
+      "title-1": "You will not find a solution to political problems in cryptography.",
+      "title-2": "> yes, but we can win a major battle in the arms race and gain a new territory of freedom...",
+      "sign": "Satoshi",
+      "cta-btn": "Create a poll",
+      "whitepaper-btn": "Whitepaper"
+    },
+    "how-it-works-section": {
+      "guide-1-title": "Creating anonymous Blockchain-Powered polls",
+      "guide-1-list-item-1": "Blockchain Security",
+      "guide-1-list-item-2": "Full Verifiability",
+      "guide-1-list-item-3": "Decentralized & Trustless",
+      "guide-2-title": "Mobile voting",
+      "guide-2-list-item-1": "Users scan a QR code to instantly download a polling app",
+      "guide-2-list-item-2": "Tap a passport to anonymously prove age and citizenship",
+      "guide-2-list-item-3": "User data stays on the device, only a zero-knowledge proof is generated",
+      "guide-3-title": "Privacy at Max",
+      "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
+    }
   }
 }

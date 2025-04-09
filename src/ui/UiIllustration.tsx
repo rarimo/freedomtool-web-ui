@@ -1,5 +1,4 @@
-import { Box, BoxProps, SxProps } from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import { Box, BoxProps } from '@mui/material'
 import { forwardRef } from 'react'
 
 import { Illustrations } from '@/enums'
@@ -9,17 +8,8 @@ type Props = {
   name: Illustrations
 } & BoxProps<'svg'>
 
-const UiIllustration = forwardRef<SVGSVGElement, Props>(({ size = 6, ...props }, ref) => {
+const UiIllustration = forwardRef<SVGSVGElement, Props>(({ ...props }, ref) => {
   const { supportedPaletteMode } = useUiState()
-  const sx: SxProps<Theme> = {
-    width: theme => theme.spacing(size),
-    height: theme => theme.spacing(size),
-    minWidth: theme => theme.spacing(size),
-    minHeight: theme => theme.spacing(size),
-    maxWidth: theme => theme.spacing(size),
-    maxHeight: theme => theme.spacing(size),
-    ...props.sx,
-  }
 
   const { className, name, ...rest } = props
 
@@ -28,7 +18,7 @@ const UiIllustration = forwardRef<SVGSVGElement, Props>(({ size = 6, ...props },
       {...rest}
       ref={ref}
       component='svg'
-      sx={sx}
+      sx={props.sx}
       className={['illustration', ...(className ? [className] : [])].join(' ')}
       aria-hidden='true'
     >

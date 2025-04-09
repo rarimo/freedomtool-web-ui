@@ -32,14 +32,14 @@ export const typography: ExtendedTypographyOptions = {
   h1: {
     fontWeight: FontWeight.Bold,
     fontFamily: FONT_FAMILY_ACCENT,
-    fontSize: toRem(32),
+    fontSize: toRem(40),
     lineHeight: toRem(36),
   },
   h2: {
     fontWeight: FontWeight.Bold,
     fontFamily: FONT_FAMILY_ACCENT,
-    fontSize: toRem(36),
-    lineHeight: toRem(32),
+    fontSize: toRem(32),
+    lineHeight: toRem(36),
   },
   h3: {
     fontWeight: FontWeight.Bold,
@@ -83,7 +83,7 @@ export const typography: ExtendedTypographyOptions = {
   },
   subtitle4: {
     fontWeight: FontWeight.Medium,
-    fontSize: toRem(14),
+    fontSize: toRem(20),
     lineHeight: toRem(20),
   },
   subtitle5: {
