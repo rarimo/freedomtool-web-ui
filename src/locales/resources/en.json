@@ -214,7 +214,6 @@
   "polls": {
     "active-polls-tab-lbl": "Active polls",
     "history-polls-tab-lbl": "Finished",
-    "draft-polls-tab-lbl": "Draft",
     "no-polls-title": "No polls",
     "no-polls-description": "You haven't created a poll yet.",
     "create-poll-btn": "Create a poll",
