@@ -315,6 +315,13 @@
       "case-3-link-title": "Blockchain voting from Iranians Vote and Freedom Tool",
       "title": "Case studies",
       "resources": "Resources:"
+    },
+    "repositories-section": {
+      "whitepaper": "Read the Whitepaper",
+      "title": "Open source repositories"
+    },
+    "footer": {
+      "quote": "Join the territory of freedom"
     }
   }
 }

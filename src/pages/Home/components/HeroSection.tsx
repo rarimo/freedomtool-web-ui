@@ -1,7 +1,9 @@
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
+import { RoutePaths } from '@/enums'
 import { useUiState } from '@/store'
 
 import { HOME_CONTAINER_WIDTH, HOME_DESKTOP_HEADER_HEIGHT } from '../constants'
@@ -47,8 +49,16 @@ export default function HeroSection() {
           </Stack>
 
           <Stack spacing={{ xs: 3, md: 4 }} direction='row' zIndex={2}>
-            <Button sx={{ height: { md: 64 } }}>{t('landing.hero-section.cta-btn')}</Button>
-            <Button sx={{ height: { md: 64 } }} variant='outlined'>
+            <Button component={Link} to={RoutePaths.NewPoll} sx={{ height: { md: 64 } }}>
+              {t('landing.hero-section.cta-btn')}
+            </Button>
+            <Button
+              component='a'
+              target='_blank'
+              href='/whitepaper'
+              variant='outlined'
+              sx={{ height: { md: 64 } }}
+            >
               {t('landing.hero-section.whitepaper-btn')}
             </Button>
           </Stack>
