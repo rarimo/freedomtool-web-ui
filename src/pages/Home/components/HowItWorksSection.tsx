@@ -108,7 +108,7 @@ export default function HowItWorksSection() {
           variant='h2'
           typography={{ xs: 'h3', md: 'h2' }}
         >
-          {t('home.how-it-works-section-title')}
+          {t('home.how-it-works.title')}
         </Typography>
 
         <Stack

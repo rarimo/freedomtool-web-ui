@@ -1,17 +1,17 @@
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import { Button, Stack, Typography, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
 import { RoutePaths } from '@/enums'
-import { useUiState } from '@/store'
 
 import { HOME_CONTAINER_WIDTH, HOME_DESKTOP_HEADER_HEIGHT } from '../constants'
+import WorldGlobe from './Globe'
 
 export default function HeroSection() {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const { isDarkMode } = useUiState()
 
   return (
     <RoundedBackground
@@ -19,7 +19,7 @@ export default function HeroSection() {
         background: palette.background.paper,
         overflow: 'hidden',
         position: 'relative',
-        height: `calc(100vh - ${HOME_DESKTOP_HEADER_HEIGHT}px - 4px)`,
+        minHeight: `calc(100vh - ${HOME_DESKTOP_HEADER_HEIGHT}px - 4px)`,
         [breakpoints.down('md')]: {
           mx: 0,
           p: 4,
@@ -64,21 +64,17 @@ export default function HeroSection() {
           </Stack>
         </Stack>
 
-        <Box
-          component='img'
-          src={isDarkMode ? '/images/globe-dark.png' : '/images/globe-light.png'}
-          sx={{
-            display: 'block',
-            maxWidth: 500,
-            objectFit: 'contain',
-            aspectRatio: 1,
-            [breakpoints.down('md')]: {
-              position: 'absolute',
-              top: 100,
-              opacity: 0.3,
-            },
+        <Stack
+          component={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            opacity: { duration: 1, delay: 1 },
           }}
-        />
+        >
+          <WorldGlobe />
+        </Stack>
       </Stack>
     </RoundedBackground>
   )
