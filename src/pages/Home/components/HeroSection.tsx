@@ -69,9 +69,13 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          sx={{ pointerEvents: 'auto' }}
           transition={{
             opacity: { duration: 1, delay: 1 },
           }}
+          whileHover={{ pointerEvents: 'none' }}
+          whileDrag={{ pointerEvents: 'auto' }}
+          whileTap={{ pointerEvents: 'auto' }}
         >
           <WorldGlobe />
         </Stack>
