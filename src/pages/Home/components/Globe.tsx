@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import Globe, { GlobeMethods } from 'react-globe.gl'
 import * as THREE from 'three'
 
@@ -68,4 +68,4 @@ const WorldGlobe = () => {
   )
 }
 
-export default WorldGlobe
+export default memo(WorldGlobe)
