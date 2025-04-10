@@ -1,4 +1,5 @@
 import { Button, Stack, Typography, useTheme } from '@mui/material'
+import zIndex from '@mui/material/styles/zIndex'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -7,12 +8,15 @@ import AppLogo from '@/common/AppLogo'
 import AppThemeButton from '@/common/AppThemeButton'
 import { Icons, RoutePaths } from '@/enums'
 import { FREEDOM_TOOL_EMAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
+import { vh } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
 export default function HomeLayout({ children }: PropsWithChildren) {
   return (
     <Stack
       width={1}
+      height={vh(100)}
+      position='relative'
       sx={{
         backgroundColor: theme => theme.palette.background.default,
         overflowX: 'hidden',
@@ -34,7 +38,13 @@ function HomeHeader() {
       py={6}
       px={4}
       bgcolor={palette.background.paper}
-      sx={{ borderBottomRightRadius: 16, borderBottomLeftRadius: 16 }}
+      sx={{
+        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: 16,
+        position: 'sticky',
+        top: 0,
+        zIndex: zIndex.appBar,
+      }}
     >
       <Stack
         maxWidth={1135}
