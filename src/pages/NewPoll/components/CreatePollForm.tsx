@@ -2,6 +2,7 @@ import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { parseUnits } from 'ethers'
+import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -59,7 +60,11 @@ export default function CreatePollForm() {
   const [processingStep, setProcessingStep] = useState(ProcessingPollStep.Image)
   const [proposalId, setProposalId] = useState<string | null>(null)
 
-  const { trigger, handleSubmit } = form
+  const {
+    trigger,
+    handleSubmit,
+    formState: { touchedFields },
+  } = form
 
   const submit = async (formData: CreatePollSchema) => {
     try {
@@ -179,14 +184,14 @@ export default function CreatePollForm() {
   useEffect(() => {
     // Prevent closing the tab until the poll is live
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (processingStep !== ProcessingPollStep.Live) {
+      if (processingStep !== ProcessingPollStep.Live && !isEmpty(touchedFields)) {
         event.preventDefault()
       }
     }
 
     window.addEventListener('beforeunload', onBeforeUnload)
     return () => window.removeEventListener('beforeunload', onBeforeUnload)
-  }, [processingStep])
+  }, [processingStep, touchedFields])
 
   return (
     <FormProvider {...form}>
