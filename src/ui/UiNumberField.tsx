@@ -1,15 +1,23 @@
-import { TextField, TextFieldProps as NumberFieldProps } from '@mui/material'
+import { TextFieldProps as NumberFieldProps, TextField } from '@mui/material'
 import { forwardRef } from 'react'
 
 import { trimLeadingZeroes } from '@/helpers'
 
 const UiNumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
   ({ value, onChange, ...props }, ref) => {
+    const preventInvalidKeys = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      // Prevent "e" and "-e"
+      if (event.key === 'e' || event.key === '-' || event.key === 'E') {
+        event.preventDefault()
+      }
+    }
+
     return (
       <TextField
         {...props}
         type='number'
         value={trimLeadingZeroes(String(value ?? ''))}
+        onKeyDown={preventInvalidKeys} // Handle key press to prevent invalid characters
         onChange={onChange}
         inputRef={ref}
         InputProps={{

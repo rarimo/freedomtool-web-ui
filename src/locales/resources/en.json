@@ -175,7 +175,8 @@
     "connect-btn": "Connect",
     "disconnect-tooltip": "Disconnect",
     "disconnect-btn": "Disconnect",
-    "dark-mode-switch-lbl": "Dark Mode"
+    "dark-mode-switch-lbl": "Dark Mode",
+    "create-poll": "Create poll"
   },
   "check-vote": {
     "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",

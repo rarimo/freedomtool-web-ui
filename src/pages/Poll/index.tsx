@@ -78,7 +78,10 @@ export default function Poll() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <ErrorView sx={{ maxWidth: 300, mx: 'auto' }} />
+              <ErrorView
+                sx={{ maxWidth: 300, mx: 'auto', mt: 8 }}
+                description='Error occurred while loading this vote'
+              />
             </motion.div>
           )}
 

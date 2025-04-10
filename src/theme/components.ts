@@ -631,6 +631,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         color: alpha(theme.palette.text.primary, 0.7),
         boxShadow: '0px 8px 16px 0px rgba(0, 0, 0, 0.04)',
       }),
+
       icon: ({ ownerState, theme }) => {
         const severityToBgColor: Record<AlertColor, string> = {
           success: alpha(theme.palette.success.main, 0.2),
@@ -657,7 +658,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiAlertTitle: {
     styleOverrides: {
       root: ({ theme }) => ({
-        ...typography.subtitle4,
+        ...typography.subtitle5,
         color: theme.palette.text.primary,
       }),
     },
