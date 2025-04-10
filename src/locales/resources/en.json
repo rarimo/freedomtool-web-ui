@@ -145,6 +145,14 @@
       "fee-lbl": "Fee:",
       "total": "Total:",
       "estimate-error": "Estimate gas error"
+    },
+    "processing-modal": {
+      "progress-title": "Please wait",
+      "progress-description": "Your poll is being created, please don’t close this tab",
+      "progress-lbl": "Progress",
+      "live-title": "Poll is live!",
+      "live-description": "Poll created! Share the QR code so participants can scan and vote.",
+      "live-view-btn": "View Poll"
     }
   },
   "ui-date-picker": {

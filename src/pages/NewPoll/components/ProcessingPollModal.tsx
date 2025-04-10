@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogProps, Stack, Typography, useTheme } from '@mui/material'
 import { useInterval } from '@reactuses/core'
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { generatePath, Link } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
@@ -18,7 +19,7 @@ const progressMilestones: {
   step: ProcessingPollStep
   estimatedTime: number
 }[] = [
-  { step: ProcessingPollStep.Image, estimatedTime: 500 },
+  { step: ProcessingPollStep.Image, estimatedTime: 1000 },
   { step: ProcessingPollStep.Metadata, estimatedTime: 500 },
   { step: ProcessingPollStep.Proposal, estimatedTime: 12_000 },
   { step: ProcessingPollStep.QrCode, estimatedTime: 500 },
@@ -83,6 +84,7 @@ export default function ProcessingPollModal({ step, proposalId, ...rest }: Props
 
 function ProgressStep({ progress }: { progress: number }) {
   const { palette } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Stack alignItems='center' spacing={6} textAlign='center'>
@@ -98,19 +100,19 @@ function ProgressStep({ progress }: { progress: number }) {
       </Stack>
       <Stack spacing={4}>
         <Typography variant='h3' color={palette.text.primary}>
-          Please wait
+          {t('create-poll.processing-modal.progress-title')}
         </Typography>
         <Typography variant='body3' color={palette.text.secondary}>
-          Your poll is being created, please don’t close this tab
+          {t('create-poll.processing-modal.progress-description')}
         </Typography>
       </Stack>
       <Stack spacing={2} px={4} width='100%'>
         <Stack direction='row' alignItems='center' justifyContent='space-between'>
           <Typography variant='body4' color={palette.text.secondary}>
-            Progress
+            {t('create-poll.processing-modal.progress-lbl')}
           </Typography>
           <Typography variant='subtitle6' color={palette.text.primary}>
-            {`${progress.toFixed(0)}%`}
+            {t('formats.percent', { value: progress.toFixed(0) })}
           </Typography>
         </Stack>
         <Stack
@@ -141,6 +143,7 @@ function ProgressStep({ progress }: { progress: number }) {
 
 function LiveStep({ proposalId }: { proposalId: string | null }) {
   const { palette } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Stack alignItems='center' spacing={6} textAlign='center'>
@@ -150,15 +153,15 @@ function LiveStep({ proposalId }: { proposalId: string | null }) {
 
       <Stack spacing={4}>
         <Typography variant='h3' color={palette.text.primary}>
-          Poll is live!
+          {t('create-poll.processing-modal.live-title')}
         </Typography>
         <Typography variant='body3' color={palette.text.secondary} sx={{ maxWidth: 260 }}>
-          Poll created! Share the QR code so participants can scan and vote.
+          {t('create-poll.processing-modal.live-description')}
         </Typography>
       </Stack>
       {!!proposalId && (
         <Button component={Link} to={generatePath(RoutePaths.Poll, { id: proposalId })} fullWidth>
-          View Poll
+          {t('create-poll.processing-modal.live-view-btn')}
         </Button>
       )}
     </Stack>

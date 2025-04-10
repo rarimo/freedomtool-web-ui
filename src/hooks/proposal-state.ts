@@ -61,20 +61,15 @@ export const useProposalState = () => {
       > & { amount: BigNumberish; votingWhitelistData: string },
     ) => {
       if (!contract) return
-      const gasLimit = await contract.contractInstance.createProposal.estimateGas(
-        {
-          description: proposalConfig.description,
-          acceptedOptions: proposalConfig.acceptedOptions,
-          startTimestamp: BigInt(proposalConfig.startTimestamp),
-          duration: BigInt(proposalConfig.duration),
-          multichoice: BigInt(0),
-          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-          votingWhitelistData: [proposalConfig.votingWhitelistData],
-        },
-        {
-          value: proposalConfig.amount,
-        },
-      )
+      const gasLimit = await contract.contractInstance.createProposal.estimateGas({
+        description: proposalConfig.description,
+        acceptedOptions: proposalConfig.acceptedOptions,
+        startTimestamp: BigInt(proposalConfig.startTimestamp),
+        duration: BigInt(proposalConfig.duration),
+        multichoice: BigInt(0),
+        votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+        votingWhitelistData: [proposalConfig.votingWhitelistData],
+      })
 
       return gasLimit
     },
