@@ -6,23 +6,24 @@ import {
   StackProps,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { motion } from 'framer-motion'
 import { t } from 'i18next'
-import { useEffect, useState } from 'react'
 
+import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { formatAddress } from '@/helpers'
 import { useSignIn } from '@/hooks'
-import { uiStore } from '@/store'
 import { UiIcon } from '@/ui'
 
 import AppLogo from './AppLogo'
+import AppThemeButton from './AppThemeButton'
 import AuthGuard from './AuthGuard'
 export default function AppHeader(props: StackProps) {
-  const { palette, zIndex } = useTheme()
+  const { palette, zIndex, breakpoints } = useTheme()
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
   const { disconnect, address } = useWeb3Context()
   const { handleSignIn, isLoading, authGuardRef } = useSignIn()
 
@@ -33,9 +34,11 @@ export default function AppHeader(props: StackProps) {
         bgcolor={palette.background.light}
         component='header'
         sx={{
+          height: DESKTOP_HEADER_HEIGHT,
           position: 'fixed',
           py: { xs: 0, md: 5 },
           px: { xs: 5, lg: 0 },
+          pl: 0,
           top: 0,
           left: 0,
           right: 0,
@@ -66,11 +69,11 @@ export default function AppHeader(props: StackProps) {
             spacing={4}
             divider={<Divider flexItem orientation='vertical' />}
           >
-            <ThemeButton />
+            <AppThemeButton />
             {address ? (
               <Stack color={palette.text.secondary} direction='row' alignItems='center' spacing={2}>
                 <Typography title={address} variant='buttonSmall'>
-                  {formatAddress(address)}
+                  {formatAddress(address, isMdUp ? 12 : 3)}
                 </Typography>
                 <Tooltip title={t('app-header.disconnect-tooltip')}>
                   <IconButton
@@ -92,28 +95,5 @@ export default function AppHeader(props: StackProps) {
       </Stack>
       <AuthGuard ref={authGuardRef} />
     </>
-  )
-}
-
-function ThemeButton() {
-  const { palette } = useTheme()
-  const [icon, setIcon] = useState(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
-
-  useEffect(() => {
-    setIcon(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
-  }, [palette.mode])
-
-  return (
-    <IconButton key={palette.mode} color='secondary' onClick={uiStore.togglePaletteMode}>
-      <motion.div
-        key={palette.mode}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <UiIcon name={icon} size={4} color={palette.text.primary} />
-      </motion.div>
-    </IconButton>
   )
 }

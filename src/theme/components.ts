@@ -180,11 +180,11 @@ export const components: Components<Omit<Theme, 'components'>> = {
       outlinedPrimary: ({ theme }) => ({
         color: theme.palette.text.primary,
         backgroundColor: 'transparent',
-        border: `1px solid ${theme.palette.text.primary}`,
+        border: `1px solid ${theme.palette.action.hover}`,
         '&:hover, &:focus, &:active': {
-          color: theme.palette.inverted.light,
-          backgroundColor: theme.palette.text.primary,
-          border: `1px solid ${theme.palette.text.primary}`,
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.action.hover,
+          border: `1px solid ${theme.palette.action.hover}`,
         },
         '&.Mui-disabled': {
           border: 'transparent',

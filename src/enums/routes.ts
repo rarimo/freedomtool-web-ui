@@ -6,4 +6,6 @@ export enum RoutePaths {
   PollsHistory = '/polls/history',
   NewPoll = '/polls/new',
   Poll = '/polls/:id',
+
+  Whitepaper = '/whitepaper',
 }
