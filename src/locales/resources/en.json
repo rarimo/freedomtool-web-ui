@@ -255,6 +255,7 @@
       "whitepaper-btn": "Whitepaper"
     },
     "how-it-works": {
+      "title": "How it works",
       "guide-1-title": "Creating anonymous Blockchain-Powered polls",
       "guide-1-list-item-1": "Blockchain Security",
       "guide-1-list-item-2": "Full Verifiability",
@@ -266,7 +267,6 @@
       "guide-3-title": "Privacy at Max",
       "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
     },
-    "how-it-works-title": "How it works",
     "case-studies": {
       "case-1-title": "Georgia",
       "case-1-description": "The United Space app, initiated by Georgian opposition activists, aims to facilitate tools for liquid democracy. It offers anonymous polls for Georgian citizens, digital versions of government documents, and tokenization of state assets.",
