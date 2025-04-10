@@ -1,6 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { Stack, Typography, useTheme } from '@mui/material'
-import { hexlify, parseUnits, randomBytes } from 'ethers'
+import { parseUnits } from 'ethers'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -49,7 +49,7 @@ export default function VoteParamsResult() {
       const gasLimit = await calculateCreateProposalGasLimit({
         votingWhitelistData,
         acceptedOptions,
-        description: hexlify(randomBytes(46)),
+        description: '0'.repeat(46),
         amount: parseUnits(amount || '0', 18).toString(),
         startTimestamp,
         duration,

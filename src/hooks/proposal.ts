@@ -8,8 +8,8 @@ import { ProposalStatus } from '@/enums/proposal'
 import {
   ErrorHandler,
   formatCountry,
+  formatDateTime,
   formatSex,
-  formatUtcDateTime,
   getVotesCount,
   hexToAscii,
   parseProposalFromContract,
@@ -61,8 +61,10 @@ export function useProposal(id?: string) {
     { silentError: true },
   )
 
-  const formattedStartDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
-  const formattedEndDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
+  const formattedStartDate = formatDateTime(proposal?.startTimestamp ?? 0)
+  const formattedEndDate = formatDateTime(
+    (proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0),
+  )
 
   const isLoading =
     isProposalLoading ||

@@ -2,18 +2,15 @@ import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { parseUnits } from 'ethers'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
+import { createQRCode } from '@/api/modules/qr-code'
 import { RoundedBackground } from '@/common'
-import SignatureConfirmationModal from '@/common/SignatureConfirmationModal'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
-import { BusEvents, RoutePaths } from '@/enums'
 import {
-  bus,
   ErrorHandler,
   prepareAcceptedOptionsToContract,
   prepareAcceptedOptionsToIpfs,
@@ -21,18 +18,20 @@ import {
   scrollToSelector,
   uploadImageToIpfs,
   uploadJsonToIpfs,
+  waitForProposalToBeIndexed,
 } from '@/helpers'
 import { useProposalState, useScrollWithShadow } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
 import { hiddenScrollbar } from '@/theme/constants'
 import { Nationality } from '@/types'
 
-import { SectionAnchor } from '../constants'
+import { ProcessingPollStep, SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
 import PollPreview from './PollPreview'
 import PollQuestionPreview from './PollQuestionPreview'
+import ProcessingPollModal from './ProcessingPollModal'
 import QuestionsSection from './QuestionsSection'
 import SectionsController from './SectionsController'
 import SettingsSection from './SettingsSection'
@@ -56,13 +55,17 @@ export default function CreatePollForm() {
     resolver: zodResolver(createPollSchema),
   })
 
-  const [isConfirmationModalShown, setIsConfirmationModalShown] = useState(false)
-  const navigate = useNavigate()
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingStep, setProcessingStep] = useState(ProcessingPollStep.Image)
+  const [proposalId, setProposalId] = useState<string | null>(null)
 
-  const { reset, trigger, handleSubmit } = form
+  const { trigger, handleSubmit } = form
 
   const submit = async (formData: CreatePollSchema) => {
     try {
+      setIsProcessing(true)
+      setProcessingStep(ProcessingPollStep.Image)
+
       const {
         details: { title, description, startDate, endDate, image },
         criteria: { minAge, nationalities, maxAge, sex },
@@ -70,10 +73,12 @@ export default function CreatePollForm() {
         settings: { amount },
       } = formData
 
-      let imageCid
+      let imageCid: string | null = null
       if (image) {
         imageCid = (await uploadImageToIpfs(image)).data.hash
       }
+
+      setProcessingStep(ProcessingPollStep.Metadata)
 
       const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
       const response = await uploadJsonToIpfs({
@@ -82,6 +87,9 @@ export default function CreatePollForm() {
         acceptedOptions: acceptedOptionsIpfs,
         ...(imageCid && { imageCid }),
       })
+
+      setProcessingStep(ProcessingPollStep.Proposal)
+
       const cid = response.data.hash
 
       const acceptedOptions = prepareAcceptedOptionsToContract(questions)
@@ -98,9 +106,7 @@ export default function CreatePollForm() {
         startTimestamp,
       })
 
-      setIsConfirmationModalShown(true)
-
-      await createProposal({
+      const proposalId = await createProposal({
         votingWhitelistData,
         acceptedOptions,
         description: cid,
@@ -109,16 +115,29 @@ export default function CreatePollForm() {
         duration,
       })
 
-      bus.emit(BusEvents.success, {
-        message: t('create-poll.success-msg'),
-      })
-      reset()
+      if (!proposalId) {
+        throw new Error(t('create-poll.proposal-id-empty-error'))
+      }
 
-      navigate(RoutePaths.Home)
+      setProposalId(proposalId)
+
+      setProcessingStep(ProcessingPollStep.QrCode)
+      await createQRCode({
+        type: 'links',
+        attributes: {
+          resource_id: proposalId,
+          metadata: { proposal_id: Number(proposalId) },
+        },
+      })
+
+      setProcessingStep(ProcessingPollStep.Indexing)
+      await waitForProposalToBeIndexed(proposalId)
+
+      setProcessingStep(ProcessingPollStep.Live)
     } catch (error) {
       ErrorHandler.process(error)
-    } finally {
-      setIsConfirmationModalShown(false)
+      setIsProcessing(false)
+      setProcessingStep(ProcessingPollStep.Initial)
     }
   }
 
@@ -156,6 +175,18 @@ export default function CreatePollForm() {
   )
 
   const { details, criteria, questions } = form.watch()
+
+  useEffect(() => {
+    // Prevent closing the tab until the poll is live
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (processingStep !== ProcessingPollStep.Live) {
+        event.preventDefault()
+      }
+    }
+
+    window.addEventListener('beforeunload', onBeforeUnload)
+    return () => window.removeEventListener('beforeunload', onBeforeUnload)
+  }, [processingStep])
 
   return (
     <FormProvider {...form}>
@@ -220,7 +251,7 @@ export default function CreatePollForm() {
           )}
         </Box>
       </Stack>
-      <SignatureConfirmationModal open={isConfirmationModalShown} />
+      <ProcessingPollModal open={isProcessing} step={processingStep} proposalId={proposalId} />
     </FormProvider>
   )
 }

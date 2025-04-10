@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
-import { formatUtcDateTime } from '@/helpers'
+import { formatDateTime } from '@/helpers'
 import { hiddenScrollbar, textWrapAndDirectionStyles } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 import { Nationality, Sex } from '@/types'
@@ -160,8 +160,8 @@ function PollImage({ imageSrc }: { imageSrc?: string }) {
 function PollDetails({ title, startDate, endDate, description }: Partial<PollDetailsProps>) {
   const { palette } = useTheme()
 
-  const formattedStartDate = startDate ? formatUtcDateTime(startDate) : '---'
-  const formattedEndDate = endDate ? formatUtcDateTime(endDate) : '---'
+  const formattedStartDate = startDate ? formatDateTime(startDate) : '---'
+  const formattedEndDate = endDate ? formatDateTime(endDate) : '---'
 
   return (
     <Stack spacing={2.5}>

@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { createContract } from '@/helpers'
+import { createContract, extractProposalIdFromTxReceipt } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
@@ -15,14 +15,18 @@ export const useProposalState = () => {
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
 
+  /**
+   * Create a proposal
+   * @returns Proposal ID in string format or null
+   */
   const createProposal = useCallback(
     async (
       proposalConfig: Omit<
         ProposalsState.ProposalConfigStruct,
         'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
       > & { amount: BigNumberish; votingWhitelistData: string },
-    ) => {
-      if (!contract) return
+    ): Promise<string | null> => {
+      if (!contract) return null
       const tx = await contract.contractInstance.createProposal(
         {
           description: proposalConfig.description,
@@ -38,7 +42,8 @@ export const useProposalState = () => {
         },
       )
 
-      await tx.wait()
+      const receipt = await tx.wait()
+      return extractProposalIdFromTxReceipt(receipt)
     },
     [contract],
   )
@@ -51,20 +56,15 @@ export const useProposalState = () => {
       > & { amount: BigNumberish; votingWhitelistData: string },
     ) => {
       if (!contract) return
-      const gasLimit = await contract.contractInstance.createProposal.estimateGas(
-        {
-          description: proposalConfig.description,
-          acceptedOptions: proposalConfig.acceptedOptions,
-          startTimestamp: BigInt(proposalConfig.startTimestamp),
-          duration: BigInt(proposalConfig.duration),
-          multichoice: BigInt(0),
-          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-          votingWhitelistData: [proposalConfig.votingWhitelistData],
-        },
-        {
-          value: proposalConfig.amount,
-        },
-      )
+      const gasLimit = await contract.contractInstance.createProposal.estimateGas({
+        description: proposalConfig.description,
+        acceptedOptions: proposalConfig.acceptedOptions,
+        startTimestamp: BigInt(proposalConfig.startTimestamp),
+        duration: BigInt(proposalConfig.duration),
+        multichoice: BigInt(0),
+        votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+        votingWhitelistData: [proposalConfig.votingWhitelistData],
+      })
 
       return gasLimit
     },
