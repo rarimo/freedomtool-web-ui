@@ -70,7 +70,7 @@ export default function AppHeader(props: StackProps) {
                 spacing={{ xs: 2, md: 6 }}
               >
                 <UiIcon sx={{ pl: 0 }} size={5} name={Icons.CloseFill} />
-                <Typography maxWidth={100} noWrap textOverflow='ellipsis' variant='subtitle5'>
+                <Typography maxWidth={120} noWrap textOverflow='ellipsis' variant='subtitle5'>
                   {title}
                 </Typography>
               </Stack>
