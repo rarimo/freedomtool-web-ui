@@ -1,4 +1,4 @@
-import { Link, Typography, TypographyProps, useTheme } from '@mui/material'
+import { Box, Link, Typography, TypographyProps, useTheme } from '@mui/material'
 import { defaultOverrides, getOverrides, MuiMarkdown, type Overrides } from 'mui-markdown'
 import { useMemo } from 'react'
 
@@ -9,7 +9,7 @@ type Props = {
 } & any
 
 export default function UiMarkdown({ overrides, typographyProps, children, ...rest }: Props) {
-  const { spacing, typography } = useTheme()
+  const { spacing, typography, palette } = useTheme()
 
   const defaultComponentOverrides: Overrides = {
     h1: {
@@ -19,6 +19,34 @@ export default function UiMarkdown({ overrides, typographyProps, children, ...re
         component: 'h1',
         sx: {
           mt: spacing(4),
+        },
+      },
+    },
+    img: {
+      component: Box,
+      props: {
+        component: 'img',
+        sx: {
+          display: 'block',
+          objectFit: 'cover',
+          maxHeight: '100%',
+          width: '100%',
+          my: spacing(8),
+          mx: 'auto',
+          borderRadius: '8px',
+          boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          marginTop: spacing(4),
+          marginBottom: spacing(4),
+          maxWidth: '100%',
+        },
+      },
+    },
+    a: {
+      component: Link,
+      props: {
+        sx: {
+          color: palette.text.primary,
+          textDecorationColor: palette.text.primary,
         },
       },
     },
@@ -77,6 +105,7 @@ export default function UiMarkdown({ overrides, typographyProps, children, ...re
       props: {
         variant: 'body4',
         component: 'p',
+        my: spacing(4),
       },
     },
     ul: {
@@ -135,7 +164,7 @@ export default function UiMarkdown({ overrides, typographyProps, children, ...re
         ...(typographyOverrides || overrides),
       }}
     >
-      {typographyOverrides ? `\n${children}\n` : children}
+      {children}
     </MuiMarkdown>
   )
 }

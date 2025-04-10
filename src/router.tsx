@@ -11,6 +11,7 @@ import FinishedPolls from '@/pages/Polls/FinishedPolls'
 import { ErrorBoundaryFallback } from './common'
 import HomeLayout from './layouts/HomeLayout'
 import NewPoll from './pages/NewPoll'
+import Whitepaper from './pages/Whitepaper'
 
 export const createRouter = () => {
   return createBrowserRouter(
@@ -66,6 +67,10 @@ export const createRouter = () => {
                 element: <Poll />,
               },
             ],
+          },
+          {
+            path: RoutePaths.Whitepaper,
+            element: <Whitepaper />,
           },
           {
             path: '*',
