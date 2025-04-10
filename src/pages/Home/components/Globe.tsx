@@ -7,17 +7,6 @@ import { useUiState } from '@/store'
 
 import { countries } from '../countries'
 
-const globeMaterial = new THREE.MeshPhongMaterial()
-globeMaterial.bumpScale = 10
-new THREE.TextureLoader().load(
-  '//cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png',
-  texture => {
-    globeMaterial.specularMap = texture
-    globeMaterial.specular = new THREE.Color('grey')
-    globeMaterial.shininess = 15
-  },
-)
-
 const WorldGlobe = () => {
   const { isDarkMode } = useUiState()
   const { palette, breakpoints } = useTheme()
