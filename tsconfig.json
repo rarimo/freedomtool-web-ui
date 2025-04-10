@@ -14,19 +14,11 @@
     "sourceMap": true,
     "baseUrl": ".",
     "composite": true,
-    "types": [
-      "node",
-      "vite/client",
-    ],
+    "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost",
-    ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "isolatedModules": true,
     "noEmit": true
   },
@@ -38,6 +30,7 @@
     "tests/**/*.tsx",
     "index.d.ts",
     "package.json",
-    "src/**/*.json"
+    "src/**/*.json",
+    "src/**/*.md"
   ]
 }
