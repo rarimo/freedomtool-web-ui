@@ -80,7 +80,7 @@ export default function Poll() {
             >
               <ErrorView
                 sx={{ maxWidth: 300, mx: 'auto', mt: 8 }}
-                description='Error occurred while loading this vote'
+                description={t('poll.loading-error')}
               />
             </motion.div>
           )}

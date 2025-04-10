@@ -241,7 +241,8 @@
     },
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",
-    "top-up-btn": "Top up"
+    "top-up-btn": "Top up",
+    "loading-error": "Error occurred while loading this poll"
   },
   "format": {
     "sex": {
