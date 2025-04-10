@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogProps, Stack, Typography, useTheme } from '@mui/material'
 import { useInterval } from '@reactuses/core'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { generatePath, Link } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
@@ -14,13 +14,13 @@ interface Props extends DialogProps {
   proposalId: string | null
 }
 
-const progressItems: {
+const progressMilestones: {
   step: ProcessingPollStep
   estimatedTime: number
 }[] = [
   { step: ProcessingPollStep.Image, estimatedTime: 500 },
   { step: ProcessingPollStep.Metadata, estimatedTime: 500 },
-  { step: ProcessingPollStep.Proposal, estimatedTime: 10_000 },
+  { step: ProcessingPollStep.Proposal, estimatedTime: 12_000 },
   { step: ProcessingPollStep.QrCode, estimatedTime: 500 },
   { step: ProcessingPollStep.Indexing, estimatedTime: 7_500 },
 ]
@@ -30,27 +30,37 @@ const UPDATE_PROGRESS_INTERVAL = 100
 export default function ProcessingPollModal({ step, proposalId, ...rest }: Props) {
   const [progress, setProgress] = useState(0)
 
+  const totalEstimatedTime = progressMilestones.reduce((acc, item) => acc + item.estimatedTime, 0)
+
+  const calculateAggregatedProgress = useCallback(
+    (stepIndex: number) => {
+      const aggregatedTime = progressMilestones
+        .slice(0, stepIndex)
+        .reduce((acc, item) => acc + item.estimatedTime, 0)
+
+      return (aggregatedTime / totalEstimatedTime) * 100
+    },
+    [totalEstimatedTime],
+  )
+
   useInterval(
     () => {
-      const currentIndex = progressItems.findIndex(item => item.step === step)
+      const currentIndex = progressMilestones.findIndex(item => item.step === step)
       if (currentIndex === -1) return
 
-      const estimatedTime = progressItems[currentIndex].estimatedTime
-      const itemMaxDelta = 100 / progressItems.length
-      const maxStepProgress = itemMaxDelta * (currentIndex + 1)
-
-      const delta = (itemMaxDelta * UPDATE_PROGRESS_INTERVAL) / estimatedTime
+      const delta = (UPDATE_PROGRESS_INTERVAL / totalEstimatedTime) * 100
+      const maxStepProgress = calculateAggregatedProgress(currentIndex + 1)
       setProgress(prev => Math.min(prev + delta, maxStepProgress))
     },
     step === ProcessingPollStep.Live ? null : UPDATE_PROGRESS_INTERVAL,
   )
 
   useEffect(() => {
-    const currentIndex = progressItems.findIndex(item => item.step === step)
+    const currentIndex = progressMilestones.findIndex(item => item.step === step)
     if (currentIndex === -1) return
 
-    setProgress((currentIndex / progressItems.length) * 100)
-  }, [step])
+    setProgress(calculateAggregatedProgress(currentIndex))
+  }, [step, calculateAggregatedProgress])
 
   return (
     <Dialog
