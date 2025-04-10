@@ -93,8 +93,8 @@
   },
   "create-poll": {
     "end-date-error": "End Date must be after Start Date",
-    "start-date-lbl": "Start Date (UTC)",
-    "end-date-lbl": "End Date (UTC)",
+    "start-date-lbl": "Start Date",
+    "end-date-lbl": "End Date",
     "add-question-btn": "Add a question",
     "submit-btn": "Publish",
     "add-option-lbl": "Add an answer",
@@ -153,7 +153,8 @@
       "live-title": "Poll is live!",
       "live-description": "Poll created! Share the QR code so participants can scan and vote.",
       "live-view-btn": "View Poll"
-    }
+    },
+    "proposal-id-empty-error": "Proposal ID is empty"
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",

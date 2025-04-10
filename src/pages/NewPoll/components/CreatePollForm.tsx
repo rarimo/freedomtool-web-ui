@@ -116,7 +116,7 @@ export default function CreatePollForm() {
       })
 
       if (!proposalId) {
-        throw new Error('Proposal ID is empty')
+        throw new Error(t('create-poll.proposal-id-empty-error'))
       }
 
       setProposalId(proposalId)
