@@ -57,16 +57,16 @@ export default function CriteriaSection() {
   const sexOptions = useMemo(
     () => [
       {
+        label: t('create-poll.sex-any'),
+        value: Sex.Any,
+      },
+      {
         label: t('create-poll.sex-male'),
         value: Sex.Male,
       },
       {
         label: t('create-poll.sex-female'),
         value: Sex.Female,
-      },
-      {
-        label: t('create-poll.sex-any'),
-        value: Sex.Any,
       },
     ],
     [t],

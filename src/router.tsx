@@ -3,12 +3,15 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 import { RoutePaths } from '@/enums'
 import MainLayout from '@/layouts/MainLayout'
 import PollsLayout from '@/layouts/PollsLayout'
+import Home from '@/pages/Home'
+import Poll from '@/pages/Poll'
 import ActivePolls from '@/pages/Polls/ActivePolls'
 import FinishedPolls from '@/pages/Polls/FinishedPolls'
 
 import { ErrorBoundaryFallback } from './common'
+import HomeLayout from './layouts/HomeLayout'
 import NewPoll from './pages/NewPoll'
-import Poll from './pages/Poll'
+import Whitepaper from './pages/Whitepaper'
 
 export const createRouter = () => {
   return createBrowserRouter(
@@ -19,6 +22,15 @@ export const createRouter = () => {
         errorElement: <ErrorBoundaryFallback onReset={() => window.location.reload()} />,
         children: [
           {
+            index: true,
+            element: (
+              <HomeLayout>
+                <Home />
+              </HomeLayout>
+            ),
+          },
+          {
+            path: RoutePaths.Polls,
             element: (
               <PollsLayout>
                 <Outlet />
@@ -57,10 +69,18 @@ export const createRouter = () => {
             ],
           },
           {
+            path: RoutePaths.Whitepaper,
+            element: <Whitepaper />,
+          },
+          {
             path: '*',
             element: <Navigate to={RoutePaths.Home} replace />,
           },
         ],
+      },
+      {
+        path: '*',
+        element: <Navigate replace to={RoutePaths.Home} />,
       },
     ],
     {

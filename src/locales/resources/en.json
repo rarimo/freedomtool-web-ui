@@ -96,16 +96,16 @@
     "start-date-lbl": "Start Date (UTC)",
     "end-date-lbl": "End Date (UTC)",
     "add-question-btn": "Add a question",
-    "submit-btn": "Submit new poll",
-    "add-option-lbl": "Add an option",
+    "submit-btn": "Publish",
+    "add-option-lbl": "Add an answer",
     "question-lbl": "Question #{{order}}",
     "option-lbl": "Answer #{{order}}",
-    "proposal-title-lbl": "Vote title",
+    "proposal-title-lbl": "Title",
     "proposal-description-lbl": "Description",
     "votes-count-lbl": "Participants",
     "amount-lbl": "Available",
     "success-msg": "You have successfully created a poll!",
-    "proposal-title-plh": "Approve this change?",
+    "proposal-title-plh": "Enter a title",
     "proposal-description-plh": "This poll outlines key points...",
     "start-date-plh": "Select a start date",
     "end-date-plh": "Select an end date",
@@ -118,7 +118,7 @@
     "sex-lbl": "Sex",
     "sex-male": "Male",
     "sex-female": "Female",
-    "sex-any": "Any",
+    "sex-any": "Male & Female",
     "age-lbl": "Age",
     "titles": {
       "details": "Poll details",
@@ -126,12 +126,12 @@
       "questions": "Questions",
       "settings": "Settings"
     },
-    "add-criteria": "Add other criteria",
+    "add-criteria": "Add criteria",
     "show-poll-option-title-1": "Real time",
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
     "show-poll-option-description-2": "The results will be shown only after the voting ends",
-    "show-poll-title": "Show results:",
+    "show-results-title": "Show poll results:",
     "vote-params-error": "Invalid vote parameters",
     "max-btn": "MAX",
     "budget-title": "Budget & Participants:",
@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "{{width}}x{{height}}px, png or jpeg, webp",
+    "image-description": "{{width}}x{{height}}px, PNG, JPEG or WEBP",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
@@ -159,44 +159,9 @@
     "invalid-format-error": "Invalid date format",
     "invalid-date-error": "Invalid date"
   },
-  "vote-item": {
-    "no-title": "No title",
-    "no-description": "No description",
-    "start-date": "Start date: {{date}}",
-    "end-date": "End date: {{date}}",
-    "error-title": "Error occurred",
-    "error-description": "Error while loading this poll"
-  },
   "signature-confirmation-modal": {
     "title": "Signature Confirmation",
     "description": "Please confirm your signature to complete the operation. This is required to ensure the security of the transaction."
-  },
-  "vote": {
-    "status": "Status:",
-    "start-date": "Start date:",
-    "end-date": "End date:",
-    "qr-code-subtitle": "Scan to participate",
-    "amount-btn": "Top up balance",
-    "success-msg": "You have successfully added funds to your voting contract",
-    "remaining-votes": "Participants",
-    "votes-count_one": "{{count}} vote",
-    "votes-count_other": "{{count}} votes",
-    "form": {
-      "votes-count-lbl": "Votes count",
-      "success-msg": "Voting successfully topped up!",
-      "top-up-button": "Top up"
-    },
-    "show-all-options-btn": "Show all options",
-    "hide-options-btn": "Collapse options",
-    "promo": {
-      "title": "Vote with RariMe",
-      "description": "Use RariMe app to participate in this voting",
-      "vote-btn": "Vote",
-      "modal-title": "Scan or tap to vote in Rarime",
-      "download-app": "Download the app",
-      "app-store-alt": "Download on the App Store",
-      "play-market-alt": "Get it on Google Play"
-    }
   },
   "app-logo": {
     "title": "Freedom Tool"
@@ -273,7 +238,8 @@
       "estimate-error": "Estimate gas error"
     },
     "tab-1-lbl": "Result",
-    "tab-2-lbl": "Details"
+    "tab-2-lbl": "Details",
+    "top-up-btn": "Top up"
   },
   "format": {
     "sex": {
@@ -284,5 +250,52 @@
   "image-picker": {
     "title": "Edit image",
     "save-btn": "Save"
+  },
+  "home": {
+    "header": {
+      "create-poll-btn": "Create a poll"
+    },
+    "hero": {
+      "title-1": "You will not find a solution to political problems in cryptography.",
+      "title-2": "> yes, but we can win a major battle in the arms race and gain a new territory of freedom...",
+      "sign": "Satoshi",
+      "cta-btn": "Create a poll",
+      "whitepaper-btn": "Whitepaper"
+    },
+    "how-it-works": {
+      "title": "How it works",
+      "guide-1-title": "Creating anonymous Blockchain-Powered polls",
+      "guide-1-list-item-1": "Blockchain Security",
+      "guide-1-list-item-2": "Full Verifiability",
+      "guide-1-list-item-3": "Decentralized & Trustless",
+      "guide-2-title": "Mobile voting",
+      "guide-2-list-item-1": "Users scan a QR code to instantly download a polling app",
+      "guide-2-list-item-2": "Tap a passport to anonymously prove age and citizenship",
+      "guide-2-list-item-3": "User data stays on the device, only a zero-knowledge proof is generated",
+      "guide-3-title": "Privacy at Max",
+      "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
+    },
+    "case-studies": {
+      "case-1-title": "Georgia",
+      "case-1-description": "The United Space app, initiated by Georgian opposition activists, aims to facilitate tools for liquid democracy. It offers anonymous polls for Georgian citizens, digital versions of government documents, and tokenization of state assets.",
+      "case-1-link-1-tite": "Georgia opposition debuts civil blockchain project ahead of critical...",
+      "case-1-link-2-title": "How a Georgian opposition party is putting blockchain on the ballot",
+      "case-2-title": "Russia",
+      "case-2-description": "Russia2024 provides a democratic alternative to the 2024 Russian presidential election. The Russia2024 app aims to establish parallel government structures to promote democracy, freedom, and peace in Russia.",
+      "case-2-link-1-title": "Exiled Russian opposition leader Mark Feygin is launching an anonymou...",
+      "case-2-link-2-title": "Pussy Riot lawyer launches blockchain-based poll to challenge legitimacy of Russian elections",
+      "case-3-title": "Iran",
+      "case-3-description": "Launched by Iranian dissidents it enables citizens to protest the presidential election safely. It allows users to cast a vote of no confidence in the Islamic Republic of Iran's presidential candidates and its corrupt electoral system.",
+      "case-3-link-title": "Blockchain voting from Iranians Vote and Freedom Tool",
+      "title": "Case studies",
+      "resources": "Resources:"
+    },
+    "repositories": {
+      "whitepaper": "Read the Whitepaper",
+      "title": "Open source repositories"
+    },
+    "footer": {
+      "quote": "Join the territory of freedom"
+    }
   }
 }

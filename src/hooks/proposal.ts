@@ -9,6 +9,7 @@ import {
   ErrorHandler,
   formatCountry,
   formatSex,
+  formatUtcDateTime,
   getVotesCount,
   hexToAscii,
   parseProposalFromContract,
@@ -60,10 +61,8 @@ export function useProposal(id?: string) {
     { silentError: true },
   )
 
-  const formattedStartDate = time(proposal?.startTimestamp).format('MM/DD/YYYY HH:mm')
-  const formattedEndDate = time((proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0)).format(
-    'MM/DD/YYYY HH:mm',
-  )
+  const formattedStartDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
+  const formattedEndDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
 
   const isLoading =
     isProposalLoading ||

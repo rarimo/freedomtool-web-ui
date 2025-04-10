@@ -1,9 +1,6 @@
 /// <reference types="vite/client" />
 
-import { BuildMode } from '@/types'
-
 interface ImportMetaEnv {
-  VITE_MODE: BuildMode
   VITE_API_URL: string
   VITE_PORT: string
   VITE_APP_NAME: string
@@ -15,3 +12,5 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+declare module '*.md'

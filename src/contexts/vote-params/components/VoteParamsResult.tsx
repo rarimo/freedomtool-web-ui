@@ -1,13 +1,17 @@
 import { time } from '@distributedlab/tools'
 import { Stack, Typography, useTheme } from '@mui/material'
-import { formatUnits, parseUnits } from 'ethers'
+import { parseUnits } from 'ethers'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DotsLoader } from '@/common'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { prepareAcceptedOptionsToContract, prepareVotingWhitelistData } from '@/helpers'
+import {
+  formatAmount,
+  prepareAcceptedOptionsToContract,
+  prepareVotingWhitelistData,
+} from '@/helpers'
 import { useLoading, useProposalState } from '@/hooks'
 import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
 
@@ -24,7 +28,7 @@ export default function VoteParamsResult() {
     isLoading: isEstimating,
     isLoadingError: isEstimatingError,
   } = useLoading(
-    null,
+    0n,
     async () => {
       const gasPrice = await rawProviderSigner?.provider.getFeeData()
       const startTimestamp = time(getValues('details.startDate')).timestamp
@@ -50,7 +54,7 @@ export default function VoteParamsResult() {
         startTimestamp,
         duration,
       })
-      return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
+      return (gasLimit || 0n) * (gasPrice?.gasPrice || 0n)
     },
     {
       loadOnMount: Boolean(amount),
@@ -72,14 +76,14 @@ export default function VoteParamsResult() {
           <DotsLoader />
         ) : (
           <Typography variant='subtitle6'>
-            {estimatedGas} {NATIVE_CURRENCY}
+            {formatAmount(estimatedGas)} {NATIVE_CURRENCY}
           </Typography>
         )}
       </Stack>
     )
   }
 
-  const total = (parseUnits(amount || '0', 18) + parseUnits(estimatedGas || '0', 18)).toString()
+  const total = parseUnits(amount || '0', 18) + estimatedGas
 
   return (
     <Stack minWidth={250} alignItems='flex-end' mt={{ xs: 6, md: 0 }} pb={{ xs: 20, md: 0 }}>
@@ -87,7 +91,7 @@ export default function VoteParamsResult() {
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>{t('create-poll.result.total')}</Typography>
         <Typography variant='subtitle4'>
-          {formatUnits(total, 18)} {NATIVE_CURRENCY}
+          {formatAmount(total)} {NATIVE_CURRENCY}
         </Typography>
       </Stack>
     </Stack>
