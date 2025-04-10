@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 
 import { config } from '@/config'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { createContract } from '@/helpers'
+import { createContract, extractProposalIdFromTxReceipt } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
@@ -43,12 +43,7 @@ export const useProposalState = () => {
       )
 
       const receipt = await tx.wait()
-      const proposalCreatedLogDescription = receipt?.logs
-        .map(log => contract.contractInterface.parseLog(log))
-        .find(description => description?.name === 'ProposalCreated')
-      const proposalId = proposalCreatedLogDescription?.args[0]
-
-      return proposalId ? proposalId.toString() : null
+      return extractProposalIdFromTxReceipt(receipt)
     },
     [contract],
   )

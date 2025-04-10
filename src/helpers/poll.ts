@@ -1,6 +1,6 @@
 import { JsonApiClientRequestOpts } from '@distributedlab/jac'
 import { time } from '@distributedlab/tools'
-import { toBeHex } from 'ethers'
+import { ContractTransactionReceipt, toBeHex } from 'ethers'
 import { decodeAbiParameters, encodeAbiParameters, stringToHex } from 'viem'
 
 import { api } from '@/api/clients'
@@ -8,6 +8,7 @@ import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
 import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
+import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
 import { sleep } from './promise'
@@ -231,4 +232,16 @@ export async function waitForProposalToBeIndexed(proposalId: string) {
     await sleep(2_500)
     return waitForProposalToBeIndexed(proposalId)
   }
+}
+
+export function extractProposalIdFromTxReceipt(
+  receipt: ContractTransactionReceipt | null,
+): string | null {
+  const contractInterface = ProposalState__factory.createInterface()
+  const proposalCreatedLogDescription = receipt?.logs
+    .map(log => contractInterface.parseLog(log))
+    .find(description => description?.name === 'ProposalCreated')
+
+  const proposalId = proposalCreatedLogDescription?.args[0]
+  return proposalId ? String(proposalId) : null
 }
