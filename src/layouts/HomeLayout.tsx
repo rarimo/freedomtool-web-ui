@@ -36,7 +36,7 @@ function HomeHeader() {
 
   return (
     <Stack
-      py={{ xs: 0, md: 6 }}
+      py={6}
       px={4}
       alignItems='center'
       justifyContent='center'
