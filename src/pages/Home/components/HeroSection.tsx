@@ -7,7 +7,7 @@ import { RoundedBackground } from '@/common'
 import { RoutePaths } from '@/enums'
 
 import { HOME_CONTAINER_WIDTH, HOME_DESKTOP_HEADER_HEIGHT } from '../constants'
-import WorldGlobe from './Globe'
+import WorldGlobe from './WorldGlobe'
 
 export default function HeroSection() {
   const { palette, breakpoints } = useTheme()

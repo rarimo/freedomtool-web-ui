@@ -11,13 +11,12 @@ const WorldGlobe = () => {
   const { isDarkMode } = useUiState()
   const { palette, breakpoints } = useTheme()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
-  // MutableRefObject<GlobeMethods | undefined> | undefined
-  const globeRef = useRef<GlobeMethods | undefined>(undefined)
+  const globeRef = useRef<GlobeMethods>()
 
   useEffect(() => {
-    const waitForGlobe = () => {
+    const initGlobe = () => {
       if (!globeRef.current || !globeRef.current.controls) {
-        requestAnimationFrame(waitForGlobe)
+        requestAnimationFrame(initGlobe)
         return
       }
 
@@ -39,7 +38,7 @@ const WorldGlobe = () => {
       animate()
     }
 
-    waitForGlobe()
+    initGlobe()
   }, [])
 
   return (
