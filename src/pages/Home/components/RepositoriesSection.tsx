@@ -2,6 +2,7 @@ import { Box, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import { RoundedBackground } from '@/common'
+import { RoutePaths } from '@/enums'
 import { Transitions } from '@/theme/constants'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
@@ -55,7 +56,7 @@ export default function RepositoriesSection() {
           variant='h2'
           typography={{ xs: 'h3', md: 'h2' }}
         >
-          {t('landing.repositories-section.title')}
+          {t('home.repositories.title')}
         </Typography>
         <Box
           sx={{
@@ -102,10 +103,10 @@ export default function RepositoriesSection() {
           textAlign='center'
           component='a'
           target='_blank'
-          href='/whitepaper'
+          href={RoutePaths.Whitepaper}
           variant='buttonLarge'
         >
-          {t('landing.repositories-section.whitepaper')}
+          {t('home.repositories.whitepaper')}
         </Typography>
       </Stack>
     </RoundedBackground>

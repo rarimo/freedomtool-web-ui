@@ -38,28 +38,28 @@ export default function HeroSection() {
         <Stack spacing={16.25}>
           <Stack component='blockquote' m={0} spacing={8} maxWidth={656}>
             <Typography component='h1' variant='h1' typography={{ xs: 'h2', md: 'h1' }}>
-              {t('landing.hero-section.title-1')}
+              {t('home.hero.title-1')}
             </Typography>
             <Typography component='p' variant='h1' typography={{ xs: 'h2', md: 'h1' }}>
-              {t('landing.hero-section.title-2')}
+              {t('home.hero.title-2')}
             </Typography>
             <Typography variant='subtitle4' sx={{ fontStyle: 'italic' }}>
-              {t('landing.hero-section.sign')}
+              {t('home.hero.sign')}
             </Typography>
           </Stack>
 
           <Stack spacing={{ xs: 3, md: 4 }} direction='row' zIndex={2}>
             <Button component={Link} to={RoutePaths.NewPoll} sx={{ height: { md: 64 } }}>
-              {t('landing.hero-section.cta-btn')}
+              {t('home.hero.cta-btn')}
             </Button>
             <Button
               component='a'
               target='_blank'
-              href='/whitepaper'
+              href={RoutePaths.Whitepaper}
               variant='outlined'
               sx={{ height: { md: 64 } }}
             >
-              {t('landing.hero-section.whitepaper-btn')}
+              {t('home.hero.whitepaper-btn')}
             </Button>
           </Stack>
         </Stack>

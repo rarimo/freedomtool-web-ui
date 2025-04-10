@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import AppLogo from '@/common/AppLogo'
 import AppThemeButton from '@/common/AppThemeButton'
 import { Icons, RoutePaths } from '@/enums'
-import { FREEDOM_TOOL_MAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
+import { FREEDOM_TOOL_EMAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
 import { UiIcon } from '@/ui'
 
 export default function HomeLayout({ children }: PropsWithChildren) {
@@ -53,7 +53,7 @@ function HomeHeader() {
             startIcon={<UiIcon size={4} name={Icons.Plus} />}
             to={RoutePaths.NewPoll}
           >
-            {t('landing.header.create-poll-btn')}
+            {t('home.header.create-poll-btn')}
           </Button>
           <AppThemeButton />
         </Stack>
@@ -78,14 +78,14 @@ function HomeFooter() {
       >
         <AppLogo />
         <Stack alignItems={{ xs: 'center', sm: 'flex-end' }}>
-          <Typography variant='body4'>{t('landing.footer.quote')}</Typography>
+          <Typography variant='body4'>{t('home.footer.quote')}</Typography>
           <Typography
             component='a'
             variant='body5'
             color={palette.text.primary}
-            href={`mailto:${FREEDOM_TOOL_MAIL}`}
+            href={`mailto:${FREEDOM_TOOL_EMAIL}`}
           >
-            {FREEDOM_TOOL_MAIL}
+            {FREEDOM_TOOL_EMAIL}
           </Typography>
         </Stack>
       </Stack>

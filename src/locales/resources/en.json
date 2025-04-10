@@ -277,18 +277,18 @@
     "title": "Edit image",
     "save-btn": "Save"
   },
-  "landing": {
+  "home": {
     "header": {
       "create-poll-btn": "Create a poll"
     },
-    "hero-section": {
+    "hero": {
       "title-1": "You will not find a solution to political problems in cryptography.",
       "title-2": "> yes, but we can win a major battle in the arms race and gain a new territory of freedom...",
       "sign": "Satoshi",
       "cta-btn": "Create a poll",
       "whitepaper-btn": "Whitepaper"
     },
-    "how-it-works-section": {
+    "how-it-works": {
       "guide-1-title": "Creating anonymous Blockchain-Powered polls",
       "guide-1-list-item-1": "Blockchain Security",
       "guide-1-list-item-2": "Full Verifiability",
@@ -300,8 +300,8 @@
       "guide-3-title": "Privacy at Max",
       "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
     },
-    "how-it-works-section-title": "How it works",
-    "case-studies-section": {
+    "how-it-works-title": "How it works",
+    "case-studies": {
       "case-1-title": "Georgia",
       "case-1-description": "The United Space app, initiated by Georgian opposition activists, aims to facilitate tools for liquid democracy. It offers anonymous polls for Georgian citizens, digital versions of government documents, and tokenization of state assets.",
       "case-1-link-1-tite": "Georgia opposition debuts civil blockchain project ahead of critical...",
@@ -316,7 +316,7 @@
       "title": "Case studies",
       "resources": "Resources:"
     },
-    "repositories-section": {
+    "repositories": {
       "whitepaper": "Read the Whitepaper",
       "title": "Open source repositories"
     },

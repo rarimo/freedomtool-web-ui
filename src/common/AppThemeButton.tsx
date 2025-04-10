@@ -1,6 +1,5 @@
 import { IconButton, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
 
 import { Icons } from '@/enums'
 import { uiStore } from '@/store'
@@ -8,11 +7,8 @@ import { UiIcon } from '@/ui'
 
 export default function AppThemeButton() {
   const { palette } = useTheme()
-  const [icon, setIcon] = useState(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
 
-  useEffect(() => {
-    setIcon(palette.mode === 'dark' ? Icons.Moon : Icons.Sun)
-  }, [palette.mode])
+  const icon = palette.mode === 'dark' ? Icons.Moon : Icons.Sun
 
   return (
     <IconButton

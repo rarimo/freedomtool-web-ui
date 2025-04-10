@@ -28,16 +28,16 @@ export default function CaseStudiesSection() {
   const items: CaseStudiesItemProps[] = [
     {
       previewSrc: isDarkMode ? '/images/georgia-dark.png' : '/images/georgia-light.png',
-      title: t('landing.case-studies-section.case-1-title'),
-      description: t('landing.case-studies-section.case-1-description'),
+      title: t('home.case-studies.case-1-title'),
+      description: t('home.case-studies.case-1-description'),
       links: [
         {
-          title: t('landing.case-studies-section.case-1-link-1-tite'),
+          title: t('home.case-studies.case-1-link-1-tite'),
           previewSrc: '/images/georgia-link-1.png',
           href: 'https://cointelegraph.com/news/georgia-opposition-blockchain-elections',
         },
         {
-          title: t('landing.case-studies-section.case-1-link-2-title'),
+          title: t('home.case-studies.case-1-link-2-title'),
           previewSrc: '/images/georgia-link-2.png',
           href: 'https://digitalfrontier.com/articles/digital-democracy-Georgia-election-blockchain-unm',
         },
@@ -45,16 +45,16 @@ export default function CaseStudiesSection() {
     },
     {
       previewSrc: isDarkMode ? '/images/russia-dark.png' : '/images/russia-light.png',
-      title: t('landing.case-studies-section.case-2-title'),
-      description: t('landing.case-studies-section.case-2-description'),
+      title: t('home.case-studies.case-2-title'),
+      description: t('home.case-studies.case-2-description'),
       links: [
         {
-          title: t('landing.case-studies-section.case-2-link-1-title'),
+          title: t('home.case-studies.case-2-link-1-title'),
           previewSrc: '/images/russia-link-1.png',
           href: 'https://www.coindesk.com/policy/2024/05/10/exiled-russian-opposition-leader-launches-blockchain-based-referendum-on-vladimir-putins-election-win',
         },
         {
-          title: t('landing.case-studies-section.case-2-link-2-title'),
+          title: t('home.case-studies.case-2-link-2-title'),
           previewSrc: '/images/russia-link-2.png',
           href: 'https://www.theblock.co/post/293528/former-pussy-riot-lawyer-launches-blockchain-powered-referendum-to-challenge-putins-inauguration',
         },
@@ -62,11 +62,11 @@ export default function CaseStudiesSection() {
     },
     {
       previewSrc: isDarkMode ? '/images/iran-dark.png' : '/images/iran-light.png',
-      title: t('landing.case-studies-section.case-3-title'),
-      description: t('landing.case-studies-section.case-3-description'),
+      title: t('home.case-studies.case-3-title'),
+      description: t('home.case-studies.case-3-description'),
       links: [
         {
-          title: t('landing.case-studies-section.case-3-link-title'),
+          title: t('home.case-studies.case-3-link-title'),
           previewSrc: '/images/iran-link-1.png',
           href: 'https://appdevelopermagazine.com/blockchain-voting-from-iranians-vote-and-freedom-tool/',
         },
@@ -96,7 +96,7 @@ export default function CaseStudiesSection() {
           variant='h2'
           typography={{ xs: 'h3', md: 'h2' }}
         >
-          {t('landing.case-studies-section.title')}
+          {t('home.case-studies.title')}
         </Typography>
         <Box
           sx={{
@@ -127,7 +127,7 @@ function CaseStudiesItem({ title, description, previewSrc, links }: CaseStudiesI
       </Typography>
       <Typography color={palette.text.secondary}>{description}</Typography>
       <Typography variant='overline2' color={palette.text.secondary}>
-        {t('landing.case-studies-section.resources')}
+        {t('home.case-studies.resources')}
       </Typography>
       {links.map((link, index) => (
         <CaseStudiesLink key={index} {...link} />

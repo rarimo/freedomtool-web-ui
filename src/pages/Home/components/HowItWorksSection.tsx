@@ -28,37 +28,37 @@ export default function HowItWorksSection() {
   const guideItems: Omit<GuideItemProps, 'order'>[] = useMemo(
     () => [
       {
-        title: t('landing.how-it-works-section.guide-1-title'),
+        title: t('home.how-it-works.guide-1-title'),
         previewSrc: isDarkMode ? 'images/polls-dark.png' : 'images/polls-light.png',
         list: [
           {
-            title: t('landing.how-it-works-section.guide-1-list-item-1'),
+            title: t('home.how-it-works.guide-1-list-item-1'),
             icon: Icons.ShieldCheck,
           },
           {
-            title: t('landing.how-it-works-section.guide-1-list-item-2'),
+            title: t('home.how-it-works.guide-1-list-item-2'),
             icon: Icons.StackLine,
           },
           {
-            title: t('landing.how-it-works-section.guide-1-list-item-3'),
+            title: t('home.how-it-works.guide-1-list-item-3'),
             icon: Icons.Shining2Line,
           },
         ],
       },
       {
-        title: t('landing.how-it-works-section.guide-1-title'),
+        title: t('home.how-it-works.guide-1-title'),
         previewSrc: isDarkMode ? 'images/voting-dark.png' : 'images/voting-light.png',
         list: [
           {
-            title: t('landing.how-it-works-section.guide-2-list-item-1'),
+            title: t('home.how-it-works.guide-2-list-item-1'),
             icon: Icons.QrCodeLine,
           },
           {
-            title: t('landing.how-it-works-section.guide-2-list-item-2'),
+            title: t('home.how-it-works.guide-2-list-item-2'),
             icon: Icons.PassportLine,
           },
           {
-            title: t('landing.how-it-works-section.guide-2-list-item-3'),
+            title: t('home.how-it-works.guide-2-list-item-3'),
             icon: Icons.LockLine,
           },
         ],
@@ -74,11 +74,11 @@ export default function HowItWorksSection() {
         ),
       },
       {
-        title: t('landing.how-it-works-section.guide-3-title'),
+        title: t('home.how-it-works.guide-3-title'),
         previewSrc: isDarkMode ? 'images/privacy-dark.png' : 'images/privacy-light.png',
         footer: (
           <Typography variant='body3' color={palette.text.primary}>
-            {t('landing.how-it-works-section.guide-3-footer')}
+            {t('home.how-it-works.guide-3-footer')}
           </Typography>
         ),
       },
@@ -108,7 +108,7 @@ export default function HowItWorksSection() {
           variant='h2'
           typography={{ xs: 'h3', md: 'h2' }}
         >
-          {t('landing.how-it-works-section-title')}
+          {t('home.how-it-works-section-title')}
         </Typography>
 
         <Stack
