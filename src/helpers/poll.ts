@@ -10,6 +10,7 @@ import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
 import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
+import { sleep } from './promise'
 import { hexToAscii } from './text'
 
 export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
@@ -219,4 +220,15 @@ export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => 
   )
 
   return data
+}
+
+export async function waitForProposalToBeIndexed(proposalId: string) {
+  const { data } = await getProposals({
+    query: { filter: { proposal_id: proposalId } },
+  })
+
+  if (data.length === 0) {
+    await sleep(2_500)
+    return waitForProposalToBeIndexed(proposalId)
+  }
 }

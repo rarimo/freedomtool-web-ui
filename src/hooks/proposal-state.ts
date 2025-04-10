@@ -15,14 +15,18 @@ export const useProposalState = () => {
     return createContract(config.PROPOSAL_STATE_CONTRACT, contractConnector, ProposalState__factory)
   }, [contractConnector])
 
+  /**
+   * Create a proposal
+   * @returns Proposal ID in string format or null
+   */
   const createProposal = useCallback(
     async (
       proposalConfig: Omit<
         ProposalsState.ProposalConfigStruct,
         'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
       > & { amount: BigNumberish; votingWhitelistData: string },
-    ) => {
-      if (!contract) return
+    ): Promise<string | null> => {
+      if (!contract) return null
       const tx = await contract.contractInstance.createProposal(
         {
           description: proposalConfig.description,
@@ -38,7 +42,13 @@ export const useProposalState = () => {
         },
       )
 
-      await tx.wait()
+      const receipt = await tx.wait()
+      const proposalCreatedLogDescription = receipt?.logs
+        .map(log => contract.contractInterface.parseLog(log))
+        .find(description => description?.name === 'ProposalCreated')
+      const proposalId = proposalCreatedLogDescription?.args[0]
+
+      return proposalId ? proposalId.toString() : null
     },
     [contract],
   )

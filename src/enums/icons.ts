@@ -201,4 +201,5 @@ export enum Icons {
   DownloadLine = 'download-line',
   DraftLine = 'draft-line',
   CalendarLine = 'calendar-line',
+  LoaderFill = 'loader-fill',
 }
