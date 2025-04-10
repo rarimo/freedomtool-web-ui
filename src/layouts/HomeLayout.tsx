@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import AppLogo from '@/common/AppLogo'
 import AppThemeButton from '@/common/AppThemeButton'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { Icons, RoutePaths } from '@/enums'
 import { FREEDOM_TOOL_EMAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
 import { vh } from '@/theme/helpers'
@@ -35,8 +36,11 @@ function HomeHeader() {
 
   return (
     <Stack
-      py={6}
+      py={{ xs: 0, md: 6 }}
       px={4}
+      alignItems='center'
+      justifyContent='center'
+      height={{ xs: MOBILE_HEADER_HEIGHT, md: DESKTOP_HEADER_HEIGHT }}
       bgcolor={palette.background.paper}
       sx={{
         borderBottomRightRadius: 16,
@@ -78,16 +82,16 @@ function HomeFooter() {
   return (
     <Stack px={6} py={{ xs: 8, md: 12 }} justifyContent='center' width={1}>
       <Stack
-        justifyContent='space-between'
+        justifyContent={{ xs: 'center', md: 'space-between' }}
         alignItems='center'
         spacing={4}
-        direction={{ xs: 'column', sm: 'row' }}
+        direction={{ xs: 'column', md: 'row' }}
         mx='auto'
         maxWidth={HOME_CONTAINER_WIDTH}
         width={1}
       >
-        <AppLogo />
-        <Stack alignItems={{ xs: 'center', sm: 'flex-end' }}>
+        <AppLogo justifyContent='center' />
+        <Stack alignItems={{ xs: 'center', md: 'flex-end' }}>
           <Typography variant='body4'>{t('home.footer.quote')}</Typography>
           <Typography
             component='a'

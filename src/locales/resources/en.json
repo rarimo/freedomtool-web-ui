@@ -175,7 +175,8 @@
     "connect-btn": "Connect",
     "disconnect-tooltip": "Disconnect",
     "disconnect-btn": "Disconnect",
-    "dark-mode-switch-lbl": "Dark Mode"
+    "dark-mode-switch-lbl": "Dark Mode",
+    "create-poll": "Create poll"
   },
   "check-vote": {
     "helper-text_one": "You need {{currencyAmount}} {{currency}} to cast one more vote.",
@@ -240,7 +241,8 @@
     },
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",
-    "top-up-btn": "Top up"
+    "top-up-btn": "Top up",
+    "loading-error": "Error occurred while loading this poll"
   },
   "format": {
     "sex": {

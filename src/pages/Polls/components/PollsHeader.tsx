@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
-import { DESKTOP_HEADER_HEIGHT } from '@/constants'
+import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
 import { UiIcon } from '@/ui'
@@ -62,7 +62,7 @@ export default function PollsHeader() {
     >
       <Stack width='100%' maxWidth={1141} mx='auto'>
         <Stack
-          height={DESKTOP_HEADER_HEIGHT}
+          height={{ xs: MOBILE_HEADER_HEIGHT, md: DESKTOP_HEADER_HEIGHT }}
           direction='row'
           alignItems='center'
           justifyContent='space-between'

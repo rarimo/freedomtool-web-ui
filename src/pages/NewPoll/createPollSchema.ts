@@ -74,8 +74,8 @@ export const createPollSchema = zod
     criteria: zod.object({
       uniqueness: zod.boolean(),
       sex: zod.nativeEnum(Sex),
-      minAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional(),
-      maxAge: zod.coerce.number().min(1).max(99).or(zod.literal('')).optional(),
+      minAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),
+      maxAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),
       nationalities: zod.array(
         zod.object({
           flag: zod.string().min(1),

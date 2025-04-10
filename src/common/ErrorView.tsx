@@ -28,8 +28,6 @@ export default function ErrorView({
       width='100%'
       justifyContent='center'
       p={8}
-      border={1}
-      borderColor={palette.error.light}
       {...rest}
     >
       <Stack
@@ -42,10 +40,10 @@ export default function ErrorView({
       >
         {icon}
       </Stack>
-      <Stack spacing={1} textAlign='center'>
-        <Typography variant='subtitle3'>{title}</Typography>
+      <Stack spacing={2} textAlign='center'>
+        <Typography variant='subtitle4'>{title}</Typography>
         {description && (
-          <Typography variant='body3' color={palette.text.secondary}>
+          <Typography variant='body4' color={palette.text.secondary}>
             {description}
           </Typography>
         )}
