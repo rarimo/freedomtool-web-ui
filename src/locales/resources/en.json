@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "420x240px, PNG, JPEG or WEBP",
+    "image-description": "16:9 ratio, PNG, JPEG or WEBP",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
@@ -244,7 +244,8 @@
       "add-funds": "Add funds",
       "fee-lbl": "Fee:",
       "estimate-error": "Estimate gas error",
-      "add-funds-btn": "Add {{amount}} {{currency}}"
+      "add-funds-btn": "Add {{amount}} {{currency}}",
+      "add-funds-success-msg": "Funds added successfully"
     },
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",

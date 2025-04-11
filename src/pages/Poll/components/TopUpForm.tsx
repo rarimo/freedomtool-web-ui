@@ -100,7 +100,7 @@ export default function TopUpForm() {
     try {
       const { amount } = formData
       await addFundsToProposal(id, parseUnits(amount, 18).toString())
-      bus.emit(BusEvents.success, { message: t('vote.form.success-msg') })
+      bus.emit(BusEvents.success, { message: t('poll.top-up-form.add-funds-success-msg') })
     } catch (error) {
       ErrorHandler.process(error)
     } finally {

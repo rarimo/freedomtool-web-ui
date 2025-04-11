@@ -87,9 +87,9 @@ export default function QrCodePanel() {
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
       {firstActiveQRCode ? (
-        <Stack direction='row' alignItems='center' spacing={1}>
+        <Stack direction='row' alignItems='center' spacing={4}>
           <QRCode
-            value={generatePollQrCodeUrl(firstActiveQRCode?.url || '')}
+            value={generatePollQrCodeUrl(firstActiveQRCode.url)}
             size={88}
             fgColor={palette.text.primary}
             bgColor='transparent'
@@ -106,7 +106,7 @@ export default function QrCodePanel() {
           </Stack>
         </Stack>
       ) : (
-        <Stack spacing={1} textAlign='left'>
+        <Stack spacing={1}>
           <Typography variant='subtitle5' color={palette.text.primary}>
             {t('poll.qr-code-panel.no-codes-title')}
           </Typography>
