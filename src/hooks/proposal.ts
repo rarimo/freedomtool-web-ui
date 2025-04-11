@@ -1,4 +1,3 @@
-import { time } from '@distributedlab/tools'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,12 +5,12 @@ import { ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
 import {
+  calculateAgeDiffFromBirthDateBound,
   ErrorHandler,
   formatCountry,
   formatDateTime,
   formatSex,
   getVotesCount,
-  hexToAscii,
   parseProposalFromContract,
 } from '@/helpers'
 import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
@@ -106,12 +105,12 @@ export function useProposal(id?: string) {
 
     const minAge =
       whitelistData?.birthDateUpperbound && whitelistData.birthDateUpperbound !== ZERO_DATE
-        ? time().diff(time(hexToAscii(whitelistData.birthDateUpperbound), 'YYMMDD'), 'year')
+        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateUpperbound)
         : null
 
     const maxAge =
       whitelistData?.birthDateLowerbound && whitelistData.birthDateLowerbound !== ZERO_DATE
-        ? time().diff(time(hexToAscii(whitelistData.birthDateLowerbound), 'YYMMDD'), 'year')
+        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateLowerbound)
         : null
 
     const formattedSex = formatSex(whitelistData?.sex)

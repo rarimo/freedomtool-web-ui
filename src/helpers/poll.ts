@@ -245,3 +245,13 @@ export function extractProposalIdFromTxReceipt(
   const proposalId = proposalCreatedLogDescription?.args[0]
   return proposalId ? String(proposalId) : null
 }
+
+export function calculateAgeDiffFromBirthDateBound(dateBound: string): number {
+  const timeDate = time(hexToAscii(dateBound), 'YYMMDD')
+  const diffInYears = time().diff(timeDate, 'year')
+
+  // Birth date is always in the past, but
+  // date conversion can be wrong because Unix timestamp
+  // starts from 1970, so we need to check if the diff is negative
+  return diffInYears < 0 ? 100 + diffInYears : diffInYears
+}

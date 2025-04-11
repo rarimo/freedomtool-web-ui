@@ -36,9 +36,9 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
       : `${formattedNationalitiesArray[0]} +${formattedNationalitiesArray.length - 1}`
     : null
 
-  const previewString = [nationalitiesPreview, formattedSex, formattedAge]
-    .filter(item => item !== null)
-    .join(', ')
+  const previewString =
+    [nationalitiesPreview, formattedSex, formattedAge].filter(item => item !== null).join(', ') ||
+    '–'
 
   const criteriaList = [
     {
@@ -68,7 +68,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
             sx={{ p: 0, color: palette.text.primary, height: 'fit-content' }}
             variant='text'
             size='small'
-            endIcon={<UiIcon size={5} name={Icons.AccountCircle} />}
+            endIcon={<UiIcon size={4} name={Icons.Info} />}
             onClick={() => setIsModalOpen(true)}
           >
             <Typography variant='subtitle6'>{previewString}</Typography>

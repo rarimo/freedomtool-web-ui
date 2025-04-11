@@ -1,5 +1,6 @@
 import {
   BN,
+  BN_ROUNDING,
   BnConfigLike,
   BnFormatConfig,
   BnLike,
@@ -61,6 +62,10 @@ const defaultBnFormatConfig: BnFormatConfig = {
   fractionGroupSeparator: '',
   fractionGroupSize: 3,
 }
+
+BN.setConfig({
+  rounding: BN_ROUNDING.DOWN,
+})
 
 /**
  * Format human amount without trailing zeros
