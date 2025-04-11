@@ -43,11 +43,6 @@ export default function QrCodePanel() {
       }),
     { pageLimit: DEFAULT_PAGE_LIMIT },
   )
-  // TODO: need to impl
-  const shareQrCode = () => {}
-
-  // TODO: need to impl
-  const downloadQrCode = () => {}
 
   const deleteQrCode = useCallback(
     async (qrCodeId: string) => {
@@ -92,7 +87,14 @@ export default function QrCodePanel() {
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
       <Stack direction='row' alignItems='center' spacing={1}>
-        <QRCodeBlock url={generatePollQrCodeUrl(firstActiveQRCode?.url || '')} />
+        <Stack p={3}>
+          <QRCode
+            value={generatePollQrCodeUrl(firstActiveQRCode?.url || '')}
+            size={88}
+            fgColor={palette.text.primary}
+            bgColor='transparent'
+          />
+        </Stack>
         <Stack alignItems='flex-start' spacing={2}>
           <Typography variant='subtitle5'>
             {formatCroppedString(firstActiveQRCode?.id || '')}
@@ -120,51 +122,8 @@ export default function QrCodePanel() {
         qrCodeLoadingState={qrCodeLoadingState}
         onReload={reloadQrCodes}
         onLoadNext={loadNextQrCodes}
-        onShare={shareQrCode}
-        onDownload={downloadQrCode}
         onCreate={generateNewQrCode}
         onDelete={deleteQrCode}
-      />
-    </Stack>
-  )
-}
-
-export function QRCodeBlock({
-  url,
-  size = 28,
-  isLink = false,
-  innerPadding = 6,
-}: {
-  url: string
-  size?: number
-  isLink?: boolean
-  innerPadding?: number
-}) {
-  const { palette, spacing } = useTheme()
-
-  const qrSize = Number(spacing(size).replace('px', '')) - innerPadding * 4
-
-  return (
-    <Stack
-      component={isLink ? 'a' : 'div'}
-      {...(isLink && {
-        href: url,
-        target: '_blank',
-        rel: 'noreferrer',
-      })}
-      sx={{
-        width: spacing(size),
-        height: spacing(size),
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: isLink ? 'pointer' : 'default',
-      }}
-    >
-      <QRCode
-        value={url}
-        size={qrSize > 0 ? qrSize : 1}
-        fgColor={palette.text.primary}
-        bgColor='transparent'
       />
     </Stack>
   )

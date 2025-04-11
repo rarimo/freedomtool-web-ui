@@ -89,7 +89,7 @@
     "load-more-btn": "Load more",
     "error-title": "Could not load data",
     "retry-btn": "Retry",
-    "no-data-title": "No data"
+    "no-data-title": "No items yet"
   },
   "create-poll": {
     "end-date-error": "End Date must be after Start Date",
@@ -231,13 +231,18 @@
         "creation-time-lbl": "Creation time",
         "actions-lbl": "Actions"
       },
-      "generate-qr-code-btn": "Generate a new QR code"
+      "generate-qr-code-btn": "Generate a new QR code",
+      "delete-btn-tooltip": "Delete QR code",
+      "download-btn-tooltip": "Download QR code",
+      "copy-btn-tooltip": "Copy QR code URL",
+      "copied-btn-tooltip": "Copied"
     },
     "criteria": "Criteria:",
     "top-up-form": {
       "add-funds": "Add funds",
-      "total": "Fee:",
-      "estimate-error": "Estimate gas error"
+      "fee-lbl": "Fee:",
+      "estimate-error": "Estimate gas error",
+      "add-funds-btn": "Add {{amount}} {{currency}}"
     },
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",
