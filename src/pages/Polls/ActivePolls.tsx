@@ -14,7 +14,7 @@ import EmptyPollsView from './components/EmptyPollsView'
 import PollCard from './components/PollCard'
 
 export default function ActivePolls() {
-  const { address, signAndSendTx } = useWeb3Context()
+  const { address } = useWeb3Context()
   const { isAuthorized } = useAuthState()
 
   const {
