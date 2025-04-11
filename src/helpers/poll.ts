@@ -245,9 +245,12 @@ export function extractProposalIdFromTxReceipt(
   return proposalId ? String(proposalId) : null
 }
 
-export function calculateAgeDiffFromBirthDateBound(dateBound: string): number {
+export function calculateAgeDiffFromBirthDateBound(
+  dateBound: string,
+  startTimestamp?: number,
+): number {
   const timeDate = time(hexToAscii(dateBound), 'YYMMDD')
-  const diff = time().diff(timeDate, 'ms')
+  const diff = time(startTimestamp).utc().diff(timeDate, 'ms')
 
   const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365.25
   const diffInYears = Math.floor(diff / MS_IN_YEAR)
