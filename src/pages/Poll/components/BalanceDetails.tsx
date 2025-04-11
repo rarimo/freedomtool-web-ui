@@ -1,11 +1,11 @@
 import { Stack, Typography, useTheme } from '@mui/material'
 
-interface BalanceDetailsProps {
+interface BalanceItem {
   title: string
   description: string
 }
 
-export default function BalanceDetails({ list }: { list: BalanceDetailsProps[] }) {
+export default function BalanceDetails({ list }: { list: BalanceItem[] }) {
   const { palette } = useTheme()
 
   return (

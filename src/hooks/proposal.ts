@@ -30,7 +30,7 @@ export function useProposal(id?: string) {
     if (!id) return null
     const proposalFromContract = await getProposalInfo(Number(id))
 
-    const { data: proposal } = await getProposals({
+    const { data: proposals } = await getProposals({
       query: {
         filter: {
           creator: address,
@@ -39,7 +39,7 @@ export function useProposal(id?: string) {
       },
     })
 
-    if (proposal?.[0]?.owner !== address) {
+    if (proposals?.[0]?.owner !== address) {
       setIsRestricted(true)
       return null
     }
@@ -48,8 +48,8 @@ export function useProposal(id?: string) {
       const parsedContractProposal = parseProposalFromContract(proposalFromContract)
 
       return {
-        metadata: proposal[0].metadata,
-        parsed: proposal[0],
+        metadata: proposals[0].metadata,
+        parsed: proposals[0],
         fromContract: parsedContractProposal,
       }
     }
