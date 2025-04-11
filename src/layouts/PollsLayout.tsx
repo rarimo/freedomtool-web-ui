@@ -30,7 +30,7 @@ const PollsLayout = ({ children }: PropsWithChildren) => {
           transition: Transitions.Default,
 
           [breakpoints.down('md')]: {
-            pb: 4,
+            py: 4,
           },
         }}
       >
