@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { formatUnits, parseUnits } from 'ethers'
+import { parseUnits } from 'ethers'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ import { DotsLoader } from '@/common'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
+import { bus, ErrorHandler, formatAmount, formatNumber } from '@/helpers'
 import { useLoading, useProposalState } from '@/hooks'
 import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
 import { UiCheckVoteInput, UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
@@ -62,21 +62,21 @@ export default function TopUpForm() {
     isLoading: isEstimating,
     isLoadingError: isEstimatingError,
   } = useLoading(
-    null,
+    0n,
     async () => {
-      if (!id) return
+      if (!id) return 0n
       const gasPrice = await rawProviderSigner?.provider.getFeeData()
       const gasLimit = await calculateAddFundsToProposalGasLimit(
         BigInt(id),
         parseUnits(amount || '0', 18).toString(),
       )
 
-      return formatUnits((gasLimit || 0n) * (gasPrice?.gasPrice || 0n), 18)
+      return (gasLimit || 0n) * (gasPrice?.gasPrice || 0n)
     },
 
     {
-      loadOnMount: Boolean(amount),
-      loadArgs: [amount],
+      loadOnMount: true,
+      loadArgs: [],
     },
   )
 
@@ -110,8 +110,6 @@ export default function TopUpForm() {
 
   const isDisabled = isSubmitting || isCalculating
 
-  const total = (parseUnits(amount || '0', 18) + parseUnits(estimatedGas || '0', 18)).toString()
-
   const renderGasEstimation = () => {
     if (!isEstimatingError && !isEstimating && !estimatedGas) return null
 
@@ -124,14 +122,14 @@ export default function TopUpForm() {
         direction='row'
         alignItems='center'
       >
-        <Typography variant='body4'>{t('poll.top-up-form.total')}</Typography>
+        <Typography variant='body4'>{t('poll.top-up-form.fee-lbl')}</Typography>
         {isEstimatingError ? (
           <Typography color={palette.error.dark}>{t('poll.top-up-form.estimate-error')}</Typography>
         ) : isEstimating ? (
           <DotsLoader />
         ) : (
           <Typography color={palette.text.primary} variant='subtitle6'>
-            {formatUnits(total, 18)} {NATIVE_CURRENCY}
+            {formatAmount(estimatedGas)} {NATIVE_CURRENCY}
           </Typography>
         )}
       </Stack>
@@ -290,7 +288,10 @@ export default function TopUpForm() {
             </Stack>
             <Divider />
             <Button disabled={isSubmitting} type='submit'>
-              {t('poll.top-up-btn')}
+              {t('poll.top-up-form.add-funds-btn', {
+                amount: formatNumber(amount, { decimals: 4 }),
+                currency: NATIVE_CURRENCY,
+              })}
             </Button>
           </Stack>
         </UiDialogContent>

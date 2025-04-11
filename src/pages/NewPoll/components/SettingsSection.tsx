@@ -89,6 +89,11 @@ export default function SettingsSection() {
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
                   maxValue={balance}
+                  endAdornmentSx={{
+                    bottom: 0,
+                    top: 'unset',
+                    right: 20,
+                  }}
                   onChange={e => {
                     field.onChange(e)
                     updateFromAmount()

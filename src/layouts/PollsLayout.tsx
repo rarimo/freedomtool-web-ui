@@ -4,7 +4,6 @@ import { PropsWithChildren } from 'react'
 import { NetworkWarningProtector } from '@/common'
 import PollsHeader from '@/pages/Polls/components/PollsHeader'
 import { Transitions } from '@/theme/constants'
-import { vh } from '@/theme/helpers'
 import { UiContainer } from '@/ui'
 
 const PollsLayout = ({ children }: PropsWithChildren) => {
@@ -12,7 +11,6 @@ const PollsLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <Stack
-      height={vh(100)}
       width='100%'
       sx={{
         backgroundColor: palette.background.default,

@@ -1,5 +1,5 @@
 import { Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -80,7 +80,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
           {hasCriteriaList && (
             <>
-              <Stack spacing={2}>
+              <Stack spacing={4}>
                 {criteriaList.map(
                   (item, index) =>
                     item.value && (
@@ -91,11 +91,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <Typography
-                          variant='body3'
-                          typography={{ xs: 'body4', md: 'body3' }}
-                          color={palette.text.secondary}
-                        >
+                        <Typography variant='body4' color={palette.text.secondary}>
                           {item.label}
                         </Typography>
                         <Typography

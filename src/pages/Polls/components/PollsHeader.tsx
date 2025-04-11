@@ -1,4 +1,5 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
+import zIndex from '@mui/material/styles/zIndex'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
@@ -54,8 +55,12 @@ export default function PollsHeader() {
     <Stack
       px={4}
       width='100%'
+      component='header'
       bgcolor={palette.background.light}
       sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: zIndex.appBar,
         borderBottomLeftRadius: spacing(4),
         borderBottomRightRadius: spacing(4),
       }}

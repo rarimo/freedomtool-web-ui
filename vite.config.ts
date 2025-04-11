@@ -97,14 +97,11 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
-      sourcemap: true,
+      chunkSizeWarningLimit: 1_000,
+      sourcemap: isProduction ? false : true,
       target: 'esnext',
       rollupOptions: {
-        plugins: [
-          // Enable rollup polyfills plugin
-          // used during production bundling
-          nodePolyfills(),
-        ],
+        plugins: [nodePolyfills()],
       },
     },
   }
