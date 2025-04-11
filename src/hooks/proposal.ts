@@ -1,3 +1,4 @@
+import { BN } from '@distributedlab/tools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -48,8 +49,8 @@ export function useProposal(id?: string) {
       const parsedContractProposal = parseProposalFromContract(proposalFromContract)
 
       return {
-        metadata: proposals[0].metadata,
-        parsed: proposals[0],
+        metadata: proposals?.[0]?.metadata,
+        parsed: proposals?.[0],
         fromContract: parsedContractProposal,
       }
     }
@@ -57,8 +58,8 @@ export function useProposal(id?: string) {
     return null
   })
 
-  const formattedStartDate = formatDateTime(proposal?.parsed.start_timestamp ?? 0)
-  const formattedEndDate = formatDateTime(proposal?.parsed.end_timestamp ?? 0)
+  const formattedStartDate = formatDateTime(proposal?.parsed?.start_timestamp ?? 0)
+  const formattedEndDate = formatDateTime(proposal?.parsed?.end_timestamp ?? 0)
 
   const isLoading = isProposalLoading || (!proposal && !isRestricted && !isProposalLoadingError)
 
@@ -130,12 +131,12 @@ export function useProposal(id?: string) {
     if (!proposal) return []
     return [
       {
-        title: t('poll.total-balance'),
-        description: `${formatAmountShort(proposal.parsed.total_balance)} ${NATIVE_CURRENCY}`,
-      },
-      {
-        title: t('poll.remaining-balance'),
-        description: `${formatAmountShort(proposal.parsed.remaining_balance)} ${NATIVE_CURRENCY}`,
+        title: t('poll.total-spent'),
+        description: `${formatAmountShort(
+          BN.fromBigInt(proposal.parsed?.total_balance ?? 0).sub(
+            BN.fromBigInt(proposal.parsed?.remaining_balance ?? 0),
+          ),
+        )} ${NATIVE_CURRENCY} / ${formatAmountShort(proposal.parsed?.total_balance ?? 0)} ${NATIVE_CURRENCY}`,
       },
     ]
   }, [proposal, t])
@@ -158,6 +159,6 @@ export function useProposal(id?: string) {
     formattedEndDate,
 
     participantsAmount,
-    remainingVotesCount: proposal?.parsed.remaining_votes_count,
+    remainingVotesCount: proposal?.parsed?.remaining_votes_count ?? 0,
   }
 }

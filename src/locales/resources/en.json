@@ -253,8 +253,7 @@
     "loading-error": "Error occurred while loading this poll",
     "unavailable-error": "This poll is unavailable",
     "back-to-poll-btn": "Back to Polls",
-    "total-balance": "Total balance:",
-    "remaining-balance": "Remaining balance:"
+    "total-spent": "Total spent"
   },
   "format": {
     "sex": {

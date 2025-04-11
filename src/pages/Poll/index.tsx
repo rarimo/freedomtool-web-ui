@@ -22,6 +22,7 @@ import BalanceDetails from './components/BalanceDetails'
 import PollDetails from './components/PollDetails'
 import PollSkeleton from './components/PollSkeleton'
 import QuestionList from './components/QuestionList'
+import StatusBadge from './components/StatusBadge'
 import TopUpForm from './components/TopUpForm'
 
 export default function Poll() {
@@ -168,6 +169,9 @@ export default function Poll() {
                             },
                           }}
                         >
+                          <Stack sx={{ position: 'absolute', top: 24, left: 24, zIndex: 1 }}>
+                            <StatusBadge status={proposal?.fromContract.status} />
+                          </Stack>
                           {proposalMetadata?.imageCid ? (
                             <LazyImage
                               width={1}
