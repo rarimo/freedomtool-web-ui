@@ -19,7 +19,7 @@ export default function HeroSection() {
         background: palette.background.paper,
         overflow: 'hidden',
         position: 'relative',
-        minHeight: `calc(100vh - ${HOME_DESKTOP_HEADER_HEIGHT}px - 4px)`,
+        minHeight: `calc(100vh - ${HOME_DESKTOP_HEADER_HEIGHT}px)`,
         [breakpoints.down('md')]: {
           mx: 0,
           p: 4,
