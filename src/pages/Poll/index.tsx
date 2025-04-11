@@ -134,7 +134,7 @@ export default function Poll() {
                             overflow: 'hidden',
                             position: 'relative',
                             [breakpoints.down('md')]: {
-                              aspectRatio: '1.5',
+                              aspectRatio: '1.71',
                               borderRadius: 0,
                             },
                           }}
