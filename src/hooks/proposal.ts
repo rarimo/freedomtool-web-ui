@@ -8,8 +8,8 @@ import {
   calculateAgeDiffFromBirthDateBound,
   ErrorHandler,
   formatCountry,
-  formatDateTime,
   formatSex,
+  formatUtcDateTime,
   getVotesCount,
   parseProposalFromContract,
 } from '@/helpers'
@@ -60,8 +60,8 @@ export function useProposal(id?: string) {
     { silentError: true },
   )
 
-  const formattedStartDate = formatDateTime(proposal?.startTimestamp ?? 0)
-  const formattedEndDate = formatDateTime(
+  const formattedStartDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
+  const formattedEndDate = formatUtcDateTime(
     (proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0),
   )
 

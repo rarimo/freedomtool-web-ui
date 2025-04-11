@@ -174,17 +174,16 @@ export const prepareVotingWhitelistData = (config: {
     .flatMap(({ codes }) => codes)
     .map(code => stringToHex(code))
 
-  const identityCreationTimestampUpperBound = time(startTimestamp).subtract(1, 'hour').timestamp
   const identityCounterUpperBound = 1
 
   const birthDateUpperbound = minAge
-    ? stringToHex(time().subtract(minAge, 'years').format('YYMMDD'))
+    ? stringToHex(time(startTimestamp).utc().subtract(minAge, 'years').format('YYMMDD'))
     : ZERO_DATE
   const birthDateLowerbound = maxAge
-    ? stringToHex(time().subtract(maxAge, 'years').format('YYMMDD'))
+    ? stringToHex(time(startTimestamp).utc().subtract(maxAge, 'years').format('YYMMDD'))
     : ZERO_DATE
 
-  const expirationDateLowerBound = stringToHex(time(startTimestamp).format('YYMMDD'))
+  const expirationDateLowerBound = stringToHex(time(startTimestamp).utc().format('YYMMDD'))
   const sex = _sex ? stringToHex(_sex) : 0
 
   // Uniqueness and passport expiration should be configured for each poll
@@ -203,7 +202,7 @@ export const prepareVotingWhitelistData = (config: {
       {
         selector: BigInt(selector),
         nationalities: formattedNationalities.map(BigInt),
-        identityCreationTimestampUpperBound: BigInt(identityCreationTimestampUpperBound),
+        identityCreationTimestampUpperBound: BigInt(startTimestamp),
         identityCounterUpperBound: BigInt(identityCounterUpperBound),
         sex: BigInt(sex),
         birthDateLowerbound: BigInt(birthDateLowerbound),
@@ -248,7 +247,10 @@ export function extractProposalIdFromTxReceipt(
 
 export function calculateAgeDiffFromBirthDateBound(dateBound: string): number {
   const timeDate = time(hexToAscii(dateBound), 'YYMMDD')
-  const diffInYears = time().diff(timeDate, 'year')
+  const diff = time().diff(timeDate, 'ms')
+
+  const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365.25
+  const diffInYears = Math.floor(diff / MS_IN_YEAR)
 
   // Birth date is always in the past, but
   // date conversion can be wrong because Unix timestamp
