@@ -169,7 +169,7 @@ export default function Poll() {
                           <DarkGradient
                             sx={{
                               position: 'absolute',
-                              height: isMdDown ? '100%' : '50%',
+                              height: isMdDown ? '100%' : '80%',
                               bottom: 0,
                               right: 0,
                               left: 0,
