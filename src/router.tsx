@@ -8,7 +8,6 @@ import Home from '@/pages/Home'
 
 import { AppLoader, ErrorBoundaryFallback } from './common'
 import HomeLayout from './layouts/HomeLayout'
-import PollSkeleton from './pages/Poll/components/PollSkeleton'
 const Poll = lazy(() => import('@/pages/Poll'))
 const ActivePolls = lazy(() => import('@/pages/Polls/ActivePolls'))
 const FinishedPolls = lazy(() => import('@/pages/Polls/FinishedPolls'))
@@ -87,7 +86,7 @@ export const createRouter = () => {
               {
                 path: RoutePaths.Poll,
                 element: (
-                  <Suspense fallback={<PollSkeleton />}>
+                  <Suspense fallback={<></>}>
                     <Poll />
                   </Suspense>
                 ),

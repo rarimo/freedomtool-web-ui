@@ -1,20 +1,11 @@
 import { Stack, Typography, useTheme } from '@mui/material'
-import { ReactNode } from 'react'
 
-import PollCriteriaList, { PollCriteriaListProps } from './PollCriteriaList'
-
-export interface PollDetailsProps {
-  title: ReactNode
-  description: ReactNode
+interface BalanceDetailsProps {
+  title: string
+  description: string
 }
 
-export default function PollDetails({
-  list,
-  criteria,
-}: {
-  list: PollDetailsProps[]
-  criteria?: PollCriteriaListProps
-}) {
+export default function BalanceDetails({ list }: { list: BalanceDetailsProps[] }) {
   const { palette } = useTheme()
 
   return (
@@ -29,7 +20,6 @@ export default function PollDetails({
           </Typography>
         </Stack>
       ))}
-      <PollCriteriaList {...criteria} />
     </Stack>
   )
 }
