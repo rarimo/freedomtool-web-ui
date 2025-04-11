@@ -42,6 +42,9 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
       whileTap={{ scale: 0.9 }}
       whileHover={{ scale: 0.95 }}
       onClick={() => navigate(generatePath(RoutePaths.Poll, { id: String(id) }))}
+      onKeyDown={e => {
+        if (e.key === 'Enter') navigate(generatePath(RoutePaths.Poll, { id: String(id) }))
+      }}
     >
       {imageCid ? (
         <LazyImage

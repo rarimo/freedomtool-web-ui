@@ -18,6 +18,19 @@ const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = (relative: string) => path.resolve(appDirectory, relative)
 const root = path.resolve(__dirname, resolveApp('src'))
 
+const splitModules = [
+  'react-dom',
+  'framer-motion',
+  'ethers',
+  'three-globe',
+  'h3-js',
+  'cbw-sdk',
+  '@mui',
+  '@metamask',
+  '@walletconnect',
+  'three',
+]
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isLocalDevelopment = mode === 'development'
@@ -103,16 +116,18 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            for (const module of splitModules) {
+              if (id.includes(module)) {
+                return module
+              }
+            }
+
             if (id.includes('node_modules')) {
-              return id.split('node_modules/')[1].split('/')[0]
+              return 'vendor'
             }
           },
         },
-        plugins: [
-          // Enable rollup polyfills plugin
-          // used during production bundling
-          nodePolyfills(),
-        ],
+        plugins: [nodePolyfills()],
       },
     },
   }
