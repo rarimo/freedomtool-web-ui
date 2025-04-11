@@ -1,26 +1,27 @@
-import { useMemo } from 'react'
+import { BN } from '@distributedlab/tools'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ZERO_DATE } from '@/constants'
+import { NATIVE_CURRENCY, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
 import {
   calculateAgeDiffFromBirthDateBound,
-  ErrorHandler,
+  formatAmountShort,
   formatCountry,
   formatSex,
   formatUtcDateTime,
-  getVotesCount,
+  getProposals,
   parseProposalFromContract,
 } from '@/helpers'
-import { useIpfsLoading, useLoading, useProposalState } from '@/hooks'
-import { IPollDetails } from '@/pages/Poll/components/PollDetails'
-import { ProposalMetadata } from '@/types'
+import { useLoading, useProposalState } from '@/hooks'
+import { PollDetailsProps } from '@/pages/Poll/components/PollDetails'
 
 export function useProposal(id?: string) {
   const { t } = useTranslation()
   const { getProposalInfo } = useProposalState()
   const { address } = useWeb3Context()
+  const [isRestricted, setIsRestricted] = useState(false)
 
   const {
     data: proposal,
@@ -29,59 +30,48 @@ export function useProposal(id?: string) {
   } = useLoading(null, async () => {
     if (!id) return null
     const proposalFromContract = await getProposalInfo(Number(id))
-    if (proposalFromContract) {
-      return parseProposalFromContract(proposalFromContract)
+
+    const { data: proposals } = await getProposals({
+      query: {
+        filter: {
+          creator: address,
+          proposal_id: id,
+        },
+      },
+    })
+
+    if (proposals?.[0]?.owner !== address) {
+      setIsRestricted(true)
+      return null
     }
+
+    if (proposalFromContract) {
+      const parsedContractProposal = parseProposalFromContract(proposalFromContract)
+
+      return {
+        metadata: proposals?.[0]?.metadata,
+        parsed: proposals?.[0],
+        fromContract: parsedContractProposal,
+      }
+    }
+
     return null
   })
 
-  const {
-    data: proposalMetadata,
-    isLoading: isMetadataLoading,
-    isLoadingError: isMetadataError,
-  } = useIpfsLoading<ProposalMetadata>(proposal?.cid as string)
+  const formattedStartDate = formatUtcDateTime(proposal?.parsed?.start_timestamp ?? 0)
+  const formattedEndDate = formatUtcDateTime(proposal?.parsed?.end_timestamp ?? 0)
 
-  const {
-    data: remainingVotesCount,
-    isLoading: isRemainingVotesCountLoading,
-    isLoadingError: isRemainingVotesCountLoadingError,
-  } = useLoading(
-    null,
-    async () => {
-      try {
-        if (!id) return
-        const response = await getVotesCount(id)
-        return response.data.vote_count || 0
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        return 0
-      }
-    },
-    { silentError: true },
-  )
-
-  const formattedStartDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
-  const formattedEndDate = formatUtcDateTime(
-    (proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0),
-  )
-
-  const isLoading =
-    isProposalLoading ||
-    isMetadataLoading ||
-    !proposal ||
-    !proposalMetadata ||
-    isRemainingVotesCountLoading
-
-  const isError = isMetadataError || isRemainingVotesCountLoadingError || isProposalLoadingError
+  const isLoading = isProposalLoading || (!proposal && !isRestricted && !isProposalLoadingError)
 
   const isTopUpAllowed =
-    [ProposalStatus.Started, ProposalStatus.Waiting].includes(proposal?.status as ProposalStatus) &&
-    address
+    [ProposalStatus.Started, ProposalStatus.Waiting].includes(
+      proposal?.fromContract.status as ProposalStatus,
+    ) && address
 
   const participantsAmount = useMemo(() => {
-    if (proposal?.voteResults) {
+    if (proposal?.fromContract.voteResults) {
       return Math.max(
-        ...proposal.voteResults.map(results =>
+        ...proposal.fromContract.voteResults.map(results =>
           results.reduce((sum, value) => sum + Number(value), 0),
         ),
         0,
@@ -89,10 +79,10 @@ export function useProposal(id?: string) {
     }
 
     return 0
-  }, [proposal?.voteResults])
+  }, [proposal])
 
   const criteria = useMemo(() => {
-    const whitelistData = proposal?.votingWhitelistData
+    const whitelistData = proposal?.fromContract.votingWhitelistData
 
     // Countries as a criteria string if exists -> ["Ukraine, Georgia"]
     const formattedNationalitiesArray = whitelistData?.nationalities
@@ -107,7 +97,7 @@ export function useProposal(id?: string) {
       whitelistData?.birthDateUpperbound && whitelistData.birthDateUpperbound !== ZERO_DATE
         ? calculateAgeDiffFromBirthDateBound(
             whitelistData.birthDateUpperbound,
-            proposal?.startTimestamp,
+            proposal?.fromContract.startTimestamp,
           )
         : null
 
@@ -115,7 +105,7 @@ export function useProposal(id?: string) {
       whitelistData?.birthDateLowerbound && whitelistData.birthDateLowerbound !== ZERO_DATE
         ? calculateAgeDiffFromBirthDateBound(
             whitelistData.birthDateLowerbound,
-            proposal?.startTimestamp,
+            proposal?.fromContract.startTimestamp,
           )
         : null
 
@@ -129,7 +119,7 @@ export function useProposal(id?: string) {
     }
   }, [proposal])
 
-  const pollDetails = useMemo<IPollDetails[]>(() => {
+  const pollDetails = useMemo<PollDetailsProps[]>(() => {
     if (!proposal) return []
     return [
       {
@@ -140,28 +130,41 @@ export function useProposal(id?: string) {
         title: t('poll.end-date'),
         description: formattedEndDate,
       },
+    ]
+  }, [proposal, t, formattedStartDate, formattedEndDate])
+
+  const balanceDetails = useMemo(() => {
+    if (!proposal) return []
+    return [
       {
-        title: t('poll.remaining-votes'),
-        description: `${participantsAmount}/${remainingVotesCount ?? 0 + participantsAmount}`,
+        title: t('poll.total-spent'),
+        description: `${formatAmountShort(
+          BN.fromBigInt(proposal.parsed?.total_balance ?? 0).sub(
+            BN.fromBigInt(proposal.parsed?.remaining_balance ?? 0),
+          ),
+        )} ${NATIVE_CURRENCY} / ${formatAmountShort(proposal.parsed?.total_balance ?? 0)} ${NATIVE_CURRENCY}`,
       },
     ]
-  }, [proposal, t, formattedStartDate, formattedEndDate, participantsAmount, remainingVotesCount])
+  }, [proposal, t])
 
   return {
+    isRestricted,
     isLoading,
-    isError,
+    isError: isProposalLoadingError,
 
     criteria,
 
     pollDetails,
+    balanceDetails,
+
     proposal,
-    proposalMetadata,
     isTopUpAllowed,
+    proposalMetadata: proposal?.metadata,
 
     formattedStartDate,
     formattedEndDate,
 
     participantsAmount,
-    remainingVotesCount,
+    remainingVotesCount: proposal?.parsed?.remaining_votes_count ?? 0,
   }
 }

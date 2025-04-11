@@ -250,7 +250,10 @@
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",
     "top-up-btn": "Top up",
-    "loading-error": "Error occurred while loading this poll"
+    "loading-error": "Error occurred while loading this poll",
+    "unavailable-error": "This poll is unavailable",
+    "back-to-poll-btn": "Back to Polls",
+    "total-spent": "Total spent"
   },
   "format": {
     "sex": {

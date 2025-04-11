@@ -23,7 +23,7 @@ export interface UploadedDataIpfs {
   hash: string
 }
 
-export interface ParsedProposal {
+export interface ParsedContractProposal {
   cid: string
   status: ProposalStatus
   startTimestamp: number

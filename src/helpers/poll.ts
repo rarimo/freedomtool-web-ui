@@ -7,7 +7,7 @@ import { api } from '@/api/clients'
 import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
-import { DecodedWhitelistData, Nationality, ParsedProposal, Proposal, Sex } from '@/types'
+import { DecodedWhitelistData, Nationality, ParsedContractProposal, Proposal, Sex } from '@/types'
 import { ProposalState__factory } from '@/types/contracts'
 import { ProposalsState } from '@/types/contracts/ProposalState'
 
@@ -120,7 +120,7 @@ export const getPredictedVotesAmount = async (
 
 export const parseProposalFromContract = (
   proposal: ProposalsState.ProposalInfoStructOutput,
-): ParsedProposal => {
+): ParsedContractProposal => {
   const rawWhitelistData = proposal[2][6].toString()
 
   const votingWhitelistData = decodeWhitelistData(rawWhitelistData)
@@ -156,7 +156,7 @@ export const decodeWhitelistData = (whitelistDataHex: string) => {
   return decodedData
 }
 
-export const getTotalVotesPerQuestion = (proposal: ParsedProposal, questionIndex: number) =>
+export const getTotalVotesPerQuestion = (proposal: ParsedContractProposal, questionIndex: number) =>
   proposal.voteResults[questionIndex]?.reduce((acc, curr) => acc + curr, 0) || 0
 
 export const getCountProgress = (count: number, totalCount: number) =>

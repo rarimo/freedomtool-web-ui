@@ -1,25 +1,28 @@
-import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Divider, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { ErrorView, LazyImage, RoundedBackground } from '@/common'
 import AuthBlock from '@/common/AuthBlock'
 import DarkGradient from '@/common/DarkGradient'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import { useRouteTitleContext } from '@/contexts'
-import { Icons } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
 import { useAuthState, useUiState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
+import { ParsedContractProposal } from '@/types'
 import { UiIcon, UiTabs } from '@/ui'
 
+import BalanceDetails from './components/BalanceDetails'
 import PollDetails from './components/PollDetails'
 import PollSkeleton from './components/PollSkeleton'
 import QuestionList from './components/QuestionList'
+import StatusBadge from './components/StatusBadge'
 import TopUpForm from './components/TopUpForm'
 
 export default function Poll() {
@@ -30,16 +33,21 @@ export default function Poll() {
   const isMdDown = useMediaQuery(breakpoints.down('md'))
   const { isDarkMode } = useUiState()
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const {
+    isRestricted,
     isLoading,
     isError,
 
     criteria,
 
     pollDetails,
+    balanceDetails,
+
     proposal,
     proposalMetadata,
+
     isTopUpAllowed,
 
     formattedEndDate,
@@ -70,6 +78,19 @@ export default function Poll() {
             </Stack>
           )}
 
+          {isRestricted && (
+            <ErrorView
+              sx={{ maxWidth: 320, mx: 'auto', mt: 8 }}
+              title='404'
+              description={t('poll.unavailable-error')}
+              action={
+                <Button variant='outlined' size='medium' onClick={() => navigate(RoutePaths.Polls)}>
+                  {t('poll.back-to-poll-btn')}
+                </Button>
+              }
+            />
+          )}
+
           {isError && (
             <motion.div
               key='error'
@@ -81,11 +102,20 @@ export default function Poll() {
               <ErrorView
                 sx={{ maxWidth: 300, mx: 'auto', mt: 8 }}
                 description={t('poll.loading-error')}
+                action={
+                  <Button
+                    variant='outlined'
+                    size='medium'
+                    onClick={() => navigate(RoutePaths.Polls)}
+                  >
+                    {t('poll.back-to-poll-btn')}
+                  </Button>
+                }
               />
             </motion.div>
           )}
 
-          {!isLoading && !isError && (
+          {!isLoading && !isError && !isRestricted && (
             <Stack
               component={motion.div}
               sx={{ overflowX: 'hidden' }}
@@ -139,6 +169,9 @@ export default function Poll() {
                             },
                           }}
                         >
+                          <Stack sx={{ position: 'absolute', top: 24, left: 24, zIndex: 1 }}>
+                            <StatusBadge status={proposal?.fromContract.status} />
+                          </Stack>
                           {proposalMetadata?.imageCid ? (
                             <LazyImage
                               width={1}
@@ -259,6 +292,7 @@ export default function Poll() {
                                       />
                                       {isTopUpAllowed && <TopUpForm />}
                                       <PollDetails list={pollDetails} criteria={criteria} />
+                                      <BalanceDetails list={balanceDetails} />
                                     </Stack>
                                   </Stack>
                                 ),
@@ -268,7 +302,7 @@ export default function Poll() {
                                 content: (
                                   <Stack>
                                     <QuestionList
-                                      proposal={proposal}
+                                      proposal={proposal?.fromContract as ParsedContractProposal}
                                       questions={proposalMetadata?.acceptedOptions ?? []}
                                     />
                                   </Stack>
@@ -282,7 +316,7 @@ export default function Poll() {
                       {!isMdDown && (
                         <Stack>
                           <QuestionList
-                            proposal={proposal}
+                            proposal={proposal?.fromContract as ParsedContractProposal}
                             questions={proposalMetadata?.acceptedOptions ?? []}
                           />
                         </Stack>
@@ -323,6 +357,7 @@ export default function Poll() {
                           {isTopUpAllowed && <TopUpForm />}
                         </Stack>
                         <PollDetails list={pollDetails} criteria={criteria} />
+                        <BalanceDetails list={balanceDetails} />
                       </Stack>
                     </Stack>
                   </RoundedBackground>
