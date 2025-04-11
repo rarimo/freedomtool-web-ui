@@ -60,7 +60,7 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
       ) : (
         <Box
           component='img'
-          width={428}
+          width={{ xs: '100%', md: 428 }}
           height='100%'
           sx={{ objectFit: 'contain', objectPosition: 'top' }}
           src={`/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`}

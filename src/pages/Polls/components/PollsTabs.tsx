@@ -95,6 +95,7 @@ function PollsTab({ count, label, route, isExact = false }: PollTabProps) {
         <Box
           component={motion.div}
           layoutId='active-tab'
+          style={{ originY: 'top' }}
           sx={{
             position: 'absolute',
             bottom: 0,
