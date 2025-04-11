@@ -127,7 +127,7 @@ export function useProposal(id?: string) {
       maxAge,
       formattedSex,
     }
-  }, [proposal?.votingWhitelistData, proposal?.startTimestamp])
+  }, [proposal])
 
   const pollDetails = useMemo<IPollDetails[]>(() => {
     if (!proposal) return []

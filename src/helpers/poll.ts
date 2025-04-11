@@ -252,6 +252,7 @@ export function calculateAgeDiffFromBirthDateBound(
   const timeDate = time(hexToAscii(dateBound), 'YYMMDD')
   const diff = time(startTimestamp).utc().diff(timeDate, 'ms')
 
+  // Adding 0.25 days to compensate for leap years
   const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365.25
   const diffInYears = Math.floor(diff / MS_IN_YEAR)
 
