@@ -4,7 +4,6 @@ import { t } from 'i18next'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { ImagePickerWithCrop } from '@/common'
-import { BANNER_HEIGHT, BANNER_WIDTH } from '@/constants'
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
 import UiDatePicker from '@/ui/UiDatePicker'
@@ -30,10 +29,7 @@ export default function DetailsSection() {
           <ImagePickerWithCrop
             ref={field.ref}
             title={t('create-poll.image-title')}
-            description={t('create-poll.image-description', {
-              width: BANNER_WIDTH,
-              height: BANNER_HEIGHT,
-            })}
+            description={t('create-poll.image-description')}
             sx={{ width: 'fit-content' }}
             labelProps={{
               width: 48,

@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "{{width}}x{{height}}px, PNG, JPEG or WEBP",
+    "image-description": "420x240px, PNG, JPEG or WEBP",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",

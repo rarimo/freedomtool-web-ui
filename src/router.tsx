@@ -46,7 +46,7 @@ export const createRouter = () => {
                 element: <ActivePolls />,
               },
               {
-                path: RoutePaths.PollsHistory,
+                path: RoutePaths.PollsFinished,
                 element: <FinishedPolls />,
               },
             ],

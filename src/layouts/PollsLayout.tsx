@@ -27,12 +27,12 @@ const PollsLayout = ({ children }: PropsWithChildren) => {
       <UiContainer
         id='main-content'
         sx={{
-          my: 8,
+          py: 8,
           maxWidth: 1136,
           transition: Transitions.Default,
 
           [breakpoints.down('md')]: {
-            mt: 4,
+            pb: 4,
           },
         }}
       >
