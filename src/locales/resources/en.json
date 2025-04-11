@@ -42,8 +42,8 @@
   "formats": {
     "percent": "{{value}}%",
     "age": {
-      "lte": "less than or equal {{maxAge}}",
-      "gte-and-lte": "{{minAge}}-{{maxAge}} y.o. only"
+      "lte": "{{maxAge}} years or less",
+      "gte-and-lte": "{{minAge}}-{{maxAge}} years"
     }
   },
   "errors": {
@@ -218,9 +218,8 @@
     "votes-count_other": "{{count}} votes",
     "criteria-list": {
       "sex": "Sex:",
-      "minAge": "Minimum age:",
-      "maxAge": "Maximum age:",
-      "allowed-nationalities": "All allowed nationalities ({{count}})"
+      "age": "Age:",
+      "allowed-nationalities": "Allowed nationalities ({{count}}):"
     },
     "qr-code-panel": {
       "modal-title": "QR Codes",
@@ -231,9 +230,12 @@
         "creation-time-lbl": "Creation time",
         "actions-lbl": "Actions"
       },
-      "generate-qr-code-btn": "Generate a new QR code"
+      "generate-qr-code-btn": "Generate a new QR code",
+      "no-codes-title": "No QR Codes",
+      "no-codes-description": "Create a QR code to start collecting votes"
     },
     "criteria": "Criteria:",
+    "criteria-modal-title": "Poll criteria",
     "top-up-form": {
       "add-funds": "Add funds",
       "total": "Fee:",
@@ -246,8 +248,8 @@
   },
   "format": {
     "sex": {
-      "female": "Females",
-      "male": "Males"
+      "female": "Female only",
+      "male": "Male only"
     }
   },
   "image-picker": {

@@ -35,7 +35,7 @@ export function UiDialogTitle({ children, onClose, closeButtonIcon, ...rest }: U
       <IconButton
         aria-label='close'
         sx={{
-          p: 0,
+          p: 1,
           background: 'transparent',
         }}
         onClick={e => onClose?.(e, 'backdropClick')}
