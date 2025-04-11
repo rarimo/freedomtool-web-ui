@@ -60,7 +60,7 @@ export default function FinishedPolls() {
                 transition: { delay, duration: 0.25 },
               }),
             }}
-            custom={Math.random() * 0.5}
+            custom={0.15}
           >
             <PollCard proposal={proposal} />
           </motion.div>

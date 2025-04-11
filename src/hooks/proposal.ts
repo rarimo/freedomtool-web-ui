@@ -8,8 +8,8 @@ import {
   calculateAgeDiffFromBirthDateBound,
   ErrorHandler,
   formatCountry,
-  formatDateTime,
   formatSex,
+  formatUtcDateTime,
   getVotesCount,
   parseProposalFromContract,
 } from '@/helpers'
@@ -60,8 +60,8 @@ export function useProposal(id?: string) {
     { silentError: true },
   )
 
-  const formattedStartDate = formatDateTime(proposal?.startTimestamp ?? 0)
-  const formattedEndDate = formatDateTime(
+  const formattedStartDate = formatUtcDateTime(proposal?.startTimestamp ?? 0)
+  const formattedEndDate = formatUtcDateTime(
     (proposal?.startTimestamp ?? 0) + (proposal?.duration ?? 0),
   )
 
@@ -105,12 +105,18 @@ export function useProposal(id?: string) {
 
     const minAge =
       whitelistData?.birthDateUpperbound && whitelistData.birthDateUpperbound !== ZERO_DATE
-        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateUpperbound)
+        ? calculateAgeDiffFromBirthDateBound(
+            whitelistData.birthDateUpperbound,
+            proposal?.startTimestamp,
+          )
         : null
 
     const maxAge =
       whitelistData?.birthDateLowerbound && whitelistData.birthDateLowerbound !== ZERO_DATE
-        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateLowerbound)
+        ? calculateAgeDiffFromBirthDateBound(
+            whitelistData.birthDateLowerbound,
+            proposal?.startTimestamp,
+          )
         : null
 
     const formattedSex = formatSex(whitelistData?.sex)
@@ -121,7 +127,7 @@ export function useProposal(id?: string) {
       maxAge,
       formattedSex,
     }
-  }, [proposal?.votingWhitelistData])
+  }, [proposal])
 
   const pollDetails = useMemo<IPollDetails[]>(() => {
     if (!proposal) return []
