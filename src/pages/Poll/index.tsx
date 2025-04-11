@@ -164,7 +164,7 @@ export default function Poll() {
                             overflow: 'hidden',
                             position: 'relative',
                             [breakpoints.down('md')]: {
-                              aspectRatio: '1.5',
+                              aspectRatio: '1.71',
                               borderRadius: 0,
                             },
                           }}
@@ -202,7 +202,7 @@ export default function Poll() {
                           <DarkGradient
                             sx={{
                               position: 'absolute',
-                              height: isMdDown ? '100%' : '60%',
+                              height: isMdDown ? '100%' : '80%',
                               bottom: 0,
                               right: 0,
                               left: 0,

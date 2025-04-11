@@ -5,7 +5,7 @@ export default function DarkGradient({ sx, children, ...rest }: StackProps & Pro
   return (
     <Stack
       sx={{
-        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65))',
+        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))',
         pointerEvents: 'none',
         ...sx,
       }}

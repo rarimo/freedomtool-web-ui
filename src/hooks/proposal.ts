@@ -9,8 +9,8 @@ import {
   calculateAgeDiffFromBirthDateBound,
   formatAmountShort,
   formatCountry,
-  formatDateTime,
   formatSex,
+  formatUtcDateTime,
   getProposals,
   parseProposalFromContract,
 } from '@/helpers'
@@ -58,8 +58,8 @@ export function useProposal(id?: string) {
     return null
   })
 
-  const formattedStartDate = formatDateTime(proposal?.parsed?.start_timestamp ?? 0)
-  const formattedEndDate = formatDateTime(proposal?.parsed?.end_timestamp ?? 0)
+  const formattedStartDate = formatUtcDateTime(proposal?.parsed?.start_timestamp ?? 0)
+  const formattedEndDate = formatUtcDateTime(proposal?.parsed?.end_timestamp ?? 0)
 
   const isLoading = isProposalLoading || (!proposal && !isRestricted && !isProposalLoadingError)
 
@@ -95,12 +95,18 @@ export function useProposal(id?: string) {
 
     const minAge =
       whitelistData?.birthDateUpperbound && whitelistData.birthDateUpperbound !== ZERO_DATE
-        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateUpperbound)
+        ? calculateAgeDiffFromBirthDateBound(
+            whitelistData.birthDateUpperbound,
+            proposal?.fromContract.startTimestamp,
+          )
         : null
 
     const maxAge =
       whitelistData?.birthDateLowerbound && whitelistData.birthDateLowerbound !== ZERO_DATE
-        ? calculateAgeDiffFromBirthDateBound(whitelistData.birthDateLowerbound)
+        ? calculateAgeDiffFromBirthDateBound(
+            whitelistData.birthDateLowerbound,
+            proposal?.fromContract.startTimestamp,
+          )
         : null
 
     const formattedSex = formatSex(whitelistData?.sex)

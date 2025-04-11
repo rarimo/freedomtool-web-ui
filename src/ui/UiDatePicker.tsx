@@ -24,7 +24,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
     const { palette } = useTheme()
     const [internalErrorMessage, setInternalErrorMessage] = useState<string | null>(null)
 
-    const toDayjs = (date?: TimeDate) => (date ? time(date).dayjs : undefined)
+    const toDayjs = (date?: TimeDate) => (date ? time(date).utc().dayjs : undefined)
 
     const value = useMemo(() => toDayjs(rest.value) || null, [rest.value])
     const minDate = useMemo(() => toDayjs(rest.minDate), [rest.minDate])
@@ -33,7 +33,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
     const maxTime = useMemo(() => toDayjs(rest.maxTime), [rest.maxTime])
 
     const handleChange = useCallback(
-      (v: TimeDate | null) => rest.onChange?.(v ? time(v).format() : null),
+      (v: TimeDate | null) => rest.onChange?.(v ? time(v).utc().format() : null),
       [rest],
     )
 
@@ -64,6 +64,7 @@ const UiDatePicker = forwardRef<HTMLInputElement, Props>(
               onError: handleError,
               minDate,
               maxDate,
+              timezone: 'UTC',
               slotProps: {
                 popper: {
                   placement: 'auto-end',
