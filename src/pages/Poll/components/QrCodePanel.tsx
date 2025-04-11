@@ -91,19 +91,30 @@ export default function QrCodePanel() {
 
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
-      <Stack direction='row' alignItems='center' spacing={1}>
-        <QRCodeBlock url={generatePollQrCodeUrl(firstActiveQRCode?.url || '')} />
-        <Stack alignItems='flex-start' spacing={2}>
-          <Typography variant='subtitle5'>
-            {formatCroppedString(firstActiveQRCode?.id || '')}
+      {firstActiveQRCode ? (
+        <Stack direction='row' alignItems='center' spacing={1}>
+          <QRCodeBlock url={generatePollQrCodeUrl(firstActiveQRCode?.url || '')} />
+          <Stack alignItems='flex-start' spacing={2}>
+            <Typography variant='subtitle5'>
+              {formatCroppedString(firstActiveQRCode?.id || '')}
+            </Typography>
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-count-lbl', {
+                count: firstActiveQRCode?.scan_count || 0,
+              })}
+            </Typography>
+          </Stack>
+        </Stack>
+      ) : (
+        <Stack spacing={1} textAlign='left'>
+          <Typography variant='subtitle5' color={palette.text.primary}>
+            {t('poll.qr-code-panel.no-codes-title')}
           </Typography>
           <Typography variant='body4' color={palette.text.secondary}>
-            {t('poll.qr-code-panel.qr-scan-count-lbl', {
-              count: firstActiveQRCode?.scan_count || 0,
-            })}
+            {t('poll.qr-code-panel.no-codes-description')}
           </Typography>
         </Stack>
-      </Stack>
+      )}
       <IconButton
         sx={{
           p: 2.5,
