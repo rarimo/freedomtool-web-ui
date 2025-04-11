@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import { ErrorView, LazyImage, RoundedBackground } from '@/common'
-import AbstractBackground from '@/common/AbstractBackground'
 import AuthBlock from '@/common/AuthBlock'
 import DarkGradient from '@/common/DarkGradient'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
@@ -14,7 +13,7 @@ import { Icons } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
-import { useAuthState } from '@/store'
+import { useAuthState, useUiState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon, UiTabs } from '@/ui'
 
@@ -29,6 +28,7 @@ export default function Poll() {
   const { setTitle } = useRouteTitleContext()
   const { isAuthorized } = useAuthState()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
+  const { isDarkMode } = useUiState()
   const { t } = useTranslation()
 
   const {
@@ -155,11 +155,15 @@ export default function Poll() {
                               alt='Poll banner'
                             />
                           ) : (
-                            <AbstractBackground
-                              backgrounds={[
-                                palette.additional.gradient4,
-                                palette.additional.gradient5,
-                              ]}
+                            <Box
+                              component='img'
+                              sx={{
+                                objectFit: 'cover',
+                                objectPosition: 'top',
+                                width: '100%',
+                                height: 'auto',
+                              }}
+                              src={`/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`}
                             />
                           )}
                           <DarkGradient

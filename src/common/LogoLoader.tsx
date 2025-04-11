@@ -10,11 +10,11 @@ export default function LogoLoader({ ...rest }: Props) {
 
   return (
     <Typography
+      variant='h1'
       sx={{
-        fontSize: '3rem',
         fontWeight: 400,
         color: palette.text.primary,
-        opacity: 0,
+        opacity: 1,
         ...rest.sx,
       }}
       {...rest}

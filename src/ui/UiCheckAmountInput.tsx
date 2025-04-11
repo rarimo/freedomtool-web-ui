@@ -16,7 +16,7 @@ import { ControllerRenderProps } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { NATIVE_CURRENCY } from '@/constants'
-import { formatAmount, formatInput, trimLeadingZeroes } from '@/helpers'
+import { formatAmountShort, formatInput, trimLeadingZeroes } from '@/helpers'
 
 import UiNumberField from './UiNumberField'
 
@@ -114,7 +114,7 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
           ),
           endAdornment: (
             <Button
-              sx={{ p: 0, position: 'absolute', bottom: 0, ...endAdornmentSx }}
+              sx={{ p: 0, position: 'absolute', top: { xs: 8, md: 10 }, ...endAdornmentSx }}
               size='small'
               variant='text'
               onClick={() => onChange(Number(formatUnits(maxValue, 18)).toFixed(4))}
@@ -122,19 +122,21 @@ const UiCheckAmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
               <Stack
                 spacing={2}
                 alignItems='center'
+                justifyContent='flex-end'
                 divider={<Divider orientation='vertical' flexItem />}
                 direction='row'
+                width={200}
               >
-                {isMdUp && (
-                  <Stack direction='row' spacing={1}>
+                <Stack direction='row' spacing={1}>
+                  {isMdUp && (
                     <Typography variant='body5' color={palette.text.secondary}>
                       {t('create-poll.amount-lbl')}
                     </Typography>
-                    <Typography variant='subtitle7' color={palette.text.secondary}>
-                      {formatAmount(maxValue)} {NATIVE_CURRENCY}
-                    </Typography>
-                  </Stack>
-                )}
+                  )}
+                  <Typography variant='subtitle7' color={palette.text.secondary}>
+                    {formatAmountShort(maxValue)} {NATIVE_CURRENCY}
+                  </Typography>
+                </Stack>
                 <Typography variant='buttonSmall'>{t('create-poll.max-btn')}</Typography>
               </Stack>
             </Button>

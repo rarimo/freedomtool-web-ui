@@ -2,8 +2,9 @@ import { Button, Stack, useTheme } from '@mui/material'
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ErrorView, LogoLoader, NoDataView } from '@/common'
+import { AppLoader, ErrorView, NoDataView } from '@/common'
 import { Icons, LoadingStates } from '@/enums'
+import { spinAnimation } from '@/theme/constants'
 import { UiIcon } from '@/ui'
 
 import IntersectionAnchor from './IntersectionAnchor'
@@ -29,7 +30,7 @@ export default function InfiniteList<D>({
   onRetry,
   onLoadNext,
 }: Props<D>) {
-  const { spacing } = useTheme()
+  const { spacing, palette } = useTheme()
   const { t } = useTranslation()
 
   if (items.length > 0) {
@@ -39,7 +40,7 @@ export default function InfiniteList<D>({
         {loadingState === LoadingStates.NextLoading ? (
           (slots?.nextLoading ?? (
             <Stack alignItems='center'>
-              <LogoLoader />
+              <AppLoader />
             </Stack>
           ))
         ) : loadingState === LoadingStates.Error ? (
@@ -58,8 +59,15 @@ export default function InfiniteList<D>({
   if ([LoadingStates.Loading, LoadingStates.Initial].includes(loadingState)) {
     return (
       slots?.loading ?? (
-        <Stack alignItems='center' p={20}>
-          <LogoLoader />
+        <Stack alignItems='center' p={{ xs: 20, md: 40 }}>
+          <UiIcon
+            name={Icons.LoaderFill}
+            size={15}
+            color={palette.text.secondary}
+            sx={{
+              animation: `${spinAnimation} 1.2s infinite linear`,
+            }}
+          />
         </Stack>
       )
     )

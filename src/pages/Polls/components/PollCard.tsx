@@ -1,18 +1,19 @@
-import { Button, Divider, Skeleton, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Divider, Skeleton, Stack, Typography, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { generatePath, useNavigate } from 'react-router-dom'
 
 import { LazyImage } from '@/common'
-import AbstractBackground from '@/common/AbstractBackground'
 import { Icons, RoutePaths } from '@/enums'
 import { formatDateDM, getCountProgress, getIpfsImageSrc } from '@/helpers'
+import { useUiState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { Proposal } from '@/types'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
 
 export default function PollCard({ proposal }: { proposal: Proposal }) {
   const navigate = useNavigate()
+  const { isDarkMode } = useUiState()
 
   const { palette } = useTheme()
   const { t } = useTranslation()
@@ -54,19 +55,12 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
           }}
         />
       ) : (
-        <AbstractBackground
-          backgrounds={[
-            palette.additional.gradient2,
-            palette.additional.gradient3,
-            palette.additional.gradient4,
-          ]}
-          sx={{
-            position: 'absolute',
-            top: 0,
-            zIndex: 1,
-            width: '100%',
-            height: '100%',
-          }}
+        <Box
+          component='img'
+          width={428}
+          height='100%'
+          sx={{ objectFit: 'contain', objectPosition: 'top' }}
+          src={`/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`}
         />
       )}
       <Stack

@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

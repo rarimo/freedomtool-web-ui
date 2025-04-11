@@ -97,9 +97,17 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
-      sourcemap: true,
+      chunkSizeWarningLimit: 1_000,
+      sourcemap: isProduction ? false : true,
       target: 'esnext',
       rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id.split('node_modules/')[1].split('/')[0]
+            }
+          },
+        },
         plugins: [
           // Enable rollup polyfills plugin
           // used during production bundling
