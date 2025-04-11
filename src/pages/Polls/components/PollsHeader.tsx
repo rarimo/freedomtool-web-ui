@@ -45,7 +45,7 @@ export default function PollsHeader() {
       // count: activePollsCount,
     },
     {
-      route: RoutePaths.PollsHistory,
+      route: RoutePaths.PollsFinished,
       label: t('polls.history-polls-tab-lbl'),
       // count: historyPollsCount,
     },

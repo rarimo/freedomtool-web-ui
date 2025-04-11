@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
+import { Button, Dialog, Divider, Stack, Typography, useTheme } from '@mui/material'
 import isEmpty from 'lodash/isEmpty'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +18,7 @@ export interface PollCriteriaListProps {
 export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) {
   const { palette } = useTheme()
   const { t } = useTranslation()
-  const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow()
+  const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(40)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   if (isEmpty(props)) return null
@@ -36,9 +36,9 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
       : `${formattedNationalitiesArray[0]} +${formattedNationalitiesArray.length - 1}`
     : null
 
-  const previewString = [nationalitiesPreview, formattedSex, formattedAge]
-    .filter(item => item !== null)
-    .join(', ')
+  const previewString =
+    [nationalitiesPreview, formattedSex, formattedAge].filter(item => item !== null).join(', ') ||
+    '–'
 
   const criteriaList = [
     {
@@ -46,12 +46,8 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
       value: formattedSex,
     },
     {
-      label: t('poll.criteria-list.minAge'),
-      value: formatAgeRange({ minAge }),
-    },
-    {
-      label: t('poll.criteria-list.maxAge'),
-      value: formatAgeRange({ maxAge }),
+      label: t('poll.criteria-list.age'),
+      value: formatAgeRange({ minAge, maxAge }),
     },
   ]
 
@@ -68,7 +64,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
             sx={{ p: 0, color: palette.text.primary, height: 'fit-content' }}
             variant='text'
             size='small'
-            endIcon={<UiIcon size={5} name={Icons.AccountCircle} />}
+            endIcon={<UiIcon size={4} name={Icons.Info} />}
             onClick={() => setIsModalOpen(true)}
           >
             <Typography variant='subtitle6'>{previewString}</Typography>
@@ -78,7 +74,9 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
         )}
       </Stack>
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <UiDialogTitle onClose={() => setIsModalOpen(false)}>{t('poll.criteria')}</UiDialogTitle>
+        <UiDialogTitle onClose={() => setIsModalOpen(false)}>
+          {t('poll.criteria-modal-title')}
+        </UiDialogTitle>
         <UiDialogContent sx={{ width: { xs: 290, md: 450 } }}>
           {hasCriteriaList && (
             <>
@@ -118,17 +116,13 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
                   count: formattedNationalitiesArray.length,
                 })}
               </Typography>
-              <Box
+              <Stack
+                spacing={1}
                 minHeight={100}
                 maxHeight={250}
-                mt={5}
+                mt={2}
                 sx={{
                   overflow: 'scroll',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-                  placeContent: 'flex-start',
-                  gap: '10px',
-
                   ...shadowScrollStyle,
                 }}
                 onScroll={onScrollHandler}
@@ -137,12 +131,12 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
                   <Typography
                     sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}
                     key={item}
-                    variant='body3'
+                    variant='body4'
                   >
                     {item}
                   </Typography>
                 ))}
-              </Box>
+              </Stack>
             </Stack>
           )}
         </UiDialogContent>

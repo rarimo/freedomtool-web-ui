@@ -42,8 +42,8 @@
   "formats": {
     "percent": "{{value}}%",
     "age": {
-      "lte": "less than or equal {{maxAge}}",
-      "gte-and-lte": "{{minAge}}-{{maxAge}} y.o. only"
+      "lte": "{{maxAge}} years or less",
+      "gte-and-lte": "{{minAge}}-{{maxAge}} years"
     }
   },
   "errors": {
@@ -139,7 +139,7 @@
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
-    "image-description": "{{width}}x{{height}}px, PNG, JPEG or WEBP",
+    "image-description": "16:9 ratio, PNG, JPEG or WEBP",
     "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
@@ -218,9 +218,8 @@
     "votes-count_other": "{{count}} votes",
     "criteria-list": {
       "sex": "Sex:",
-      "minAge": "Minimum age:",
-      "maxAge": "Maximum age:",
-      "allowed-nationalities": "All allowed nationalities ({{count}})"
+      "age": "Age:",
+      "allowed-nationalities": "Allowed nationalities ({{count}}):"
     },
     "qr-code-panel": {
       "modal-title": "QR Codes",
@@ -235,14 +234,18 @@
       "delete-btn-tooltip": "Delete QR code",
       "download-btn-tooltip": "Download QR code",
       "copy-btn-tooltip": "Copy QR code URL",
-      "copied-btn-tooltip": "Copied"
+      "copied-btn-tooltip": "Copied",
+      "no-codes-title": "No QR Codes",
+      "no-codes-description": "Create a QR code to start collecting votes"
     },
     "criteria": "Criteria:",
+    "criteria-modal-title": "Poll criteria",
     "top-up-form": {
       "add-funds": "Add funds",
       "fee-lbl": "Fee:",
       "estimate-error": "Estimate gas error",
-      "add-funds-btn": "Add {{amount}} {{currency}}"
+      "add-funds-btn": "Add {{amount}} {{currency}}",
+      "add-funds-success-msg": "Funds added successfully"
     },
     "tab-1-lbl": "Result",
     "tab-2-lbl": "Details",
@@ -251,8 +254,8 @@
   },
   "format": {
     "sex": {
-      "female": "Females",
-      "male": "Males"
+      "female": "Female only",
+      "male": "Male only"
     }
   },
   "image-picker": {

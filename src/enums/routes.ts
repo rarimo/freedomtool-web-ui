@@ -3,7 +3,7 @@ export enum RoutePaths {
 
   Polls = '/polls',
   PollsActive = '/polls/active',
-  PollsHistory = '/polls/history',
+  PollsFinished = '/polls/finished',
   NewPoll = '/polls/new',
   Poll = '/polls/:id',
 

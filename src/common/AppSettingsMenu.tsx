@@ -1,6 +1,6 @@
 import {
+  ButtonBase,
   Divider,
-  IconButton,
   MenuItem,
   Stack,
   SxProps,
@@ -14,8 +14,9 @@ import { useTranslation } from 'react-i18next'
 import { AppMenu } from '@/common/index'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
-import { formatAddress, formatBalance } from '@/helpers'
+import { formatAddress, formatAmountShort } from '@/helpers'
 import { authStore, uiStore } from '@/store'
+import { Transitions } from '@/theme/constants'
 import { UiIcon, UiSwitch } from '@/ui'
 
 export default function AppSettingsMenu() {
@@ -32,24 +33,26 @@ export default function AppSettingsMenu() {
   return (
     <>
       <Stack
+        component={ButtonBase}
         bgcolor={palette.action.active}
         px={4}
         py={{ xs: 1.5, md: 2.5 }}
         borderRadius={100}
-        onClick={() => {}}
+        fontFamily='inherit'
+        sx={{
+          transition: Transitions.Default,
+          '&:hover, &:focus-visible': {
+            bgcolor: palette.action.hover,
+          },
+        }}
+        onClick={event => setAnchorEl(event.currentTarget)}
       >
         <Stack direction='row' spacing={2} alignItems='center'>
           <UiIcon name={Icons.Ethereum} size={5} />
-          <Typography variant='subtitle6'>{formatBalance(balance)}</Typography>
+          <Typography variant='subtitle6'>{formatAmountShort(balance)}</Typography>
           <Divider orientation='vertical' flexItem />
           {isMdUp && <Typography variant='subtitle6'>{formatAddress(address, 5)}</Typography>}
-          <IconButton
-            color='secondary'
-            sx={{ p: 0 }}
-            onClick={event => setAnchorEl(event.currentTarget)}
-          >
-            <UiIcon name={Icons.ArrowDownSLine} size={4} />
-          </IconButton>
+          <UiIcon name={Icons.ArrowDownSLine} size={4} />
         </Stack>
       </Stack>
       <AppMenu

@@ -98,7 +98,6 @@ export default function PollSkeleton() {
               spacing={6}
               divider={<Divider orientation='horizontal' flexItem />}
               sx={{
-                textAlign: 'center',
                 alignItems: 'center',
                 marginBottom: 3,
               }}

@@ -60,7 +60,7 @@ export const createRouter = () => {
                 ),
               },
               {
-                path: RoutePaths.PollsHistory,
+                path: RoutePaths.PollsFinished,
                 element: (
                   <Suspense fallback={<></>}>
                     <FinishedPolls />

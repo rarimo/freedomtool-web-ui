@@ -21,7 +21,9 @@ export function useScrollWithShadow(size: number = 80) {
 
     let maskImage = 'none'
 
-    if (isTop) {
+    if (isTop && isBottom) {
+      maskImage = 'none'
+    } else if (isTop) {
       maskImage = `linear-gradient(to top, transparent, #000 ${shadowSize})`
     } else if (isBottom) {
       maskImage = `linear-gradient(to bottom, transparent, #000 ${shadowSize})`

@@ -7,10 +7,8 @@ import { UiTypographySkeleton } from '@/ui'
 export function QrCodePanelSkeleton() {
   return (
     <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
-      <Stack direction='row' alignItems='center' spacing={2} width='100%'>
-        <Stack width={112} height={112} minWidth={112} alignItems='center' justifyContent='center'>
-          <Skeleton width={88} height={88} />
-        </Stack>
+      <Stack direction='row' alignItems='center' spacing={4} width='100%'>
+        <Skeleton width={88} height={88} sx={{ minWidth: 88 }} />
         <Stack alignItems='flex-start' width='100%' spacing={2}>
           <UiTypographySkeleton variant='subtitle5' width='50%' />
           <UiTypographySkeleton variant='body4' width='30%' />
