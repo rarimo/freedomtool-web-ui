@@ -172,33 +172,24 @@ export default function Poll() {
                           <Stack sx={{ position: 'absolute', top: 24, left: 24, zIndex: 1 }}>
                             <StatusBadge status={proposal?.fromContract.status} />
                           </Stack>
-                          {proposalMetadata?.imageCid ? (
-                            <LazyImage
-                              width={1}
-                              height={1}
-                              imageProps={{
-                                sx: {
-                                  objectFit: 'cover',
-                                  objectPosition: 'top',
-                                  width: '100%',
-                                  height: 'auto',
-                                },
-                              }}
-                              src={getIpfsImageSrc(proposalMetadata.imageCid)}
-                              alt='Poll banner'
-                            />
-                          ) : (
-                            <Box
-                              component='img'
-                              sx={{
+                          <LazyImage
+                            width={1}
+                            height={1}
+                            imageProps={{
+                              sx: {
                                 objectFit: 'cover',
                                 objectPosition: 'top',
                                 width: '100%',
                                 height: 'auto',
-                              }}
-                              src={`/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`}
-                            />
-                          )}
+                              },
+                            }}
+                            src={
+                              proposalMetadata?.imageCid
+                                ? getIpfsImageSrc(proposalMetadata.imageCid)
+                                : `/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
+                            }
+                            alt='Poll banner'
+                          />
                           <DarkGradient
                             sx={{
                               position: 'absolute',

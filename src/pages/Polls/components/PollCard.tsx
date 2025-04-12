@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Skeleton, Stack, Typography, useTheme } from '@mui/material'
+import { Button, Divider, Skeleton, Stack, Typography, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { generatePath, useNavigate } from 'react-router-dom'
@@ -46,26 +46,21 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
         if (e.key === 'Enter') navigate(generatePath(RoutePaths.Poll, { id: String(id) }))
       }}
     >
-      {imageCid ? (
-        <LazyImage
-          src={getIpfsImageSrc(imageCid)}
-          alt={title ?? 'Poll image'}
-          width='100%'
-          height='60%'
-          sx={{
-            position: 'absolute',
-            top: 0,
-          }}
-        />
-      ) : (
-        <Box
-          component='img'
-          width={{ xs: '100%', md: 428 }}
-          height='100%'
-          sx={{ objectFit: 'contain', objectPosition: 'top' }}
-          src={`/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`}
-        />
-      )}
+      <LazyImage
+        src={
+          imageCid
+            ? getIpfsImageSrc(imageCid)
+            : `/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
+        }
+        alt={title ?? 'Poll image'}
+        width='100%'
+        height='60%'
+        sx={{
+          position: 'absolute',
+          top: 0,
+        }}
+      />
+
       <Stack
         sx={{ position: 'absolute', zIndex: 2, width: 1 }}
         spacing={5}
