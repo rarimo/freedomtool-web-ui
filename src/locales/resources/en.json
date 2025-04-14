@@ -237,7 +237,8 @@
       "copy-btn-tooltip": "Copy QR code URL",
       "copied-btn-tooltip": "Copied",
       "no-codes-title": "No QR Codes",
-      "no-codes-description": "Create a QR code to start collecting votes"
+      "no-codes-description": "Create a QR code to start collecting votes",
+      "info-msg": "Manage QR codes from here: create, download, and share them so people can scan and participate in polls"
     },
     "criteria": "Criteria:",
     "criteria-modal-title": "Poll criteria",
