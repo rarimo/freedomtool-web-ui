@@ -92,7 +92,6 @@ export default function CaseStudiesSection() {
       }}
     >
       <Stack maxWidth={HOME_CONTAINER_WIDTH} width={1}>
-        {/* Заголовок секции без анимации */}
         <Typography
           textAlign='center'
           component='h2'
