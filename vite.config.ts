@@ -101,6 +101,26 @@ export default defineConfig(({ mode }) => {
       sourcemap: isProduction ? false : true,
       target: 'esnext',
       rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // Skip virtual modules that do not have a physical file on disk.
+            if (id.startsWith('\x00')) {
+              return
+            }
+
+            if (id.includes('node_modules')) {
+              const filePath = id.split('?')[0]
+              try {
+                const stats = fs.statSync(filePath)
+                if (stats.size > 100 * 1_024) {
+                  return `chunk-${path.basename(filePath, path.extname(filePath))}`
+                }
+              } catch (error) {
+                console.error(error)
+              }
+            }
+          },
+        },
         plugins: [nodePolyfills()],
       },
     },

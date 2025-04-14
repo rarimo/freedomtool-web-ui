@@ -75,15 +75,17 @@ function QuestionItem({
           divider={<Divider flexItem />}
           sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
         >
-          {variants.map((variant, oIndex) => (
-            <LinearProgressWithLabel
-              title={variant}
-              isLeading={maxIndex === oIndex}
-              count={voteResults[oIndex] || 0}
-              progress={getCountProgress(totalCount, voteResults[oIndex] || 0)}
-              key={oIndex}
-            />
-          ))}
+          {variants.map((variant, oIndex) => {
+            return (
+              <LinearProgressWithLabel
+                title={variant}
+                isLeading={maxIndex === oIndex}
+                count={voteResults[oIndex] || 0}
+                progress={getCountProgress(voteResults[oIndex] || 0, totalCount)}
+                key={oIndex}
+              />
+            )
+          })}
         </Stack>
       </Stack>
     </Stack>
