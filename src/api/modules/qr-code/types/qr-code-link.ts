@@ -13,6 +13,7 @@ export interface QrCodeLink {
 
 export interface QRCodeMetadata {
   proposal_id: number
+  name?: string
 }
 
 export interface CreateQRCode {

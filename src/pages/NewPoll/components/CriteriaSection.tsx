@@ -197,9 +197,11 @@ export default function CriteriaSection() {
             gap={5}
             divider={
               isMdUp ? (
-                <Typography variant='body4' color={palette.text.secondary}>
-                  –
-                </Typography>
+                <Stack height={56} alignItems='center' justifyContent='center'>
+                  <Typography variant='body4' color={palette.text.secondary}>
+                    –
+                  </Typography>
+                </Stack>
               ) : null
             }
           >

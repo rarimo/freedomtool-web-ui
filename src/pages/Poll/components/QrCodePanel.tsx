@@ -5,13 +5,15 @@ import QRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
-import { createQRCode, deleteQRCode, getQrCodeLinks } from '@/api/modules/qr-code'
+import { deleteQRCode, getQrCodeLinks } from '@/api/modules/qr-code'
 import { Icons, LoadingStates } from '@/enums'
 import { ErrorHandler, formatCroppedString, generatePollQrCodeUrl } from '@/helpers'
 import { useMultiPageLoading } from '@/hooks'
 import QrCodeModal from '@/pages/Poll/components/QrCodeModal'
 import { QrCodePanelSkeleton } from '@/pages/Poll/components/QrCodePanelSkeleton'
 import { UiIcon } from '@/ui'
+
+import CreateQrModal from './CreateQrModal'
 
 export const qrCodeModalGridTemplateColumns = '1.7fr 1.3fr 1fr'
 const QR_CODES_LIST_LIMIT = 5
@@ -22,6 +24,7 @@ export default function QrCodePanel() {
   const { id } = useParams()
 
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
+  const [isCreateQrOpen, setIsCreateQrOpen] = useState(false)
 
   const {
     data: qrCodes,
@@ -56,26 +59,6 @@ export default function QrCodePanel() {
     [updateQrCodes],
   )
 
-  const generateNewQrCode = useCallback(async () => {
-    try {
-      if (!id) return
-
-      await createQRCode({
-        type: 'links',
-        attributes: {
-          resource_id: id,
-          metadata: {
-            proposal_id: Number(id),
-          },
-        },
-      })
-
-      await updateQrCodes()
-    } catch (error) {
-      ErrorHandler.process(error)
-    }
-  }, [id, updateQrCodes])
-
   const firstActiveQRCode = useMemo(() => {
     const activeCodes = qrCodes.filter(qrCode => qrCode.active)
     return activeCodes.length > 0 ? activeCodes[0] : null
@@ -95,14 +78,23 @@ export default function QrCodePanel() {
             bgColor='transparent'
           />
           <Stack alignItems='flex-start' spacing={2}>
-            <Typography variant='subtitle5'>
-              {formatCroppedString(firstActiveQRCode?.id || '')}
+            <Typography variant='subtitle5' maxWidth={200} textOverflow='ellipsis'>
+              {firstActiveQRCode.metadata.name || formatCroppedString(firstActiveQRCode?.id || '')}
             </Typography>
-            <Typography variant='body4' color={palette.text.secondary}>
-              {t('poll.qr-code-panel.qr-scan-count-lbl', {
-                count: firstActiveQRCode?.scan_count || 0,
-              })}
-            </Typography>
+            {firstActiveQRCode.scan_limit ? (
+              <Typography variant='body4' color={palette.text.secondary}>
+                {t('poll.qr-code-panel.qr-scan-limit-lbl', {
+                  count: firstActiveQRCode?.scan_count || 0,
+                  total: firstActiveQRCode.scan_limit,
+                })}
+              </Typography>
+            ) : (
+              <Typography variant='body4' color={palette.text.secondary}>
+                {t('poll.qr-code-panel.qr-scan-count-lbl', {
+                  count: firstActiveQRCode?.scan_count || 0,
+                })}
+              </Typography>
+            )}
           </Stack>
         </Stack>
       ) : (
@@ -131,8 +123,16 @@ export default function QrCodePanel() {
         qrCodeLoadingState={qrCodeLoadingState}
         onReload={reloadQrCodes}
         onLoadNext={loadNextQrCodes}
-        onCreate={generateNewQrCode}
         onDelete={deleteQrCode}
+        onCreateModalOpen={() => setIsCreateQrOpen(true)}
+      />
+      <CreateQrModal
+        isOpen={isCreateQrOpen}
+        onClose={() => setIsCreateQrOpen(false)}
+        onSuccess={async () => {
+          await reloadQrCodes()
+          setIsQrModalOpen(false)
+        }}
       />
     </Stack>
   )

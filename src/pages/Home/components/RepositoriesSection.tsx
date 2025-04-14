@@ -1,4 +1,6 @@
-import { Box, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { RoundedBackground } from '@/common'
@@ -6,6 +8,7 @@ import { RoutePaths } from '@/enums'
 import { Transitions } from '@/theme/constants'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
+import { getRepositoryItemVariants } from '../helpers'
 
 export default function RepositoriesSection() {
   const { palette, breakpoints } = useTheme()
@@ -67,33 +70,8 @@ export default function RepositoriesSection() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           }}
         >
-          {links.map(({ href, title }, index) => (
-            <Stack
-              key={index}
-              component='a'
-              target='_blank'
-              rel='noopener'
-              href={href}
-              justifyContent='flex-end'
-              sx={{
-                borderRadius: 3,
-                pt: 17,
-                px: 6,
-                pb: 6,
-                height: 132,
-                color: palette.text.primary,
-                border: `1px solid ${palette.action.active}`,
-                transition: Transitions.Fast,
-                '&:hover': {
-                  background: palette.action.active,
-                  textDecoration: 'underline',
-                },
-              }}
-            >
-              <Typography variant='buttonLarge' maxWidth={80} color={palette.text.primary}>
-                {title}
-              </Typography>
-            </Stack>
+          {links.map((link, index) => (
+            <RepositoryItem key={index} link={link} index={index} total={links.length} />
           ))}
         </Box>
         <Typography
@@ -110,5 +88,55 @@ export default function RepositoriesSection() {
         </Typography>
       </Stack>
     </RoundedBackground>
+  )
+}
+
+interface RepositoryItemProps {
+  link: { title: string; href: string }
+  index: number
+  total: number
+}
+
+function RepositoryItem({ link, index, total }: RepositoryItemProps) {
+  const { palette, breakpoints } = useTheme()
+  const ref = useRef(null)
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
+  const inView = useInView(ref, { once: true, amount: 1 })
+
+  const variants = getRepositoryItemVariants(index, total, isMdDown)
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={variants}
+      initial='hidden'
+      animate={inView ? 'visible' : 'hidden'}
+    >
+      <Stack
+        component='a'
+        href={link.href}
+        target='_blank'
+        rel='noopener'
+        justifyContent='flex-end'
+        sx={{
+          borderRadius: 3,
+          pt: 17,
+          px: 6,
+          pb: 6,
+          height: 132,
+          color: palette.text.primary,
+          border: `1px solid ${palette.action.active}`,
+          transition: Transitions.Fast,
+          '&:hover': {
+            background: palette.action.active,
+            textDecoration: 'underline',
+          },
+        }}
+      >
+        <Typography variant='buttonLarge' maxWidth={80} color={palette.text.primary}>
+          {link.title}
+        </Typography>
+      </Stack>
+    </motion.div>
   )
 }

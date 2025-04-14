@@ -1,4 +1,6 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { RoundedBackground } from '@/common'
@@ -90,6 +92,7 @@ export default function CaseStudiesSection() {
       }}
     >
       <Stack maxWidth={HOME_CONTAINER_WIDTH} width={1}>
+        {/* Заголовок секции без анимации */}
         <Typography
           textAlign='center'
           component='h2'
@@ -98,6 +101,7 @@ export default function CaseStudiesSection() {
         >
           {t('home.case-studies.title')}
         </Typography>
+
         <Box
           sx={{
             mt: { xs: 10, md: 20 },
@@ -108,7 +112,7 @@ export default function CaseStudiesSection() {
           }}
         >
           {items.map((item, index) => (
-            <CaseStudiesItem {...item} key={index} />
+            <CaseStudiesItem key={index} {...item} />
           ))}
         </Box>
       </Stack>
@@ -119,20 +123,39 @@ export default function CaseStudiesSection() {
 function CaseStudiesItem({ title, description, previewSrc, links }: CaseStudiesItemProps) {
   const { t } = useTranslation()
   const { palette } = useTheme()
+  const cardRef = useRef(null)
+  const isInView = useInView(cardRef, { once: true, amount: 0.4 })
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  }
+
   return (
-    <Stack spacing={6} p={6} sx={{ borderRadius: 4, border: `1px solid ${palette.action.active}` }}>
-      <Box component='img' src={previewSrc} width={136} height={80} />
-      <Typography component='h3' variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
-        {title}
-      </Typography>
-      <Typography color={palette.text.secondary}>{description}</Typography>
-      <Typography variant='overline2' color={palette.text.secondary}>
-        {t('home.case-studies.resources')}
-      </Typography>
-      {links.map((link, index) => (
-        <CaseStudiesLink key={index} {...link} />
-      ))}
-    </Stack>
+    <motion.div
+      ref={cardRef}
+      variants={cardVariants}
+      initial='hidden'
+      animate={isInView ? 'visible' : 'hidden'}
+    >
+      <Stack
+        spacing={6}
+        p={6}
+        sx={{ borderRadius: 4, border: `1px solid ${palette.action.active}` }}
+      >
+        <Box component='img' src={previewSrc} width={136} height={80} />
+        <Typography component='h3' variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
+          {title}
+        </Typography>
+        <Typography color={palette.text.secondary}>{description}</Typography>
+        <Typography variant='overline2' color={palette.text.secondary}>
+          {t('home.case-studies.resources')}
+        </Typography>
+        {links.map((link, index) => (
+          <CaseStudiesLink {...link} key={index} />
+        ))}
+      </Stack>
+    </motion.div>
   )
 }
 
@@ -155,7 +178,6 @@ function CaseStudiesLink({ title, previewSrc, href }: CaseStudiesLinkProps) {
         height={55}
         sx={{ borderRadius: 1.5 }}
       />
-
       <Typography
         variant='body4'
         sx={{ ...lineClamp(2), textDecoration: 'underline', color: palette.text.primary }}
