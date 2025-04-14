@@ -47,11 +47,11 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
     },
     {
       label: t('poll.criteria-list.age'),
-      value: formatAgeRange({ minAge, maxAge }),
+      value: formattedAge,
     },
   ]
 
-  const hasCriteriaList = criteriaList.every(criteria => criteria.value)
+  const hasCriteriaList = criteriaList.some(criteria => criteria.value)
 
   return (
     <>

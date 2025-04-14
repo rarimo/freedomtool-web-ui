@@ -68,14 +68,16 @@ export default function DetailsSection() {
       <Stack
         direction={{ md: 'row' }}
         justifyContent='space-between'
-        alignItems='center'
+        alignItems='flex-start'
         width='100%'
         gap={{ xs: 4, md: 6 }}
         divider={
           isMdUp ? (
-            <Typography variant='body4' color={palette.text.secondary}>
-              –
-            </Typography>
+            <Stack height={56} alignItems='center' justifyContent='center'>
+              <Typography variant='body4' color={palette.text.secondary}>
+                –
+              </Typography>
+            </Stack>
           ) : null
         }
       >

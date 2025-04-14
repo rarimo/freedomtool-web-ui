@@ -201,7 +201,7 @@
   "poll-preview": {
     "title": "Preview",
     "criteria-subtitle": "Criteria",
-    "max-age-criteria": "{age} and below",
+    "max-age-criteria": "{{age}} and below",
     "sex-male": "Male",
     "sex-female": "Female",
     "age-criteria-item": "Age: {{value}}",
@@ -225,6 +225,7 @@
       "modal-title": "QR Codes",
       "qr-scan-count-lbl_one": "{{ count }} scan",
       "qr-scan-count-lbl_other": "{{ count }} scans",
+      "qr-scan-limit-lbl": "{{count}}/{{total}} scans",
       "headers": {
         "qr-code-lbl": "QR code",
         "creation-time-lbl": "Creation time",
@@ -236,7 +237,8 @@
       "copy-btn-tooltip": "Copy QR code URL",
       "copied-btn-tooltip": "Copied",
       "no-codes-title": "No QR Codes",
-      "no-codes-description": "Create a QR code to start collecting votes"
+      "no-codes-description": "Create a QR code to start collecting votes",
+      "info-msg": "Manage QR codes from here: create, download, and share them so people can scan and participate in polls"
     },
     "criteria": "Criteria:",
     "criteria-modal-title": "Poll criteria",
@@ -253,7 +255,17 @@
     "loading-error": "Error occurred while loading this poll",
     "unavailable-error": "This poll is unavailable",
     "back-to-poll-btn": "Back to Polls",
-    "total-spent": "Total spent"
+    "total-spent": "Total spent",
+    "create-qr-modal": {
+      "success-msg": "You have successfully created QR code!",
+      "name-plh": "For youtube",
+      "time-lbl": "Expiration time (UTC)",
+      "time-plh": "Expiration time",
+      "limit-lbl": "Scan limit",
+      "submit-btn": "Create",
+      "title": "Create QR Code"
+    },
+    "create-qr-modal-name-lbl": "Name"
   },
   "format": {
     "sex": {
@@ -287,7 +299,8 @@
       "guide-2-list-item-2": "Tap a passport to anonymously prove age and citizenship",
       "guide-2-list-item-3": "User data stays on the device, only a zero-knowledge proof is generated",
       "guide-3-title": "Privacy at Max",
-      "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous."
+      "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous.",
+      "create-a-poll-btn": "Create a poll"
     },
     "case-studies": {
       "case-1-title": "Georgia",

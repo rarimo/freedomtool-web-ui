@@ -31,8 +31,8 @@ interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
   qrCodeLoadingState: LoadingStates
   onReload: () => Promise<void>
   onLoadNext: () => Promise<void>
-  onCreate: () => Promise<void>
   onDelete: (id: string) => void
+  onCreateModalOpen: () => void
 }
 
 export default function QrCodeModal({
@@ -42,8 +42,8 @@ export default function QrCodeModal({
   qrCodeLoadingState,
   onReload,
   onLoadNext,
-  onCreate,
   onDelete,
+  onCreateModalOpen,
   ...rest
 }: QrCodeModalProps) {
   const { t } = useTranslation()
@@ -123,7 +123,7 @@ export default function QrCodeModal({
             height: 'fit-content',
             p: 0,
           }}
-          onClick={onCreate}
+          onClick={onCreateModalOpen}
         >
           {t('poll.qr-code-panel.generate-qr-code-btn')}
         </Button>
@@ -151,10 +151,21 @@ function DesktopQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
           bgColor='transparent'
         />
         <Stack alignItems='flex-start'>
-          <Typography variant='subtitle6'>{formatCroppedString(qrCode.id)}</Typography>
-          <Typography variant='body4' color={palette.text.secondary}>
-            {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
+          <Typography variant='subtitle6'>
+            {qrCode.metadata.name || formatCroppedString(qrCode.id)}
           </Typography>
+          {qrCode.scan_limit ? (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-limit-lbl', {
+                count: qrCode?.scan_count || 0,
+                total: qrCode.scan_limit,
+              })}
+            </Typography>
+          ) : (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
+            </Typography>
+          )}
         </Stack>
       </Stack>
       <Typography variant='subtitle6'>{formatDateTime(qrCode.created_at)}</Typography>
@@ -179,11 +190,22 @@ function MobileQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
         <QRCodeListItemActions qrCode={qrCode} onDelete={onDelete} />
       </Stack>
       <Stack>
-        <Typography variant='subtitle6'>{formatCroppedString(qrCode.id)}</Typography>
+        <Typography variant='subtitle6'>
+          {qrCode.metadata.name || formatCroppedString(qrCode.id)}
+        </Typography>
         <Stack direction='row' alignItems='center' spacing={1}>
-          <Typography variant='body4' color={palette.text.secondary}>
-            {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
-          </Typography>
+          {qrCode.scan_limit ? (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-limit-lbl', {
+                count: qrCode?.scan_count || 0,
+                total: qrCode.scan_limit,
+              })}
+            </Typography>
+          ) : (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
+            </Typography>
+          )}
           <DotDivider />
           <Typography variant='body4' color={palette.text.secondary}>
             {formatDateTime(qrCode.created_at)}

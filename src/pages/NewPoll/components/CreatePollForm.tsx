@@ -131,7 +131,7 @@ export default function CreatePollForm() {
         type: 'links',
         attributes: {
           resource_id: proposalId,
-          metadata: { proposal_id: Number(proposalId) },
+          metadata: { proposal_id: Number(proposalId), name: 'Main QR Code' },
         },
       })
 

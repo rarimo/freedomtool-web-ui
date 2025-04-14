@@ -118,16 +118,10 @@ function LinearProgressWithLabel({
           transform: 'translateY(-50%)',
         }}
       >
-        <Typography
-          variant='subtitle5'
-          color={isLeading ? palette.common.black : palette.text.primary}
-        >
+        <Typography variant='subtitle5' color={palette.text.primary}>
           {t('formats.percent', { value: progress.toFixed(2) })}
         </Typography>
-        <Typography
-          variant='body5'
-          color={isLeading ? palette.common.black : palette.text.secondary}
-        >
+        <Typography variant='body5' color={palette.text.primary}>
           {t('poll.participants', { count })}
         </Typography>
       </Stack>
@@ -139,7 +133,7 @@ function LinearProgressWithLabel({
           variant={isLeading ? 'subtitle5' : 'body4'}
           sx={{
             position: 'absolute',
-            color: isLeading ? palette.common.black : palette.text.primary,
+            color: palette.text.primary,
             zIndex: 1,
             left: 15,
             top: '50%',
