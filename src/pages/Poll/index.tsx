@@ -58,8 +58,14 @@ export default function Poll() {
   } = useProposal(id)
 
   useEffect(() => {
-    setTitle(proposalMetadata?.title ?? '')
-  }, [proposalMetadata?.title, setTitle])
+    if (proposal && !isRestricted && !isLoading && !isError) {
+      setTitle(proposalMetadata?.title ?? '')
+    }
+
+    return () => {
+      setTitle('')
+    }
+  }, [isError, isLoading, isRestricted, proposal, proposalMetadata?.title, setTitle])
 
   return (
     <>
@@ -283,6 +289,7 @@ export default function Poll() {
                                       />
                                       {isTopUpAllowed && <TopUpForm />}
                                       <PollDetails list={pollDetails} criteria={criteria} />
+                                      <Divider />
                                       <BalanceDetails list={balanceDetails} />
                                     </Stack>
                                   </Stack>

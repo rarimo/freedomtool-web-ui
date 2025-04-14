@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   FormControl,
   FormControlProps,
   FormLabel,
@@ -10,6 +11,7 @@ import {
   Stack,
   StackProps,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material'
 import { getMimeType } from 'advanced-cropper/extensions/mimes'
@@ -229,6 +231,8 @@ interface CropperDialogProps {
 
 function CropperDialog({ image, isOpen, onClose, onSave }: CropperDialogProps) {
   const cropperRef = useRef<FixedCropperRef>(null)
+  const { breakpoints } = useTheme()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
   const { t } = useTranslation()
 
   const saveResult = async () => {
@@ -247,11 +251,11 @@ function CropperDialog({ image, isOpen, onClose, onSave }: CropperDialogProps) {
   }
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog fullScreen={isMdDown} open={isOpen} onClose={onClose}>
       <UiDialogTitle onClose={onClose}>{t('image-picker.title')}</UiDialogTitle>
       <UiDialogContent width={{ md: 400 }} height={400}>
         <Stack spacing={5}>
-          <Stack sx={{ borderRadius: 2, overflow: 'hidden' }}>
+          <Stack sx={{ borderRadius: 2, overflow: 'hidden', maxHeight: 400 }}>
             <FixedCropper
               ref={cropperRef}
               src={image && image.src}
@@ -268,9 +272,16 @@ function CropperDialog({ image, isOpen, onClose, onSave }: CropperDialogProps) {
               imageRestriction={ImageRestriction.fitArea}
             />
           </Stack>
-          <Button onClick={saveResult}>{t('image-picker.save-btn')}</Button>
+          {!isMdDown && <Button onClick={saveResult}>{t('image-picker.save-btn')}</Button>}
         </Stack>
       </UiDialogContent>
+      {isMdDown && (
+        <DialogActions>
+          <Button fullWidth onClick={saveResult}>
+            {t('image-picker.save-btn')}
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }
