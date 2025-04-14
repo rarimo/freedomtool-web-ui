@@ -49,7 +49,7 @@ export default function CreateQrModal({ isOpen, onClose, onSuccess, ...rest }: C
   const { t } = useTranslation()
 
   const submit = async (form: CreateQrCodeSchema) => {
-    const { endDate, name, scanLimit } = form
+    const { expirationDate, name, scanLimit } = form
     try {
       if (!id) return
 
@@ -58,7 +58,9 @@ export default function CreateQrModal({ isOpen, onClose, onSuccess, ...rest }: C
         attributes: {
           resource_id: id,
           ...(scanLimit ? { scan_limit: scanLimit } : {}),
-          ...(endDate ? { expires_at: time(formatUtcDateTime(endDate)).timestamp } : {}),
+          ...(expirationDate
+            ? { expires_at: time(formatUtcDateTime(expirationDate)).timestamp }
+            : {}),
           metadata: {
             proposal_id: Number(id),
             ...(name ? { name } : {}),
@@ -103,7 +105,7 @@ export default function CreateQrModal({ isOpen, onClose, onSuccess, ...rest }: C
           />
 
           <Controller
-            name='endDate'
+            name='expirationDate'
             control={control}
             render={({ field, fieldState }) => (
               <UiDatePicker

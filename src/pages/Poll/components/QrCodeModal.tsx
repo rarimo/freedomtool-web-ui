@@ -190,11 +190,22 @@ function MobileQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
         <QRCodeListItemActions qrCode={qrCode} onDelete={onDelete} />
       </Stack>
       <Stack>
-        <Typography variant='subtitle6'>{formatCroppedString(qrCode.id)}</Typography>
+        <Typography variant='subtitle6'>
+          {qrCode.metadata.name || formatCroppedString(qrCode.id)}
+        </Typography>
         <Stack direction='row' alignItems='center' spacing={1}>
-          <Typography variant='body4' color={palette.text.secondary}>
-            {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
-          </Typography>
+          {qrCode.scan_limit ? (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-limit-lbl', {
+                count: qrCode?.scan_count || 0,
+                total: qrCode.scan_limit,
+              })}
+            </Typography>
+          ) : (
+            <Typography variant='body4' color={palette.text.secondary}>
+              {t('poll.qr-code-panel.qr-scan-count-lbl', { count: qrCode.scan_count })}
+            </Typography>
+          )}
           <DotDivider />
           <Typography variant='body4' color={palette.text.secondary}>
             {formatDateTime(qrCode.created_at)}
