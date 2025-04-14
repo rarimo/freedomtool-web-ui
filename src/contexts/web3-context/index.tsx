@@ -119,7 +119,7 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   )
 
   const isInitialized = useMemo(() => {
-    return status !== 'connecting' && status !== 'reconnecting' && _isInitialized
+    return _isInitialized && status === 'connected'
   }, [status, _isInitialized])
 
   // Disconnect any social login
@@ -208,8 +208,10 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [client?.chain?.id])
 
   useEffect(() => {
-    if (appKitEvent?.data.event === 'INITIALIZE') {
-      setIsInitialized(true)
+    if (appKitEvent?.data.event === 'INITIALIZE' || appKitEvent?.data.event === 'MODAL_CREATED') {
+      setTimeout(() => {
+        setIsInitialized(true)
+      }, 500)
     }
     if (appKitEvent?.data.event === 'DISCONNECT_SUCCESS') {
       authStore.signOut()

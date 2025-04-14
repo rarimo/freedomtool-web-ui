@@ -8,13 +8,14 @@ import Home from '@/pages/Home'
 
 import { AppLoader, ErrorBoundaryFallback } from './common'
 import HomeLayout from './layouts/HomeLayout'
-const Poll = lazy(() => import('@/pages/Poll'))
-const ActivePolls = lazy(() => import('@/pages/Polls/ActivePolls'))
-const FinishedPolls = lazy(() => import('@/pages/Polls/FinishedPolls'))
-const NewPoll = lazy(() => import('@/pages/NewPoll'))
-const Whitepaper = lazy(() => import('@/pages/Whitepaper'))
 
 export const createRouter = () => {
+  const Poll = lazy(() => import('@/pages/Poll'))
+  const ActivePolls = lazy(() => import('@/pages/Polls/ActivePolls'))
+  const FinishedPolls = lazy(() => import('@/pages/Polls/FinishedPolls'))
+  const NewPoll = lazy(() => import('@/pages/NewPoll'))
+  const Whitepaper = lazy(() => import('@/pages/Whitepaper'))
+
   return createBrowserRouter(
     [
       {

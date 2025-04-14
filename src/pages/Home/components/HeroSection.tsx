@@ -71,7 +71,8 @@ export default function HeroSection() {
           exit={{ opacity: 0 }}
           sx={{ pointerEvents: 'auto' }}
           transition={{
-            opacity: { duration: 1, delay: 1 },
+            type: 'spring',
+            delay: 0.5,
           }}
           whileHover={{ pointerEvents: 'none' }}
           whileDrag={{ pointerEvents: 'auto' }}

@@ -7,7 +7,6 @@ import { RouterProvider } from 'react-router-dom'
 import { AppLoader, ErrorBoundaryFallback } from '@/common'
 import { ToastsManager } from '@/contexts'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { ErrorHandler } from '@/helpers'
 import { useSystemPaletteMode, useViewportSizes } from '@/hooks'
 import { useLocalizedZodSchema } from '@/hooks/zod'
 import { createRouter } from '@/router'
@@ -33,11 +32,6 @@ const App = () => {
   useLocalizedZodSchema()
 
   const init = useCallback(async () => {
-    try {
-      setIsAppInitialized(false)
-    } catch (error) {
-      ErrorHandler.processWithoutFeedback(error)
-    }
     setIsAppInitialized(true)
   }, [])
 
