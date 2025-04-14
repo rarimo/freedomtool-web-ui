@@ -27,36 +27,44 @@ export function useProposal(id?: string) {
     data: proposal,
     isLoading: isProposalLoading,
     isLoadingError: isProposalLoadingError,
-  } = useLoading(null, async () => {
-    if (!id) return null
-    const proposalFromContract = await getProposalInfo(Number(id))
+  } = useLoading(
+    null,
+    async () => {
+      if (!id) return null
+      const proposalFromContract = await getProposalInfo(Number(id))
 
-    const { data: proposals } = await getProposals({
-      query: {
-        filter: {
-          creator: address,
-          proposal_id: id,
+      const { data: proposals } = await getProposals({
+        query: {
+          filter: {
+            creator: address,
+            proposal_id: id,
+          },
         },
-      },
-    })
+      })
 
-    if (proposals?.[0]?.owner !== address) {
-      setIsRestricted(true)
-      return null
-    }
-
-    if (proposalFromContract) {
-      const parsedContractProposal = parseProposalFromContract(proposalFromContract)
-
-      return {
-        metadata: proposals?.[0]?.metadata,
-        parsed: proposals?.[0],
-        fromContract: parsedContractProposal,
+      if (address && proposals?.[0]?.owner !== address) {
+        setIsRestricted(true)
+        return null
       }
-    }
 
-    return null
-  })
+      if (!address) return null
+
+      if (proposalFromContract) {
+        const parsedContractProposal = parseProposalFromContract(proposalFromContract)
+
+        return {
+          metadata: proposals?.[0]?.metadata,
+          parsed: proposals?.[0],
+          fromContract: parsedContractProposal,
+        }
+      }
+
+      return null
+    },
+    {
+      loadArgs: [address],
+    },
+  )
 
   const formattedStartDate = formatUtcDateTime(proposal?.parsed?.start_timestamp ?? 0)
   const formattedEndDate = formatUtcDateTime(proposal?.parsed?.end_timestamp ?? 0)
