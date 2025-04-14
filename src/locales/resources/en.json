@@ -257,7 +257,7 @@
     "back-to-poll-btn": "Back to Polls",
     "total-spent": "Total spent",
     "create-qr-modal": {
-      "success-msg": "You have successfully create QR code!",
+      "success-msg": "You have successfully created QR code!",
       "name-plh": "For youtube",
       "time-lbl": "Expiration time (UTC)",
       "time-plh": "Expiration time",
