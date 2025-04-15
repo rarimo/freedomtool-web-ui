@@ -212,7 +212,11 @@ export default function CreatePollForm() {
           }}
         >
           <RoundedBackground
-            sx={{ alignItems: 'flex-end', pr: { lg: 24.5 }, [breakpoints.down('md')]: { p: 4 } }}
+            sx={{
+              alignItems: 'flex-end',
+              pr: { lg: 24.5 },
+              [breakpoints.down('md')]: { p: 4, mb: 20 },
+            }}
           >
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
           </RoundedBackground>
