@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { MAX_OPTIONS_PER_QUESTION } from '@/constants'
 import { Icons } from '@/enums'
+import { Transitions } from '@/theme/constants'
 import { UiIcon } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
@@ -17,23 +18,38 @@ interface QuestionFormProps extends SortableAction {
   control: Control<CreatePollSchema, unknown>
   index: number
   canDelete: boolean
+  isPreviewable: boolean
   isDisabled: boolean
+  onSelect: () => void
   onDelete: () => void
 }
 
 export default function QuestionForm(props: QuestionFormProps) {
   const { palette } = useTheme()
-  const { question, index, canDelete, control, onDelete, draggable, attributes, listeners } = props
+  const {
+    question,
+    index,
+    isPreviewable,
+    canDelete,
+    control,
+    onDelete,
+    onSelect,
+    draggable,
+    attributes,
+    listeners,
+  } = props
   const { t } = useTranslation()
 
   return (
     <Stack
       py={4}
       px={5}
-      bgcolor={palette.action.active}
+      bgcolor={isPreviewable ? palette.action.selected : palette.action.active}
       key={question.id}
       spacing={2}
       borderRadius={4}
+      sx={{ transition: Transitions.Fast }}
+      onClick={onSelect}
     >
       <Stack>
         <Controller
@@ -45,7 +61,7 @@ export default function QuestionForm(props: QuestionFormProps) {
                 <IconButton
                   color='secondary'
                   sx={{ cursor: 'grab', touchAction: 'none' }}
-                  onClick={onDelete}
+                  onClick={onSelect}
                   {...attributes}
                   {...listeners}
                 >
@@ -59,6 +75,26 @@ export default function QuestionForm(props: QuestionFormProps) {
                 label={t('create-poll.question-lbl', { order: index + 1 })}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    backgroundColor: 'transparent',
+                  },
+                  '& .MuiInputBase-input': {
+                    backgroundColor: 'transparent',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'transparent',
+                    '& fieldset': {
+                      backgroundColor: 'transparent',
+                    },
+                    '&:hover fieldset': {
+                      backgroundColor: 'transparent',
+                    },
+                    '&.Mui-focused fieldset': {
+                      backgroundColor: 'transparent',
+                    },
+                  },
+                }}
                 InputProps={{
                   endAdornment: canDelete && (
                     <IconButton color='secondary' onClick={onDelete}>

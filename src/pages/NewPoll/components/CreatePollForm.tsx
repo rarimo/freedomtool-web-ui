@@ -59,6 +59,8 @@ export default function CreatePollForm() {
   const [processingStep, setProcessingStep] = useState(ProcessingPollStep.Image)
   const [proposalId, setProposalId] = useState<string | null>(null)
 
+  const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
+
   const {
     trigger,
     handleSubmit,
@@ -165,7 +167,12 @@ export default function CreatePollForm() {
       },
       {
         title: t('create-poll.titles.questions'),
-        children: <QuestionsSection />,
+        children: (
+          <QuestionsSection
+            previewQuestionIndex={previewQuestionIndex}
+            setPreviewQuestionIndex={setPreviewQuestionIndex}
+          />
+        ),
         validate: () => trigger(['questions']),
         onBack: () => {
           setIsQuestionPreview(false)
@@ -178,7 +185,7 @@ export default function CreatePollForm() {
         footer: <VoteParamsResult />,
       },
     ],
-    [t, trigger],
+    [previewQuestionIndex, t, trigger],
   )
 
   const { details, criteria, questions } = form.watch()
@@ -237,7 +244,7 @@ export default function CreatePollForm() {
                 }}
               >
                 {isQuestionPreview ? (
-                  <PollQuestionPreview question={questions[questions.length - 1]} />
+                  <PollQuestionPreview question={questions[previewQuestionIndex ?? 0]} />
                 ) : (
                   <PollPreview {...details} {...criteria} />
                 )}
