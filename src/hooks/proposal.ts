@@ -155,10 +155,16 @@ export function useProposal(id?: string) {
     ]
   }, [proposal, t])
 
+  const isAlive = [ProposalStatus.Waiting, ProposalStatus.Started].includes(
+    proposal?.fromContract?.status as ProposalStatus,
+  )
+
   return {
     isRestricted,
     isLoading,
     isError: isProposalLoadingError,
+
+    isAlive,
 
     criteria,
 
