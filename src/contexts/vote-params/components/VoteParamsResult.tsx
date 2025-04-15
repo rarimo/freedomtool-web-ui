@@ -1,5 +1,6 @@
 import { time } from '@distributedlab/tools'
 import { Stack, Typography, useTheme } from '@mui/material'
+import { useDebounce } from '@reactuses/core'
 import { parseUnits } from 'ethers'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +23,8 @@ export default function VoteParamsResult() {
   const { t } = useTranslation()
   const { rawProviderSigner } = useWeb3Context()
   const amount = watch('settings.amount')
+
+  const debouncedAmount = useDebounce(amount, 300)
 
   const {
     data: estimatedGas,
@@ -50,15 +53,15 @@ export default function VoteParamsResult() {
         votingWhitelistData,
         acceptedOptions,
         description: '0'.repeat(46),
-        amount: parseUnits(amount || '0', 18).toString(),
+        amount: parseUnits(debouncedAmount || '0', 18).toString(),
         startTimestamp,
         duration,
       })
       return (gasLimit || 0n) * (gasPrice?.gasPrice || 0n)
     },
     {
-      loadOnMount: Boolean(amount),
-      loadArgs: [amount],
+      loadOnMount: Boolean(debouncedAmount),
+      loadArgs: [debouncedAmount],
     },
   )
 
@@ -83,7 +86,7 @@ export default function VoteParamsResult() {
     )
   }
 
-  const total = parseUnits(amount || '0', 18) + estimatedGas
+  const total = parseUnits(debouncedAmount || '0', 18) + estimatedGas
 
   return (
     <Stack minWidth={250} alignItems='flex-end' mt={{ xs: 6, md: 0 }}>
