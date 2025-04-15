@@ -42,7 +42,13 @@ export default function QuestionForm(props: QuestionFormProps) {
           render={({ field, fieldState }) => (
             <Stack direction='row'>
               {draggable && (
-                <IconButton color='secondary' onClick={onDelete} {...attributes} {...listeners}>
+                <IconButton
+                  color='secondary'
+                  sx={{ cursor: 'grab', touchAction: 'none' }}
+                  onClick={onDelete}
+                  {...attributes}
+                  {...listeners}
+                >
                   <UiIcon name={Icons.Draggable} size={4} />
                 </IconButton>
               )}
@@ -110,7 +116,7 @@ function OptionsForm({
                       {...attributes}
                       {...listeners}
                       color='secondary'
-                      sx={{ cursor: 'grab', height: 56 }}
+                      sx={{ cursor: 'grab', touchAction: 'none', height: 55 }}
                     >
                       <UiIcon name={Icons.Draggable} size={4} />
                     </IconButton>
