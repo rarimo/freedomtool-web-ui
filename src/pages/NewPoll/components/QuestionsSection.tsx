@@ -15,7 +15,7 @@ import { CreatePollSchema } from '../createPollSchema'
 import QuestionForm from './QuestionForm'
 import SortableItem from './SortableItem'
 
-const modifiers = [restrictToVerticalAxis, restrictToParentElement]
+const dndModifiers = [restrictToVerticalAxis, restrictToParentElement]
 
 export default function QuestionsSection() {
   const {
@@ -65,7 +65,7 @@ export default function QuestionsSection() {
         md: 0,
       }}
     >
-      <DndContext modifiers={modifiers} onDragEnd={swapQuestionsAfterDrag}>
+      <DndContext modifiers={dndModifiers} onDragEnd={swapQuestionsAfterDrag}>
         <SortableContext items={questionFields.map(q => q.id)}>
           <Stack spacing={{ xs: 4, md: 6 }}>
             {questionFields.map((question, index) => (

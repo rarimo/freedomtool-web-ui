@@ -15,12 +15,15 @@ export interface SortableAction {
   listeners?: SyntheticListenerMap
 }
 
-export default function SortableItem(props: {
+export default function SortableItem({
+  id,
+  index,
+  children,
+}: {
   id: string
   index: number
   children: (args: UseSortableReturn) => React.ReactNode
 }) {
-  const { id, index } = props
   const { setNodeRef, transform, transition, ...rest } = useSortable({
     id,
     data: { sortable: { index } },
@@ -33,7 +36,7 @@ export default function SortableItem(props: {
 
   return (
     <Stack ref={setNodeRef} style={style}>
-      {props.children({ ...rest })}
+      {children(rest)}
     </Stack>
   )
 }
