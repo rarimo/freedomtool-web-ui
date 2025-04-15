@@ -1,16 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useScrollWithShadow(size: number = 80) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const [scrollTop, setScrollTop] = useState(0)
   const [scrollHeight, setScrollHeight] = useState(0)
   const [clientHeight, setClientHeight] = useState(0)
-
-  const onScrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
-    const target = event.currentTarget
-    setScrollTop(target.scrollTop)
-    setScrollHeight(target.scrollHeight)
-    setClientHeight(target.clientHeight)
-  }
 
   function getMaskStyle(): React.CSSProperties {
     const shadowSize = `${size}px`
@@ -38,8 +32,26 @@ export function useScrollWithShadow(size: number = 80) {
     }
   }
 
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const observeScroll = () => {
+      setScrollTop(container.scrollTop)
+      setScrollHeight(container.scrollHeight)
+      setClientHeight(container.clientHeight)
+    }
+
+    observeScroll()
+
+    container.addEventListener('scroll', observeScroll)
+    return () => {
+      container.removeEventListener('scroll', observeScroll)
+    }
+  }, [])
+
   return {
+    containerRef,
     shadowScrollStyle: getMaskStyle(),
-    onScrollHandler,
   }
 }
