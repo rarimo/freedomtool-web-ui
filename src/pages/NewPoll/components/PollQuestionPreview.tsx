@@ -3,6 +3,7 @@ import { ButtonBase, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { textWrapAndDirectionStyles } from '@/theme/constants'
 import { lineClamp } from '@/theme/helpers'
 
+import { SectionAnchor } from '../constants'
 import { CreatePollSchema } from '../createPollSchema'
 import PreviewLayout from './PreviewLayout'
 
@@ -14,23 +15,26 @@ export default function PollQuestionPreview({ question }: Props) {
   const { palette } = useTheme()
 
   return (
-    <PreviewLayout>
-      <Stack spacing={5} px={4} py={5}>
-        <Typography
-          variant='h4'
-          color={palette.text.primary}
-          sx={{ ...textWrapAndDirectionStyles, ...lineClamp(3) }}
-        >
-          {question?.text || '--'}
-        </Typography>
-        <Divider />
-        <Stack spacing={2}>
-          {question?.options.map(({ id, text }, index) => (
-            <OptionItem key={id} text={text} index={index} />
-          ))}
+    <>
+      <Stack id={SectionAnchor.Questions} />
+      <PreviewLayout>
+        <Stack spacing={5} px={4} py={5}>
+          <Typography
+            variant='h4'
+            color={palette.text.primary}
+            sx={{ ...textWrapAndDirectionStyles, ...lineClamp(3) }}
+          >
+            {question?.text || '--'}
+          </Typography>
+          <Divider />
+          <Stack spacing={2}>
+            {question?.options.map(({ id, text }, index) => (
+              <OptionItem key={id} text={text} index={index} />
+            ))}
+          </Stack>
         </Stack>
-      </Stack>
-    </PreviewLayout>
+      </PreviewLayout>
+    </>
   )
 }
 

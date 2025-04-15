@@ -45,8 +45,7 @@ export default function CreatePollForm() {
   const isLgUp = useMediaQuery(breakpoints.up('lg'))
 
   const { containerRef, shadowScrollStyle } = useScrollWithShadow(80)
-  const { containerRef: questionRef, shadowScrollStyle: questionScrollStyle } =
-    useScrollWithShadow(80)
+
   const { createProposal } = useProposalState()
   const [isQuestionPreview, setIsQuestionPreview] = useState(false)
 
@@ -158,7 +157,10 @@ export default function CreatePollForm() {
         title: t('create-poll.titles.criteria'),
         children: <CriteriaSection />,
         validate: () => trigger(['criteria']),
-        onContinue: () => setIsQuestionPreview(true),
+        onContinue: () => {
+          setIsQuestionPreview(true)
+          setTimeout(() => scrollToSelector(`#${SectionAnchor.Questions}`), 0)
+        },
         onBack: () => scrollToSelector(`#${SectionAnchor.Details}`),
       },
       {
@@ -167,7 +169,7 @@ export default function CreatePollForm() {
         validate: () => trigger(['questions']),
         onBack: () => {
           setIsQuestionPreview(false)
-          setTimeout(() => scrollToSelector(`#${SectionAnchor.Criteria}`), 100)
+          setTimeout(() => scrollToSelector(`#${SectionAnchor.Criteria}`), 0)
         },
       },
       {
@@ -222,41 +224,25 @@ export default function CreatePollForm() {
           </RoundedBackground>
 
           {isLgUp && (
-            <>
-              {isQuestionPreview ? (
-                <RoundedBackground>
-                  <Stack
-                    ref={questionRef}
-                    key='question'
-                    height={500}
-                    sx={{
-                      overflow: 'auto',
-                      ...questionScrollStyle,
-                      position: 'sticky',
-                      top: DESKTOP_HEADER_HEIGHT,
-                    }}
-                  >
-                    <PollQuestionPreview question={questions[questions.length - 1]} />
-                  </Stack>
-                </RoundedBackground>
-              ) : (
-                <RoundedBackground>
-                  <Stack
-                    height={500}
-                    ref={containerRef}
-                    sx={{
-                      overflow: 'auto',
-                      ...shadowScrollStyle,
-                      ...hiddenScrollbar,
-                      position: 'sticky',
-                      top: DESKTOP_HEADER_HEIGHT,
-                    }}
-                  >
-                    <PollPreview {...details} {...criteria} />
-                  </Stack>
-                </RoundedBackground>
-              )}
-            </>
+            <RoundedBackground>
+              <Stack
+                ref={containerRef}
+                height={500}
+                sx={{
+                  overflow: 'auto',
+                  ...shadowScrollStyle,
+                  ...hiddenScrollbar,
+                  position: 'sticky',
+                  top: DESKTOP_HEADER_HEIGHT,
+                }}
+              >
+                {isQuestionPreview ? (
+                  <PollQuestionPreview question={questions[questions.length - 1]} />
+                ) : (
+                  <PollPreview {...details} {...criteria} />
+                )}
+              </Stack>
+            </RoundedBackground>
           )}
         </Box>
       </Stack>

@@ -100,7 +100,7 @@ export default function PollPreview({
             description={description}
           />
 
-          <Stack height={320} spacing={5}>
+          <Stack height={300} spacing={5}>
             {hasAnyCriteria && (
               <Stack spacing={5}>
                 <Divider />
@@ -110,8 +110,8 @@ export default function PollPreview({
               </Stack>
             )}
             {hasAnyCriteria && (
-              <Stack spacing={5} pb={2} sx={{ overflow: 'auto', ...hiddenScrollbar }}>
-                <Stack spacing={4}>
+              <Stack spacing={5} pb={2}>
+                <Stack spacing={4} height={180} sx={{ overflowY: 'auto', ...hiddenScrollbar }}>
                   {criteriaItems.map(
                     ({ id, text, isHidden }) => !isHidden && <CriteriaItem key={id} text={text} />,
                   )}
