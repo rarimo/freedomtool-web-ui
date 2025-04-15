@@ -88,7 +88,7 @@ export const createPollSchema = zod
       .array(
         zod.object({
           id: zod.string().uuid(),
-          text: zod.string().min(5).max(40),
+          text: zod.string().min(5).max(50),
           options: zod
             .array(
               zod.object({
