@@ -51,7 +51,7 @@ function HomeHeader() {
       }}
     >
       <Stack
-        maxWidth={1135}
+        maxWidth={HOME_CONTAINER_WIDTH}
         mx='auto'
         width={1}
         direction='row'
