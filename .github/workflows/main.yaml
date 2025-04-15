@@ -34,3 +34,19 @@ jobs:
         with:
           command: build --tag ${{ github.sha }}
           repository: ghcr.io/${{ github.repository_owner }}
+
+  deploy:
+    name: Deploy
+    needs: converge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: ConfigCreate
+        run: |
+          mkdir ~/.kube/
+          echo "${{ secrets.K8SCONFIG_DEV }}" | base64 -d > config
+          mv config ~/.kube/
+          kubectl set image deployment freedom-tool-web-test freedom-tool-web-test=ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA -n freedom
