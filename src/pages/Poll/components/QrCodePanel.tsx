@@ -19,7 +19,7 @@ import CreateQrModal from './CreateQrModal'
 export const qrCodeModalGridTemplateColumns = '1.7fr 1.3fr 1fr'
 const QR_CODES_LIST_LIMIT = 5
 
-export default function QrCodePanel() {
+export default function QrCodePanel({ isCreatable }: { isCreatable: boolean }) {
   const { palette } = useTheme()
   const { t } = useTranslation()
   const { id } = useParams()
@@ -167,19 +167,22 @@ export default function QrCodePanel() {
         qrCodes={qrCodes}
         qrCodeLoadingState={qrCodeLoadingState}
         isDisabled={isDeleting}
+        isCreatable={isCreatable}
         onReload={reloadQrCodes}
         onLoadNext={loadNextQrCodes}
         onDelete={deleteQrCode}
         onCreateModalOpen={() => setIsCreateQrOpen(true)}
       />
-      <CreateQrModal
-        isOpen={isCreateQrOpen}
-        onClose={() => setIsCreateQrOpen(false)}
-        onSuccess={() => {
-          setIsQrModalOpen(false)
-          reloadQrCodes()
-        }}
-      />
+      {isCreatable && (
+        <CreateQrModal
+          isOpen={isCreateQrOpen}
+          onClose={() => setIsCreateQrOpen(false)}
+          onSuccess={() => {
+            setIsQrModalOpen(false)
+            reloadQrCodes()
+          }}
+        />
+      )}
     </>
   )
 }

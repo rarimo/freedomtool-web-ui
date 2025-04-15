@@ -53,6 +53,8 @@ export default function Poll() {
     formattedEndDate,
     formattedStartDate,
 
+    isAlive,
+
     participantsAmount,
     remainingVotesCount,
   } = useProposal(id)
@@ -270,7 +272,7 @@ export default function Poll() {
 
                       {isMdDown && (
                         <Stack mx={4}>
-                          <QrCodePanel />
+                          <QrCodePanel isCreatable={isAlive} />
                         </Stack>
                       )}
 
@@ -346,7 +348,7 @@ export default function Poll() {
                           marginBottom: 3,
                         }}
                       >
-                        <QrCodePanel />
+                        <QrCodePanel isCreatable={isAlive} />
                         <Stack spacing={6} width='100%'>
                           <VotesLeftProgress
                             remainingVotes={remainingVotesCount ?? 0}

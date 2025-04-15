@@ -26,6 +26,7 @@ import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
 interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
   isDisabled: boolean
+  isCreatable: boolean
   isOpen: boolean
   onClose: () => void
   qrCodes: QRCodeType[]
@@ -39,6 +40,7 @@ interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
 export default function QrCodeModal({
   isOpen,
   isDisabled,
+  isCreatable,
   onClose,
   qrCodes,
   qrCodeLoadingState,
@@ -125,20 +127,24 @@ export default function QrCodeModal({
             ),
           )}
         </InfiniteList>
-        <Divider flexItem />
-        <Button
-          variant='text'
-          size='medium'
-          startIcon={<UiIcon name={Icons.AddFill} size={5} />}
-          sx={{
-            width: 'fit-content',
-            height: 'fit-content',
-            p: 0,
-          }}
-          onClick={onCreateModalOpen}
-        >
-          {t('poll.qr-code-panel.generate-qr-code-btn')}
-        </Button>
+        {isCreatable && (
+          <>
+            <Divider flexItem />
+            <Button
+              variant='text'
+              size='medium'
+              startIcon={<UiIcon name={Icons.AddFill} size={5} />}
+              sx={{
+                width: 'fit-content',
+                height: 'fit-content',
+                p: 0,
+              }}
+              onClick={onCreateModalOpen}
+            >
+              {t('poll.qr-code-panel.generate-qr-code-btn')}
+            </Button>
+          </>
+        )}
       </UiDialogContent>
     </Dialog>
   )
