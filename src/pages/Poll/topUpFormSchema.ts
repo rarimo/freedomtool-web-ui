@@ -1,7 +1,7 @@
 import { t } from 'i18next'
 import { z as zod } from 'zod'
 
-import { MAX_PARTICIPANTS_PER_POLL } from '@/constants'
+import { MAX_PARTICIPANTS_PER_POLL, POLL_MIN_FUNDING_NUMBER } from '@/constants'
 
 export const topUpDefaultValues: TopUpSchema = {
   votesCount: 0,
@@ -13,7 +13,7 @@ export const topUpSchema = zod.object({
   amount: zod
     .string()
     .min(1)
-    .refine(value => Number(value) > 0, {
+    .refine(value => Number(value) > POLL_MIN_FUNDING_NUMBER, {
       message: t('create-poll.amount-error'),
     }),
 })
