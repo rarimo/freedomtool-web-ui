@@ -1,7 +1,8 @@
+import { formatUnits, parseUnits } from 'ethers'
 import { t } from 'i18next'
 import { z as zod } from 'zod'
 
-import { MAX_PARTICIPANTS_PER_POLL } from '@/constants'
+import { MAX_PARTICIPANTS_PER_POLL, POLL_MIN_FUNDING_AMOUNT } from '@/constants'
 
 export const topUpDefaultValues: TopUpSchema = {
   votesCount: 0,
@@ -13,8 +14,10 @@ export const topUpSchema = zod.object({
   amount: zod
     .string()
     .min(1)
-    .refine(value => Number(value) > 0, {
-      message: t('create-poll.amount-error'),
+    .refine(value => parseUnits(value) > POLL_MIN_FUNDING_AMOUNT, {
+      message: t('create-poll.amount-error', {
+        minAmount: formatUnits(POLL_MIN_FUNDING_AMOUNT),
+      }),
     }),
 })
 
