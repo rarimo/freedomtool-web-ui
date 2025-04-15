@@ -18,7 +18,7 @@ export interface PollCriteriaListProps {
 export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) {
   const { palette } = useTheme()
   const { t } = useTranslation()
-  const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(40)
+  const { containerRef, shadowScrollStyle } = useScrollWithShadow(40)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   if (isEmpty(props)) return null
@@ -117,6 +117,7 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
                 })}
               </Typography>
               <Stack
+                ref={containerRef}
                 spacing={1}
                 minHeight={100}
                 maxHeight={250}
@@ -125,7 +126,6 @@ export default function PollCriteriaList(props: Partial<PollCriteriaListProps>) 
                   overflow: 'scroll',
                   ...shadowScrollStyle,
                 }}
-                onScroll={onScrollHandler}
               >
                 {formattedNationalitiesArray.map(item => (
                   <Typography
