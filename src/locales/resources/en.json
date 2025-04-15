@@ -140,7 +140,7 @@
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
     "image-description": "16:9 ratio, PNG, JPEG or WEBP",
-    "amount-error": "Must be {{minAmount}} or more",
+    "amount-error": "Amount must be more than 0",
     "result": {
       "fee-lbl": "Fee:",
       "total": "Total:",
