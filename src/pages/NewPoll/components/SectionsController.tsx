@@ -19,7 +19,7 @@ interface SectionsControllerProps {
 }
 
 export default function SectionsController({ sections, isDisabled }: SectionsControllerProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(2)
   const { children, footer, title, validate, onContinue, onBack } = sections[currentIndex]
   const { t } = useTranslation()
   const { breakpoints, palette } = useTheme()
@@ -57,7 +57,7 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
 
       {isMdUp && (
         <Stack
-          direction={{ xs: 'column-reverse', md: 'row' }}
+          direction={{ xs: 'column-reverse' }}
           spacing={10}
           flexWrap='wrap'
           alignItems='center'
