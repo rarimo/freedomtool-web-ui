@@ -70,15 +70,19 @@ export default function AppSettingsMenu() {
       >
         <Stack spacing={1.5} divider={<Divider flexItem />}>
           {!isMdUp && (
-            <Typography
-              variant='subtitle6'
+            <Stack
+              direction='row'
+              alignItems='center'
+              spacing={3}
               sx={{
                 py: 2,
                 pr: 2,
+                pl: 2,
               }}
             >
-              {formatAddress(address, 12)}
-            </Typography>
+              <UiIcon size={5} color={palette.text.secondary} name={Icons.User3Line} />
+              <Typography variant='subtitle6'>{formatAddress(address, 5)}</Typography>
+            </Stack>
           )}
           <Stack direction='row' alignItems='center' justifyContent='space-between'>
             <Stack direction='row' alignItems='center' spacing={3} sx={menuItemSx}>
