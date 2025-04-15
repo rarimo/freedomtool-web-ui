@@ -76,8 +76,7 @@ export default function AppSettingsMenu() {
               spacing={3}
               sx={{
                 py: 2,
-                pr: 2,
-                pl: 2,
+                px: 2,
               }}
             >
               <UiIcon size={5} color={palette.text.secondary} name={Icons.User3Line} />
