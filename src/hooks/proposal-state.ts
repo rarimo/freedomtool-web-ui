@@ -2,6 +2,7 @@ import { BigNumberish } from 'ethers'
 import { useCallback, useMemo } from 'react'
 
 import { config } from '@/config'
+import { POLL_MIN_FUNDING_AMOUNT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { createContract, extractProposalIdFromTxReceipt } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
@@ -56,15 +57,18 @@ export const useProposalState = () => {
       > & { amount: BigNumberish; votingWhitelistData: string },
     ) => {
       if (!contract) return
-      const gasLimit = await contract.contractInstance.createProposal.estimateGas({
-        description: proposalConfig.description,
-        acceptedOptions: proposalConfig.acceptedOptions,
-        startTimestamp: BigInt(proposalConfig.startTimestamp),
-        duration: BigInt(proposalConfig.duration),
-        multichoice: BigInt(0),
-        votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-        votingWhitelistData: [proposalConfig.votingWhitelistData],
-      })
+      const gasLimit = await contract.contractInstance.createProposal.estimateGas(
+        {
+          description: proposalConfig.description,
+          acceptedOptions: proposalConfig.acceptedOptions,
+          startTimestamp: BigInt(proposalConfig.startTimestamp),
+          duration: BigInt(proposalConfig.duration),
+          multichoice: BigInt(0),
+          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
+          votingWhitelistData: [proposalConfig.votingWhitelistData],
+        },
+        { value: POLL_MIN_FUNDING_AMOUNT },
+      )
 
       return gasLimit
     },
