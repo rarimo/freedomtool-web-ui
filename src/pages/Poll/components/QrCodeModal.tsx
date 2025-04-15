@@ -25,6 +25,7 @@ import { qrCodeModalGridTemplateColumns } from '@/pages/Poll/components/QrCodePa
 import { UiDialogContent, UiDialogTitle, UiIcon } from '@/ui'
 
 interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
+  isDisabled: boolean
   isOpen: boolean
   onClose: () => void
   qrCodes: QRCodeType[]
@@ -37,6 +38,7 @@ interface QrCodeModalProps extends Omit<DialogProps, 'open' | 'onClose'> {
 
 export default function QrCodeModal({
   isOpen,
+  isDisabled,
   onClose,
   qrCodes,
   qrCodeLoadingState,
@@ -107,9 +109,19 @@ export default function QrCodeModal({
         >
           {qrCodes.map(qrCode =>
             isMdUp ? (
-              <DesktopQrCodeItem key={qrCode.id} qrCode={qrCode} onDelete={onDelete} />
+              <DesktopQrCodeItem
+                isDisabled={isDisabled}
+                key={qrCode.id}
+                qrCode={qrCode}
+                onDelete={onDelete}
+              />
             ) : (
-              <MobileQrCodeItem key={qrCode.id} qrCode={qrCode} onDelete={onDelete} />
+              <MobileQrCodeItem
+                key={qrCode.id}
+                isDisabled={isDisabled}
+                qrCode={qrCode}
+                onDelete={onDelete}
+              />
             ),
           )}
         </InfiniteList>
@@ -134,10 +146,11 @@ export default function QrCodeModal({
 
 interface QrCodeItemProps {
   qrCode: QRCodeType
+  isDisabled: boolean
   onDelete: (id: string) => void
 }
 
-function DesktopQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
+function DesktopQrCodeItem({ isDisabled, qrCode, onDelete }: QrCodeItemProps) {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
@@ -169,12 +182,12 @@ function DesktopQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
         </Stack>
       </Stack>
       <Typography variant='subtitle6'>{formatDateTime(qrCode.created_at)}</Typography>
-      <QRCodeListItemActions qrCode={qrCode} onDelete={onDelete} />
+      <QRCodeListItemActions isDisabled={isDisabled} qrCode={qrCode} onDelete={onDelete} />
     </Box>
   )
 }
 
-function MobileQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
+function MobileQrCodeItem({ isDisabled, qrCode, onDelete }: QrCodeItemProps) {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
@@ -187,7 +200,7 @@ function MobileQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
           fgColor={palette.text.primary}
           bgColor='transparent'
         />
-        <QRCodeListItemActions qrCode={qrCode} onDelete={onDelete} />
+        <QRCodeListItemActions isDisabled={isDisabled} qrCode={qrCode} onDelete={onDelete} />
       </Stack>
       <Stack>
         <Typography variant='subtitle6'>
@@ -218,8 +231,10 @@ function MobileQrCodeItem({ qrCode, onDelete }: QrCodeItemProps) {
 
 function QRCodeListItemActions({
   qrCode,
+  isDisabled,
   onDelete,
 }: {
+  isDisabled: boolean
   qrCode: QRCodeType
   onDelete: (id: string) => void
 }) {
@@ -247,17 +262,22 @@ function QRCodeListItemActions({
         }
         enterDelay={300}
       >
-        <IconButton sx={{ p: 3 }} onClick={() => copy(qrCodeValue)}>
+        <IconButton sx={{ p: 3 }} disabled={isDisabled} onClick={() => copy(qrCodeValue)}>
           <UiIcon name={isCopied ? Icons.CheckFill : Icons.FileCopyLine} size={4} />
         </IconButton>
       </Tooltip>
       <Tooltip title={t('poll.qr-code-panel.download-btn-tooltip')} enterDelay={300}>
-        <IconButton sx={{ p: 3 }} onClick={downloadQrCode}>
+        <IconButton sx={{ p: 3 }} disabled={isDisabled} onClick={downloadQrCode}>
           <UiIcon name={Icons.DownloadLine} size={4} />
         </IconButton>
       </Tooltip>
       <Tooltip title={t('poll.qr-code-panel.delete-btn-tooltip')} enterDelay={300}>
-        <IconButton color='error' sx={{ p: 3 }} onClick={() => onDelete(qrCode.id)}>
+        <IconButton
+          disabled={isDisabled}
+          color='error'
+          sx={{ p: 3 }}
+          onClick={() => onDelete(qrCode.id)}
+        >
           <UiIcon name={Icons.DeleteBin6Line} size={4} />
         </IconButton>
       </Tooltip>
