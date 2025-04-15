@@ -19,10 +19,10 @@ const dndModifiers = [restrictToVerticalAxis, restrictToParentElement]
 
 export default function QuestionsSection({
   previewQuestionIndex,
-  onSelect,
+  onQuestionSelect,
 }: {
   previewQuestionIndex: number
-  onSelect: (index: number) => void
+  onQuestionSelect: (index: number) => void
 }) {
   const {
     control,
@@ -60,7 +60,7 @@ export default function QuestionsSection({
       // index could be 0
       if (activeIndex !== undefined && overIndex !== undefined) {
         move(activeIndex, overIndex)
-        onSelect(overIndex)
+        onQuestionSelect(overIndex)
       }
     }
   }
@@ -89,7 +89,7 @@ export default function QuestionsSection({
                     isDisabled={isSubmitting}
                     canDelete={questionFields.length > 1}
                     onDelete={() => remove(index)}
-                    onSelect={() => onSelect(index)}
+                    onSelect={() => onQuestionSelect(index)}
                   />
                 )}
               </SortableItem>
