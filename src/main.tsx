@@ -24,8 +24,8 @@ const activeNetwork = defineChain({
   name: network.name,
   nativeCurrency: {
     decimals: 18,
-    name: 'RMO',
-    symbol: 'RMO',
+    name: 'ETH',
+    symbol: 'ETH',
   },
   rpcUrls: {
     default: {

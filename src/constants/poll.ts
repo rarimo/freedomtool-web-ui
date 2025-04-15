@@ -1,3 +1,5 @@
+import { parseUnits } from 'ethers'
+
 export const MAX_OPTIONS_PER_QUESTION = 8
 export const MAX_QUESTIONS = 12
 
@@ -14,6 +16,8 @@ export const MAX_TOKEN_AMOUNT_PER_POLL = 10_000
 export const MAX_UINT32 = 4294967295
 
 export const ZERO_DATE = '0x303030303030'
+
+export const POLL_MIN_FUNDING_AMOUNT = parseUnits('0.0005', 18)
 
 export const WHITELIST_DATA_ABI_TYPE = {
   type: 'tuple',
