@@ -118,10 +118,6 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     [connectManager],
   )
 
-  const isInitialized = useMemo(() => {
-    return _isInitialized && status === 'connected'
-  }, [status, _isInitialized])
-
   // Disconnect any social login
   useEffect(() => {
     const disconnectIdAuth = async () => {
@@ -244,7 +240,7 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
         address: address ?? '',
         chain: chainId ?? '',
         isConnected,
-        isInitialized,
+        isInitialized: _isInitialized,
 
         isCorrectNetwork,
 
