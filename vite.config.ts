@@ -39,9 +39,11 @@ export default defineConfig(({ mode }) => {
       {
         name: 'markdown-loader',
         transform(code, id) {
-          if (id.slice(-3) === '.md') {
-            // For .md files, get the raw content
-            return `export default ${JSON.stringify(code)};`
+          if (id.endsWith('.md')) {
+            return {
+              code: `export default ${JSON.stringify(code)};`,
+              map: null,
+            }
           }
         },
       },
