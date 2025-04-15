@@ -88,11 +88,18 @@ export default function SettingsSection() {
                   disabled={isSubmitting || isCalculating}
                   error={Boolean(fieldState.error)}
                   helperText={fieldState.error?.message}
+                  helperTextSx={{
+                    top: 15,
+                  }}
                   maxValue={balance}
                   endAdornmentSx={{
                     bottom: 0,
                     top: 'unset',
-                    right: 20,
+                    left: { xs: 'unset', md: 20 },
+                    right: { xs: 20, md: 'unset' },
+                    '[data-button-stack]': {
+                      justifyContent: { md: 'flex-start' },
+                    },
                   }}
                   onChange={e => {
                     field.onChange(e)

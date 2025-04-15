@@ -674,7 +674,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         backgroundColor: theme.palette.background.paper,
       }),
       barColorPrimary: ({ theme }) => ({
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: alpha(theme.palette.primary.main, 0.2),
       }),
       barColorSecondary: ({ theme }) => ({
         backgroundColor: theme.palette.action.active,

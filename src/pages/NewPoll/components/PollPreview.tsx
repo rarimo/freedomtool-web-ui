@@ -135,6 +135,7 @@ function PollImage({ imageSrc }: { imageSrc?: string }) {
       justifyContent='center'
       alignItems='center'
       height={194}
+      flexShrink={0}
       borderBottom={imageSrc ? 0 : 1}
       borderColor={palette.action.active}
     >

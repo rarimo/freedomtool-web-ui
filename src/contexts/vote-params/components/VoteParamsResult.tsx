@@ -86,7 +86,7 @@ export default function VoteParamsResult() {
   const total = parseUnits(amount || '0', 18) + estimatedGas
 
   return (
-    <Stack minWidth={250} alignItems='flex-end' mt={{ xs: 6, md: 0 }} pb={{ xs: 20, md: 0 }}>
+    <Stack minWidth={250} alignItems='flex-end' mt={{ xs: 6, md: 0 }}>
       {renderGasEstimation()}
       <Stack spacing={1} direction='row' justifyContent='center' alignItems='center'>
         <Typography variant='body2'>{t('create-poll.result.total')}</Typography>

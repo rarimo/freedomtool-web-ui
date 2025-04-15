@@ -101,7 +101,7 @@ export const Web3ContextProviderWrapper = ({ children }: PropsWithChildren) => {
 
 const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   const [balance, setBalance] = useState<string>('0')
-  const [_isInitialized, setIsInitialized] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
   const [rawProviderSigner, setRawProviderSigner] = useState<JsonRpcSigner | null>(null)
 
   const connectManager = useConnect()
@@ -117,10 +117,6 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
     },
     [connectManager],
   )
-
-  const isInitialized = useMemo(() => {
-    return status !== 'connecting' && status !== 'reconnecting' && _isInitialized
-  }, [status, _isInitialized])
 
   // Disconnect any social login
   useEffect(() => {
@@ -208,7 +204,7 @@ const Web3ContextProvider = ({ children }: PropsWithChildren) => {
   }, [client?.chain?.id])
 
   useEffect(() => {
-    if (appKitEvent?.data.event === 'INITIALIZE') {
+    if (appKitEvent?.data.event === 'INITIALIZE' || appKitEvent?.data.event === 'MODAL_CREATED') {
       setIsInitialized(true)
     }
     if (appKitEvent?.data.event === 'DISCONNECT_SUCCESS') {

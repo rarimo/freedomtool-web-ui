@@ -3,7 +3,12 @@ import { t } from 'i18next'
 import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
-import { ALLOWED_IMAGE_MIME_TYPES, MAX_BANNER_SIZE, MAX_PARTICIPANTS_PER_POLL } from '@/constants'
+import {
+  ALLOWED_IMAGE_MIME_TYPES,
+  MAX_BANNER_SIZE,
+  MAX_PARTICIPANTS_PER_POLL,
+  POLL_MIN_FUNDING_NUMBER,
+} from '@/constants'
 import { Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
@@ -88,7 +93,7 @@ export const createPollSchema = zod
       .array(
         zod.object({
           id: zod.string().uuid(),
-          text: zod.string().min(5).max(40),
+          text: zod.string().min(5).max(50),
           options: zod
             .array(
               zod.object({
@@ -105,8 +110,8 @@ export const createPollSchema = zod
       amount: zod
         .string()
         .min(1)
-        .refine(value => Number(value) > 0, {
-          message: t('create-poll.amount-error'),
+        .refine(value => Number(value) > POLL_MIN_FUNDING_NUMBER, {
+          message: t('create-poll.amount-error', { amount: POLL_MIN_FUNDING_NUMBER }),
         }),
     }),
   })

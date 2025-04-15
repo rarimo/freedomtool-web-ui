@@ -44,8 +44,8 @@ export default function CreatePollForm() {
   const { breakpoints } = useTheme()
   const isLgUp = useMediaQuery(breakpoints.up('lg'))
 
-  const { onScrollHandler, shadowScrollStyle } = useScrollWithShadow(80)
-  const { onScrollHandler: questionScrollHandler, shadowScrollStyle: questionScrollStyle } =
+  const { containerRef, shadowScrollStyle } = useScrollWithShadow(80)
+  const { containerRef: questionRef, shadowScrollStyle: questionScrollStyle } =
     useScrollWithShadow(80)
   const { createProposal } = useProposalState()
   const [isQuestionPreview, setIsQuestionPreview] = useState(false)
@@ -131,7 +131,7 @@ export default function CreatePollForm() {
         type: 'links',
         attributes: {
           resource_id: proposalId,
-          metadata: { proposal_id: Number(proposalId) },
+          metadata: { proposal_id: Number(proposalId), name: 'Main QR Code' },
         },
       })
 
@@ -212,7 +212,11 @@ export default function CreatePollForm() {
           }}
         >
           <RoundedBackground
-            sx={{ alignItems: 'flex-end', pr: { lg: 24.5 }, [breakpoints.down('md')]: { p: 4 } }}
+            sx={{
+              alignItems: 'flex-end',
+              pr: { lg: 24.5 },
+              [breakpoints.down('md')]: { p: 4, mb: 20 },
+            }}
           >
             <SectionsController isDisabled={form.formState.isSubmitting} sections={sections} />
           </RoundedBackground>
@@ -222,6 +226,7 @@ export default function CreatePollForm() {
               {isQuestionPreview ? (
                 <RoundedBackground>
                   <Stack
+                    ref={questionRef}
                     key='question'
                     height={500}
                     sx={{
@@ -230,7 +235,6 @@ export default function CreatePollForm() {
                       position: 'sticky',
                       top: DESKTOP_HEADER_HEIGHT,
                     }}
-                    onScroll={questionScrollHandler}
                   >
                     <PollQuestionPreview question={questions[questions.length - 1]} />
                   </Stack>
@@ -239,6 +243,7 @@ export default function CreatePollForm() {
                 <RoundedBackground>
                   <Stack
                     height={500}
+                    ref={containerRef}
                     sx={{
                       overflow: 'auto',
                       ...shadowScrollStyle,
@@ -246,7 +251,6 @@ export default function CreatePollForm() {
                       position: 'sticky',
                       top: DESKTOP_HEADER_HEIGHT,
                     }}
-                    onScroll={onScrollHandler}
                   >
                     <PollPreview {...details} {...criteria} />
                   </Stack>

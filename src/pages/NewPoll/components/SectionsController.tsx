@@ -57,7 +57,7 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
 
       {isMdUp && (
         <Stack
-          direction={{ xs: 'column-reverse', md: 'row' }}
+          direction={{ xs: 'column-reverse' }}
           spacing={10}
           flexWrap='wrap'
           alignItems='center'
@@ -93,10 +93,11 @@ export default function SectionsController({ sections, isDisabled }: SectionsCon
       {!isMdUp && (
         <Stack
           position='fixed'
-          bottom={0}
+          height={64}
           left={0}
+          bottom={0}
           right={0}
-          sx={{ borderTop: `1px solid ${palette.action.active}`, zIndex: 1 }}
+          sx={{ borderTop: `1px solid ${palette.action.active}`, zIndex: 1, overflow: 'hidden' }}
         >
           <Stack
             bgcolor={palette.background.paper}
