@@ -111,7 +111,7 @@ export const createPollSchema = zod
         .string()
         .min(1)
         .refine(value => Number(value) > POLL_MIN_FUNDING_NUMBER, {
-          message: t('create-poll.amount-error'),
+          message: t('create-poll.amount-error', { amount: POLL_MIN_FUNDING_NUMBER }),
         }),
     }),
   })
