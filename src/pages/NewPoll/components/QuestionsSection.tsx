@@ -17,7 +17,13 @@ import SortableItem from './SortableItem'
 
 const dndModifiers = [restrictToVerticalAxis, restrictToParentElement]
 
-export default function QuestionsSection() {
+export default function QuestionsSection({
+  previewQuestionIndex,
+  onQuestionSelect,
+}: {
+  previewQuestionIndex: number
+  onQuestionSelect: (index: number) => void
+}) {
   const {
     control,
     trigger,
@@ -54,6 +60,7 @@ export default function QuestionsSection() {
       // index could be 0
       if (activeIndex !== undefined && overIndex !== undefined) {
         move(activeIndex, overIndex)
+        onQuestionSelect(overIndex)
       }
     }
   }
@@ -78,9 +85,11 @@ export default function QuestionsSection() {
                     question={question}
                     index={index}
                     control={control}
+                    isPreviewable={index === previewQuestionIndex}
                     isDisabled={isSubmitting}
                     canDelete={questionFields.length > 1}
                     onDelete={() => remove(index)}
+                    onSelect={() => onQuestionSelect(index)}
                   />
                 )}
               </SortableItem>

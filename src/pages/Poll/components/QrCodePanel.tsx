@@ -25,6 +25,8 @@ export default function QrCodePanel() {
   const { id } = useParams()
   const { isQrInfoVisible } = useQrState()
 
+  const [isDeleting, setIsDeleting] = useState(false)
+
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [isCreateQrOpen, setIsCreateQrOpen] = useState(false)
 
@@ -51,11 +53,14 @@ export default function QrCodePanel() {
 
   const deleteQrCode = useCallback(
     async (qrCodeId: string) => {
+      setIsDeleting(true)
       try {
         await deleteQRCode(qrCodeId)
         await updateQrCodes()
       } catch (error) {
         ErrorHandler.process(error)
+      } finally {
+        setIsDeleting(false)
       }
     },
     [updateQrCodes],
@@ -161,6 +166,7 @@ export default function QrCodePanel() {
         onClose={() => setIsQrModalOpen(false)}
         qrCodes={qrCodes}
         qrCodeLoadingState={qrCodeLoadingState}
+        isDisabled={isDeleting}
         onReload={reloadQrCodes}
         onLoadNext={loadNextQrCodes}
         onDelete={deleteQrCode}
