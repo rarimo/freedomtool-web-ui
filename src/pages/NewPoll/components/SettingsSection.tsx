@@ -51,7 +51,6 @@ export default function SettingsSection() {
             color={palette.info.darker}
             borderRadius={4}
             p={3}
-            maxWidth={{ md: 620 }}
             spacing={3}
             direction='row'
             alignItems='center'
