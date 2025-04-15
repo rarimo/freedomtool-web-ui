@@ -4,7 +4,6 @@ import { SortableContext } from '@dnd-kit/sortable'
 import { Button, Stack } from '@mui/material'
 import { useEvent } from '@reactuses/core'
 import { t } from 'i18next'
-import { Dispatch, SetStateAction } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -20,10 +19,10 @@ const dndModifiers = [restrictToVerticalAxis, restrictToParentElement]
 
 export default function QuestionsSection({
   previewQuestionIndex,
-  setPreviewQuestionIndex,
+  onSelect,
 }: {
   previewQuestionIndex: number
-  setPreviewQuestionIndex: Dispatch<SetStateAction<number>>
+  onSelect: (index: number) => void
 }) {
   const {
     control,
@@ -61,7 +60,7 @@ export default function QuestionsSection({
       // index could be 0
       if (activeIndex !== undefined && overIndex !== undefined) {
         move(activeIndex, overIndex)
-        setPreviewQuestionIndex(overIndex)
+        onSelect(overIndex)
       }
     }
   }
@@ -90,7 +89,7 @@ export default function QuestionsSection({
                     isDisabled={isSubmitting}
                     canDelete={questionFields.length > 1}
                     onDelete={() => remove(index)}
-                    onSelect={() => setPreviewQuestionIndex(index)}
+                    onSelect={() => onSelect(index)}
                   />
                 )}
               </SortableItem>

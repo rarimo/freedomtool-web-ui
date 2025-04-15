@@ -170,7 +170,7 @@ export default function CreatePollForm() {
         children: (
           <QuestionsSection
             previewQuestionIndex={previewQuestionIndex}
-            setPreviewQuestionIndex={setPreviewQuestionIndex}
+            onSelect={setPreviewQuestionIndex}
           />
         ),
         validate: () => trigger(['questions']),
