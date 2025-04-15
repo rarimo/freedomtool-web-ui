@@ -257,12 +257,7 @@ function QRCodeListItemActions({
         </IconButton>
       </Tooltip>
       <Tooltip title={t('poll.qr-code-panel.delete-btn-tooltip')} enterDelay={300}>
-        <IconButton
-          color='error'
-          sx={{ p: 3 }}
-          disabled={!qrCode.active}
-          onClick={() => onDelete(qrCode.id)}
-        >
+        <IconButton color='error' sx={{ p: 3 }} onClick={() => onDelete(qrCode.id)}>
           <UiIcon name={Icons.DeleteBin6Line} size={4} />
         </IconButton>
       </Tooltip>
