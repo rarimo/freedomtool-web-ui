@@ -30,7 +30,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      ...(isLocalDevelopment && { allowedHosts: true }),
+      // ...(isLocalDevelopment && { allowedHosts: true }),
+      allowedHosts: true,
       port: Number(env.VITE_PORT || 8000),
     },
     base: './',
