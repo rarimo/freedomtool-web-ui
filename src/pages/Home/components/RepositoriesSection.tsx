@@ -2,6 +2,7 @@ import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
 import { RoutePaths } from '@/enums'
@@ -79,9 +80,8 @@ export default function RepositoriesSection() {
           sx={{ textDecoration: 'underline' }}
           color={palette.text.primary}
           textAlign='center'
-          component='a'
-          target='_blank'
-          href={RoutePaths.Whitepaper}
+          component={Link}
+          to={RoutePaths.Whitepaper}
           variant='buttonLarge'
         >
           {t('home.repositories.whitepaper')}
