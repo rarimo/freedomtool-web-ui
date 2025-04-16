@@ -77,7 +77,9 @@ export default function InfiniteList<D>({
     return (
       slots?.error ?? (
         <ErrorView
+          sx={{ maxWidth: 320, mx: 'auto', mt: 8 }}
           title={t('infinite-list.error-title')}
+          description={t('infinite-list.error-description')}
           action={
             <Button
               variant='outlined'
