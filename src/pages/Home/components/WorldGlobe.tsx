@@ -54,12 +54,16 @@ const WorldGlobe = () => {
       hexPolygonColor={() => palette.text.secondary}
       animateIn={false}
       globeMaterial={
-        new THREE.MeshPhongMaterial({
-          color: isDarkMode ? 0x272827 : 0xffffff,
-          emissive: isDarkMode ? 0x272827 : 0xffffff,
-          shininess: 0,
-          flatShading: true,
-        })
+        isDarkMode
+          ? new THREE.MeshBasicMaterial({
+              color: 0x272827,
+            })
+          : new THREE.MeshPhongMaterial({
+              color: 0xffffff,
+              emissive: 0xffffff,
+              shininess: 0,
+              flatShading: false,
+            })
       }
       backgroundColor={palette.background.paper}
       showAtmosphere={false}
