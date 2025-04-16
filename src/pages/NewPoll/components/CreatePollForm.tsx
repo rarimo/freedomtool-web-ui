@@ -2,7 +2,7 @@ import { time } from '@distributedlab/tools'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { parseUnits } from 'ethers'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +28,7 @@ import { Nationality } from '@/types'
 
 import { ProcessingPollStep, SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
+import { useCreatePollDraft } from '../hooks/create-poll-draft'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
 import PollPreview from './PollPreview'
@@ -59,13 +60,12 @@ export default function CreatePollForm() {
   const [processingStep, setProcessingStep] = useState(ProcessingPollStep.Image)
   const [proposalId, setProposalId] = useState<string | null>(null)
 
+  // Hook to process indexDB create poll draft
+  useCreatePollDraft(form)
+
   const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
 
-  const {
-    trigger,
-    handleSubmit,
-    formState: { touchedFields },
-  } = form
+  const { trigger, handleSubmit } = form
 
   const submit = async (formData: CreatePollSchema) => {
     try {
@@ -189,6 +189,9 @@ export default function CreatePollForm() {
   )
 
   const { details, criteria, questions } = form.watch()
+  const {
+    formState: { touchedFields },
+  } = form
 
   useEffect(() => {
     // Prevent closing the tab until the poll is live
