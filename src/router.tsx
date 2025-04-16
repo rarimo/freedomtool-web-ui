@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
+import { createHashRouter, Navigate, Outlet } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
 import MainLayout from '@/layouts/MainLayout'
@@ -17,7 +17,7 @@ export const createRouter = () => {
   const NewPoll = lazy(() => import('@/pages/NewPoll'))
   const Whitepaper = lazy(() => import('@/pages/Whitepaper'))
 
-  return createBrowserRouter(
+  return createHashRouter(
     [
       {
         path: RoutePaths.Home,
