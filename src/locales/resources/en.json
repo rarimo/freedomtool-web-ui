@@ -197,7 +197,9 @@
       "progress-lbl": "Progress",
       "participants-lbl": "{{ currentVotesCount }} / {{ totalVotes }} participants",
       "retry-btn": "Retry"
-    }
+    },
+    "draft-polls-empty-view-title": "No drafts",
+    "draft-polls-empty-view-description": "Drafts are automatically created and updated while you fill out the form and deleted when submit a proposal."
   },
   "poll-preview": {
     "title": "Preview",
