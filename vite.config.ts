@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => {
       ...(isLocalDevelopment && { allowedHosts: true }),
       port: Number(env.VITE_PORT || 8000),
     },
+    base: './',
     plugins: [
       react(),
       // Custom plugin to load markdown files
