@@ -53,9 +53,8 @@ export default function HeroSection() {
               {t('home.hero.cta-btn')}
             </Button>
             <Button
-              component='a'
-              target='_blank'
-              href={RoutePaths.Whitepaper}
+              component={Link}
+              to={RoutePaths.Whitepaper}
               variant='outlined'
               sx={{ height: { md: 64 } }}
             >
