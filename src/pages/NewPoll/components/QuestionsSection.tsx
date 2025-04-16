@@ -66,47 +66,40 @@ export default function QuestionsSection({
   }
 
   return (
-    <Stack
-      pb={{
-        xs: questionFields.length > 1 || questionFields[0]?.options?.length > 3 ? 20 : 0,
-        md: 0,
-      }}
-    >
-      <DndContext modifiers={dndModifiers} onDragEnd={swapQuestionsAfterDrag}>
-        <SortableContext items={questionFields.map(q => q.id)}>
-          <Stack spacing={{ xs: 4, md: 6 }}>
-            {questionFields.map((question, index) => (
-              <SortableItem key={question.id} id={question.id} index={index}>
-                {({ attributes, listeners }) => (
-                  <QuestionForm
-                    attributes={attributes}
-                    listeners={listeners}
-                    draggable={questionFields.length > 1}
-                    question={question}
-                    index={index}
-                    control={control}
-                    isPreviewable={index === previewQuestionIndex}
-                    isDisabled={isSubmitting}
-                    canDelete={questionFields.length > 1}
-                    onDelete={() => remove(index)}
-                    onSelect={() => onQuestionSelect(index)}
-                  />
-                )}
-              </SortableItem>
-            ))}
-            <Button
-              sx={{ mr: 'auto', py: 0, pl: 0, height: 'fit-content' }}
-              size='medium'
-              variant='text'
-              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
-              startIcon={<UiIcon name={Icons.Plus} size={5} />}
-              onClick={addQuestion}
-            >
-              {t('create-poll.add-question-btn')}
-            </Button>
-          </Stack>
-        </SortableContext>
-      </DndContext>
-    </Stack>
+    <DndContext modifiers={dndModifiers} onDragEnd={swapQuestionsAfterDrag}>
+      <SortableContext items={questionFields.map(q => q.id)}>
+        <Stack spacing={{ xs: 4, md: 6 }}>
+          {questionFields.map((question, index) => (
+            <SortableItem key={question.id} id={question.id} index={index}>
+              {({ attributes, listeners }) => (
+                <QuestionForm
+                  attributes={attributes}
+                  listeners={listeners}
+                  draggable={questionFields.length > 1}
+                  question={question}
+                  index={index}
+                  control={control}
+                  isPreviewable={index === previewQuestionIndex}
+                  isDisabled={isSubmitting}
+                  canDelete={questionFields.length > 1}
+                  onDelete={() => remove(index)}
+                  onSelect={() => onQuestionSelect(index)}
+                />
+              )}
+            </SortableItem>
+          ))}
+          <Button
+            sx={{ mr: 'auto', py: 0, pl: 0, height: 'fit-content' }}
+            size='medium'
+            variant='text'
+            disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
+            startIcon={<UiIcon name={Icons.Plus} size={5} />}
+            onClick={addQuestion}
+          >
+            {t('create-poll.add-question-btn')}
+          </Button>
+        </Stack>
+      </SortableContext>
+    </DndContext>
   )
 }

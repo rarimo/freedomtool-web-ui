@@ -30,6 +30,7 @@ const UPDATE_PROGRESS_INTERVAL = 100
 
 export default function ProcessingPollModal({ step, proposalId, ...rest }: Props) {
   const [progress, setProgress] = useState(0)
+  const { breakpoints } = useTheme()
 
   const totalEstimatedTime = progressMilestones.reduce((acc, item) => acc + item.estimatedTime, 0)
 
@@ -70,7 +71,15 @@ export default function ProcessingPollModal({ step, proposalId, ...rest }: Props
         noValidate: true,
         position: 'relative',
         ...rest.PaperProps,
-        sx: { width: 470, p: 12, ...rest.PaperProps?.sx },
+        sx: {
+          width: 470,
+          p: 12,
+          ...rest.PaperProps?.sx,
+          [breakpoints.down('md')]: {
+            px: 4,
+            py: 8,
+          },
+        },
       }}
     >
       {step === ProcessingPollStep.Live ? (
