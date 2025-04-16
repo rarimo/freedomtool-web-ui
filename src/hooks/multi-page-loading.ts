@@ -1,10 +1,9 @@
 import { JsonApiLinkFields, JsonApiResponse } from '@distributedlab/jac'
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { LoadingStates } from '@/enums'
 import { ErrorHandler } from '@/helpers'
 
-// TODO: put page limit from opts to request opts
 export const useMultiPageLoading = <D, M>(
   loadFn: () => Promise<JsonApiResponse<D[], M>>,
   opts?: {
@@ -32,14 +31,17 @@ export const useMultiPageLoading = <D, M>(
   const [loadingState, setLoadingState] = useState<LoadingStates>(LoadingStates.Initial)
   const [hasNext, setHasNext] = useState(true)
 
-  const optsWithDefaults = useMemo(() => {
-    return {
+  const abortControllerRef = useRef<AbortController>(new AbortController())
+
+  const optsWithDefaults = useMemo(
+    () => ({
       loadOnMount: true,
       pageLimit: 100,
       silentError: false,
       ...opts,
-    }
-  }, [opts])
+    }),
+    [opts],
+  )
 
   const handleError = useCallback(
     (e: unknown) => {
@@ -63,24 +65,41 @@ export const useMultiPageLoading = <D, M>(
   )
 
   const load = useCallback(async () => {
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
     setLoadingState(LoadingStates.Loading)
     try {
       const res = await loadFn()
+      if (controller.signal.aborted) return
+
       handleResponse(res)
+      if (controller.signal.aborted) return
+
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
+      if (controller.signal.aborted) return
+
       setLoadingState(LoadingStates.Error)
       handleError(error)
     }
   }, [handleError, handleResponse, loadFn])
 
   const update = useCallback(async () => {
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
     try {
       const res = await loadFn()
+      if (controller.signal.aborted) return
 
       handleResponse(res)
+      if (controller.signal.aborted) return
+
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
+      if (controller.signal.aborted) return
+
       setLoadingState(LoadingStates.Error)
       handleError(error)
     }
@@ -89,14 +108,21 @@ export const useMultiPageLoading = <D, M>(
   const loadNext = useCallback(async () => {
     if (!response || !hasNext || loadingState === LoadingStates.NextLoading) return
 
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
     setLoadingState(LoadingStates.NextLoading)
     try {
-      const res = await response?.fetchPage(JsonApiLinkFields.next)
+      const res = await response.fetchPage(JsonApiLinkFields.next)
+      if (controller.signal.aborted) return
+
       setResponse(res)
       setData(prev => prev.concat(res.data))
       setHasNext(res.data.length >= optsWithDefaults.pageLimit && Boolean(res.links?.next))
       setLoadingState(LoadingStates.Loaded)
     } catch (error) {
+      if (controller.signal.aborted) return
+
       setLoadingState(LoadingStates.Error)
       handleError(error)
     }
@@ -115,8 +141,16 @@ export const useMultiPageLoading = <D, M>(
   }, [load, reset])
 
   useEffect(() => {
-    if (!optsWithDefaults.loadOnMount) return
-    load()
+    const currentController = abortControllerRef.current
+    return () => {
+      currentController.abort()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (optsWithDefaults.loadOnMount) {
+      load()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, optsWithDefaults.loadArgs ?? [])
 

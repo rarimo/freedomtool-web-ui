@@ -49,6 +49,11 @@ export default function PollsHeader() {
       label: t('polls.history-polls-tab-lbl'),
       // count: historyPollsCount,
     },
+    {
+      route: RoutePaths.PollsDrafts,
+      label: 'Drafts',
+      // count: historyPollsCount,
+    },
   ]
 
   return (
