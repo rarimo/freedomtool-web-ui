@@ -27,7 +27,7 @@ export default function ErrorView({
       alignItems='center'
       width='100%'
       justifyContent='center'
-      p={8}
+      p={6}
       {...rest}
     >
       <Stack

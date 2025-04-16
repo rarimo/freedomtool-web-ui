@@ -89,7 +89,8 @@
     "load-more-btn": "Load more",
     "error-title": "Could not load data",
     "retry-btn": "Retry",
-    "no-data-title": "No items yet"
+    "no-data-title": "No items yet",
+    "error-description": "The service is unavailable"
   },
   "create-poll": {
     "end-date-error": "End Date must be after Start Date",
