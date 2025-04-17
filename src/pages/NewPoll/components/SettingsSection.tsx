@@ -70,7 +70,7 @@ export default function SettingsSection() {
               }}
               title={t('create-poll.top-up-tooltip')}
             >
-              <UiIcon color={palette.text.secondary} size={5} name={Icons.InformationLine} />
+              <UiIcon color={palette.text.secondary} size={5} name={Icons.QuestionLine} />
             </Tooltip>
           </Stack>
           <Stack
