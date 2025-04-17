@@ -50,7 +50,7 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
         src={
           imageCid
             ? getIpfsImageSrc(imageCid)
-            : `/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
+            : `images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
         }
         alt={title ?? 'Poll image'}
         width='100%'

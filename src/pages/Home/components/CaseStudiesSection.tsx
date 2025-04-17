@@ -29,47 +29,47 @@ export default function CaseStudiesSection() {
 
   const items: CaseStudiesItemProps[] = [
     {
-      previewSrc: isDarkMode ? '/images/georgia-dark.png' : '/images/georgia-light.png',
+      previewSrc: isDarkMode ? 'images/georgia-dark.png' : 'images/georgia-light.png',
       title: t('home.case-studies.case-1-title'),
       description: t('home.case-studies.case-1-description'),
       links: [
         {
           title: t('home.case-studies.case-1-link-1-tite'),
-          previewSrc: '/images/georgia-link-1.png',
+          previewSrc: 'images/georgia-link-1.png',
           href: 'https://cointelegraph.com/news/georgia-opposition-blockchain-elections',
         },
         {
           title: t('home.case-studies.case-1-link-2-title'),
-          previewSrc: '/images/georgia-link-2.png',
+          previewSrc: 'images/georgia-link-2.png',
           href: 'https://digitalfrontier.com/articles/digital-democracy-Georgia-election-blockchain-unm',
         },
       ],
     },
     {
-      previewSrc: isDarkMode ? '/images/russia-dark.png' : '/images/russia-light.png',
+      previewSrc: isDarkMode ? 'images/russia-dark.png' : 'images/russia-light.png',
       title: t('home.case-studies.case-2-title'),
       description: t('home.case-studies.case-2-description'),
       links: [
         {
           title: t('home.case-studies.case-2-link-1-title'),
-          previewSrc: '/images/russia-link-1.png',
+          previewSrc: 'images/russia-link-1.png',
           href: 'https://www.coindesk.com/policy/2024/05/10/exiled-russian-opposition-leader-launches-blockchain-based-referendum-on-vladimir-putins-election-win',
         },
         {
           title: t('home.case-studies.case-2-link-2-title'),
-          previewSrc: '/images/russia-link-2.png',
+          previewSrc: 'images/russia-link-2.png',
           href: 'https://www.theblock.co/post/293528/former-pussy-riot-lawyer-launches-blockchain-powered-referendum-to-challenge-putins-inauguration',
         },
       ],
     },
     {
-      previewSrc: isDarkMode ? '/images/iran-dark.png' : '/images/iran-light.png',
+      previewSrc: isDarkMode ? 'images/iran-dark.png' : 'images/iran-light.png',
       title: t('home.case-studies.case-3-title'),
       description: t('home.case-studies.case-3-description'),
       links: [
         {
           title: t('home.case-studies.case-3-link-title'),
-          previewSrc: '/images/iran-link-1.png',
+          previewSrc: 'images/iran-link-1.png',
           href: 'https://appdevelopermagazine.com/blockchain-voting-from-iranians-vote-and-freedom-tool/',
         },
       ],
