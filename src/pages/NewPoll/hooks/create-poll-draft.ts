@@ -35,4 +35,6 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
   useUpdateCreatePollFields('details', form, currentDraftId)
   useUpdateCreatePollFields('criteria', form, currentDraftId)
   useUpdateCreatePollFields('questions', form, currentDraftId)
+
+  return { currentDraftId }
 }

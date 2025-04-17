@@ -1,13 +1,15 @@
-import { Stack, Typography, useTheme } from '@mui/material'
+import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { AppLoader, LazyImage } from '@/common'
-import { RoutePaths } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
+import { ErrorHandler } from '@/helpers'
 import { lineClamp } from '@/theme/helpers'
+import { UiIcon } from '@/ui'
 
 import { db, PollDraft } from '../NewPoll/db'
 import EmptyPollsView from './components/EmptyPollsView'
@@ -34,16 +36,28 @@ export default function DraftPolls() {
       </Stack>
     )
 
+  // TODO: Add animation
   return (
-    <Stack>
-      {drafts.map((item, index) => (
-        <PollDraftCard {...item} key={index} />
-      ))}
-    </Stack>
+    <AnimatePresence>
+      <Box
+        sx={{
+          display: 'grid',
+          alignItems: 'center',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: 4,
+        }}
+      >
+        {drafts.map(item => (
+          <PollDraftCard key={item.id} {...item} />
+        ))}
+      </Box>
+    </AnimatePresence>
   )
 }
 
-function PollDraftCard({ details, id }: PollDraft) {
+interface PollDraftCardProps extends PollDraft {}
+
+function PollDraftCard({ details, id }: PollDraftCardProps) {
   const navigate = useNavigate()
   const { palette } = useTheme()
   const [imageUrl, setImageUrl] = useState<string>('')
@@ -57,6 +71,16 @@ function PollDraftCard({ details, id }: PollDraft) {
     })
   }
 
+  const deleteDraft = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!id) return
+    try {
+      await db.drafts.delete(id)
+    } catch (error) {
+      ErrorHandler.process(error)
+    }
+  }
+
   useEffect(() => {
     if (image instanceof File) {
       const url = URL.createObjectURL(image)
@@ -65,53 +89,63 @@ function PollDraftCard({ details, id }: PollDraft) {
         URL.revokeObjectURL(url)
       }
     } else {
-      setImageUrl(`/images/'globe-${palette.mode}.png`)
+      setImageUrl(`/images/globe-${palette.mode}.png`)
     }
   }, [image, palette.mode])
 
   return (
-    <Stack
-      component={motion.div}
-      justifyContent='flex-end'
-      position='relative'
-      border='1px solid'
-      borderColor={palette.action.active}
-      borderRadius={5}
-      overflow='hidden'
-      height={390}
-      sx={{ cursor: 'pointer' }}
-      whileFocus={{ scale: 0.95 }}
-      whileTap={{ scale: 0.9 }}
-      whileHover={{ scale: 0.95 }}
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.6 }}
+      transition={{ duration: 0.4 }}
+      style={{ cursor: 'pointer' }}
       onClick={goToDraft}
       onKeyDown={e => {
         if (e.key === 'Enter') goToDraft()
       }}
     >
-      <LazyImage
-        src={imageUrl}
-        alt={title ?? `Draft #${id}`}
-        width='100%'
-        height='60%'
-        sx={{
-          position: 'absolute',
-          top: 0,
-        }}
-      />
-
       <Stack
-        sx={{ position: 'absolute', zIndex: 2, width: 1 }}
-        spacing={5}
-        p={5}
-        borderRadius={4}
-        bgcolor={palette.background.paper}
+        justifyContent='flex-end'
+        position='relative'
+        border='1px solid'
+        borderColor={palette.action.active}
+        borderRadius={5}
+        overflow='hidden'
+        height={300}
       >
-        <Stack spacing={4}>
+        <LazyImage
+          src={imageUrl}
+          alt={title ?? `Draft #${id}`}
+          width='100%'
+          height='100%'
+          sx={{
+            position: 'absolute',
+            top: 0,
+          }}
+        />
+
+        <Stack
+          sx={{ position: 'absolute', zIndex: 2, width: 1 }}
+          spacing={5}
+          p={5}
+          borderRadius={4}
+          bgcolor={palette.background.paper}
+        >
           <Typography variant='h4' sx={{ ...lineClamp(2) }}>
             {details.title || `Draft #${id}`}
           </Typography>
         </Stack>
+
+        <IconButton
+          color='secondary'
+          sx={{ position: 'absolute', top: 20, right: 20 }}
+          onClick={deleteDraft}
+        >
+          <UiIcon size={5} name={Icons.DeleteBin6Line} />
+        </IconButton>
       </Stack>
-    </Stack>
+    </motion.div>
   )
 }

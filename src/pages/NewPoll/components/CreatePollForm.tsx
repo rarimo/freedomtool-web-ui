@@ -28,6 +28,7 @@ import { Nationality } from '@/types'
 
 import { ProcessingPollStep, SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
+import { db } from '../db'
 import { useCreatePollDraft } from '../hooks/create-poll-draft'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
@@ -61,7 +62,7 @@ export default function CreatePollForm() {
   const [proposalId, setProposalId] = useState<string | null>(null)
 
   // Hook to process indexDB create poll draft
-  useCreatePollDraft(form)
+  const { currentDraftId } = useCreatePollDraft(form)
 
   const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
 
@@ -140,6 +141,10 @@ export default function CreatePollForm() {
       await waitForProposalToBeIndexed(proposalId)
 
       setProcessingStep(ProcessingPollStep.Live)
+
+      if (currentDraftId) {
+        await db.drafts.delete(currentDraftId)
+      }
     } catch (error) {
       ErrorHandler.process(error)
       setIsProcessing(false)
