@@ -200,7 +200,8 @@
       "retry-btn": "Retry"
     },
     "draft-polls-empty-view-title": "No drafts",
-    "draft-polls-empty-view-description": "Drafts are automatically created and updated while you fill out the form and deleted when submit a proposal."
+    "draft-polls-empty-view-description": "Drafts are automatically created and updated while you fill out the form and deleted when submit a proposal.",
+    "draft-polls-default-title": "Draft #{{id}}"
   },
   "poll-preview": {
     "title": "Preview",

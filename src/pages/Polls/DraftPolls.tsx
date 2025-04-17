@@ -76,11 +76,12 @@ export default function DraftPolls() {
 
 interface PollDraftCardProps extends PollDraft {}
 
+// id isn't equal index!
 function PollDraftCard({ details, id }: PollDraftCardProps) {
   const navigate = useNavigate()
   const { palette } = useTheme()
   const [imageUrl, setImageUrl] = useState<string>('')
-
+  const { t } = useTranslation()
   const { image, title } = details
 
   const goToDraft = () => {
@@ -135,7 +136,7 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
       >
         <LazyImage
           src={imageUrl}
-          alt={title ?? `Draft #${id}`}
+          alt={title ?? t('polls.draft-polls-default-title', { id })}
           width='100%'
           height='100%'
           sx={{
@@ -152,7 +153,7 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
           bgcolor={palette.background.paper}
         >
           <Typography variant='h4' sx={{ ...lineClamp(2) }}>
-            {details.title || `Draft #${id}`}
+            {details.title || t('polls.draft-polls-default-title', { id })}
           </Typography>
         </Stack>
 

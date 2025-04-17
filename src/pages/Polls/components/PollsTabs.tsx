@@ -62,7 +62,7 @@ function PollsTab({ count, label, route, isExact = false }: PollTabProps) {
       }}
     >
       <Stack direction='row' spacing={2} alignItems='center'>
-        {count && (
+        {Boolean(count) && (
           <Typography
             variant='subtitle6'
             color={isRouteActive ? palette.common.black : palette.text.secondary}

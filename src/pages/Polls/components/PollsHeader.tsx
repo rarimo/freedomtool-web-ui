@@ -1,5 +1,6 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
@@ -8,6 +9,7 @@ import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons, RoutePaths } from '@/enums'
+import { db } from '@/pages/NewPoll/db'
 import { UiIcon } from '@/ui'
 
 import PollsTabs, { PollTabProps } from './PollsTabs'
@@ -18,6 +20,8 @@ export default function PollsHeader() {
   const { t } = useTranslation()
   const { isConnected } = useWeb3Context()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
+
+  const pollDraftsCount = useLiveQuery(() => db.drafts.count(), [])
 
   // const { getProposalInfo } = useProposalState()
 
@@ -52,7 +56,7 @@ export default function PollsHeader() {
     {
       route: RoutePaths.PollsDrafts,
       label: 'Drafts',
-      // count: historyPollsCount,
+      count: pollDraftsCount,
     },
   ]
 
