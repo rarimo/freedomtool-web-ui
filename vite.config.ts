@@ -105,15 +105,6 @@ export default defineConfig(({ mode }) => {
       target: 'esnext',
       rollupOptions: {
         plugins: [nodePolyfills()],
-        output: {
-          assetFileNames: assetInfo => {
-            const ext = assetInfo.name ? path.extname(assetInfo.name) : ''
-            if (ext === '.css') {
-              return 'assets/[name].[hash][extname]'
-            }
-            return 'assets/[name][extname]'
-          },
-        },
       },
     },
   }
