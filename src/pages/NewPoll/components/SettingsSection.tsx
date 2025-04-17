@@ -100,7 +100,22 @@ export default function SettingsSection() {
                       component='a'
                       target='_blank'
                       rel='noopener'
-                      sx={{ textDecoration: 'underline', fontWeight: FontWeight.SemiBold }}
+                      sx={{
+                        textDecoration: 'underline',
+                        fontWeight: FontWeight.SemiBold,
+                        '&:link': {
+                          color: palette.info.darker,
+                        },
+                        '&:visited': {
+                          color: palette.info.darker,
+                        },
+                        '&:hover': {
+                          color: palette.info.darker,
+                        },
+                        '&:active': {
+                          color: palette.info.dark,
+                        },
+                      }}
                       href={`https://${BRIDGE_LINK}`}
                     >
                       {BRIDGE_LINK}
