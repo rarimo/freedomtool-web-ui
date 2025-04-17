@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useS
 import { LoadingStates } from '@/enums'
 import { ErrorHandler } from '@/helpers'
 
+// TODO: put page limit from opts to request opts
 export const useMultiPageLoading = <D, M>(
   loadFn: () => Promise<JsonApiResponse<D[], M>>,
   opts?: {
