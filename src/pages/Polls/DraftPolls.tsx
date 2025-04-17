@@ -36,19 +36,27 @@ export default function DraftPolls() {
       </Stack>
     )
 
-  // TODO: Add animation
   return (
     <AnimatePresence>
       <Box
+        layout
+        component={motion.div}
         sx={{
           display: 'grid',
-          alignItems: 'center',
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: 4,
         }}
       >
         {drafts.map(item => (
-          <PollDraftCard key={item.id} {...item} />
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PollDraftCard {...item} />
+          </motion.div>
         ))}
       </Box>
     </AnimatePresence>
@@ -95,7 +103,6 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.6 }}
