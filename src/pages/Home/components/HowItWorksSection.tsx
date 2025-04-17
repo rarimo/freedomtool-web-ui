@@ -57,7 +57,7 @@ export default function HowItWorksSection() {
         ),
       },
       {
-        title: t('home.how-it-works.guide-1-title'),
+        title: t('home.how-it-works.guide-2-title'),
         previewSrc: isDarkMode ? 'images/voting-dark.png' : 'images/voting-light.png',
         list: [
           {

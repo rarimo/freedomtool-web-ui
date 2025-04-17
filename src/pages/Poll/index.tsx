@@ -60,20 +60,26 @@ export default function Poll() {
   } = useProposal(id)
 
   useEffect(() => {
-    if (proposal && !isRestricted && !isLoading && !isError) {
+    if (proposal && !isRestricted) {
       setTitle(proposalMetadata?.title ?? '')
     }
 
     return () => {
       setTitle('')
     }
-  }, [isError, isLoading, isRestricted, proposal, proposalMetadata?.title, setTitle])
+  }, [isRestricted, proposal, proposalMetadata?.title, setTitle])
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      setTitle('')
+    }
+  }, [isAuthorized, setTitle])
 
   return (
     <>
       {isAuthorized ? (
         <AnimatePresence mode='popLayout'>
-          {isLoading && !isError && (
+          {isLoading && (
             <Stack
               component={motion.div}
               key='loading'
@@ -86,30 +92,12 @@ export default function Poll() {
             </Stack>
           )}
 
-          {isRestricted && (
-            <ErrorView
-              sx={{ maxWidth: 320, mx: 'auto', mt: 8 }}
-              title='404'
-              description={t('poll.unavailable-error')}
-              action={
-                <Button variant='outlined' size='medium' onClick={() => navigate(RoutePaths.Polls)}>
-                  {t('poll.back-to-poll-btn')}
-                </Button>
-              }
-            />
-          )}
-
-          {isError && (
-            <motion.div
-              key='error'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+          {isError &&
+            (isRestricted ? (
               <ErrorView
-                sx={{ maxWidth: 300, mx: 'auto', mt: 8 }}
-                description={t('poll.loading-error')}
+                sx={{ maxWidth: 320, mx: 'auto', mt: 8 }}
+                title='404'
+                description={t('poll.unavailable-error')}
                 action={
                   <Button
                     variant='outlined'
@@ -120,10 +108,31 @@ export default function Poll() {
                   </Button>
                 }
               />
-            </motion.div>
-          )}
+            ) : (
+              <motion.div
+                key='error'
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <ErrorView
+                  sx={{ maxWidth: 300, mx: 'auto', mt: 8 }}
+                  description={t('poll.loading-error')}
+                  action={
+                    <Button
+                      variant='outlined'
+                      size='medium'
+                      onClick={() => navigate(RoutePaths.Polls)}
+                    >
+                      {t('poll.back-to-poll-btn')}
+                    </Button>
+                  }
+                />
+              </motion.div>
+            ))}
 
-          {!isLoading && !isError && !isRestricted && (
+          {proposal && (
             <Stack
               component={motion.div}
               sx={{ overflowX: 'hidden' }}

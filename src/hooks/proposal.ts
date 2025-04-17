@@ -30,7 +30,7 @@ export function useProposal(id?: string) {
   } = useLoading(
     null,
     async () => {
-      if (!id) return null
+      if (!id || !address) return null
       const proposalFromContract = await getProposalInfo(Number(id))
 
       const { data: proposals } = await getProposals({
@@ -42,12 +42,10 @@ export function useProposal(id?: string) {
         },
       })
 
-      if (address && proposals?.[0]?.owner !== address) {
+      if (proposals?.[0]?.owner !== address) {
         setIsRestricted(true)
-        return null
+        throw new Error('Failed to load proposal. Access denied')
       }
-
-      if (!address) return null
 
       if (proposalFromContract) {
         const parsedContractProposal = parseProposalFromContract(proposalFromContract)
@@ -59,17 +57,17 @@ export function useProposal(id?: string) {
         }
       }
 
-      return null
+      throw new Error('Failed to load proposal')
     },
     {
       loadArgs: [address],
+      loadOnMount: Boolean(address),
+      silentError: true,
     },
   )
 
   const formattedStartDate = formatUtcDateTime(proposal?.parsed?.start_timestamp ?? 0)
   const formattedEndDate = formatUtcDateTime(proposal?.parsed?.end_timestamp ?? 0)
-
-  const isLoading = isProposalLoading || (!proposal && !isRestricted && !isProposalLoadingError)
 
   const isTopUpAllowed =
     [ProposalStatus.Started, ProposalStatus.Waiting].includes(
@@ -161,7 +159,7 @@ export function useProposal(id?: string) {
 
   return {
     isRestricted,
-    isLoading,
+    isLoading: isProposalLoading,
     isError: isProposalLoadingError,
 
     isAlive,
