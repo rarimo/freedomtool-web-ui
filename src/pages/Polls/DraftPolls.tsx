@@ -6,8 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { AppLoader, LazyImage } from '@/common'
+import AuthBlock from '@/common/AuthBlock'
 import { Icons, RoutePaths } from '@/enums'
 import { ErrorHandler } from '@/helpers'
+import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
@@ -17,6 +19,15 @@ import EmptyPollsView from './components/EmptyPollsView'
 export default function DraftPolls() {
   const drafts = useLiveQuery(() => db.drafts.toArray(), [])
   const { t } = useTranslation()
+  const { isAuthorized } = useAuthState()
+
+  if (!isAuthorized) {
+    return (
+      <Stack minWidth={350} mx='auto' mt={8}>
+        <AuthBlock />
+      </Stack>
+    )
+  }
 
   /*
    * useLiveQuery returns undefined while loading,
