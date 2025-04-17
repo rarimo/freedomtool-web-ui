@@ -203,7 +203,7 @@ export default function Poll() {
                             src={
                               proposalMetadata?.imageCid
                                 ? getIpfsImageSrc(proposalMetadata.imageCid)
-                                : `/images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
+                                : `images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
                             }
                             alt='Poll banner'
                           />
