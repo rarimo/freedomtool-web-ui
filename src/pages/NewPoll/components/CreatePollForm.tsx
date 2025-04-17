@@ -61,7 +61,7 @@ export default function CreatePollForm() {
   const [proposalId, setProposalId] = useState<string | null>(null)
 
   // Hook to process create poll draft
-  const { deleteCurrentDraft } = useCreatePollDraft(form)
+  const deleteCurrentDraft = useCreatePollDraft(form)
 
   const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
 

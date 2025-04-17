@@ -45,5 +45,5 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
     }
   }, [currentDraftId, deleteDraft])
 
-  return { deleteCurrentDraft }
+  return deleteCurrentDraft
 }
