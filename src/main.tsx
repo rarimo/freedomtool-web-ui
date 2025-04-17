@@ -3,9 +3,9 @@ import 'react-advanced-cropper/dist/style.css'
 // eslint-disable-next-line import/no-unresolved
 import 'virtual:svg-icons-register'
 
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { AppKitNetwork, defineChain } from '@reown/appkit/networks'
 import { createAppKit } from '@reown/appkit/react'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { http } from 'viem'

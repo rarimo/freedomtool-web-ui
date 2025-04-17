@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-named-as-default
 import Dexie, { type Table } from 'dexie'
 
 import { CreatePollSchema } from './createPollSchema'

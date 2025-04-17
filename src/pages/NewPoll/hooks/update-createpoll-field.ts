@@ -20,7 +20,6 @@ export default function useUpdateCreatePollFields<T extends keyof CreatePollSche
   const updateDraftField = useEvent(async (draftId: number, field: Partial<CreatePollSchema>) => {
     try {
       await db.drafts.update(draftId, field)
-      console.log(`Draft ${draftId} updated with:`, field)
     } catch (error) {
       ErrorHandler.process(error)
     }
