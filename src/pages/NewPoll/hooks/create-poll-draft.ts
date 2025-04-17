@@ -7,7 +7,7 @@ import { usePollDrafts } from '@/db/hooks'
 
 import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
 import { fromPollDraft, toPollDraft } from '../helpers/pollDraftAdapters'
-import useUpdateCreatePollFields from './update-createpoll-field'
+import useDebouncedPollDraftUpdate from './debounced-poll-draft-update'
 
 const DRAFT_ID_KEY = 'draftId'
 
@@ -35,9 +35,9 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
     initDraft()
   }, [])
 
-  useUpdateCreatePollFields('details', form, currentDraftId)
-  useUpdateCreatePollFields('criteria', form, currentDraftId)
-  useUpdateCreatePollFields('questions', form, currentDraftId)
+  useDebouncedPollDraftUpdate('details', form, currentDraftId)
+  useDebouncedPollDraftUpdate('criteria', form, currentDraftId)
+  useDebouncedPollDraftUpdate('questions', form, currentDraftId)
 
   const deleteCurrentDraft = useCallback(async () => {
     if (currentDraftId) {

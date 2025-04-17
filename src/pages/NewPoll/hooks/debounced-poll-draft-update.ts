@@ -7,7 +7,7 @@ import { usePollDrafts } from '@/db/hooks'
 import { CreatePollSchema } from '../createPollSchema'
 import { toPartialPollDraft } from '../helpers/pollDraftAdapters'
 
-export default function useUpdateCreatePollFields<T extends keyof CreatePollSchema>(
+export default function useDebouncedPollDraftUpdate<T extends keyof CreatePollSchema>(
   fieldName: T,
   form: UseFormReturn<CreatePollSchema>,
   currentDraftId: number | null,

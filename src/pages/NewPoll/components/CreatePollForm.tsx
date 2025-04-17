@@ -65,7 +65,11 @@ export default function CreatePollForm() {
 
   const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
 
-  const { trigger, handleSubmit } = form
+  const {
+    trigger,
+    handleSubmit,
+    formState: { touchedFields },
+  } = form
 
   const submit = async (formData: CreatePollSchema) => {
     try {
@@ -191,9 +195,6 @@ export default function CreatePollForm() {
   )
 
   const { details, criteria, questions } = form.watch()
-  const {
-    formState: { touchedFields },
-  } = form
 
   useEffect(() => {
     // Prevent closing the tab until the poll is live
