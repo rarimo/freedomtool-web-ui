@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { alpha, Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -152,17 +152,27 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
           borderRadius={4}
           bgcolor={palette.background.paper}
         >
-          <Typography variant='h4' sx={{ ...lineClamp(2) }}>
+          <Typography width='100%' variant='h4' sx={{ ...lineClamp(2), display: 'block' }}>
             {details.title || t('polls.draft-polls-default-title', { id })}
           </Typography>
         </Stack>
 
         <IconButton
           color='secondary'
-          sx={{ position: 'absolute', top: 20, right: 20 }}
+          sx={{
+            position: 'absolute',
+            background: alpha(palette.common.black, 0.5),
+            color: palette.common.white,
+            top: 15,
+            right: 15,
+            '&:hover': {
+              background: alpha(palette.common.black, 0.7),
+              color: palette.common.white,
+            },
+          }}
           onClick={deleteDraft}
         >
-          <UiIcon size={5} name={Icons.DeleteBin6Line} />
+          <UiIcon size={4} name={Icons.DeleteBin6Line} />
         </IconButton>
       </Stack>
     </motion.div>

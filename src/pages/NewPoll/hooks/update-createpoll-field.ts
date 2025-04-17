@@ -1,6 +1,6 @@
 import { useEvent } from '@reactuses/core'
 import { debounce, isEqual } from 'lodash'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { UseFormReturn, useWatch } from 'react-hook-form'
 
 import { ErrorHandler } from '@/helpers'
@@ -12,7 +12,7 @@ export default function useUpdateCreatePollFields<T extends keyof CreatePollSche
   fieldName: T,
   form: UseFormReturn<CreatePollSchema>,
   currentDraftId: number | null,
-  debounceTime: number = 1_500,
+  debounceTime: number = 1_000,
 ) {
   const fieldData = useWatch({ control: form.control, name: fieldName })
   const prevRef = useRef(fieldData)
@@ -25,9 +25,14 @@ export default function useUpdateCreatePollFields<T extends keyof CreatePollSche
     }
   })
 
-  const debouncedUpdate = debounce((draftId: number, field: Partial<CreatePollSchema>) => {
-    updateDraftField(draftId, field)
-  }, debounceTime)
+  const debouncedUpdate = useMemo(
+    () =>
+      debounce(
+        (draftId: number, field: Partial<CreatePollSchema>) => updateDraftField(draftId, field),
+        debounceTime,
+      ),
+    [updateDraftField, debounceTime],
+  )
 
   useEffect(() => {
     if (currentDraftId && !isEqual(prevRef.current, fieldData)) {
