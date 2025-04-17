@@ -19,7 +19,7 @@ export default function EmptyPollsView({
     <Stack spacing={10} alignItems='center' mt={3}>
       <Box
         component='img'
-        src={`/images/no-polls-image-${palette.mode}.svg`}
+        src={`images/no-polls-image-${palette.mode}.svg`}
         alt='no polls data'
         width={160}
         height={200}

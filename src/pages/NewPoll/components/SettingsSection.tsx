@@ -1,16 +1,28 @@
-import { Box, Radio, RadioGroup, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
+import {
+  Box,
+  Radio,
+  RadioGroup,
+  Stack,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { memo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { DotsLoader } from '@/common'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
+import { FontWeight } from '@/theme/constants'
 import { UiCheckVoteInput, UiIcon } from '@/ui'
 import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
 import { CreatePollSchema } from '../createPollSchema'
+
+const BRIDGE_LINK = 'l2bridge.rarimo.com'
 
 export default function SettingsSection() {
   const {
@@ -45,7 +57,22 @@ export default function SettingsSection() {
         <ShowPollResultWithMemo />
 
         <Stack spacing={4}>
-          <Typography variant='subtitle5'>{t('create-poll.budget-title')}</Typography>
+          <Stack direction='row' spacing={2} alignItems='center'>
+            <Typography variant='subtitle5'>{t('create-poll.budget-title')}</Typography>
+            <Tooltip
+              slotProps={{
+                popper: {
+                  sx: {
+                    maxWidth: 300,
+                    textAlign: 'center',
+                  },
+                },
+              }}
+              title={t('create-poll.top-up-tooltip')}
+            >
+              <UiIcon color={palette.text.secondary} size={5} name={Icons.QuestionLine} />
+            </Tooltip>
+          </Stack>
           <Stack
             bgcolor={palette.info.lighter}
             color={palette.info.darker}
@@ -60,10 +87,42 @@ export default function SettingsSection() {
             <Typography
               color={palette.info.darker}
               variant='body4'
-              typography={{ xs: 'body5', md: 'body4' }}
+              maxWidth={500}
               alignSelf='start'
             >
-              {t('create-poll.fee-alert')}
+              <Trans
+                i18nKey='create-poll.bridge-alert'
+                values={{ link: BRIDGE_LINK }}
+                components={{
+                  Link: (
+                    <Typography
+                      variant='body4'
+                      component='a'
+                      target='_blank'
+                      rel='noopener'
+                      sx={{
+                        textDecoration: 'underline',
+                        fontWeight: FontWeight.SemiBold,
+                        '&:link': {
+                          color: palette.info.darker,
+                        },
+                        '&:visited': {
+                          color: palette.info.darker,
+                        },
+                        '&:hover': {
+                          color: palette.info.darker,
+                        },
+                        '&:active': {
+                          color: palette.info.dark,
+                        },
+                      }}
+                      href={`https://${BRIDGE_LINK}`}
+                    >
+                      {BRIDGE_LINK}
+                    </Typography>
+                  ),
+                }}
+              />
             </Typography>
           </Stack>
 

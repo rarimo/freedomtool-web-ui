@@ -136,7 +136,7 @@
     "vote-params-error": "Invalid vote parameters",
     "max-btn": "MAX",
     "budget-title": "Budget & Participants:",
-    "fee-alert": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up.",
+    "bridge-alert": "Currently voting is available on Rarimo L2. To launch a poll, bridge ETH via <Link>{{link}}</Link>",
     "image-size-error": "Max image size is {{size}}MB.",
     "image-format-error": "Only .jpg, .jpeg, .png and .webp formats are supported.",
     "image-title": "Upload a cover",
@@ -155,7 +155,8 @@
       "live-description": "Poll created! Share the QR code so participants can scan and vote.",
       "live-view-btn": "View Poll"
     },
-    "proposal-id-empty-error": "Proposal ID is empty"
+    "proposal-id-empty-error": "Proposal ID is empty",
+    "top-up-tooltip": "Voting day fees will fluctuate with network congestion, but no worries – you can always top up gas as more voters show up."
   },
   "ui-date-picker": {
     "invalid-format-error": "Invalid date format",
@@ -315,7 +316,7 @@
       "case-2-link-1-title": "Exiled Russian opposition leader Mark Feygin is launching an anonymou...",
       "case-2-link-2-title": "Pussy Riot lawyer launches blockchain-based poll to challenge legitimacy of Russian elections",
       "case-3-title": "Iran",
-      "case-3-description": "Launched by Iranian dissidents it enables citizens to protest the presidential election safely. It allows users to cast a vote of no confidence in the Islamic Republic of Iran's presidential candidates and its corrupt electoral system.",
+      "case-3-description": "Launched by Iranian dissidents it enables citizens to protest the presidential election safely. It allows users to cast a vote of no confidence in the Islamic Republic of Iran's presidential candidates.",
       "case-3-link-title": "Blockchain voting from Iranians Vote and Freedom Tool",
       "title": "Case studies",
       "resources": "Resources:"
