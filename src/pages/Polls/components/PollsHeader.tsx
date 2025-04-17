@@ -55,7 +55,7 @@ export default function PollsHeader() {
     },
     {
       route: RoutePaths.PollsDrafts,
-      label: 'Drafts',
+      label: t('polls.draft-polls-tab-lbl'),
       count: pollDraftsCount,
     },
   ]
