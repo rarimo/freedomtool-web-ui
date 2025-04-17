@@ -1,12 +1,11 @@
-import { useEvent } from '@reactuses/core'
 import { debounce, isEqual } from 'lodash'
 import { useEffect, useMemo, useRef } from 'react'
 import { UseFormReturn, useWatch } from 'react-hook-form'
 
-import { ErrorHandler } from '@/helpers'
+import { usePollDrafts } from '@/db/hooks'
 
 import { CreatePollSchema } from '../createPollSchema'
-import { db } from '../db'
+import { toPartialPollDraft } from '../helpers/pollDraftAdapters'
 
 export default function useUpdateCreatePollFields<T extends keyof CreatePollSchema>(
   fieldName: T,
@@ -14,24 +13,18 @@ export default function useUpdateCreatePollFields<T extends keyof CreatePollSche
   currentDraftId: number | null,
   debounceTime: number = 1_000,
 ) {
+  const { updateDraft } = usePollDrafts()
   const fieldData = useWatch({ control: form.control, name: fieldName })
   const prevRef = useRef(fieldData)
-
-  const updateDraftField = useEvent(async (draftId: number, field: Partial<CreatePollSchema>) => {
-    try {
-      await db.drafts.update(draftId, field)
-    } catch (error) {
-      ErrorHandler.process(error)
-    }
-  })
 
   const debouncedUpdate = useMemo(
     () =>
       debounce(
-        (draftId: number, field: Partial<CreatePollSchema>) => updateDraftField(draftId, field),
+        (draftId: number, field: Partial<CreatePollSchema>) =>
+          updateDraft(draftId, toPartialPollDraft(field)),
         debounceTime,
       ),
-    [updateDraftField, debounceTime],
+    [debounceTime, updateDraft],
   )
 
   useEffect(() => {

@@ -1,16 +1,19 @@
 import { useOnceEffect } from '@reactuses/core'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 
-import { CreatePollSchema } from '../createPollSchema'
-import { db } from '../db'
+import { usePollDrafts } from '@/db/hooks'
+
+import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
+import { fromPollDraft, toPollDraft } from '../helpers/pollDraftAdapters'
 import useUpdateCreatePollFields from './update-createpoll-field'
 
 const DRAFT_ID_KEY = 'draftId'
 
 export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { addDraft, getDraft, deleteDraft } = usePollDrafts()
 
   const currentDraftId = useMemo(() => {
     const param = searchParams.get(DRAFT_ID_KEY)
@@ -20,13 +23,13 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
   useOnceEffect(() => {
     async function initDraft() {
       if (!currentDraftId) {
-        const newDraftId = await db.drafts.add(form.getValues())
+        const newDraftId = await addDraft(toPollDraft(createPollDefaultValues))
         setSearchParams({ draftId: newDraftId.toString() })
         return
       }
-      const existingData = await db.drafts.get(currentDraftId)
-      if (existingData) {
-        form.reset(existingData)
+      const existingDraft = await getDraft(currentDraftId)
+      if (existingDraft) {
+        form.reset(fromPollDraft(existingDraft))
       }
     }
     initDraft()
@@ -36,5 +39,11 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
   useUpdateCreatePollFields('criteria', form, currentDraftId)
   useUpdateCreatePollFields('questions', form, currentDraftId)
 
-  return { currentDraftId }
+  const deleteCurrentDraft = useCallback(async () => {
+    if (currentDraftId) {
+      await deleteDraft(currentDraftId)
+    }
+  }, [currentDraftId, deleteDraft])
+
+  return { deleteCurrentDraft }
 }

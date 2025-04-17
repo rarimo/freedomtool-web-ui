@@ -1,5 +1,4 @@
 import { alpha, Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
-import { useLiveQuery } from 'dexie-react-hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,17 +6,18 @@ import { useNavigate } from 'react-router-dom'
 
 import { AppLoader, LazyImage } from '@/common'
 import AuthBlock from '@/common/AuthBlock'
+import { usePollDrafts } from '@/db/hooks'
+import { PollDratSchema } from '@/db/schemas'
 import { Icons, RoutePaths } from '@/enums'
 import { ErrorHandler } from '@/helpers'
 import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
-import { db, PollDraft } from '../NewPoll/db'
 import EmptyPollsView from './components/EmptyPollsView'
 
 export default function DraftPolls() {
-  const drafts = useLiveQuery(() => db.drafts.toArray(), [])
+  const { drafts, deleteDraft } = usePollDrafts()
   const { t } = useTranslation()
   const { isAuthorized } = useAuthState()
 
@@ -58,15 +58,15 @@ export default function DraftPolls() {
           gap: 4,
         }}
       >
-        {drafts.map(item => (
+        {drafts.map(draft => (
           <motion.div
-            key={item.id}
+            key={draft.id}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
             transition={{ duration: 0.3 }}
           >
-            <PollDraftCard {...item} />
+            <PollDraftCard {...draft} onDelete={() => deleteDraft(draft.id ?? 0)} />
           </motion.div>
         ))}
       </Box>
@@ -74,15 +74,16 @@ export default function DraftPolls() {
   )
 }
 
-interface PollDraftCardProps extends PollDraft {}
+interface PollDraftCardProps extends PollDratSchema {
+  onDelete: () => Promise<void>
+}
 
 // id isn't equal index!
-function PollDraftCard({ details, id }: PollDraftCardProps) {
+function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
   const navigate = useNavigate()
   const { palette } = useTheme()
   const [imageUrl, setImageUrl] = useState<string>('')
   const { t } = useTranslation()
-  const { image, title } = details
 
   const goToDraft = () => {
     navigate({
@@ -95,7 +96,7 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
     e.stopPropagation()
     if (!id) return
     try {
-      await db.drafts.delete(id)
+      await onDelete()
     } catch (error) {
       ErrorHandler.process(error)
     }
@@ -153,7 +154,7 @@ function PollDraftCard({ details, id }: PollDraftCardProps) {
           bgcolor={palette.background.paper}
         >
           <Typography width='100%' variant='h4' sx={{ ...lineClamp(2), display: 'block' }}>
-            {details.title || t('polls.draft-polls-default-title', { id })}
+            {title || t('polls.draft-polls-default-title', { id })}
           </Typography>
         </Stack>
 
