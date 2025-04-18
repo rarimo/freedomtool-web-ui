@@ -5,7 +5,13 @@ import { NavLink } from 'react-router-dom'
 import { Icons, RoutePaths } from '@/enums'
 import { UiIcon } from '@/ui'
 
-export default function EmptyPollsView() {
+export default function EmptyPollsView({
+  title,
+  description,
+}: {
+  title?: string
+  description?: string
+}) {
   const { t } = useTranslation()
   const { palette } = useTheme()
 
@@ -19,9 +25,11 @@ export default function EmptyPollsView() {
         height={200}
       />
       <Stack spacing={4} alignItems='center'>
-        <Typography variant='h3'>{t('polls.no-polls-title')}</Typography>
-        <Typography variant='body3' color={palette.text.secondary}>
-          {t('polls.no-polls-description')}
+        <Typography textAlign='center' variant='h3'>
+          {title ?? t('polls.no-polls-title')}
+        </Typography>
+        <Typography textAlign='center' variant='body3' color={palette.text.secondary}>
+          {description ?? t('polls.no-polls-description')}
         </Typography>
       </Stack>
       <Button

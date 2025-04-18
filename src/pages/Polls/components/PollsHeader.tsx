@@ -1,5 +1,6 @@
 import { Button, Divider, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
@@ -7,7 +8,9 @@ import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
+import { getPollDraftsCount } from '@/db/services'
 import { Icons, RoutePaths } from '@/enums'
+import { QueryKey } from '@/query'
 import { UiIcon } from '@/ui'
 
 import PollsTabs, { PollTabProps } from './PollsTabs'
@@ -18,6 +21,12 @@ export default function PollsHeader() {
   const { t } = useTranslation()
   const { isConnected } = useWeb3Context()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
+
+  const { data: pollDraftsCount } = useQuery({
+    queryKey: [QueryKey.DraftsCounter],
+    queryFn: getPollDraftsCount,
+    initialData: 0,
+  })
 
   // const { getProposalInfo } = useProposalState()
 
@@ -48,6 +57,11 @@ export default function PollsHeader() {
       route: RoutePaths.PollsFinished,
       label: t('polls.history-polls-tab-lbl'),
       // count: historyPollsCount,
+    },
+    {
+      route: RoutePaths.PollsDrafts,
+      label: t('polls.draft-polls-tab-lbl'),
+      count: pollDraftsCount ?? 0,
     },
   ]
 

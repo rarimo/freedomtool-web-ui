@@ -11,6 +11,7 @@ import { createQRCode } from '@/api/modules/qr-code'
 import { RoundedBackground } from '@/common'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
+import { deletePollDraft } from '@/db/services'
 import {
   ErrorHandler,
   prepareAcceptedOptionsToContract,
@@ -28,6 +29,7 @@ import { Nationality } from '@/types'
 
 import { ProcessingPollStep, SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
+import { useCreatePollDraft } from '../hooks/create-poll-draft'
 import CriteriaSection from './CriteriaSection'
 import DetailsSection from './DetailsSection'
 import PollPreview from './PollPreview'
@@ -58,6 +60,9 @@ export default function CreatePollForm() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingStep, setProcessingStep] = useState(ProcessingPollStep.Image)
   const [proposalId, setProposalId] = useState<string | null>(null)
+
+  // Hook to process create poll draft
+  const currentDraftId = useCreatePollDraft(form)
 
   const [previewQuestionIndex, setPreviewQuestionIndex] = useState(0)
 
@@ -140,6 +145,8 @@ export default function CreatePollForm() {
       await waitForProposalToBeIndexed(proposalId)
 
       setProcessingStep(ProcessingPollStep.Live)
+
+      await deletePollDraft(currentDraftId ?? 0)
     } catch (error) {
       ErrorHandler.process(error)
       setIsProcessing(false)

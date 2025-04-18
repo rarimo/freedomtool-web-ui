@@ -13,7 +13,6 @@ import { Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
   criteria: {
-    uniqueness: false,
     nationalities: [],
     sex: Sex.Any,
   },
@@ -77,7 +76,6 @@ export const createPollSchema = zod
       endDate: zod.string().min(1),
     }),
     criteria: zod.object({
-      uniqueness: zod.boolean(),
       sex: zod.nativeEnum(Sex),
       minAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),
       maxAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),

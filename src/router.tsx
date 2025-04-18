@@ -13,6 +13,7 @@ export const createRouter = () => {
   const Poll = lazy(() => import('@/pages/Poll'))
   const ActivePolls = lazy(() => import('@/pages/Polls/ActivePolls'))
   const FinishedPolls = lazy(() => import('@/pages/Polls/FinishedPolls'))
+  const DraftPolls = lazy(() => import('@/pages/Polls/DraftPolls'))
   const NewPoll = lazy(() => import('@/pages/NewPoll'))
   const Whitepaper = lazy(() => import('@/pages/Whitepaper'))
 
@@ -64,6 +65,14 @@ export const createRouter = () => {
                 element: (
                   <Suspense fallback={<></>}>
                     <FinishedPolls />
+                  </Suspense>
+                ),
+              },
+              {
+                path: RoutePaths.PollsDrafts,
+                element: (
+                  <Suspense fallback={<></>}>
+                    <DraftPolls />
                   </Suspense>
                 ),
               },
