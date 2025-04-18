@@ -1,9 +1,9 @@
 import DexieDB, { Table } from 'dexie'
 
-import { PollDratSchema } from './schemas'
+import { PollDraftSchema } from './schemas'
 
 const db = new DexieDB('App') as DexieDB & {
-  drafts: Table<PollDratSchema, number>
+  drafts: Table<PollDraftSchema, number>
 }
 
 db.version(1).stores({

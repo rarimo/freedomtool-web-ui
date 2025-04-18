@@ -1,25 +1,47 @@
 import { alpha, Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import { AppLoader, LazyImage } from '@/common'
+import { AppLoader, ErrorView, LazyImage } from '@/common'
 import AuthBlock from '@/common/AuthBlock'
-import { usePollDrafts } from '@/db/hooks'
-import { PollDratSchema } from '@/db/schemas'
+import { PollDraftSchema } from '@/db/schemas'
+import { deletePollDraft, getAllPollDrafts } from '@/db/services'
 import { Icons, RoutePaths } from '@/enums'
 import { ErrorHandler } from '@/helpers'
+import { queryClient } from '@/query'
 import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
 import EmptyPollsView from './components/EmptyPollsView'
 
+const queryKey = 'drafts'
+
 export default function DraftPolls() {
-  const { drafts, deleteDraft } = usePollDrafts()
   const { t } = useTranslation()
   const { isAuthorized } = useAuthState()
+
+  const {
+    data: drafts,
+    isLoading: isDraftsLoading,
+    isLoadingError: isDraftsLoadingError,
+  } = useQuery({
+    queryKey: [queryKey],
+    queryFn: getAllPollDrafts,
+    initialData: [],
+  })
+
+  const deleteDraft = async (id: number) => {
+    try {
+      await deletePollDraft(id)
+      queryClient.invalidateQueries({ queryKey: [queryKey] })
+    } catch (error) {
+      ErrorHandler.process(error)
+    }
+  }
 
   if (!isAuthorized) {
     return (
@@ -29,12 +51,12 @@ export default function DraftPolls() {
     )
   }
 
-  /*
-   * useLiveQuery returns undefined while loading,
-   * and an empty array if no items are found.
-   */
-  if (drafts === undefined) {
+  if (isDraftsLoading) {
     return <AppLoader />
+  }
+
+  if (isDraftsLoadingError) {
+    return <ErrorView />
   }
 
   if (drafts.length === 0)
@@ -66,7 +88,7 @@ export default function DraftPolls() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PollDraftCard {...draft} onDelete={() => deleteDraft(draft.id ?? 0)} />
+            <PollDraftCard {...draft} onDelete={deleteDraft} />
           </motion.div>
         ))}
       </Box>
@@ -74,8 +96,8 @@ export default function DraftPolls() {
   )
 }
 
-interface PollDraftCardProps extends PollDratSchema {
-  onDelete: () => Promise<void>
+interface PollDraftCardProps extends PollDraftSchema {
+  onDelete: (id: number) => void
 }
 
 // id isn't equal index!
@@ -84,15 +106,10 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
   const [imageUrl, setImageUrl] = useState<string>('')
   const { t } = useTranslation()
 
-  const deleteDraft = async (e: React.MouseEvent) => {
+  const deleteDraft = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!id) return
-    try {
-      await onDelete()
-    } catch (error) {
-      ErrorHandler.process(error)
-    }
+    onDelete(id ?? 0)
   }
 
   useEffect(() => {
@@ -103,7 +120,6 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
         URL.revokeObjectURL(url)
       }
     }
-
     setImageUrl(`images/globe-${palette.mode}.png`)
   }, [image, palette.mode])
 

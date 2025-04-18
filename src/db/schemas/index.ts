@@ -1,1 +1,1 @@
-export { type PollDratSchema } from './PollDraftSchema'
+export { type PollDraftSchema } from './PollDraftSchema'

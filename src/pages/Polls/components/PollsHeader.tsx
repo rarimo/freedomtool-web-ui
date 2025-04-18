@@ -7,8 +7,9 @@ import { AppSettingsMenu } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { usePollDrafts } from '@/db/hooks'
+import { getPollDraftsCount } from '@/db/services'
 import { Icons, RoutePaths } from '@/enums'
+import { useLoading } from '@/hooks'
 import { UiIcon } from '@/ui'
 
 import PollsTabs, { PollTabProps } from './PollsTabs'
@@ -19,7 +20,8 @@ export default function PollsHeader() {
   const { t } = useTranslation()
   const { isConnected } = useWeb3Context()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
-  const { count: pollDraftsCount } = usePollDrafts()
+
+  const { data: pollDraftsCount } = useLoading(0, getPollDraftsCount, { silentError: true })
 
   // const { getProposalInfo } = useProposalState()
 
@@ -54,7 +56,7 @@ export default function PollsHeader() {
     {
       route: RoutePaths.PollsDrafts,
       label: t('polls.draft-polls-tab-lbl'),
-      count: pollDraftsCount,
+      count: pollDraftsCount ?? 0,
     },
   ]
 

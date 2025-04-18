@@ -1,8 +1,8 @@
-import { PollDratSchema } from '@/db/schemas'
+import { PollDraftSchema } from '@/db/schemas'
 
 import { CreatePollSchema } from '../createPollSchema'
 
-export const toPollDraft = (form: CreatePollSchema, id?: number): PollDratSchema => {
+export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchema => {
   const {
     details: { image, title, description, startDate, endDate },
     criteria: { nationalities, sex, maxAge, minAge },
@@ -28,7 +28,7 @@ export const toPollDraft = (form: CreatePollSchema, id?: number): PollDratSchema
 export const toPartialPollDraft = (
   form: Partial<CreatePollSchema>,
   id?: number,
-): Partial<PollDratSchema> => ({
+): Partial<PollDraftSchema> => ({
   ...(id !== undefined && { id }),
 
   ...(form.details ?? {}),
@@ -37,7 +37,7 @@ export const toPartialPollDraft = (
   ...(form.questions && { questions: form.questions }),
 })
 
-export const fromPollDraft = (pollDraft: PollDratSchema): Partial<CreatePollSchema> => {
+export const fromPollDraft = (pollDraft: PollDraftSchema): Partial<CreatePollSchema> => {
   const {
     image,
     title,

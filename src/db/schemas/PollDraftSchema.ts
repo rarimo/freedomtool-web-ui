@@ -1,6 +1,6 @@
 import { Nationality, Sex } from '@/types'
 
-export interface PollDratSchema {
+export interface PollDraftSchema {
   id?: number
 
   image?: File | null

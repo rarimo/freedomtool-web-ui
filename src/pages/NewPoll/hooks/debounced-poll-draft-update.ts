@@ -2,7 +2,7 @@ import { debounce, isEqual } from 'lodash'
 import { useEffect, useMemo, useRef } from 'react'
 import { UseFormReturn, useWatch } from 'react-hook-form'
 
-import { usePollDrafts } from '@/db/hooks'
+import { updatePollDraft } from '@/db/services'
 
 import { CreatePollSchema } from '../createPollSchema'
 import { toPartialPollDraft } from '../helpers/pollDraftAdapters'
@@ -13,7 +13,6 @@ export default function useDebouncedPollDraftUpdate<T extends keyof CreatePollSc
   currentDraftId: number | null,
   debounceTime: number = 1_000,
 ) {
-  const { updateDraft } = usePollDrafts()
   const fieldData = useWatch({ control: form.control, name: fieldName })
   const prevRef = useRef(fieldData)
 
@@ -21,10 +20,10 @@ export default function useDebouncedPollDraftUpdate<T extends keyof CreatePollSc
     () =>
       debounce(
         (draftId: number, field: Partial<CreatePollSchema>) =>
-          updateDraft(draftId, toPartialPollDraft(field)),
+          updatePollDraft(draftId, toPartialPollDraft(field)),
         debounceTime,
       ),
-    [debounceTime, updateDraft],
+    [debounceTime],
   )
 
   useEffect(() => {
