@@ -28,7 +28,7 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
         }
         const existingDraft = await getPollDraftById(currentDraftId)
         if (existingDraft) {
-          form.reset(fromPollDraft(existingDraft))
+          form.reset({ ...createPollDefaultValues, ...fromPollDraft(existingDraft) })
         }
       } catch (error) {
         ErrorHandler.processWithoutFeedback(error)
