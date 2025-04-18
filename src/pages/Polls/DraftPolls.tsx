@@ -11,14 +11,12 @@ import { PollDraftSchema } from '@/db/schemas'
 import { deletePollDraft, getAllPollDrafts } from '@/db/services'
 import { Icons, RoutePaths } from '@/enums'
 import { ErrorHandler } from '@/helpers'
-import { queryClient } from '@/query'
+import { queryClient, QueryKey } from '@/query'
 import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
 
 import EmptyPollsView from './components/EmptyPollsView'
-
-const queryKey = 'drafts'
 
 export default function DraftPolls() {
   const { t } = useTranslation()
@@ -29,7 +27,7 @@ export default function DraftPolls() {
     isLoading: isDraftsLoading,
     isLoadingError: isDraftsLoadingError,
   } = useQuery({
-    queryKey: [queryKey],
+    queryKey: [QueryKey.Drafts],
     queryFn: getAllPollDrafts,
     initialData: [],
   })
@@ -37,7 +35,8 @@ export default function DraftPolls() {
   const deleteDraft = async (id: number) => {
     try {
       await deletePollDraft(id)
-      queryClient.invalidateQueries({ queryKey: [queryKey] })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Drafts] })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.DraftsCounter] })
     } catch (error) {
       ErrorHandler.process(error)
     }
