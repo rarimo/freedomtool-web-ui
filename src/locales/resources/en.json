@@ -340,5 +340,8 @@
     "description": "Use this address below to make a donation from your wallet",
     "address-lbl": "Address",
     "title": "Donate"
+  },
+  "lazy-image": {
+    "load-error": "Failed to load image :("
   }
 }

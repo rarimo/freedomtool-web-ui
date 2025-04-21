@@ -1,7 +1,8 @@
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
+import { LazyImage } from '@/common'
 import { Icons, RoutePaths } from '@/enums'
 import { UiIcon } from '@/ui'
 
@@ -17,10 +18,11 @@ export default function EmptyPollsView({
 
   return (
     <Stack spacing={10} alignItems='center' mt={3}>
-      <Box
+      <LazyImage
         component='img'
         src={`images/no-polls-image-${palette.mode}.svg`}
         alt='no polls data'
+        sx={{ background: 'transparent' }}
         width={160}
         height={200}
       />

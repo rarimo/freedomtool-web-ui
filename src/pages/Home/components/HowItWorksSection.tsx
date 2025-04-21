@@ -184,7 +184,7 @@ function GuideItem({ list, previewSrc, order, title, footer, isReversed = true }
             <LazyImage
               src={previewSrc}
               alt={title}
-              sx={{ objectFit: 'contain' }}
+              sx={{ objectFit: 'contain', borderRadius: 3 }}
               width='100%'
               height='100%'
             />
