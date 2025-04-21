@@ -11,7 +11,6 @@ export default function UiCopyField({ value, label, ...rest }: Props) {
 
   return (
     <TextField
-      sx={{ width: 1 }}
       label={label}
       value={value}
       InputProps={{
@@ -23,6 +22,7 @@ export default function UiCopyField({ value, label, ...rest }: Props) {
         ),
       }}
       {...rest}
+      sx={{ width: 1, ...rest.sx }}
     />
   )
 }

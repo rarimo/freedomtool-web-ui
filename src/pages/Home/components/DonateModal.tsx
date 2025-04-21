@@ -73,19 +73,21 @@ interface ContributeModalContentProps extends DonationToken {
 function DonateModalContent({ address, description, name, iconName }: ContributeModalContentProps) {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const isMdDown = useMediaQuery(breakpoints.down('md'))
+  const isMdUp = useMediaQuery(breakpoints.up('md'))
 
   return (
     <Stack mt={3} spacing={{ xs: 4, md: 6 }} alignItems='center' justifyContent='center'>
-      <UiIcon size={isMdDown ? 12 : 18} name={iconName} />
-      <Typography textAlign='center' variant='subtitle5' color={palette.text.secondary}>
-        {name}
-      </Typography>
-      <Typography textAlign='center' variant='body4' color={palette.text.secondary}>
-        {description || t('donate-modal.description')}
-      </Typography>
-      <ReactQRCode size={isMdDown ? 80 : 140} value={address} />
-      <UiCopyField label={t('donate-modal.address-lbl')} value={address} />
+      <UiIcon size={isMdUp ? 18 : 12} name={iconName} />
+      <Stack spacing={1}>
+        <Typography textAlign='center' variant='subtitle5' color={palette.text.secondary}>
+          {name}
+        </Typography>
+        <Typography textAlign='center' variant='body4' color={palette.text.secondary}>
+          {description || t('donate-modal.description')}
+        </Typography>
+      </Stack>
+      {isMdUp && <ReactQRCode size={140} value={address} />}
+      <UiCopyField sx={{ mt: 1 }} label={t('donate-modal.address-lbl')} value={address} />
     </Stack>
   )
 }
