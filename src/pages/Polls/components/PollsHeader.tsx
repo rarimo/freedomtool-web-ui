@@ -61,7 +61,7 @@ export default function PollsHeader() {
     {
       route: RoutePaths.PollsDrafts,
       label: t('polls.draft-polls-tab-lbl'),
-      count: pollDraftsCount ?? 0,
+      count: isConnected && pollDraftsCount ? pollDraftsCount : 0,
     },
   ]
 
