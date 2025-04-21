@@ -10,6 +10,7 @@ import { Transitions } from '@/theme/constants'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
 import { getRepositoryItemVariants } from '../helpers'
+import ContributeSection from './ContributeSection'
 
 export default function RepositoriesSection() {
   const { palette, breakpoints } = useTheme()
@@ -47,45 +48,50 @@ export default function RepositoriesSection() {
         pt: 20,
         mt: 0,
         mb: 0,
-        pb: 0,
+        pb: 22,
         [breakpoints.down('md')]: {
           mx: 0,
+          pb: 11,
         },
       }}
     >
       <Stack maxWidth={HOME_CONTAINER_WIDTH} width={1}>
-        <Typography
-          textAlign='center'
-          component='h2'
-          variant='h2'
-          typography={{ xs: 'h3', md: 'h2' }}
-        >
-          {t('home.repositories.title')}
-        </Typography>
-        <Box
-          sx={{
-            mt: { xs: 10, md: 20 },
-            width: 1,
-            gap: 4,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          }}
-        >
-          {links.map((link, index) => (
-            <RepositoryItem key={index} link={link} index={index} total={links.length} />
-          ))}
-        </Box>
-        <Typography
-          my={{ xs: 11, md: 22 }}
-          sx={{ textDecoration: 'underline' }}
-          color={palette.text.primary}
-          textAlign='center'
-          component={Link}
-          to={RoutePaths.Whitepaper}
-          variant='buttonLarge'
-        >
-          {t('home.repositories.whitepaper')}
-        </Typography>
+        <Stack component='section'>
+          <Typography
+            textAlign='center'
+            component='h2'
+            variant='h2'
+            typography={{ xs: 'h3', md: 'h2' }}
+          >
+            {t('home.repositories.title')}
+          </Typography>
+          <Box
+            sx={{
+              mt: { xs: 10, md: 20 },
+              width: 1,
+              gap: 4,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            }}
+          >
+            {links.map((link, index) => (
+              <RepositoryItem key={index} link={link} index={index} total={links.length} />
+            ))}
+          </Box>
+          <Typography
+            my={{ xs: 11, md: 22 }}
+            sx={{ textDecoration: 'underline' }}
+            color={palette.text.primary}
+            textAlign='center'
+            component={Link}
+            to={RoutePaths.Whitepaper}
+            variant='buttonLarge'
+          >
+            {t('home.repositories.whitepaper')}
+          </Typography>
+        </Stack>
+
+        <ContributeSection />
       </Stack>
     </RoundedBackground>
   )
@@ -100,10 +106,10 @@ interface RepositoryItemProps {
 function RepositoryItem({ link, index, total }: RepositoryItemProps) {
   const { palette, breakpoints } = useTheme()
   const ref = useRef(null)
-  const isMdDown = useMediaQuery(breakpoints.down('md'))
+  const isLgDown = useMediaQuery(breakpoints.down('lg'))
   const inView = useInView(ref, { once: true, amount: 1 })
 
-  const variants = getRepositoryItemVariants(index, total, isMdDown)
+  const variants = getRepositoryItemVariants(index, total, isLgDown)
 
   return (
     <motion.div

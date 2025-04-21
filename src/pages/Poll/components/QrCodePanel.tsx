@@ -1,7 +1,7 @@
 import { Collapse, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import QRCode from 'react-qr-code'
+import ReactQRCode from 'react-qr-code'
 import { useParams } from 'react-router-dom'
 
 import { DEFAULT_PAGE_LIMIT } from '@/api/clients'
@@ -80,7 +80,7 @@ export default function QrCodePanel({ isCreatable }: { isCreatable: boolean }) {
         <Stack direction='row' alignItems='center' justifyContent='space-between' width='100%'>
           {firstActiveQRCode ? (
             <Stack direction='row' alignItems='center' spacing={4}>
-              <QRCode
+              <ReactQRCode
                 value={generatePollQrCodeUrl(firstActiveQRCode.url)}
                 size={88}
                 fgColor={palette.text.primary}

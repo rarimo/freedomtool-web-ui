@@ -1,13 +1,12 @@
-import { Box, Button, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { Button, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import { motion, useInView } from 'framer-motion'
 import { ReactNode, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink } from 'react-router-dom'
 
-import { RoundedBackground } from '@/common'
+import { LazyImage, RoundedBackground } from '@/common'
 import { RARIME_APP_STORE_URL, RARIME_GOOGLE_PLAY_URL } from '@/constants'
 import { Icons, RoutePaths } from '@/enums'
-import { useUiState } from '@/store'
 import { UiIcon } from '@/ui'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
@@ -24,13 +23,12 @@ interface GuideItemProps {
 export default function HowItWorksSection() {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const { isDarkMode } = useUiState()
 
   const guideItems: Omit<GuideItemProps, 'order'>[] = useMemo(
     () => [
       {
         title: t('home.how-it-works.guide-1-title'),
-        previewSrc: isDarkMode ? 'images/polls-dark.png' : 'images/polls-light.png',
+        previewSrc: `images/how-it-works/polls-${palette.mode}.png`,
         list: [
           {
             title: t('home.how-it-works.guide-1-list-item-1'),
@@ -58,7 +56,7 @@ export default function HowItWorksSection() {
       },
       {
         title: t('home.how-it-works.guide-2-title'),
-        previewSrc: isDarkMode ? 'images/voting-dark.png' : 'images/voting-light.png',
+        previewSrc: `images/how-it-works/voting-${palette.mode}.png`,
         list: [
           {
             title: t('home.how-it-works.guide-2-list-item-1'),
@@ -86,7 +84,7 @@ export default function HowItWorksSection() {
       },
       {
         title: t('home.how-it-works.guide-3-title'),
-        previewSrc: isDarkMode ? 'images/privacy-dark.png' : 'images/privacy-light.png',
+        previewSrc: `images/how-it-works/privacy-${palette.mode}.png`,
         footer: (
           <Typography variant='body3' color={palette.text.primary}>
             {t('home.how-it-works.guide-3-footer')}
@@ -94,7 +92,7 @@ export default function HowItWorksSection() {
         ),
       },
     ],
-    [isDarkMode, palette, t],
+    [palette, t],
   )
 
   return (
@@ -183,11 +181,12 @@ function GuideItem({ list, previewSrc, order, title, footer, isReversed = true }
             }}
             bgcolor={palette.background.default}
           >
-            <Box
-              component='img'
+            <LazyImage
               src={previewSrc}
               alt={title}
-              sx={{ width: 1, height: 1, objectFit: 'contain' }}
+              sx={{ objectFit: 'contain' }}
+              width='100%'
+              height='100%'
             />
           </Stack>
         </motion.div>

@@ -16,6 +16,7 @@ export enum Icons {
   Backspace = 'backspace',
   BellFill = 'bell-fill',
   Bell = 'bell',
+  Bitcoin = 'bitcoin',
   BlueCheckMark = 'blue-check-mark',
   CalendarBlank = 'calendar-blank',
   CalendarEventFill = 'calendar-event-fill',
