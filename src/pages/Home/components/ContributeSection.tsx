@@ -13,7 +13,7 @@ export default function ContributeSection() {
   const { palette } = useTheme()
   const { t } = useTranslation()
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const isInView = useInView(ref, { once: true, amount: 1 })
 
   const initial = { opacity: 0 }
   const animate = isInView ? { opacity: 1 } : {}
