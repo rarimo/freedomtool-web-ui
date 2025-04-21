@@ -3,8 +3,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LazyImage } from '@/common'
-import DefaultDonateModal from '@/common/DonateModal'
+import { DefaultDonateModal, LazyImage } from '@/common'
 
 export default function ContributeSection() {
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)

@@ -48,6 +48,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^11.11.9",
     "i18next": "^22.4.3",
+    "ldrs": "^1.1.6",
     "lodash": "^4.17.21",
     "loglevel": "^1.8.1",
     "markdown-to-jsx": "^7.5.0",
