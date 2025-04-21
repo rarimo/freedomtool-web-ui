@@ -3,8 +3,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { RoundedBackground } from '@/common'
-import { useUiState } from '@/store'
+import { LazyImage, RoundedBackground } from '@/common'
 import { lineClamp } from '@/theme/helpers'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
@@ -25,51 +24,50 @@ interface CaseStudiesLinkProps {
 export default function CaseStudiesSection() {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const { isDarkMode } = useUiState()
 
   const items: CaseStudiesItemProps[] = [
     {
-      previewSrc: isDarkMode ? 'images/georgia-dark.png' : 'images/georgia-light.png',
+      previewSrc: `images/case-studies/georgia-${palette.mode}.png`,
       title: t('home.case-studies.case-1-title'),
       description: t('home.case-studies.case-1-description'),
       links: [
         {
           title: t('home.case-studies.case-1-link-1-tite'),
-          previewSrc: 'images/georgia-link-1.png',
+          previewSrc: 'images/case-studies/georgia-link-1.png',
           href: 'https://cointelegraph.com/news/georgia-opposition-blockchain-elections',
         },
         {
           title: t('home.case-studies.case-1-link-2-title'),
-          previewSrc: 'images/georgia-link-2.png',
+          previewSrc: 'images/case-studies/georgia-link-2.png',
           href: 'https://digitalfrontier.com/articles/digital-democracy-Georgia-election-blockchain-unm',
         },
       ],
     },
     {
-      previewSrc: isDarkMode ? 'images/russia-dark.png' : 'images/russia-light.png',
+      previewSrc: `images/case-studies/russia-${palette.mode}.png`,
       title: t('home.case-studies.case-2-title'),
       description: t('home.case-studies.case-2-description'),
       links: [
         {
           title: t('home.case-studies.case-2-link-1-title'),
-          previewSrc: 'images/russia-link-1.png',
+          previewSrc: 'images/case-studies/russia-link-1.png',
           href: 'https://www.coindesk.com/policy/2024/05/10/exiled-russian-opposition-leader-launches-blockchain-based-referendum-on-vladimir-putins-election-win',
         },
         {
           title: t('home.case-studies.case-2-link-2-title'),
-          previewSrc: 'images/russia-link-2.png',
+          previewSrc: 'images/case-studies/russia-link-2.png',
           href: 'https://www.theblock.co/post/293528/former-pussy-riot-lawyer-launches-blockchain-powered-referendum-to-challenge-putins-inauguration',
         },
       ],
     },
     {
-      previewSrc: isDarkMode ? 'images/iran-dark.png' : 'images/iran-light.png',
+      previewSrc: `images/case-studies/iran-${palette.mode}.png`,
       title: t('home.case-studies.case-3-title'),
       description: t('home.case-studies.case-3-description'),
       links: [
         {
           title: t('home.case-studies.case-3-link-title'),
-          previewSrc: 'images/iran-link-1.png',
+          previewSrc: 'images/case-studies/iran-link-1.png',
           href: 'https://appdevelopermagazine.com/blockchain-voting-from-iranians-vote-and-freedom-tool/',
         },
       ],
@@ -107,7 +105,7 @@ export default function CaseStudiesSection() {
             width: 1,
             gap: 4,
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           }}
         >
           {items.map((item, index) => (
@@ -142,7 +140,7 @@ function CaseStudiesItem({ title, description, previewSrc, links }: CaseStudiesI
         p={6}
         sx={{ borderRadius: 4, border: `1px solid ${palette.action.active}` }}
       >
-        <Box component='img' src={previewSrc} width={136} height={80} />
+        <LazyImage src={previewSrc} width={136} height={80} alt='Link preview' />
         <Typography component='h3' variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
           {title}
         </Typography>
@@ -169,13 +167,12 @@ function CaseStudiesLink({ title, previewSrc, href }: CaseStudiesLinkProps) {
       direction='row'
       alignItems='center'
     >
-      <Box
-        component='img'
+      <LazyImage
         src={previewSrc}
         alt={title}
         width={55}
         height={55}
-        sx={{ borderRadius: 1.5 }}
+        sx={{ borderRadius: 1.5, flexShrink: 0 }}
       />
       <Typography
         variant='body4'

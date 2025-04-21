@@ -1,5 +1,5 @@
-export function getRepositoryItemVariants(index: number, total: number, isMdDown: boolean) {
-  if (isMdDown) {
+export function getRepositoryItemVariants(index: number, total: number, isLgDown: boolean) {
+  if (isLgDown) {
     return {
       hidden: { opacity: 0 },
       visible: { opacity: 1 },
