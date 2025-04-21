@@ -4,17 +4,13 @@ import { useTranslation } from 'react-i18next'
 import ReactQRCode from 'react-qr-code'
 
 import { DonateTokenConfig, donateTokenConfig } from '@/constants'
+import { Icons } from '@/enums'
 import { UiCopyField, UiDialogContent, UiDialogTitle, UiIcon, UiTabs } from '@/ui'
-import { UiTab } from '@/ui/UiTabs'
 
-interface DonateModalProps extends DialogProps {
-  title?: string
-  tokenTabs: UiTab[]
-}
-
-export default function DefaultDonateModal({ open, onClose }: DialogProps) {
+export default function DonateModal({ open, onClose }: DialogProps) {
   const { t } = useTranslation()
   const { palette, breakpoints } = useTheme()
+  const isMdDown = useMediaQuery(breakpoints.down('md'))
 
   const tokenTabs = useMemo(
     () =>
@@ -25,32 +21,27 @@ export default function DefaultDonateModal({ open, onClose }: DialogProps) {
           py: 4,
           px: 8,
           height: 'unset',
+          '&.MuiTab-labelIcon': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 2,
+          },
           borderRadius: 2,
           [breakpoints.down('md')]: {
             py: 2,
             px: 4,
           },
         },
+        ...(isMdDown ? {} : { icon: <UiIcon size={5} name={token.iconName as Icons} /> }),
         iconPosition: 'start' as const,
         content: <DonateModalContent {...token} key={token.symbol} />,
       })),
-    [breakpoints, palette],
+    [breakpoints, palette, isMdDown],
   )
-  return (
-    <DonateModal
-      title={t('donate-modal.title')}
-      tokenTabs={tokenTabs}
-      open={open}
-      onClose={onClose}
-    />
-  )
-}
-
-export function DonateModal({ title, open, onClose, tokenTabs }: DonateModalProps) {
-  const { palette } = useTheme()
   return (
     <Dialog open={open} onClose={onClose}>
-      <UiDialogTitle onClose={onClose}>{title}</UiDialogTitle>
+      <UiDialogTitle onClose={onClose}>{t('donate-modal.title')}</UiDialogTitle>
       <UiDialogContent>
         <UiTabs
           slots={{
@@ -75,7 +66,7 @@ export function DonateModal({ title, open, onClose, tokenTabs }: DonateModalProp
   )
 }
 
-interface DonateModalContentProps extends DonateTokenConfig {
+interface ContributeModalContentProps extends DonateTokenConfig {
   description?: string
 }
 
@@ -86,7 +77,7 @@ function DonateModalContent({
   symbol,
   type,
   iconName,
-}: DonateModalContentProps) {
+}: ContributeModalContentProps) {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
