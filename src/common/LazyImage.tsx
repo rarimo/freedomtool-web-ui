@@ -71,7 +71,6 @@ export default function LazyImage({
           }}
           {...imageProps}
           onLoad={() => setImageState('idle')}
-          onError={() => setImageState('error')}
         />
       )}
       <Fade in={isLoading}>
