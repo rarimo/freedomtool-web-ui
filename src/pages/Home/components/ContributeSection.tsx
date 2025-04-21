@@ -22,7 +22,7 @@ export default function ContributeSection() {
         component={motion.div}
         ref={ref}
         width={1}
-        p={11}
+        p={{ xs: 6, md: 11 }}
         bgcolor={palette.action.active}
         borderRadius={8}
         alignItems='center'
@@ -42,16 +42,24 @@ export default function ContributeSection() {
           <Stack spacing={3} alignItems='center' justifyContent='center'>
             <Typography
               alignSelf='flex-start'
+              textAlign='center'
               component='h2'
               variant='h2'
               typography={{ xs: 'h3', md: 'h2' }}
             >
               {t('home.contribute.title')}
             </Typography>
-            <Typography>{t('home.contribute.description')}</Typography>
+            <Typography
+              color={palette.text.secondary}
+              variant='subtitle4'
+              typography={{ xs: 'subtitle5', md: 'subtitle4' }}
+              textAlign='center'
+            >
+              {t('home.contribute.description')}
+            </Typography>
           </Stack>
           <Button
-            sx={{ mt: 2, width: 'fit-content' }}
+            sx={{ mt: { xs: 1, md: 2 }, width: 'fit-content' }}
             size='small'
             onClick={() => setIsDonateModalOpen(true)}
           >

@@ -52,6 +52,7 @@ export default function RepositoriesSection() {
         [breakpoints.down('md')]: {
           mx: 0,
           pb: 11,
+          px: 4,
         },
       }}
     >
