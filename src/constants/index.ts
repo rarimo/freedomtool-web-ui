@@ -1,5 +1,5 @@
 export * from './bn'
-export * from './donate-token-config'
+export * from './donation-token-config'
 export * from './header'
 export * from './images'
 export * from './network-config'

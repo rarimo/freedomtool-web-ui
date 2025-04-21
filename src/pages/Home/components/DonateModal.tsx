@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactQRCode from 'react-qr-code'
 
-import { DonateTokenConfig, donateTokenConfig } from '@/constants'
+import { DonationToken, donationTokens } from '@/constants'
 import { Icons } from '@/enums'
 import { UiCopyField, UiDialogContent, UiDialogTitle, UiIcon, UiTabs } from '@/ui'
 
@@ -14,7 +14,7 @@ export default function DonateModal({ open, onClose }: DialogProps) {
 
   const tokenTabs = useMemo(
     () =>
-      donateTokenConfig.map(token => ({
+      donationTokens.map(token => ({
         label: token.symbol,
         sx: {
           border: `1px solid ${palette.action.active}`,
@@ -66,18 +66,11 @@ export default function DonateModal({ open, onClose }: DialogProps) {
   )
 }
 
-interface ContributeModalContentProps extends DonateTokenConfig {
+interface ContributeModalContentProps extends DonationToken {
   description?: string
 }
 
-function DonateModalContent({
-  address,
-  description,
-  name,
-  symbol,
-  type,
-  iconName,
-}: ContributeModalContentProps) {
+function DonateModalContent({ address, description, name, iconName }: ContributeModalContentProps) {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
@@ -86,7 +79,7 @@ function DonateModalContent({
     <Stack mt={3} spacing={{ xs: 4, md: 6 }} alignItems='center' justifyContent='center'>
       <UiIcon size={isMdDown ? 12 : 18} name={iconName} />
       <Typography textAlign='center' variant='subtitle5' color={palette.text.secondary}>
-        {name} ({type || symbol})
+        {name}
       </Typography>
       <Typography textAlign='center' variant='body4' color={palette.text.secondary}>
         {description || t('donate-modal.description')}

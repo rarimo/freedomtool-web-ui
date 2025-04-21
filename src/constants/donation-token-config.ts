@@ -1,31 +1,29 @@
 import { Icons } from '@/enums'
 
-export interface DonateTokenConfig {
+export interface DonationToken {
   iconName: Icons
   name: string
   symbol: string
   address: string
-  type?: string
 }
 
-export const donateTokenConfig: DonateTokenConfig[] = [
+export const donationTokens: DonationToken[] = [
   {
-    name: 'Bitcoin',
+    name: 'BTC (Bitcoin)',
     symbol: 'BTC',
     address: '0x00',
     iconName: Icons.Bitcoin,
   },
   {
-    name: 'Ethereum',
+    name: 'ETH (Ethereum)',
     symbol: 'ETH',
     address: '0x01',
     iconName: Icons.Ethereum,
   },
   {
-    name: 'USDC',
+    name: 'USDC (ERC-20)',
     symbol: 'USDC',
     address: '0x02',
-    type: 'ERC-20',
     iconName: Icons.Usdc,
   },
 ]
