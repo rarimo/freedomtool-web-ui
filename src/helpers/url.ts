@@ -1,4 +1,4 @@
-import { VOTE_QR_BASE_URL } from '@/constants'
+import { config } from '@/config'
 
 export const generateQrCodeUrl = (baseUrl: string, queryParams: Record<string, string>) => {
   const newUrl = new URL(baseUrl)
@@ -9,7 +9,7 @@ export const generateQrCodeUrl = (baseUrl: string, queryParams: Record<string, s
 }
 
 export const generatePollQrCodeUrl = (url: string) => {
-  return generateQrCodeUrl(VOTE_QR_BASE_URL, {
+  return generateQrCodeUrl(config.RARIME_EXTERNAL_BASE_URL, {
     type: 'voting',
     qr_code_url: url,
   })

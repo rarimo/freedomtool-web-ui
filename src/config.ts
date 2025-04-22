@@ -6,6 +6,7 @@ export type Config = {
 
   API_URL: string
   APP_HOST_URL: string
+  RARIME_EXTERNAL_BASE_URL: string
 
   IPFS_NODE_URL: string
 
@@ -21,6 +22,7 @@ export const config: Config = {
 
   APP_HOST_URL: import.meta.env.VITE_APP_HOST_URL,
   API_URL: import.meta.env.VITE_API_URL,
+  RARIME_EXTERNAL_BASE_URL: import.meta.env.VITE_RARIME_EXTERNAL_BASE_URL,
 
   IPFS_NODE_URL: import.meta.env.VITE_IPFS_NODE_URL,
 
