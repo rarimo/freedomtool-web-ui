@@ -13,7 +13,7 @@ import { Icons, RoutePaths } from '@/enums'
 import { getCountProgress, getIpfsImageSrc } from '@/helpers'
 import { useProposal } from '@/hooks/proposal'
 import QrCodePanel from '@/pages/Poll/components/QrCodePanel'
-import { useAuthState, useUiState } from '@/store'
+import { useAuthState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { ParsedContractProposal } from '@/types'
 import { UiIcon, UiTabs } from '@/ui'
@@ -31,7 +31,6 @@ export default function Poll() {
   const { setTitle } = useRouteTitleContext()
   const { isAuthorized } = useAuthState()
   const isMdDown = useMediaQuery(breakpoints.down('md'))
-  const { isDarkMode } = useUiState()
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -203,7 +202,7 @@ export default function Poll() {
                             src={
                               proposalMetadata?.imageCid
                                 ? getIpfsImageSrc(proposalMetadata.imageCid)
-                                : `images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
+                                : 'globe-light.png'
                             }
                             alt='Poll banner'
                           />

@@ -12,12 +12,6 @@
   background-color: #f8f9fb;
 }
 
-@media (prefers-color-scheme: dark) {
-  .app__init {
-    background-color: #131313;
-  }
-}
-
 .app__init-logo {
   display: flex;
   flex-direction: column;

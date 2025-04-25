@@ -3,12 +3,9 @@ import { memo, useEffect, useRef } from 'react'
 import Globe, { GlobeMethods } from 'react-globe.gl'
 import * as THREE from 'three'
 
-import { useUiState } from '@/store'
-
 import { countries } from '../countries'
 
 const WorldGlobe = () => {
-  const { isDarkMode } = useUiState()
   const { palette, breakpoints } = useTheme()
   const isMdUp = useMediaQuery(breakpoints.up('md'))
   const globeRef = useRef<GlobeMethods>()
@@ -54,16 +51,12 @@ const WorldGlobe = () => {
       hexPolygonColor={() => palette.text.secondary}
       animateIn={false}
       globeMaterial={
-        isDarkMode
-          ? new THREE.MeshBasicMaterial({
-              color: 0x272827,
-            })
-          : new THREE.MeshPhongMaterial({
-              color: 0xffffff,
-              emissive: 0xffffff,
-              shininess: 0,
-              flatShading: false,
-            })
+        new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          emissive: 0xffffff,
+          shininess: 0,
+          flatShading: false,
+        })
       }
       backgroundColor={palette.background.paper}
       showAtmosphere={false}

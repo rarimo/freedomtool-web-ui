@@ -6,14 +6,12 @@ import { generatePath, useNavigate } from 'react-router-dom'
 import { LazyImage } from '@/common'
 import { Icons, RoutePaths } from '@/enums'
 import { formatDateDM, getCountProgress, getIpfsImageSrc } from '@/helpers'
-import { useUiState } from '@/store'
 import { lineClamp } from '@/theme/helpers'
 import { Proposal } from '@/types'
 import { UiIcon, UiTypographySkeleton } from '@/ui'
 
 export default function PollCard({ proposal }: { proposal: Proposal }) {
   const navigate = useNavigate()
-  const { isDarkMode } = useUiState()
 
   const { palette } = useTheme()
   const { t } = useTranslation()
@@ -47,11 +45,7 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
       }}
     >
       <LazyImage
-        src={
-          imageCid
-            ? getIpfsImageSrc(imageCid)
-            : `images/${isDarkMode ? 'globe-dark.png' : 'globe-light.png'}`
-        }
+        src={imageCid ? getIpfsImageSrc(imageCid) : 'globe-light.png'}
         alt={title ?? 'Poll image'}
         width='100%'
         height='60%'
