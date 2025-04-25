@@ -37,7 +37,7 @@ export default function ContributeSection() {
           <LazyImage
             width={64}
             height={64}
-            sx={{ background: 'transparent' }}
+            sx={{ background: 'transparent', borderRadius: '100%' }}
             src={`images/contribute/hands-with-puzzle-${palette.mode}.svg`}
             alt='Contribute Icon'
           />

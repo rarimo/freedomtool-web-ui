@@ -140,7 +140,13 @@ function CaseStudiesItem({ title, description, previewSrc, links }: CaseStudiesI
         p={6}
         sx={{ borderRadius: 4, border: `1px solid ${palette.action.active}` }}
       >
-        <LazyImage src={previewSrc} width={136} height={80} alt='Link preview' />
+        <LazyImage
+          src={previewSrc}
+          width={136}
+          height={80}
+          alt='Article preview'
+          sx={{ borderRadius: 2 }}
+        />
         <Typography component='h3' variant='h3' typography={{ xs: 'h4', md: 'h3' }}>
           {title}
         </Typography>
