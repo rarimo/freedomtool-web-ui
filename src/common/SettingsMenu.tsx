@@ -16,12 +16,10 @@ import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
 
-import AppSettings from './AppSettings'
-
 export default function SettingsMenu({ ...rest }: IconButtonProps) {
   const { palette, breakpoints } = useTheme()
   const { t } = useTranslation()
-  const { address, disconnect } = useWeb3Context()
+  const { disconnect } = useWeb3Context()
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 
@@ -67,28 +65,22 @@ export default function SettingsMenu({ ...rest }: IconButtonProps) {
         }}
         onClose={() => setAnchorEl(null)}
       >
-        <AppSettings>
-          {Boolean(address) && (
-            <>
-              <Divider />
-              <MenuItem
-                component={Stack}
-                direction='row'
-                alignItems='center'
-                spacing={3}
-                sx={{ minHeight: 36, p: 2, m: 0 }}
-                onClick={() => {
-                  disconnect()
-                }}
-              >
-                <UiIcon name={Icons.LogoutCircleRLine} color={palette.error.dark} size={5} />
-                <Typography variant='buttonMedium' color={palette.error.dark}>
-                  {t('app-navbar.logout-lbl')}
-                </Typography>
-              </MenuItem>
-            </>
-          )}
-        </AppSettings>
+        <Divider />
+        <MenuItem
+          component={Stack}
+          direction='row'
+          alignItems='center'
+          spacing={3}
+          sx={{ minHeight: 36, p: 2, m: 0 }}
+          onClick={() => {
+            disconnect()
+          }}
+        >
+          <UiIcon name={Icons.LogoutCircleRLine} color={palette.error.dark} size={5} />
+          <Typography variant='buttonMedium' color={palette.error.dark}>
+            {t('app-navbar.logout-lbl')}
+          </Typography>
+        </MenuItem>
       </AppMenu>
     </>
   )

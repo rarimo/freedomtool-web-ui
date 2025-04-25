@@ -172,8 +172,10 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
             onClick={deleteDraft}
             sx={{
               position: 'absolute',
-              top: 15,
-              right: 15,
+              top: 8,
+              right: 8,
+              width: 40,
+              height: 40,
               background: alpha(palette.common.black, 0.5),
               color: palette.common.white,
               '&:hover': {
@@ -182,7 +184,13 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
               },
             }}
           >
-            <UiIcon size={4} name={Icons.DeleteBin6Line} />
+            <Stack
+              alignItems='center'
+              justifyContent='center'
+              sx={{ width: '100%', height: '100%' }}
+            >
+              <UiIcon size={4} name={Icons.DeleteBin6Line} />
+            </Stack>
           </IconButton>
         </Stack>
       </motion.div>

@@ -15,9 +15,9 @@ import { AppMenu } from '@/common/index'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { formatAddress, formatAmountShort } from '@/helpers'
-import { authStore, uiStore } from '@/store'
+import { authStore } from '@/store'
 import { Transitions } from '@/theme/constants'
-import { UiIcon, UiSwitch } from '@/ui'
+import { UiIcon } from '@/ui'
 
 export default function AppSettingsMenu() {
   const { palette, breakpoints } = useTheme()
@@ -83,15 +83,6 @@ export default function AppSettingsMenu() {
               <Typography variant='subtitle6'>{formatAddress(address, 5)}</Typography>
             </Stack>
           )}
-          <Stack direction='row' alignItems='center' justifyContent='space-between'>
-            <Stack direction='row' alignItems='center' spacing={3} sx={menuItemSx}>
-              <UiIcon name={Icons.Moon} size={5} color={palette.text.secondary} />
-              <Typography variant='buttonMedium' color={palette.text.primary}>
-                {t('app-header.dark-mode-switch-lbl')}
-              </Typography>
-            </Stack>
-            <UiSwitch checked={palette.mode === 'dark'} onChange={uiStore.togglePaletteMode} />
-          </Stack>
           <MenuItem
             sx={menuItemSx}
             onClick={() => {
