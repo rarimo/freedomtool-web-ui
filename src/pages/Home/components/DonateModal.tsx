@@ -42,7 +42,7 @@ export default function DonateModal({ open, onClose }: DialogProps) {
   return (
     <Dialog open={open} onClose={onClose}>
       <UiDialogTitle onClose={onClose}>{t('donate-modal.title')}</UiDialogTitle>
-      <UiDialogContent>
+      <UiDialogContent sx={{ minWidth: { xs: 'unset', md: 500 } }}>
         <UiTabs
           slots={{
             tabsProps: {
