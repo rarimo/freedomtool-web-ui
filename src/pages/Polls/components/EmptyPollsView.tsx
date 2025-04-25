@@ -30,7 +30,12 @@ export default function EmptyPollsView({
         <Typography textAlign='center' variant='h3'>
           {title ?? t('polls.no-polls-title')}
         </Typography>
-        <Typography textAlign='center' variant='body3' color={palette.text.secondary}>
+        <Typography
+          maxWidth={{ xs: 300, md: 600 }}
+          textAlign='center'
+          variant='body3'
+          color={palette.text.secondary}
+        >
           {description ?? t('polls.no-polls-description')}
         </Typography>
       </Stack>

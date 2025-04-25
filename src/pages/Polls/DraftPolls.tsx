@@ -145,15 +145,13 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
           overflow='hidden'
           justifyContent='flex-end'
         >
-          {imageUrl && (
-            <LazyImage
-              src={imageUrl}
-              alt={title || t('polls.draft-polls-default-title', { id })}
-              width='100%'
-              height='100%'
-              sx={{ position: 'absolute', top: 0 }}
-            />
-          )}
+          <LazyImage
+            src={imageUrl}
+            alt={title || t('polls.draft-polls-default-title', { id })}
+            width='100%'
+            height='100%'
+            sx={{ position: 'absolute', top: 0 }}
+          />
 
           <Stack
             position='absolute'
