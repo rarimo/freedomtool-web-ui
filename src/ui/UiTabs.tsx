@@ -1,14 +1,18 @@
-import { Box, Stack, StackProps, Tab, Tabs, useTheme } from '@mui/material'
+import { Box, Stack, StackProps, Tab, TabProps, Tabs, TabsProps, useTheme } from '@mui/material'
 import { ReactNode, SyntheticEvent, useCallback, useState } from 'react'
 
 import { Transitions } from '@/theme/constants'
 
 interface Props extends StackProps {
-  tabs: {
-    label: string
-    content: ReactNode
-  }[]
+  tabs: UiTab[]
   ariaLabel?: string
+  slots?: {
+    tabsProps?: TabsProps
+  }
+}
+
+export type UiTab = Omit<TabProps, 'content'> & {
+  content: ReactNode
 }
 
 const a11yProps = (index: number) => {
@@ -45,7 +49,7 @@ export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
   const [currentTab, setCurrentTab] = useState(0)
   const { palette } = useTheme()
 
-  const handleChange = useCallback((event: SyntheticEvent, newValue: number) => {
+  const changeTab = useCallback((event: SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue)
   }, [])
 
@@ -55,8 +59,9 @@ export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
         value={currentTab}
         textColor='inherit'
         indicatorColor='primary'
-        onChange={handleChange}
+        onChange={changeTab}
         aria-label={ariaLabel}
+        {...rest?.slots?.tabsProps}
         sx={{
           background: palette.action.active,
           alignItems: 'center',
@@ -73,12 +78,16 @@ export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
             justifyContent: 'center',
             height: '100%',
           },
+          ...rest?.slots?.tabsProps?.sx,
         }}
       >
-        {tabs.map(({ label }, idx) => (
+        {tabs.map(({ label, icon, ...rest }, idx) => (
           <Tab
             key={idx}
             label={label}
+            icon={icon}
+            {...rest}
+            content={undefined}
             {...a11yProps(idx)}
             sx={{
               minWidth: 'unset',
@@ -94,6 +103,7 @@ export default function UiTabs({ tabs, ariaLabel, ...rest }: Props) {
               '&[aria-selected="false"]:hover': {
                 opacity: 1,
               },
+              ...rest.sx,
             }}
           />
         ))}

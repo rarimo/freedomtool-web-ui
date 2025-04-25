@@ -329,6 +329,16 @@
     },
     "footer": {
       "quote": "Join the territory of freedom"
+    },
+    "contribute": {
+      "title": "Contribute to the project",
+      "description": "Join the territory of freedom",
+      "btn": "Contribute"
     }
+  },
+  "donate-modal": {
+    "description": "Use this address below to make a donation from your wallet",
+    "address-lbl": "Address",
+    "title": "Donate"
   }
 }

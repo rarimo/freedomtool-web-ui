@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { generatePath, Link } from 'react-router-dom'
 
 import { Icons, RoutePaths } from '@/enums'
-import { spinAnimation } from '@/theme/constants'
-import { UiIcon } from '@/ui'
+import { UiIcon, UiLineSpinner } from '@/ui'
 
 import { ProcessingPollStep } from '../constants'
 
@@ -98,14 +97,7 @@ function ProgressStep({ progress }: { progress: number }) {
   return (
     <Stack alignItems='center' spacing={6} textAlign='center'>
       <Stack bgcolor={palette.action.active} p={5} borderRadius={100}>
-        <UiIcon
-          name={Icons.LoaderFill}
-          size={8}
-          color={palette.text.secondary}
-          sx={{
-            animation: `${spinAnimation} 1.2s infinite linear`,
-          }}
-        />
+        <UiLineSpinner color={palette.text.secondary} />
       </Stack>
       <Stack spacing={4}>
         <Typography variant='h3' color={palette.text.primary}>

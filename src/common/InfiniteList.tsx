@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AppLoader, ErrorView, NoDataView } from '@/common'
 import { Icons, LoadingStates } from '@/enums'
-import { spinAnimation } from '@/theme/constants'
-import { UiIcon } from '@/ui'
+import { UiIcon, UiLineSpinner } from '@/ui'
 
 import IntersectionAnchor from './IntersectionAnchor'
 
@@ -60,14 +59,7 @@ export default function InfiniteList<D>({
     return (
       slots?.loading ?? (
         <Stack alignItems='center' p={{ xs: 20, md: 40 }}>
-          <UiIcon
-            name={Icons.LoaderFill}
-            size={15}
-            color={palette.text.secondary}
-            sx={{
-              animation: `${spinAnimation} 1.2s infinite linear`,
-            }}
-          />
+          <UiLineSpinner size={15} stroke={4} color={palette.text.secondary} />
         </Stack>
       )
     )
