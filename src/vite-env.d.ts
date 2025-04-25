@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   VITE_APP_BUILD_VERSION: string
   VITE_NETWORK: string
   VITE_CTF_EXCHANGE_CONTRACT_ADDRESS: string
+  VITE_RARIME_EXTERNAL_BASE_URL: string
 }
 
 interface ImportMeta {
