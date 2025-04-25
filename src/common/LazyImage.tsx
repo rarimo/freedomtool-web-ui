@@ -1,11 +1,7 @@
-import { alpha, Box, BoxProps, Fade, Skeleton, Stack, Typography, useTheme } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Box, BoxProps, Fade, Skeleton } from '@mui/material'
+import { useState } from 'react'
 
-import { Icons } from '@/enums'
-import { ErrorHandler } from '@/helpers'
 import { Transitions } from '@/theme/constants'
-import { UiIcon } from '@/ui'
 
 interface LazyImageProps extends BoxProps<'img'> {
   src: string
@@ -15,8 +11,6 @@ interface LazyImageProps extends BoxProps<'img'> {
   imageProps?: BoxProps<'img'>
 }
 
-type ImageState = 'idle' | 'loading' | 'error'
-
 export default function LazyImage({
   imageProps,
   src,
@@ -25,24 +19,7 @@ export default function LazyImage({
   height,
   ...rest
 }: LazyImageProps) {
-  const { palette } = useTheme()
-  const { t } = useTranslation()
-  const [imageState, setImageState] = useState<ImageState>('loading')
-
-  const isLoading = imageState === 'loading'
-  const isError = imageState === 'error'
-
-  useEffect(() => {
-    const checkImageAvailability = async () => {
-      try {
-        await fetch(src)
-      } catch (error) {
-        ErrorHandler.processWithoutFeedback(error)
-        setImageState('error')
-      }
-    }
-    checkImageAvailability()
-  }, [src])
+  const [isLoading, setIsLoading] = useState(true)
 
   return (
     <Box
@@ -55,48 +32,26 @@ export default function LazyImage({
         ...rest.sx,
       }}
     >
-      {!isError && (
-        <Box
-          component='img'
-          src={src}
-          alt={alt}
-          loading='lazy'
-          sx={{
-            opacity: isLoading ? 0 : 1,
-            transition: Transitions.Gentle,
-            objectFit: 'cover',
-            width: '100%',
-            height: '100%',
-            ...imageProps?.sx,
-          }}
-          {...imageProps}
-          onLoad={() => setImageState('idle')}
-        />
-      )}
+      <Box
+        component='img'
+        src={src}
+        alt={alt}
+        loading='lazy'
+        sx={{
+          opacity: isLoading ? 0 : 1,
+          transition: Transitions.Gentle,
+          objectFit: 'cover',
+          width: '100%',
+          height: '100%',
+          ...imageProps?.sx,
+        }}
+        {...imageProps}
+        onLoad={() => setIsLoading(false)}
+      />
       <Fade in={isLoading}>
         <Skeleton
           sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 0 }}
         />
-      </Fade>
-      <Fade in={isError}>
-        <Stack
-          alignItems='center'
-          spacing={4}
-          justifyContent='center'
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            borderRadius: 0,
-            background: palette.action.active,
-          }}
-        >
-          <UiIcon size={30} color={alpha(palette.text.disabled, 0.2)} name={Icons.Warning} />
-          <Typography color={palette.text.disabled} variant='subtitle4'>
-            {t('lazy-image.load-error')}
-          </Typography>
-        </Stack>
       </Fade>
     </Box>
   )

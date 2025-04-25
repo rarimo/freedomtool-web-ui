@@ -169,26 +169,22 @@ function GuideItem({ list, previewSrc, order, title, footer, isReversed = true }
         gap={{ xs: 8, md: 16 }}
       >
         <motion.div variants={childVariant}>
-          <Stack
+          <LazyImage
+            src={previewSrc}
+            alt={title}
             sx={{
               aspectRatio: 1.16,
               width: 463,
               maxHeight: 400,
               borderRadius: 8,
+              bgcolor: palette.background.default,
               [breakpoints.down('md')]: {
                 width: '100%',
               },
             }}
-            bgcolor={palette.background.default}
-          >
-            <LazyImage
-              src={previewSrc}
-              alt={title}
-              sx={{ objectFit: 'contain', borderRadius: 3 }}
-              width='100%'
-              height='100%'
-            />
-          </Stack>
+            width={463}
+            height='auto'
+          />
         </motion.div>
 
         <motion.div variants={childVariant}>
