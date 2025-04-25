@@ -4,7 +4,6 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import { AppThemeButton } from '@/common'
 import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
 import { Icons, RoutePaths } from '@/enums'
@@ -69,7 +68,7 @@ function HomeHeader() {
           >
             {t('home.header.create-poll-btn')}
           </Button>
-          <AppThemeButton />
+          {/* <AppThemeButton /> */}
         </Stack>
       </Stack>
     </Stack>

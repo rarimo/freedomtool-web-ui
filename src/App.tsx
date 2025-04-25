@@ -7,7 +7,7 @@ import { RouterProvider } from 'react-router-dom'
 import { AppLoader, ErrorBoundaryFallback } from '@/common'
 import { ToastsManager } from '@/contexts'
 import { useWeb3Context } from '@/contexts/web3-context'
-import { useSystemPaletteMode, useViewportSizes } from '@/hooks'
+import { useViewportSizes } from '@/hooks'
 import { useLocalizedZodSchema } from '@/hooks/zod'
 import { createRouter } from '@/router'
 import { authStore } from '@/store'
@@ -24,7 +24,6 @@ const App = () => {
     isInitialized: isWeb3Initialized,
     isCorrectNetwork,
   } = useWeb3Context()
-  const paletteMode = useSystemPaletteMode()
   const { close } = useAppKit()
   const { open: isOpen, loading: isLoading } = useAppKitState()
 
@@ -39,7 +38,8 @@ const App = () => {
     init()
   }, [init])
 
-  const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
+  // Keep only light mode
+  const theme = useMemo(() => createTheme('light'), [])
 
   useEffect(() => {
     if ((!address && isConnected) || !isConnected) return
