@@ -45,7 +45,7 @@ export default function PollCard({ proposal }: { proposal: Proposal }) {
       }}
     >
       <LazyImage
-        src={imageCid ? getIpfsImageSrc(imageCid) : 'globe-light.png'}
+        src={imageCid ? getIpfsImageSrc(imageCid) : 'images/globe-light.png'}
         alt={title ?? 'Poll image'}
         width='100%'
         height='60%'
