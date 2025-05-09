@@ -11,6 +11,7 @@ import { createQRCode } from '@/api/modules/qr-code'
 import { RoundedBackground } from '@/common'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
+import { useWeb3Context } from '@/contexts/web3-context'
 import { deletePollDraft } from '@/db/services'
 import {
   ErrorHandler,
@@ -24,6 +25,7 @@ import {
 } from '@/helpers'
 import { useProposalState, useScrollWithShadow } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
+import { authStore } from '@/store'
 import { hiddenScrollbar } from '@/theme/constants'
 import { Nationality } from '@/types'
 
@@ -45,6 +47,7 @@ export default function CreatePollForm() {
   const { t } = useTranslation()
   const { breakpoints } = useTheme()
   const isLgUp = useMediaQuery(breakpoints.up('lg'))
+  const { address } = useWeb3Context()
 
   const { containerRef, shadowScrollStyle } = useScrollWithShadow(80)
 
@@ -74,6 +77,7 @@ export default function CreatePollForm() {
 
   const submit = async (formData: CreatePollSchema) => {
     try {
+      authStore.verifyToken(address)
       setIsProcessing(true)
       setProcessingStep(ProcessingPollStep.Image)
 
