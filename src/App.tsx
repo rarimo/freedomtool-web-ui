@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { useAppKit, useAppKitState } from '@reown/appkit/react'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { RouterProvider } from 'react-router-dom'
 
@@ -16,8 +16,6 @@ import { createTheme } from '@/theme'
 const router = createRouter()
 
 const App = () => {
-  const [isAppInitialized, setIsAppInitialized] = useState(false)
-
   const {
     address,
     isConnected,
@@ -29,14 +27,6 @@ const App = () => {
 
   useViewportSizes()
   useLocalizedZodSchema()
-
-  const init = useCallback(async () => {
-    setIsAppInitialized(true)
-  }, [])
-
-  useEffect(() => {
-    init()
-  }, [init])
 
   // Keep only light mode
   const theme = useMemo(() => createTheme('light'), [])
@@ -60,7 +50,7 @@ const App = () => {
       <CssBaseline />
       <ToastsManager>
         <div className='App' key='app_main'>
-          {isAppInitialized && isWeb3Initialized ? (
+          {isWeb3Initialized ? (
             <ErrorBoundary
               FallbackComponent={({ resetErrorBoundary }) => (
                 <ErrorBoundaryFallback onReset={resetErrorBoundary} />

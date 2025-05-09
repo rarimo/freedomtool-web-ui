@@ -119,7 +119,7 @@ function PollDraftCard({ title, image, id, onDelete }: PollDraftCardProps) {
         URL.revokeObjectURL(url)
       }
     }
-    setImageUrl(`images/globe-light.png`)
+    setImageUrl('images/globe-light.png')
   }, [image])
 
   return (
