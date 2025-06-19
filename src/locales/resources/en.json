@@ -334,7 +334,8 @@
       "title": "Contribute to the project",
       "description": "Join the territory of freedom",
       "btn": "Contribute"
-    }
+    },
+    "powered-by": "Powered by Rarimo"
   },
   "donate-modal": {
     "description": "Use this address below to make a donation from your wallet",

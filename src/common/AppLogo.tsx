@@ -25,11 +25,7 @@ export default function AppLogo(props: StackProps) {
       <UiIcon
         name={Icons.App}
         color={palette.text.primary}
-        sx={
-          isMdUp
-            ? { width: 176, height: 22, minWidth: 176, minHeight: 22 }
-            : { width: 132, height: 16.5, minWidth: 132, minHeight: 16.5 }
-        }
+        sx={isMdUp ? { width: 176, minWidth: 176 } : { width: 132, minWidth: 132 }}
       />
     </Stack>
   )

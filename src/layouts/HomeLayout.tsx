@@ -2,7 +2,7 @@ import { Button, Stack, Typography, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 
 import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
@@ -10,6 +10,8 @@ import { Icons, RoutePaths } from '@/enums'
 import { FREEDOM_TOOL_EMAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
 import { vh } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
+
+const RARIMO_LINK = 'https://rarimo.com'
 
 export default function HomeLayout({ children }: PropsWithChildren) {
   return (
@@ -58,10 +60,22 @@ function HomeHeader() {
         justifyContent='space-between'
         alignItems='center'
       >
-        <AppLogo />
+        <Stack spacing={{ md: 0.5 }}>
+          <AppLogo />
+          <Typography
+            variant='body5'
+            component='a'
+            href={RARIMO_LINK}
+            target='_blank'
+            rel='noopener'
+            color={palette.text.secondary}
+          >
+            {t('home.powered-by')}
+          </Typography>
+        </Stack>
         <Stack spacing={3} direction='row'>
           <Button
-            component={Link}
+            component={RouterLink}
             size='small'
             startIcon={<UiIcon size={4} name={Icons.Plus} />}
             to={RoutePaths.NewPoll}
@@ -89,9 +103,22 @@ function HomeFooter() {
         maxWidth={HOME_CONTAINER_WIDTH}
         width={1}
       >
-        <AppLogo justifyContent='center' />
+        <Stack spacing={{ md: 0.5 }} alignItems={{ xs: 'center', md: 'flex-start' }}>
+          <AppLogo />
+          <Typography
+            variant='body5'
+            component='a'
+            href={RARIMO_LINK}
+            target='_blank'
+            rel='noopener'
+            color={palette.text.secondary}
+          >
+            {t('home.powered-by')}
+          </Typography>
+        </Stack>
+
         <Stack alignItems={{ xs: 'center', md: 'flex-end' }}>
-          <Typography variant='body4'>{t('home.footer.quote')}</Typography>
+          <Typography variant='subtitle6'>{t('home.footer.quote')}</Typography>
           <Typography
             component='a'
             variant='body5'
