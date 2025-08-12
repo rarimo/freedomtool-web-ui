@@ -1,5 +1,7 @@
 import { parseUnits } from 'ethers'
 
+import { Nationality } from '@/types'
+
 export const MAX_OPTIONS_PER_QUESTION = 8
 export const MAX_QUESTIONS = 12
 
@@ -32,3 +34,9 @@ export const WHITELIST_DATA_ABI_TYPE = {
     { name: 'expirationDateLowerBound', type: 'uint256' },
   ],
 } as const
+
+export const ALL_COUNTRIES_NATIONALITY: Nationality = {
+  flag: '🌍',
+  name: 'All Countries',
+  codes: [],
+}

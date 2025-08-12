@@ -2,6 +2,7 @@ import { Box, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ALL_COUNTRIES_NATIONALITY } from '@/constants'
 import { Icons } from '@/enums'
 import { formatUtcDateTime } from '@/helpers'
 import { hiddenScrollbar, textWrapAndDirectionStyles } from '@/theme/constants'
@@ -55,7 +56,9 @@ export default function PollPreview({
       text: t('poll-preview.nationalities-criteria-item', {
         value: nationalities.map(({ name }) => name).join(', '),
       }),
-      isHidden: nationalities.length === 0,
+      isHidden:
+        nationalities.length === 0 ||
+        nationalities.some(({ name }) => name === ALL_COUNTRIES_NATIONALITY.name),
     },
     {
       id: 'age',

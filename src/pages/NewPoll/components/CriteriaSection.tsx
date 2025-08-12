@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   Button,
+  Chip,
   FormControl,
   FormHelperText,
   IconButton,
@@ -19,10 +20,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { ALL_COUNTRIES_NATIONALITY } from '@/constants'
 import { Icons } from '@/enums'
 import { formatCountry } from '@/helpers'
 import countries from '@/locales/resources/countries_en.json'
-import { Nationality, Sex } from '@/types'
+import { Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
 import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
@@ -153,8 +155,31 @@ export default function CriteriaSection() {
                   }}
                   disableCloseOnSelect
                   disabled={field.disabled || isSubmitting}
-                  options={countries}
-                  getOptionLabel={({ codes }) => formatCountry(codes[0], { withFlag: true })}
+                  options={[ALL_COUNTRIES_NATIONALITY, ...countries]}
+                  getOptionLabel={({ name, flag, codes }) =>
+                    codes.length > 0
+                      ? formatCountry(codes[0], { withFlag: true })
+                      : `${flag} ${name}`
+                  }
+                  renderTags={(tagValue, getTagProps) =>
+                    tagValue.map(({ name, flag, codes }, index) => {
+                      const { key, ...tagProps } = getTagProps({ index })
+                      const isAllCountries = name === ALL_COUNTRIES_NATIONALITY.name
+
+                      return (
+                        <Chip
+                          key={key}
+                          {...tagProps}
+                          label={
+                            isAllCountries
+                              ? `${flag} ${name}`
+                              : formatCountry(codes[0], { withFlag: true })
+                          }
+                          onDelete={isAllCountries ? undefined : tagProps.onDelete}
+                        />
+                      )
+                    })
+                  }
                   renderInput={params => (
                     <TextField
                       {...params}
@@ -174,8 +199,12 @@ export default function CriteriaSection() {
                       label={t('create-poll.nationalities-lbl')}
                     />
                   )}
-                  onChange={(_, newValue: Nationality[] | null) => {
-                    field.onChange(newValue)
+                  onChange={(_, newValue) => {
+                    field.onChange(
+                      !newValue.length || newValue.at(-1)?.name === ALL_COUNTRIES_NATIONALITY.name
+                        ? [ALL_COUNTRIES_NATIONALITY]
+                        : newValue.filter(({ codes }) => codes.length > 0),
+                    )
                   }}
                 />
                 <FormHelperText>{fieldState.error?.message}</FormHelperText>

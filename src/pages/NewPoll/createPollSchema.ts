@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { z as zod } from 'zod'
 
 import {
+  ALL_COUNTRIES_NATIONALITY,
   ALLOWED_IMAGE_MIME_TYPES,
   MAX_BANNER_SIZE,
   MAX_PARTICIPANTS_PER_POLL,
@@ -13,7 +14,7 @@ import { Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
   criteria: {
-    nationalities: [],
+    nationalities: [ALL_COUNTRIES_NATIONALITY],
     sex: Sex.Any,
   },
   questions: [
@@ -83,7 +84,7 @@ export const createPollSchema = zod
         zod.object({
           flag: zod.string().min(1),
           name: zod.string().min(1),
-          codes: zod.array(zod.string().min(1)).min(1),
+          codes: zod.array(zod.string().min(1)),
         }),
       ),
     }),
