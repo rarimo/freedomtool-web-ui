@@ -128,6 +128,8 @@
       "settings": "Settings"
     },
     "add-criteria": "Add criteria",
+    "ranking-title": "Ranking-based poll",
+    "ranking-description": "Allows participants to change the order of options to show their priorities or preferences",
     "show-poll-option-title-1": "Real time",
     "show-poll-option-description-1": "The results will be available to participants during the voting",
     "show-poll-option-title-2": "After completion",
@@ -217,6 +219,8 @@
   "poll": {
     "start-date": "Start Date (UTC):",
     "end-date": "End Date (UTC):",
+    "points_one": "{{ count }} Point",
+    "points_other": "{{ count }} Points",
     "participants_one": "{{ count }} Participant",
     "participants_other": "{{ count }} Participants",
     "remaining-votes": "Participants:",

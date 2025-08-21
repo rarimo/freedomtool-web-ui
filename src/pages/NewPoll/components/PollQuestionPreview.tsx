@@ -9,9 +9,10 @@ import PreviewLayout from './PreviewLayout'
 
 interface Props {
   question?: CreatePollSchema['questions'][0]
+  isRankingBased: boolean
 }
 
-export default function PollQuestionPreview({ question }: Props) {
+export default function PollQuestionPreview({ question, isRankingBased }: Props) {
   const { palette } = useTheme()
 
   return (
@@ -29,7 +30,7 @@ export default function PollQuestionPreview({ question }: Props) {
           <Divider />
           <Stack spacing={2}>
             {question?.options.map(({ id, text }, index) => (
-              <OptionItem key={id} text={text} index={index} />
+              <OptionItem key={id} text={text} index={index} isRankingBased={isRankingBased} />
             ))}
           </Stack>
         </Stack>
@@ -38,7 +39,15 @@ export default function PollQuestionPreview({ question }: Props) {
   )
 }
 
-function OptionItem({ text, index }: { text: string; index: number }) {
+function OptionItem({
+  text,
+  index,
+  isRankingBased,
+}: {
+  text: string
+  index: number
+  isRankingBased: boolean
+}) {
   const { palette } = useTheme()
 
   return (
@@ -62,14 +71,18 @@ function OptionItem({ text, index }: { text: string; index: number }) {
         },
       }}
     >
-      <Typography
-        variant='subtitle7'
-        color={palette.text.secondary}
-        sx={{ minWidth: 16, textAlign: 'center' }}
-      >
-        {index + 1}
-      </Typography>
-      <Divider orientation='vertical' flexItem />
+      {!isRankingBased && (
+        <>
+          <Typography
+            variant='subtitle7'
+            color={palette.text.secondary}
+            sx={{ minWidth: 16, textAlign: 'center' }}
+          >
+            {index + 1}
+          </Typography>
+          <Divider orientation='vertical' flexItem />
+        </>
+      )}
       <Typography
         variant='subtitle6'
         color={palette.text.primary}

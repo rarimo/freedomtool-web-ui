@@ -1,15 +1,15 @@
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext } from '@dnd-kit/sortable'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useEvent } from '@reactuses/core'
 import { t } from 'i18next'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 
 import { MAX_QUESTIONS } from '@/constants'
 import { Icons } from '@/enums'
-import { UiIcon } from '@/ui'
+import { UiCheckbox, UiIcon } from '@/ui'
 
 import { CreatePollSchema } from '../createPollSchema'
 import QuestionForm from './QuestionForm'
@@ -24,10 +24,12 @@ export default function QuestionsSection({
   previewQuestionIndex: number
   onQuestionSelect: (index: number) => void
 }) {
+  const { palette } = useTheme()
   const {
     control,
     trigger,
     formState: { isSubmitting },
+    watch,
   } = useFormContext<CreatePollSchema>()
 
   const {
@@ -39,6 +41,8 @@ export default function QuestionsSection({
     control,
     name: 'questions',
   })
+
+  const isRankingBased = watch('isRankingBased')
 
   const addQuestion = useEvent(() => {
     append({
@@ -67,6 +71,38 @@ export default function QuestionsSection({
 
   return (
     <DndContext modifiers={dndModifiers} onDragEnd={swapQuestionsAfterDrag}>
+      <Stack
+        mb={3}
+        bgcolor={palette.action.active}
+        direction='row'
+        alignItems='center'
+        spacing={2.5}
+        p={5}
+        pl={3}
+        borderRadius={4}
+      >
+        <Controller
+          name='isRankingBased'
+          control={control}
+          render={({ field }) => (
+            <Stack direction='row'>
+              <UiCheckbox
+                {...field}
+                checked={isRankingBased}
+                onChange={e => {
+                  field.onChange(e)
+                  remove(questionFields.map((_, index) => index).slice(1))
+                }}
+              />
+              <Stack spacing={1}>
+                <Typography variant='buttonLarge'>{t('create-poll.ranking-title')}</Typography>
+                <Typography variant='body4'>{t('create-poll.ranking-description')}</Typography>
+              </Stack>
+            </Stack>
+          )}
+        />
+      </Stack>
+
       <SortableContext items={questionFields.map(q => q.id)}>
         <Stack spacing={{ xs: 4, md: 6 }}>
           {questionFields.map((question, index) => (
@@ -88,16 +124,18 @@ export default function QuestionsSection({
               )}
             </SortableItem>
           ))}
-          <Button
-            sx={{ mr: 'auto', py: 0, pl: 0, height: 'fit-content' }}
-            size='medium'
-            variant='text'
-            disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
-            startIcon={<UiIcon name={Icons.Plus} size={5} />}
-            onClick={addQuestion}
-          >
-            {t('create-poll.add-question-btn')}
-          </Button>
+          {!isRankingBased && (
+            <Button
+              sx={{ mr: 'auto', py: 0, pl: 0, height: 'fit-content' }}
+              size='medium'
+              variant='text'
+              disabled={questionFields.length === MAX_QUESTIONS || isSubmitting}
+              startIcon={<UiIcon name={Icons.Plus} size={5} />}
+              onClick={addQuestion}
+            >
+              {t('create-poll.add-question-btn')}
+            </Button>
+          )}
         </Stack>
       </SortableContext>
     </DndContext>

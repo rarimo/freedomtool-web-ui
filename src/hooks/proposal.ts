@@ -157,12 +157,15 @@ export function useProposal(id?: string) {
     proposal?.fromContract?.status as ProposalStatus,
   )
 
+  const isRankingBased = proposal?.metadata?.rankingBased ?? false
+
   return {
     isRestricted,
     isLoading: isProposalLoading,
     isError: isProposalLoadingError,
 
     isAlive,
+    isRankingBased,
 
     criteria,
 

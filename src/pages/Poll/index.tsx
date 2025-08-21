@@ -56,6 +56,7 @@ export default function Poll() {
 
     participantsAmount,
     remainingVotesCount,
+    isRankingBased,
   } = useProposal(id)
 
   useEffect(() => {
@@ -312,6 +313,7 @@ export default function Poll() {
                                     <QuestionList
                                       proposal={proposal?.fromContract as ParsedContractProposal}
                                       questions={proposalMetadata?.acceptedOptions ?? []}
+                                      isRankingBased={isRankingBased}
                                     />
                                   </Stack>
                                 ),
@@ -326,6 +328,7 @@ export default function Poll() {
                           <QuestionList
                             proposal={proposal?.fromContract as ParsedContractProposal}
                             questions={proposalMetadata?.acceptedOptions ?? []}
+                            isRankingBased={isRankingBased}
                           />
                         </Stack>
                       )}

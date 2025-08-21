@@ -47,7 +47,10 @@ export default function VoteParamsResult() {
         startTimestamp,
       })
 
-      const acceptedOptions = prepareAcceptedOptionsToContract(getValues('questions'))
+      const acceptedOptions = prepareAcceptedOptionsToContract(
+        getValues('questions'),
+        getValues('isRankingBased'),
+      )
 
       const gasLimit = await calculateCreateProposalGasLimit({
         votingWhitelistData,

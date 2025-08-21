@@ -8,6 +8,7 @@ export interface PollDraftSchema {
   description: string
   startDate: string
   endDate: string
+  isRankingBased: boolean
 
   sex: Sex
   minAge?: number | ''

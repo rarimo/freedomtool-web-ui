@@ -14,11 +14,19 @@ import { ProposalsState } from '@/types/contracts/ProposalState'
 import { sleep } from './promise'
 import { hexToAscii } from './text'
 
-export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
-  questions.map(question => ({
+export const prepareAcceptedOptionsToIpfs = (
+  questions: CreatePollSchema['questions'],
+  isRankingBased: boolean,
+) => {
+  const preparedQuestions = isRankingBased
+    ? Array.from({ length: questions[0].options.length }, () => questions[0])
+    : questions
+
+  return preparedQuestions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
   }))
+}
 
 export function calculateProposalSelector(opts: {
   nationalities: boolean
@@ -60,12 +68,15 @@ export function calculateProposalSelector(opts: {
 
 // The array [3, 7] indicates that there are
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
-export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['questions']) => {
-  return questions.map(question => {
-    const optionsCount = question.options.length
-    const bitMask = (1 << optionsCount) - 1
-    return bitMask
-  })
+export const prepareAcceptedOptionsToContract = (
+  questions: CreatePollSchema['questions'],
+  isRankingBased: boolean,
+) => {
+  const preparedQuestions = isRankingBased
+    ? Array.from({ length: questions[0].options.length }, () => questions[0])
+    : questions
+
+  return preparedQuestions.map(question => (1 << question.options.length) - 1)
 }
 
 export const getVotesCount = (id: string) => {
@@ -260,4 +271,29 @@ export function calculateAgeDiffFromBirthDateBound(
   // date conversion can be wrong because Unix timestamp
   // starts from 1970, so we need to check if the diff is negative
   return diffInYears < 0 ? 100 + diffInYears : diffInYears
+}
+
+/**
+ * Calculates the total points for a ranked poll based on vote results.
+ *
+ * Each position in the `voteResults` array represents the number of votes
+ * received for that rank. Higher-ranked positions receive more points:
+ * the first position gets the most points, decreasing by one for each
+ * subsequent position.
+ *
+ * For example, if voteResults = [3, 2, 1] and there are 3 ranks:
+ * - Rank 1 (index 0): 3 votes × 3 points = 9
+ * - Rank 2 (index 1): 2 votes × 2 points = 4
+ * - Rank 3 (index 2): 1 vote × 1 point = 1
+ * Total = 14
+ *
+ * @param {number[]} voteResults - An array where each element is the number
+ *   of votes for a given rank, with index 0 being the highest rank.
+ * @returns {number} The total calculated points.
+ */
+export function calculateRankedPoolPoints(voteResults: number[]): number {
+  return voteResults.reduce((total, count, i) => {
+    const points = voteResults.length - i
+    return total + count * points
+  }, 0)
 }
