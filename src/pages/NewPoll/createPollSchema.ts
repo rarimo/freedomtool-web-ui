@@ -17,6 +17,7 @@ export const createPollDefaultValues: CreatePollSchema = {
     nationalities: [ALL_COUNTRIES_NATIONALITY],
     sex: Sex.Any,
   },
+  isRankingBased: false,
   questions: [
     {
       id: uuidv4(),
@@ -76,6 +77,7 @@ export const createPollSchema = zod
       startDate: zod.string().min(1),
       endDate: zod.string().min(1),
     }),
+    isRankingBased: zod.boolean(),
     criteria: zod.object({
       sex: zod.nativeEnum(Sex),
       minAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),

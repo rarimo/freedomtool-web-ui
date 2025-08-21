@@ -85,6 +85,7 @@ export default function CreatePollForm() {
         details: { title, description, startDate, endDate, image },
         criteria: { minAge, nationalities, maxAge, sex },
         questions,
+        isRankingBased,
         settings: { amount },
       } = formData
 
@@ -95,11 +96,12 @@ export default function CreatePollForm() {
 
       setProcessingStep(ProcessingPollStep.Metadata)
 
-      const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions)
+      const acceptedOptionsIpfs = prepareAcceptedOptionsToIpfs(questions, isRankingBased)
       const response = await uploadJsonToIpfs({
         title,
         description,
         acceptedOptions: acceptedOptionsIpfs,
+        rankingBased: isRankingBased,
         ...(imageCid && { imageCid }),
       })
 
@@ -107,7 +109,7 @@ export default function CreatePollForm() {
 
       const cid = response.data.hash
 
-      const acceptedOptions = prepareAcceptedOptionsToContract(questions)
+      const acceptedOptions = prepareAcceptedOptionsToContract(questions, isRankingBased)
 
       const startTimestamp = time(startDate).timestamp
       const endTimestamp = time(endDate).timestamp
@@ -199,7 +201,7 @@ export default function CreatePollForm() {
     [previewQuestionIndex, t, trigger],
   )
 
-  const { details, criteria, questions } = form.watch()
+  const { details, criteria, questions, isRankingBased } = form.watch()
 
   useEffect(() => {
     // Prevent closing the tab until the poll is live
@@ -255,7 +257,10 @@ export default function CreatePollForm() {
                 }}
               >
                 {isQuestionPreview ? (
-                  <PollQuestionPreview question={questions[previewQuestionIndex ?? 0]} />
+                  <PollQuestionPreview
+                    question={questions[previewQuestionIndex ?? 0]}
+                    isRankingBased={isRankingBased}
+                  />
                 ) : (
                   <PollPreview {...details} {...criteria} />
                 )}

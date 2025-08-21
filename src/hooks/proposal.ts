@@ -2,6 +2,7 @@ import { BN } from '@distributedlab/tools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { config } from '@/config'
 import { NATIVE_CURRENCY, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
@@ -49,11 +50,13 @@ export function useProposal(id?: string) {
 
       if (proposalFromContract) {
         const parsedContractProposal = parseProposalFromContract(proposalFromContract)
+        const response = await fetch(`${config.IPFS_NODE_URL}/ipfs/${parsedContractProposal.cid}`)
 
         return {
           metadata: proposals?.[0]?.metadata,
           parsed: proposals?.[0],
           fromContract: parsedContractProposal,
+          fromIpfs: await response.json(),
         }
       }
 
@@ -157,12 +160,15 @@ export function useProposal(id?: string) {
     proposal?.fromContract?.status as ProposalStatus,
   )
 
+  const isRankingBased = proposal?.fromIpfs?.rankingBased ?? false
+
   return {
     isRestricted,
     isLoading: isProposalLoading,
     isError: isProposalLoadingError,
 
     isAlive,
+    isRankingBased,
 
     criteria,
 

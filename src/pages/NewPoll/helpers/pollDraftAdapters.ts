@@ -7,6 +7,7 @@ export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchem
     details: { image, title, description, startDate, endDate },
     criteria: { nationalities, sex, maxAge, minAge },
     questions,
+    isRankingBased,
   } = form
 
   return {
@@ -20,6 +21,7 @@ export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchem
     questions,
     nationalities,
     sex,
+    isRankingBased,
 
     ...(id && { id }),
   }
@@ -29,6 +31,7 @@ export const toPartialPollDraft = (
   form: Partial<CreatePollSchema>,
   id?: number,
 ): Partial<PollDraftSchema> => ({
+  isRankingBased: form.isRankingBased || false,
   ...(id !== undefined && { id }),
 
   ...(form.details ?? {}),
@@ -49,10 +52,12 @@ export const fromPollDraft = (pollDraft: PollDraftSchema): Partial<CreatePollSch
     maxAge,
     sex,
     questions,
+    isRankingBased,
   } = pollDraft
   return {
     details: { image, title, description, startDate, endDate },
     criteria: { nationalities, minAge, maxAge, sex },
     questions,
+    isRankingBased,
   }
 }

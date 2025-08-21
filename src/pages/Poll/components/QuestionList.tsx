@@ -2,30 +2,96 @@ import { Divider, LinearProgress, Stack, Tooltip, Typography, useTheme } from '@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
+import { calcTotalPoints, getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
 import { ParsedContractProposal, QuestionIpfs } from '@/types'
 
 export default function QuestionList({
   proposal,
   questions,
+  isRankingBased,
 }: {
   questions: QuestionIpfs[]
   proposal: ParsedContractProposal | null
+  isRankingBased: boolean
 }) {
   if (!proposal) return null
 
   return (
-    <Stack spacing={6}>
+    <Stack spacing={4}>
+      {isRankingBased && <Typography variant='subtitle2'>{questions[0].title}</Typography>}
       <Stack spacing={4}>
-        {questions?.map(({ title, variants }, qIndex) => (
-          <QuestionItem
-            key={qIndex}
-            title={title}
-            variants={variants}
-            voteResults={proposal?.voteResults[qIndex]}
-            totalCount={Number(getTotalVotesPerQuestion(proposal, qIndex))}
-          />
-        ))}
+        {questions?.map(({ title, variants }, qIndex) =>
+          isRankingBased ? (
+            <QuestionItemRanking
+              key={qIndex}
+              title={variants[qIndex]}
+              voteResults={proposal?.voteResults?.map(item => item[qIndex])}
+              totalCount={Number(getTotalVotesPerQuestion(proposal, qIndex))}
+            />
+          ) : (
+            <QuestionItem
+              key={qIndex}
+              title={title}
+              variants={variants}
+              voteResults={proposal?.voteResults[qIndex]}
+              totalCount={Number(getTotalVotesPerQuestion(proposal, qIndex))}
+            />
+          ),
+        )}
+      </Stack>
+    </Stack>
+  )
+}
+
+function QuestionItemRanking({
+  title,
+  totalCount,
+  voteResults,
+}: {
+  title: string
+  totalCount: number
+  voteResults: number[]
+}) {
+  const { t } = useTranslation()
+  const { palette } = useTheme()
+
+  const maxIndex = useMemo(() => {
+    if (!voteResults || voteResults.length === 0) return -1
+
+    const maxValue = Math.max(...voteResults)
+    const count = voteResults.filter(option => option === maxValue).length
+
+    return count === 1 ? voteResults.indexOf(maxValue) : -1
+  }, [voteResults])
+
+  return (
+    <Stack bgcolor={palette.action.active} borderRadius={5}>
+      <Stack spacing={2} p={{ xs: 4, md: 6 }}>
+        <Stack direction='row' width='100%' justifyContent='space-between' spacing={2}>
+          <Typography variant='subtitle5'>{title}</Typography>
+          <Typography variant='body4'>
+            {t('poll.points', { count: calcTotalPoints(voteResults) })}
+          </Typography>
+        </Stack>
+
+        <Stack
+          justifyContent='flex-start'
+          divider={<Divider flexItem />}
+          mt={{ xs: 2, md: 3 }}
+          sx={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${palette.action.active}` }}
+        >
+          {voteResults.map((item, oIndex) => {
+            return (
+              <LinearProgressWithLabel
+                isLeading={maxIndex === oIndex}
+                title={oIndex + 1}
+                count={item}
+                progress={getCountProgress(item, totalCount)}
+                key={oIndex}
+              />
+            )
+          })}
+        </Stack>
       </Stack>
     </Stack>
   )
@@ -98,7 +164,7 @@ function LinearProgressWithLabel({
   isLeading,
   count,
 }: {
-  title: string
+  title: string | number
   progress: number
   isLeading: boolean
   count: number

@@ -71,6 +71,7 @@ export interface ProposalMetadata {
   description: string
   imageCid?: string
   acceptedOptions: QuestionIpfs[]
+  rankingBased: boolean
 }
 
 export interface DecodedWhitelistData {

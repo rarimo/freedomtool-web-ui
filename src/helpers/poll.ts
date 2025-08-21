@@ -14,11 +14,23 @@ import { ProposalsState } from '@/types/contracts/ProposalState'
 import { sleep } from './promise'
 import { hexToAscii } from './text'
 
-export const prepareAcceptedOptionsToIpfs = (questions: CreatePollSchema['questions']) =>
-  questions.map(question => ({
+export const prepareAcceptedOptionsToIpfs = (
+  questions: CreatePollSchema['questions'],
+  isRankingBased: boolean,
+) => {
+  if (isRankingBased) {
+    const question = questions[0]
+    return [...Array(question.options.length)].map(() => ({
+      title: question.text,
+      variants: question.options.map(option => option.text),
+    }))
+  }
+
+  return questions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
   }))
+}
 
 export function calculateProposalSelector(opts: {
   nationalities: boolean
@@ -60,7 +72,19 @@ export function calculateProposalSelector(opts: {
 
 // The array [3, 7] indicates that there are
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
-export const prepareAcceptedOptionsToContract = (questions: CreatePollSchema['questions']) => {
+export const prepareAcceptedOptionsToContract = (
+  questions: CreatePollSchema['questions'],
+  isRankingBased: boolean,
+) => {
+  if (isRankingBased) {
+    const question = questions[0]
+    return [...Array(question.options.length)].map(() => {
+      const optionsCount = question.options.length
+      const bitMask = (1 << optionsCount) - 1
+      return bitMask
+    })
+  }
+
   return questions.map(question => {
     const optionsCount = question.options.length
     const bitMask = (1 << optionsCount) - 1
@@ -260,4 +284,11 @@ export function calculateAgeDiffFromBirthDateBound(
   // date conversion can be wrong because Unix timestamp
   // starts from 1970, so we need to check if the diff is negative
   return diffInYears < 0 ? 100 + diffInYears : diffInYears
+}
+
+export function calcTotalPoints(choices: number[]): number {
+  return choices.reduce((total, count, i) => {
+    const points = choices.length - i
+    return total + count * points
+  }, 0)
 }

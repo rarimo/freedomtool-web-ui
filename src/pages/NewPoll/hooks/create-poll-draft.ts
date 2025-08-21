@@ -37,6 +37,7 @@ export function useCreatePollDraft(form: UseFormReturn<CreatePollSchema>) {
     initDraft()
   }, [])
 
+  useDebouncedPollDraftUpdate('isRankingBased', form, currentDraftId)
   useDebouncedPollDraftUpdate('details', form, currentDraftId)
   useDebouncedPollDraftUpdate('criteria', form, currentDraftId)
   useDebouncedPollDraftUpdate('questions', form, currentDraftId)
