@@ -50,13 +50,11 @@ export function useProposal(id?: string) {
 
       if (proposalFromContract) {
         const parsedContractProposal = parseProposalFromContract(proposalFromContract)
-        const response = await fetch(`${config.IPFS_NODE_URL}/ipfs/${parsedContractProposal.cid}`)
 
         return {
           metadata: proposals?.[0]?.metadata,
           parsed: proposals?.[0],
           fromContract: parsedContractProposal,
-          fromIpfs: await response.json(),
         }
       }
 
@@ -160,7 +158,7 @@ export function useProposal(id?: string) {
     proposal?.fromContract?.status as ProposalStatus,
   )
 
-  const isRankingBased = proposal?.fromIpfs?.rankingBased ?? false
+  const isRankingBased = proposal?.metadata?.rankingBased ?? false
 
   return {
     isRestricted,

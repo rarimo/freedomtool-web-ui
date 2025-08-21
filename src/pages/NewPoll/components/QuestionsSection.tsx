@@ -4,7 +4,7 @@ import { SortableContext } from '@dnd-kit/sortable'
 import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useEvent } from '@reactuses/core'
 import { t } from 'i18next'
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 
 import { MAX_QUESTIONS } from '@/constants'
@@ -29,6 +29,7 @@ export default function QuestionsSection({
     control,
     trigger,
     formState: { isSubmitting },
+    watch,
   } = useFormContext<CreatePollSchema>()
 
   const {
@@ -41,10 +42,7 @@ export default function QuestionsSection({
     name: 'questions',
   })
 
-  const isRankingBased = useWatch({
-    control,
-    name: 'isRankingBased',
-  })
+  const isRankingBased = watch('isRankingBased')
 
   const addQuestion = useEvent(() => {
     append({
@@ -74,7 +72,7 @@ export default function QuestionsSection({
   return (
     <DndContext modifiers={dndModifiers} onDragEnd={swapQuestionsAfterDrag}>
       <Stack
-        mb='24px'
+        mb={3}
         bgcolor={palette.action.active}
         direction='row'
         alignItems='center'

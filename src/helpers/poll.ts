@@ -18,15 +18,11 @@ export const prepareAcceptedOptionsToIpfs = (
   questions: CreatePollSchema['questions'],
   isRankingBased: boolean,
 ) => {
-  if (isRankingBased) {
-    const question = questions[0]
-    return [...Array(question.options.length)].map(() => ({
-      title: question.text,
-      variants: question.options.map(option => option.text),
-    }))
-  }
+  const preparedQuestions = isRankingBased
+    ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
+    : questions
 
-  return questions.map(question => ({
+  return preparedQuestions.map(question => ({
     title: question.text,
     variants: question.options.map(option => option.text),
   }))
@@ -76,20 +72,11 @@ export const prepareAcceptedOptionsToContract = (
   questions: CreatePollSchema['questions'],
   isRankingBased: boolean,
 ) => {
-  if (isRankingBased) {
-    const question = questions[0]
-    return [...Array(question.options.length)].map(() => {
-      const optionsCount = question.options.length
-      const bitMask = (1 << optionsCount) - 1
-      return bitMask
-    })
-  }
+  const preparedQuestions = isRankingBased
+    ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
+    : questions
 
-  return questions.map(question => {
-    const optionsCount = question.options.length
-    const bitMask = (1 << optionsCount) - 1
-    return bitMask
-  })
+  return preparedQuestions.map(question => (1 << question.options.length) - 1)
 }
 
 export const getVotesCount = (id: string) => {
@@ -286,9 +273,9 @@ export function calculateAgeDiffFromBirthDateBound(
   return diffInYears < 0 ? 100 + diffInYears : diffInYears
 }
 
-export function calcTotalPoints(choices: number[]): number {
-  return choices.reduce((total, count, i) => {
-    const points = choices.length - i
+export function calculateRankedPoolPoints(voteResults: number[]): number {
+  return voteResults.reduce((total, count, i) => {
+    const points = voteResults.length - i
     return total + count * points
   }, 0)
 }

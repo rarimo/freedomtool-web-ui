@@ -1,6 +1,7 @@
 import { PollDraftSchema } from '@/db/schemas'
 
 import { CreatePollSchema } from '../createPollSchema'
+import { isBoolean } from 'lodash'
 
 export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchema => {
   const {
@@ -31,7 +32,7 @@ export const toPartialPollDraft = (
   form: Partial<CreatePollSchema>,
   id?: number,
 ): Partial<PollDraftSchema> => ({
-  isRankingBased: form.isRankingBased || false,
+  ...(isBoolean(form.isRankingBased) && { isRankingBased: form.isRankingBased }),
   ...(id !== undefined && { id }),
 
   ...(form.details ?? {}),

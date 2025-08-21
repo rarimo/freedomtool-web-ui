@@ -2,7 +2,7 @@ import { Divider, LinearProgress, Stack, Tooltip, Typography, useTheme } from '@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { calcTotalPoints, getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
+import { calculateRankedPoolPoints, getCountProgress, getTotalVotesPerQuestion } from '@/helpers'
 import { ParsedContractProposal, QuestionIpfs } from '@/types'
 
 export default function QuestionList({
@@ -22,7 +22,7 @@ export default function QuestionList({
       <Stack spacing={4}>
         {questions?.map(({ title, variants }, qIndex) =>
           isRankingBased ? (
-            <QuestionItemRanking
+            <RankingQuestionItem
               key={qIndex}
               title={variants[qIndex]}
               voteResults={proposal?.voteResults?.map(item => item[qIndex])}
@@ -43,7 +43,7 @@ export default function QuestionList({
   )
 }
 
-function QuestionItemRanking({
+function RankingQuestionItem({
   title,
   totalCount,
   voteResults,
@@ -70,7 +70,7 @@ function QuestionItemRanking({
         <Stack direction='row' width='100%' justifyContent='space-between' spacing={2}>
           <Typography variant='subtitle5'>{title}</Typography>
           <Typography variant='body4'>
-            {t('poll.points', { count: calcTotalPoints(voteResults) })}
+            {t('poll.points', { count: calculateRankedPoolPoints(voteResults) })}
           </Typography>
         </Stack>
 
@@ -84,7 +84,7 @@ function QuestionItemRanking({
             return (
               <LinearProgressWithLabel
                 isLeading={maxIndex === oIndex}
-                title={oIndex + 1}
+                title={(oIndex + 1).toString()}
                 count={item}
                 progress={getCountProgress(item, totalCount)}
                 key={oIndex}
@@ -164,7 +164,7 @@ function LinearProgressWithLabel({
   isLeading,
   count,
 }: {
-  title: string | number
+  title: string
   progress: number
   isLeading: boolean
   count: number
