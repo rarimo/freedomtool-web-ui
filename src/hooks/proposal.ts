@@ -2,7 +2,6 @@ import { BN } from '@distributedlab/tools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { config } from '@/config'
 import { NATIVE_CURRENCY, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
