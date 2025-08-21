@@ -46,11 +46,11 @@ export default function QuestionList({
 function RankingQuestionItem({
   title,
   totalCount,
-  voteResults,
+  voteResults = [],
 }: {
   title: string
   totalCount: number
-  voteResults: number[]
+  voteResults?: number[]
 }) {
   const { t } = useTranslation()
   const { palette } = useTheme()
@@ -101,12 +101,12 @@ function QuestionItem({
   title,
   variants,
   totalCount,
-  voteResults,
+  voteResults = [],
 }: {
   title: string
   variants: string[]
   totalCount: number
-  voteResults: number[]
+  voteResults?: number[]
 }) {
   const { palette } = useTheme()
 

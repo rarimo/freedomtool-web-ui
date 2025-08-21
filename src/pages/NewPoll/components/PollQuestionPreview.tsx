@@ -9,7 +9,7 @@ import PreviewLayout from './PreviewLayout'
 
 interface Props {
   question?: CreatePollSchema['questions'][0]
-  isRankingBased?: boolean
+  isRankingBased: boolean
 }
 
 export default function PollQuestionPreview({ question, isRankingBased }: Props) {
@@ -46,7 +46,7 @@ function OptionItem({
 }: {
   text: string
   index: number
-  isRankingBased?: boolean
+  isRankingBased: boolean
 }) {
   const { palette } = useTheme()
 

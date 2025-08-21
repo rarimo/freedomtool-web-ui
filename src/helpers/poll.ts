@@ -16,10 +16,10 @@ import { hexToAscii } from './text'
 
 export const prepareAcceptedOptionsToIpfs = (
   questions: CreatePollSchema['questions'],
-  isRankingBased?: boolean,
+  isRankingBased: boolean,
 ) => {
   const preparedQuestions = isRankingBased
-    ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
+    ? Array.from({ length: questions[0].options.length }, () => questions[0])
     : questions
 
   return preparedQuestions.map(question => ({
@@ -70,10 +70,10 @@ export function calculateProposalSelector(opts: {
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
 export const prepareAcceptedOptionsToContract = (
   questions: CreatePollSchema['questions'],
-  isRankingBased?: boolean,
+  isRankingBased: boolean,
 ) => {
   const preparedQuestions = isRankingBased
-    ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
+    ? Array.from({ length: questions[0].options.length }, () => questions[0])
     : questions
 
   return preparedQuestions.map(question => (1 << question.options.length) - 1)
@@ -273,6 +273,24 @@ export function calculateAgeDiffFromBirthDateBound(
   return diffInYears < 0 ? 100 + diffInYears : diffInYears
 }
 
+/**
+ * Calculates the total points for a ranked poll based on vote results.
+ *
+ * Each position in the `voteResults` array represents the number of votes
+ * received for that rank. Higher-ranked positions receive more points:
+ * the first position gets the most points, decreasing by one for each
+ * subsequent position.
+ *
+ * For example, if voteResults = [3, 2, 1] and there are 3 ranks:
+ * - Rank 1 (index 0): 3 votes × 3 points = 9
+ * - Rank 2 (index 1): 2 votes × 2 points = 4
+ * - Rank 3 (index 2): 1 vote × 1 point = 1
+ * Total = 14
+ *
+ * @param {number[]} voteResults - An array where each element is the number
+ *   of votes for a given rank, with index 0 being the highest rank.
+ * @returns {number} The total calculated points.
+ */
 export function calculateRankedPoolPoints(voteResults: number[]): number {
   return voteResults.reduce((total, count, i) => {
     const points = voteResults.length - i

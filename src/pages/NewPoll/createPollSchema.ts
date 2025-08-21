@@ -77,7 +77,7 @@ export const createPollSchema = zod
       startDate: zod.string().min(1),
       endDate: zod.string().min(1),
     }),
-    isRankingBased: zod.boolean().optional(),
+    isRankingBased: zod.boolean(),
     criteria: zod.object({
       sex: zod.nativeEnum(Sex),
       minAge: zod.coerce.number().min(1).max(99).int().or(zod.literal('')).optional(),

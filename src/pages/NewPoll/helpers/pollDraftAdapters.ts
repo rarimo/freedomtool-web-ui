@@ -23,7 +23,7 @@ export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchem
     questions,
     nationalities,
     sex,
-    isRankingBased: isRankingBased || false,
+    isRankingBased: isRankingBased,
 
     ...(id && { id }),
   }
@@ -60,6 +60,6 @@ export const fromPollDraft = (pollDraft: PollDraftSchema): Partial<CreatePollSch
     details: { image, title, description, startDate, endDate },
     criteria: { nationalities, minAge, maxAge, sex },
     questions,
-    isRankingBased: isRankingBased || false,
+    isRankingBased: isRankingBased ?? false,
   }
 }
