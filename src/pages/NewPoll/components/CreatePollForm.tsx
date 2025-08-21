@@ -101,7 +101,7 @@ export default function CreatePollForm() {
         title,
         description,
         acceptedOptions: acceptedOptionsIpfs,
-        rankingBased: isRankingBased,
+        rankingBased: isRankingBased || false,
         ...(imageCid && { imageCid }),
       })
 

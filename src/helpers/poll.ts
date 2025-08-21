@@ -16,7 +16,7 @@ import { hexToAscii } from './text'
 
 export const prepareAcceptedOptionsToIpfs = (
   questions: CreatePollSchema['questions'],
-  isRankingBased: boolean,
+  isRankingBased?: boolean,
 ) => {
   const preparedQuestions = isRankingBased
     ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
@@ -70,7 +70,7 @@ export function calculateProposalSelector(opts: {
 // [0b11, 0b111] -> 2 and 3 choices per options correspondingly available.
 export const prepareAcceptedOptionsToContract = (
   questions: CreatePollSchema['questions'],
-  isRankingBased: boolean,
+  isRankingBased?: boolean,
 ) => {
   const preparedQuestions = isRankingBased
     ? (new Array(questions[0].options.length).fill(questions[0]) as CreatePollSchema['questions'])
