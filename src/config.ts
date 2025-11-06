@@ -12,6 +12,7 @@ export type Config = {
 
   PROPOSAL_STATE_CONTRACT: string
   BIO_PASSPORT_VOTING_CONTRACT: string
+  ID_CARD_VOTING_CONTRACT: string
 
   REOWN_ID: string
 }
@@ -28,6 +29,7 @@ export const config: Config = {
 
   PROPOSAL_STATE_CONTRACT: import.meta.env.VITE_PROPOSAL_STATE_CONTRACT,
   BIO_PASSPORT_VOTING_CONTRACT: import.meta.env.VITE_BIO_PASSPORT_VOTING_CONTRACT,
+  ID_CARD_VOTING_CONTRACT: import.meta.env.VITE_ID_CARD_VOTING_CONTRACT,
 
   REOWN_ID: import.meta.env.VITE_REOWN_ID,
 }

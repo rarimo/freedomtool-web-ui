@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 
 import { createQRCode } from '@/api/modules/qr-code'
 import { RoundedBackground } from '@/common'
+import { config } from '@/config'
 import { DESKTOP_HEADER_HEIGHT } from '@/constants'
 import VoteParamsResult from '@/contexts/vote-params/components/VoteParamsResult'
 import { useWeb3Context } from '@/contexts/web3-context'
@@ -27,7 +28,7 @@ import { useProposalState, useScrollWithShadow } from '@/hooks'
 import nationalities from '@/locales/resources/countries_en.json'
 import { authStore } from '@/store'
 import { hiddenScrollbar } from '@/theme/constants'
-import { Nationality } from '@/types'
+import { DocumentType, Nationality } from '@/types'
 
 import { ProcessingPollStep, SectionAnchor } from '../constants'
 import { createPollDefaultValues, CreatePollSchema, createPollSchema } from '../createPollSchema'
@@ -83,7 +84,7 @@ export default function CreatePollForm() {
 
       const {
         details: { title, description, startDate, endDate, image },
-        criteria: { minAge, nationalities, maxAge, sex },
+        criteria: { minAge, nationalities, maxAge, sex, documentType },
         questions,
         isRankingBased,
         settings: { amount },
@@ -123,13 +124,19 @@ export default function CreatePollForm() {
         startTimestamp,
       })
 
+      const votingContract =
+        documentType === DocumentType.IdCard
+          ? config.ID_CARD_VOTING_CONTRACT
+          : config.BIO_PASSPORT_VOTING_CONTRACT
+
       const proposalId = await createProposal({
-        votingWhitelistData,
         acceptedOptions,
         description: cid,
         amount: parseUnits(amount, 18).toString(),
         startTimestamp,
         duration,
+        votingWhitelist: [votingContract],
+        votingWhitelistData: [votingWhitelistData],
       })
 
       if (!proposalId) {

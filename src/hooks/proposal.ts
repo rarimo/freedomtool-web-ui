@@ -2,6 +2,7 @@ import { BN } from '@distributedlab/tools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { config } from '@/config'
 import { NATIVE_CURRENCY, ZERO_DATE } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { ProposalStatus } from '@/enums/proposal'
@@ -65,6 +66,11 @@ export function useProposal(id?: string) {
       silentError: true,
     },
   )
+
+  const formattedDocumentType =
+    proposal?.fromContract.votingWhitelist?.[0] === config.ID_CARD_VOTING_CONTRACT
+      ? t('poll.document-type-id-card')
+      : t('poll.document-type-passport')
 
   const formattedStartDate = formatUtcDateTime(proposal?.parsed?.start_timestamp ?? 0)
   const formattedEndDate = formatUtcDateTime(proposal?.parsed?.end_timestamp ?? 0)
@@ -136,8 +142,12 @@ export function useProposal(id?: string) {
         title: t('poll.end-date'),
         description: formattedEndDate,
       },
+      {
+        title: t('poll.document-type'),
+        description: formattedDocumentType,
+      },
     ]
-  }, [proposal, t, formattedStartDate, formattedEndDate])
+  }, [proposal, t, formattedStartDate, formattedEndDate, formattedDocumentType])
 
   const balanceDetails = useMemo(() => {
     if (!proposal) return []

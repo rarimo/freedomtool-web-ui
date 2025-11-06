@@ -10,12 +10,13 @@ import {
   MAX_PARTICIPANTS_PER_POLL,
   POLL_MIN_FUNDING_NUMBER,
 } from '@/constants'
-import { Sex } from '@/types'
+import { DocumentType, Sex } from '@/types'
 
 export const createPollDefaultValues: CreatePollSchema = {
   criteria: {
     nationalities: [ALL_COUNTRIES_NATIONALITY],
     sex: Sex.Any,
+    documentType: DocumentType.Passport,
   },
   isRankingBased: false,
   questions: [
@@ -89,6 +90,7 @@ export const createPollSchema = zod
           codes: zod.array(zod.string().min(1)),
         }),
       ),
+      documentType: zod.nativeEnum(DocumentType),
     }),
     questions: zod
       .array(

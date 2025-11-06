@@ -1,4 +1,4 @@
-import { Nationality, Sex } from '@/types'
+import { DocumentType, Nationality, Sex } from '@/types'
 
 export interface PollDraftSchema {
   id?: number
@@ -14,6 +14,7 @@ export interface PollDraftSchema {
   minAge?: number | ''
   maxAge?: number | ''
   nationalities: Nationality[]
+  documentType?: DocumentType
 
   questions: Question[]
 }

@@ -1,13 +1,14 @@
 import { isBoolean } from 'lodash'
 
 import { PollDraftSchema } from '@/db/schemas'
+import { DocumentType } from '@/types'
 
 import { CreatePollSchema } from '../createPollSchema'
 
 export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchema => {
   const {
     details: { image, title, description, startDate, endDate },
-    criteria: { nationalities, sex, maxAge, minAge },
+    criteria: { nationalities, sex, maxAge, minAge, documentType },
     questions,
     isRankingBased,
   } = form
@@ -23,6 +24,7 @@ export const toPollDraft = (form: CreatePollSchema, id?: number): PollDraftSchem
     questions,
     nationalities,
     sex,
+    documentType,
     isRankingBased: isRankingBased,
 
     ...(id && { id }),
@@ -53,12 +55,13 @@ export const fromPollDraft = (pollDraft: PollDraftSchema): Partial<CreatePollSch
     minAge,
     maxAge,
     sex,
+    documentType = DocumentType.Passport,
     questions,
     isRankingBased,
   } = pollDraft
   return {
     details: { image, title, description, startDate, endDate },
-    criteria: { nationalities, minAge, maxAge, sex },
+    criteria: { nationalities, minAge, maxAge, sex, documentType },
     questions,
     isRankingBased: isRankingBased ?? false,
   }

@@ -142,6 +142,7 @@ export const parseProposalFromContract = (
     startTimestamp: Number(proposal[2].startTimestamp),
     duration: Number(proposal[2].duration),
     voteResults: proposal[3].map(bigIntArray => bigIntArray.map(Number)),
+    votingWhitelist: proposal[2].votingWhitelist,
     votingWhitelistData,
     rawProposal: proposal,
   }

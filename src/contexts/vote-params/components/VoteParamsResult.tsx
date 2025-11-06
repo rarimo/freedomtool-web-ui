@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { DotsLoader } from '@/common'
+import { config } from '@/config'
 import { NATIVE_CURRENCY } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import {
@@ -15,6 +16,7 @@ import {
 } from '@/helpers'
 import { useLoading, useProposalState } from '@/hooks'
 import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
+import { DocumentType } from '@/types'
 
 export default function VoteParamsResult() {
   const { watch, getValues } = useFormContext<CreatePollSchema>()
@@ -37,7 +39,7 @@ export default function VoteParamsResult() {
       const startTimestamp = time(getValues('details.startDate')).timestamp
       const endTimestamp = time(getValues('details.endDate')).timestamp
       const duration = endTimestamp - startTimestamp
-      const { maxAge, minAge, sex, nationalities } = getValues('criteria')
+      const { maxAge, minAge, sex, nationalities, documentType } = getValues('criteria')
 
       const votingWhitelistData = prepareVotingWhitelistData({
         maxAge: Number(maxAge),
@@ -52,13 +54,19 @@ export default function VoteParamsResult() {
         getValues('isRankingBased'),
       )
 
+      const votingContract =
+        documentType === DocumentType.IdCard
+          ? config.ID_CARD_VOTING_CONTRACT
+          : config.BIO_PASSPORT_VOTING_CONTRACT
+
       const gasLimit = await calculateCreateProposalGasLimit({
-        votingWhitelistData,
         acceptedOptions,
         description: '0'.repeat(46),
         amount: parseUnits(debouncedAmount || '0', 18).toString(),
         startTimestamp,
         duration,
+        votingWhitelist: [votingContract],
+        votingWhitelistData: [votingWhitelistData],
       })
       return (gasLimit || 0n) * (gasPrice?.gasPrice || 0n)
     },

@@ -24,12 +24,12 @@ import { ALL_COUNTRIES_NATIONALITY } from '@/constants'
 import { Icons } from '@/enums'
 import { formatCountry } from '@/helpers'
 import countries from '@/locales/resources/countries_en.json'
-import { Sex } from '@/types'
+import { DocumentType, Sex } from '@/types'
 import { UiIcon, UiNumberField } from '@/ui'
 
 import { createPollDefaultValues, CreatePollSchema } from '../createPollSchema'
 
-type CriteriaKey = 'age' | 'nationalities' | 'sex'
+type CriteriaKey = 'age' | 'nationalities' | 'sex' | 'documentType'
 
 interface CriteriaOptions {
   key: CriteriaKey
@@ -74,11 +74,20 @@ export default function CriteriaSection() {
     [t],
   )
 
+  const documentTypeOptions = useMemo(
+    () => [
+      { label: t('create-poll.document-type-passport'), value: DocumentType.Passport },
+      { label: t('create-poll.document-type-id-card'), value: DocumentType.IdCard },
+    ],
+    [t],
+  )
+
   const criteriaOptions: CriteriaOptions[] = useMemo(
     () => [
       { key: 'nationalities', label: t('create-poll.nationalities-lbl') },
       { key: 'age', label: t('create-poll.age-lbl') },
       { key: 'sex', label: t('create-poll.sex-lbl') },
+      { key: 'documentType', label: t('create-poll.document-type-lbl') },
     ],
     [t],
   )
@@ -326,6 +335,68 @@ export default function CriteriaSection() {
             )}
           />
           <IconButton color='secondary' onClick={() => toggleCriteria('sex')}>
+            <UiIcon name={Icons.DeleteBin6Line} size={4} />
+          </IconButton>
+        </Stack>
+      )}
+      {selectedKey.includes('documentType') && (
+        <Stack direction='row' alignItems='center' gap={6}>
+          <Controller
+            name='criteria.documentType'
+            defaultValue={DocumentType.Passport}
+            control={control}
+            render={({ field }) => (
+              <FormControl>
+                <InputLabel shrink variant='filled'>
+                  {t('create-poll.document-type-lbl')}
+                </InputLabel>
+                <Select
+                  {...field}
+                  displayEmpty
+                  sx={{ pt: 4 }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        p: 1,
+                      },
+                    },
+                    MenuListProps: {
+                      sx: {
+                        padding: 0,
+                      },
+                    },
+                  }}
+                  slotProps={{ input: { sx: { pl: 3 } } }}
+                  IconComponent={(props: SelectProps) => {
+                    const iconClass = props.className
+
+                    return (
+                      <UiIcon
+                        name={Icons.ArrowDownSLine}
+                        size={5}
+                        sx={{
+                          mt: 1,
+                          transition: 'transform 0.3s ease',
+                          transform: iconClass?.includes('MuiSelect-iconOpen')
+                            ? 'rotate(180deg)'
+                            : 'rotate(0deg)',
+                        }}
+                        className={iconClass}
+                      />
+                    )
+                  }}
+                  disabled={isSubmitting}
+                >
+                  {documentTypeOptions.map(({ label, value }) => (
+                    <MenuItem key={value} value={value}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+          <IconButton color='secondary' onClick={() => toggleCriteria('documentType')}>
             <UiIcon name={Icons.DeleteBin6Line} size={4} />
           </IconButton>
         </Stack>

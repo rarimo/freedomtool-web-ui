@@ -22,10 +22,9 @@ export const useProposalState = () => {
    */
   const createProposal = useCallback(
     async (
-      proposalConfig: Omit<
-        ProposalsState.ProposalConfigStruct,
-        'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
-      > & { amount: BigNumberish; votingWhitelistData: string },
+      proposalConfig: Omit<ProposalsState.ProposalConfigStruct, 'multichoice'> & {
+        amount: BigNumberish
+      },
     ): Promise<string | null> => {
       if (!contract) return null
       const tx = await contract.contractInstance.createProposal(
@@ -35,8 +34,8 @@ export const useProposalState = () => {
           startTimestamp: BigInt(proposalConfig.startTimestamp),
           duration: BigInt(proposalConfig.duration),
           multichoice: BigInt(0),
-          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-          votingWhitelistData: [proposalConfig.votingWhitelistData],
+          votingWhitelist: proposalConfig.votingWhitelist,
+          votingWhitelistData: proposalConfig.votingWhitelistData,
         },
         {
           value: proposalConfig.amount,
@@ -51,10 +50,9 @@ export const useProposalState = () => {
 
   const calculateCreateProposalGasLimit = useCallback(
     async (
-      proposalConfig: Omit<
-        ProposalsState.ProposalConfigStruct,
-        'multichoice' | 'votingWhitelistData' | 'votingWhitelist'
-      > & { amount: BigNumberish; votingWhitelistData: string },
+      proposalConfig: Omit<ProposalsState.ProposalConfigStruct, 'multichoice'> & {
+        amount: BigNumberish
+      },
     ) => {
       if (!contract) return
       const gasLimit = await contract.contractInstance.createProposal.estimateGas(
@@ -64,8 +62,8 @@ export const useProposalState = () => {
           startTimestamp: BigInt(proposalConfig.startTimestamp),
           duration: BigInt(proposalConfig.duration),
           multichoice: BigInt(0),
-          votingWhitelist: [config.BIO_PASSPORT_VOTING_CONTRACT as string],
-          votingWhitelistData: [proposalConfig.votingWhitelistData],
+          votingWhitelist: proposalConfig.votingWhitelist,
+          votingWhitelistData: proposalConfig.votingWhitelistData,
         },
         { value: POLL_MIN_FUNDING_AMOUNT },
       )

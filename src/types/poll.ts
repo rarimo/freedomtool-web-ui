@@ -29,6 +29,7 @@ export interface ParsedContractProposal {
   startTimestamp: number
   duration: number
   voteResults: number[][]
+  votingWhitelist: string[]
   votingWhitelistData: DecodedWhitelistData
   rawProposal: ProposalsState.ProposalInfoStructOutput
 }
@@ -43,6 +44,11 @@ export enum Sex {
   Male = 'M',
   Female = 'F',
   Any = '',
+}
+
+export enum DocumentType {
+  Passport = 'passport',
+  IdCard = 'id',
 }
 
 // New types
