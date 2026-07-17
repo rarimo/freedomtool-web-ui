@@ -301,48 +301,52 @@
       "title-1": "You will not find a solution to political problems in cryptography.",
       "title-2": "> yes, but we can win a major battle in the arms race and gain a new territory of freedom...",
       "sign": "Satoshi",
+      "about-desc": "Freedom Tool is an open source framework for anonymous, verifiable digital voting. It is built for continuous democracy: giving citizens a voice between elections, working in restricted environments, and turning individual voices into collective action.",
       "cta-btn": "Create a poll",
       "whitepaper-btn": "Whitepaper"
     },
     "how-it-works": {
       "title": "How it works",
-      "guide-1-title": "Creating anonymous Blockchain-Powered polls",
-      "guide-1-list-item-1": "Blockchain Security",
-      "guide-1-list-item-2": "Full Verifiability",
-      "guide-1-list-item-3": "Decentralized & Trustless",
-      "guide-2-title": "Mobile voting",
-      "guide-2-list-item-1": "Users scan a QR code to instantly download a polling app",
-      "guide-2-list-item-2": "Tap a passport to anonymously prove age and citizenship",
-      "guide-2-list-item-3": "User data stays on the device, only a zero-knowledge proof is generated",
-      "guide-3-title": "Privacy at Max",
-      "guide-3-footer": "All results are stored on the blockchain – secure, tamper-proof, and transparent. Voting data is protected from manipulation, while voter identities remain completely anonymous.",
-      "create-a-poll-btn": "Create a poll"
+      "guide-1-title": "Create a verifiable poll",
+      "guide-1-list-item-1": "Define the question, voting options, eligibility rules, and timeline.",
+      "guide-2-title": "Vote with a tap",
+      "guide-2-list-item-1": "Scan a poll's QR code to open it in the voting app.",
+      "guide-2-list-item-2": "Tap a passport or national ID to anonymously prove eligibility.",
+      "guide-2-list-item-3": "Personal data stays on the phone. Only a cryptographic proof of eligibility is shared.",
+      "guide-3-title": "Private ballots. Public verification.",
+      "guide-3-footer": "Every ballot is recorded on a public blockchain: tamper-proof and auditable by anyone. No one, including the organizers, can link a vote to a voter.",
+      "create-a-poll-btn": "Create a poll",
+      "see-demo-btn": "View the demo"
     },
     "case-studies": {
       "case-1-title": "Georgia",
-      "case-1-description": "The United Space app, initiated by Georgian opposition activists, aims to facilitate tools for liquid democracy. It offers anonymous polls for Georgian citizens, digital versions of government documents, and tokenization of state assets.",
+      "case-1-description": "Georgia's largest opposition party built the United Space app to run polls ahead of the parliamentary elections, making liquid democracy a campaign promise to citizens at home and emigrants abroad.",
       "case-1-link-1-tite": "Georgia opposition debuts civil blockchain project ahead of critical...",
       "case-1-link-2-title": "How a Georgian opposition party is putting blockchain on the ballot",
       "case-2-title": "Russia",
-      "case-2-description": "Russia2024 provides a democratic alternative to the 2024 Russian presidential election. The Russia2024 app aims to establish parallel government structures to promote democracy, freedom, and peace in Russia.",
+      "case-2-description": "Russia2024 provided a democratic alternative to the 2024 Russian presidential election. Built by exiled opposition figures, the app aims to establish parallel government structures to promote democracy, freedom, and peace in Russia.",
       "case-2-link-1-title": "Exiled Russian opposition leader Mark Feygin is launching an anonymou...",
       "case-2-link-2-title": "Pussy Riot lawyer launches blockchain-based poll to challenge legitimacy of Russian elections",
       "case-3-title": "Iran",
-      "case-3-description": "Launched by Iranian dissidents it enables citizens to protest the presidential election safely. It allows users to cast a vote of no confidence in the Islamic Republic of Iran's presidential candidates.",
+      "case-3-description": "Iranians Vote, launched by dissidents, let citizens safely protest the presidential election by casting a vote of no confidence in the Islamic Republic's candidates.",
       "case-3-link-title": "Blockchain voting from Iranians Vote and Freedom Tool",
-      "title": "Case studies",
+      "case-4-title": "France",
+      "case-4-description": "Référendum Citoyen, launched by Alexandre Jardin, lets French citizens vote on major national questions between elections. Voters prove eligibility with their biometric passport or national ID.",
+      "case-4-link-1-title": "The \"Référendum Citoyen\" app aims to fill the democratic void that sets in between elections",
+      "case-4-link-2-title": "\"For a few days now, the French have been able to choose the trajectory of the country,\" says Robinson Jardin",
+      "title": "Deployments",
       "resources": "Resources:"
     },
     "repositories": {
-      "whitepaper": "Read the Whitepaper",
-      "title": "Open source repositories"
+      "title": "Build your own App",
+      "description": "Every deployment above is independent. Fork this and launch yours.",
+      "audited-badge": "Audited"
     },
-    "footer": {
-      "quote": "Join the territory of freedom"
-    },
+    "footer": {},
     "contribute": {
       "title": "Contribute to the project",
-      "description": "Join the territory of freedom",
+      "description": "Freedom Tool is a public good. No single company runs it: independent teams maintain the stack, and every deployment has its own local initiator.",
+      "raised-lbl": "Contributed so far",
       "btn": "Contribute"
     },
     "powered-by": "Powered by Rarimo"

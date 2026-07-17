@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
-import { RoutePaths } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
 import { Transitions } from '@/theme/constants'
+import { UiIcon } from '@/ui'
 
 import { HOME_CONTAINER_WIDTH } from '../constants'
 import { getRepositoryItemVariants } from '../helpers'
@@ -19,23 +20,40 @@ export default function RepositoriesSection() {
   const links = [
     {
       title: 'Passport ZK Circuits',
+      description: 'Prove eligibility from a passport or ID chip without revealing identity',
       href: 'https://github.com/rarimo/passport-zk-circuits',
+      auditHref:
+        'https://github.com/rarimo/passport-zk-circuits/blob/main/audits/halborn_2024-03-16.pdf',
     },
     {
       title: 'Voting Contracts',
+      description: 'Register ballots and tally results on-chain',
       href: 'https://github.com/rarimo/passport-voting-contracts',
-    },
-    {
-      title: 'IOS App',
-      href: 'https://github.com/rarimo/rarime-ios-app',
-    },
-    {
-      title: 'Android App',
-      href: 'https://github.com/rarimo/rarime-android-app',
+      auditHref:
+        'https://github.com/rarimo/voting-contracts/blob/main/audits/halborn_2024-03-12.pdf',
     },
     {
       title: 'Proof Verification Relayer',
+      description: 'Verify proofs and submit votes, so voters never pay gas',
       href: 'https://github.com/rarimo/proof-verification-relayer/',
+    },
+    {
+      title: 'IOS App',
+      description: 'Reference voting app to fork and rebrand',
+      href: 'https://github.com/rarimo/rarime-ios-app',
+      auditHref: 'https://github.com/rarimo/FreedomTool/blob/main/audits/halborn_2024-03-26.pdf',
+    },
+    {
+      title: 'Android App',
+      description: 'Reference voting app to fork and rebrand',
+      href: 'https://github.com/rarimo/rarime-android-app',
+      auditHref: 'https://github.com/rarimo/FreedomTool/blob/main/audits/halborn_2024-03-26.pdf',
+    },
+    {
+      title: 'Whitepaper',
+      description: 'The architecture and cryptography behind Freedom Tool',
+      href: RoutePaths.Whitepaper,
+      internal: true,
     },
   ]
 
@@ -66,30 +84,29 @@ export default function RepositoriesSection() {
           >
             {t('home.repositories.title')}
           </Typography>
+          <Typography
+            textAlign='center'
+            color={palette.text.secondary}
+            maxWidth={656}
+            mx='auto'
+            mt={{ xs: 4, md: 6 }}
+          >
+            {t('home.repositories.description')}
+          </Typography>
           <Box
             sx={{
               mt: { xs: 10, md: 20 },
               width: 1,
               gap: 4,
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             }}
           >
             {links.map((link, index) => (
               <RepositoryItem key={index} link={link} index={index} total={links.length} />
             ))}
           </Box>
-          <Typography
-            my={{ xs: 11, md: 22 }}
-            sx={{ textDecoration: 'underline' }}
-            color={palette.text.primary}
-            textAlign='center'
-            component={Link}
-            to={RoutePaths.Whitepaper}
-            variant='buttonLarge'
-          >
-            {t('home.repositories.whitepaper')}
-          </Typography>
+          <Box mb={{ xs: 11, md: 22 }} />
         </Stack>
 
         <ContributeSection />
@@ -99,13 +116,14 @@ export default function RepositoriesSection() {
 }
 
 interface RepositoryItemProps {
-  link: { title: string; href: string }
+  link: { title: string; description: string; href: string; auditHref?: string; internal?: boolean }
   index: number
   total: number
 }
 
 function RepositoryItem({ link, index, total }: RepositoryItemProps) {
   const { palette, breakpoints } = useTheme()
+  const { t } = useTranslation()
   const ref = useRef(null)
   const isLgDown = useMediaQuery(breakpoints.down('lg'))
   const inView = useInView(ref, { once: true, amount: 1 })
@@ -118,19 +136,21 @@ function RepositoryItem({ link, index, total }: RepositoryItemProps) {
       variants={variants}
       initial='hidden'
       animate={inView ? 'visible' : 'hidden'}
+      style={{ position: 'relative', height: '100%' }}
     >
       <Stack
-        component='a'
-        href={link.href}
-        target='_blank'
-        rel='noopener'
+        {...(link.internal
+          ? { component: Link, to: link.href }
+          : { component: 'a', href: link.href, target: '_blank', rel: 'noopener' })}
         justifyContent='flex-end'
+        spacing={2}
         sx={{
           borderRadius: 3,
           pt: 17,
           px: 6,
           pb: 6,
-          height: 132,
+          height: '100%',
+          minHeight: 172,
           color: palette.text.primary,
           border: `1px solid ${palette.action.active}`,
           transition: Transitions.Fast,
@@ -140,10 +160,45 @@ function RepositoryItem({ link, index, total }: RepositoryItemProps) {
           },
         }}
       >
-        <Typography variant='buttonLarge' maxWidth={80} color={palette.text.primary}>
+        <Typography variant='buttonLarge' color={palette.text.primary}>
           {link.title}
         </Typography>
+        {/* Reserve two lines so titles align across cards with 1- and 2-line descriptions */}
+        <Typography variant='body4' color={palette.text.secondary} sx={{ minHeight: 40 }}>
+          {link.description}
+        </Typography>
       </Stack>
+      {link.auditHref && (
+        <Stack
+          component='a'
+          href={link.auditHref}
+          target='_blank'
+          rel='noopener'
+          direction='row'
+          alignItems='center'
+          spacing={1}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: 24,
+            py: 1,
+            px: 2,
+            borderRadius: 25,
+            color: palette.success.dark,
+            background: palette.success.light,
+            transition: Transitions.Fast,
+            '&:hover': {
+              background: palette.success.main,
+              color: palette.success.contrastText,
+            },
+          }}
+        >
+          <UiIcon name={Icons.SealCheck} size={4} />
+          <Typography variant='caption2' color='inherit'>
+            {t('home.repositories.audited-badge')}
+          </Typography>
+        </Stack>
+      )}
     </motion.div>
   )
 }

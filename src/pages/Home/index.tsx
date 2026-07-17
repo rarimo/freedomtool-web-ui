@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <Stack>
       <HeroSection />
-      <HowItWorksSection />
       <CaseStudiesSection />
+      <HowItWorksSection />
       <RepositoriesSection />
     </Stack>
   )

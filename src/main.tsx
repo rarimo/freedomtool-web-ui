@@ -16,6 +16,13 @@ import { NETWORK_NAME, networkConfigsMap } from '@/constants'
 import App from './App'
 import { Web3ContextProviderWrapper } from './contexts/web3-context'
 
+// On a split deployment this host serves only the landing, but QR codes and
+// links in the wild still point poll routes at it. Forward them, hash intact,
+// to the host that runs the poll app.
+if (config.POLL_APP_URL && window.location.hash.startsWith('#/polls')) {
+  window.location.replace(`${config.POLL_APP_URL}/${window.location.hash}`)
+}
+
 const network = networkConfigsMap[NETWORK_NAME]
 const activeNetwork = defineChain({
   id: network.chainId,

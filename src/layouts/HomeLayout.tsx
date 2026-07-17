@@ -2,11 +2,11 @@ import { Button, Stack, Typography, useTheme } from '@mui/material'
 import zIndex from '@mui/material/styles/zIndex'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link as RouterLink } from 'react-router-dom'
 
 import AppLogo from '@/common/AppLogo'
 import { DESKTOP_HEADER_HEIGHT, MOBILE_HEADER_HEIGHT } from '@/constants'
-import { Icons, RoutePaths } from '@/enums'
+import { Icons } from '@/enums'
+import { getCreatePollLinkProps } from '@/helpers'
 import { FREEDOM_TOOL_EMAIL, HOME_CONTAINER_WIDTH } from '@/pages/Home/constants'
 import { vh } from '@/theme/helpers'
 import { UiIcon } from '@/ui'
@@ -60,25 +60,12 @@ function HomeHeader() {
         justifyContent='space-between'
         alignItems='center'
       >
-        <Stack spacing={{ md: 0.5 }}>
-          <AppLogo />
-          <Typography
-            variant='body5'
-            component='a'
-            href={RARIMO_LINK}
-            target='_blank'
-            rel='noopener'
-            color={palette.text.secondary}
-          >
-            {t('home.powered-by')}
-          </Typography>
-        </Stack>
+        <AppLogo />
         <Stack spacing={3} direction='row'>
           <Button
-            component={RouterLink}
+            {...getCreatePollLinkProps()}
             size='small'
             startIcon={<UiIcon size={4} name={Icons.Plus} />}
-            to={RoutePaths.NewPoll}
           >
             {t('home.header.create-poll-btn')}
           </Button>
@@ -117,8 +104,7 @@ function HomeFooter() {
           </Typography>
         </Stack>
 
-        <Stack alignItems={{ xs: 'center', md: 'flex-end' }}>
-          <Typography variant='subtitle6'>{t('home.footer.quote')}</Typography>
+        <Stack alignItems={{ xs: 'center', md: 'flex-end' }} justifyContent='center'>
           <Typography
             component='a'
             variant='body5'

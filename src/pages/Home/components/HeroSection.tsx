@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { RoundedBackground } from '@/common'
 import { RoutePaths } from '@/enums'
+import { getCreatePollLinkProps } from '@/helpers'
 
 import { HOME_CONTAINER_WIDTH, HOME_DESKTOP_HEADER_HEIGHT } from '../constants'
 import WorldGlobe from './WorldGlobe'
@@ -35,7 +36,7 @@ export default function HeroSection() {
         justifyContent='space-between'
         width={1}
       >
-        <Stack spacing={16.25}>
+        <Stack spacing={{ xs: 8, md: 12 }}>
           <Stack component='blockquote' m={0} spacing={8} maxWidth={656}>
             <Typography component='h1' variant='h1' typography={{ xs: 'h2', md: 'h1' }}>
               {t('home.hero.title-1')}
@@ -48,8 +49,12 @@ export default function HeroSection() {
             </Typography>
           </Stack>
 
+          <Typography maxWidth={656} color={palette.text.secondary}>
+            {t('home.hero.about-desc')}
+          </Typography>
+
           <Stack spacing={{ xs: 3, md: 4 }} direction='row' zIndex={2}>
-            <Button component={Link} to={RoutePaths.NewPoll} sx={{ height: { md: 64 } }}>
+            <Button {...getCreatePollLinkProps()} sx={{ height: { md: 64 } }}>
               {t('home.hero.cta-btn')}
             </Button>
             <Button
