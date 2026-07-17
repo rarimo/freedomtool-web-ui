@@ -342,7 +342,9 @@
       "description": "Every deployment above is independent. Fork this and launch yours.",
       "audited-badge": "Audited"
     },
-    "footer": {},
+    "footer": {
+      "reach-out-lbl": "Reach out"
+    },
     "contribute": {
       "title": "Contribute to the project",
       "description": "Freedom Tool is a public good. No single company runs it: independent teams maintain the stack, and every deployment has its own local initiator.",

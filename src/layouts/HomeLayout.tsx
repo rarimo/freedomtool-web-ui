@@ -105,6 +105,7 @@ function HomeFooter() {
         </Stack>
 
         <Stack alignItems={{ xs: 'center', md: 'flex-end' }} justifyContent='center'>
+          <Typography variant='subtitle6'>{t('home.footer.reach-out-lbl')}</Typography>
           <Typography
             component='a'
             variant='body5'
