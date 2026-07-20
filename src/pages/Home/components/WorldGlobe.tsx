@@ -8,6 +8,53 @@ import { countries } from '../countries'
 // Countries with Freedom Tool case studies, by ISO A3 code
 const HIGHLIGHTED_COUNTRIES = new Set(['FRA', 'GEO', 'IRN', 'RUS'])
 
+type GeoFeature = {
+  properties: { ADM0_A3: string }
+  geometry: { type: string; coordinates: unknown }
+}
+
+// The bundled map data draws Crimea inside Russia's borders. Reassign its
+// polygon to Ukraine before rendering, so country highlights never claim it.
+const CRIMEA_BBOX = { minLng: 31.5, maxLng: 37.5, minLat: 43.5, maxLat: 46.5 }
+
+const globeFeatures = (() => {
+  const features = (countries.features as unknown as GeoFeature[]).map(feature => ({
+    ...feature,
+    geometry: { ...feature.geometry },
+  }))
+
+  const rus = features.find(f => f.properties.ADM0_A3 === 'RUS')
+  const ukr = features.find(f => f.properties.ADM0_A3 === 'UKR')
+  if (!rus || !ukr) return features as unknown as typeof countries.features
+
+  const isCrimea = (polygon: number[][][]) => {
+    const ring = polygon[0]
+    const lng = ring.reduce((sum, point) => sum + point[0], 0) / ring.length
+    const lat = ring.reduce((sum, point) => sum + point[1], 0) / ring.length
+    return (
+      lng > CRIMEA_BBOX.minLng &&
+      lng < CRIMEA_BBOX.maxLng &&
+      lat > CRIMEA_BBOX.minLat &&
+      lat < CRIMEA_BBOX.maxLat
+    )
+  }
+
+  const rusPolygons = rus.geometry.coordinates as number[][][][]
+  const crimeaPolygons = rusPolygons.filter(isCrimea)
+  rus.geometry.coordinates = rusPolygons.filter(polygon => !isCrimea(polygon))
+
+  if (crimeaPolygons.length) {
+    const ukrPolygons =
+      ukr.geometry.type === 'MultiPolygon'
+        ? (ukr.geometry.coordinates as number[][][][])
+        : [ukr.geometry.coordinates as number[][][]]
+    ukr.geometry.type = 'MultiPolygon'
+    ukr.geometry.coordinates = [...ukrPolygons, ...crimeaPolygons]
+  }
+
+  return features as unknown as typeof countries.features
+})()
+
 const HIGHLIGHT_COLOR = new THREE.Color('#57CA71')
 const BASE_COLOR = new THREE.Color('#000000')
 const BASE_OPACITY = 0.56
@@ -27,7 +74,7 @@ const WorldGlobe = () => {
   const globeRef = useRef<GlobeMethods>()
 
   useEffect(() => {
-    const highlightedFeatures = countries.features.filter(feature =>
+    const highlightedFeatures = globeFeatures.filter(feature =>
       HIGHLIGHTED_COUNTRIES.has(feature.properties.ADM0_A3),
     ) as HexPolygonFeature[]
 
@@ -73,7 +120,7 @@ const WorldGlobe = () => {
   return (
     <Globe
       ref={globeRef}
-      hexPolygonsData={countries.features}
+      hexPolygonsData={globeFeatures}
       hexPolygonResolution={3}
       hexPolygonMargin={0.4}
       hexPolygonUseDots={true}
