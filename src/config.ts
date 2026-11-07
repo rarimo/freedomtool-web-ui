@@ -10,8 +10,10 @@ export type Config = {
   // When set, the landing links to the poll app on this external host
   // instead of its own routes (split landing / poll-app deployments)
   POLL_APP_URL?: string
+  VOTING_API_URL: string
 
   IPFS_NODE_URL: string
+  IPFS_UPLOAD_URL?: string
 
   PROPOSAL_STATE_CONTRACT: string
   BIO_PASSPORT_VOTING_CONTRACT: string
@@ -29,7 +31,10 @@ export const config: Config = {
   RARIME_EXTERNAL_BASE_URL: import.meta.env.VITE_RARIME_EXTERNAL_BASE_URL,
   POLL_APP_URL: import.meta.env.VITE_POLL_APP_URL,
 
+  VOTING_API_URL: import.meta.env.VITE_VOTING_API_URL || import.meta.env.VITE_API_URL,
+
   IPFS_NODE_URL: import.meta.env.VITE_IPFS_NODE_URL,
+  IPFS_UPLOAD_URL: import.meta.env.VITE_IPFS_UPLOAD_URL,
 
   PROPOSAL_STATE_CONTRACT: import.meta.env.VITE_PROPOSAL_STATE_CONTRACT,
   BIO_PASSPORT_VOTING_CONTRACT: import.meta.env.VITE_BIO_PASSPORT_VOTING_CONTRACT,

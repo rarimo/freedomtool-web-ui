@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AppMenu } from '@/common/index'
+import { NATIVE_CURRENCY_ICON } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { formatAddress, formatAmountShort } from '@/helpers'
@@ -48,7 +49,7 @@ export default function AppSettingsMenu() {
         onClick={event => setAnchorEl(event.currentTarget)}
       >
         <Stack direction='row' spacing={2} alignItems='center'>
-          <UiIcon name={Icons.Ethereum} size={5} />
+          <UiIcon name={NATIVE_CURRENCY_ICON} size={5} />
           <Typography variant='subtitle6'>{formatAmountShort(balance)}</Typography>
           <Divider orientation='vertical' flexItem />
           {isMdUp && <Typography variant='subtitle6'>{formatAddress(address, 5)}</Typography>}

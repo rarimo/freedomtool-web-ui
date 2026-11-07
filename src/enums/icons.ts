@@ -203,6 +203,7 @@ export enum Icons {
   ChatNewLine = 'chat-new-line',
   AddFill = 'add-fill',
   Ethereum = 'ethereum',
+  Xdai = 'xdai',
   ShareLine = 'share-line',
   DownloadLine = 'download-line',
   DraftLine = 'draft-line',

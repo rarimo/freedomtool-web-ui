@@ -8,7 +8,8 @@ import {
   ALLOWED_IMAGE_MIME_TYPES,
   MAX_BANNER_SIZE,
   MAX_PARTICIPANTS_PER_POLL,
-  POLL_MIN_FUNDING_NUMBER,
+  NATIVE_CURRENCY,
+  POLL_CREATION_MIN_FUNDING,
 } from '@/constants'
 import { DocumentType, Sex } from '@/types'
 
@@ -112,8 +113,11 @@ export const createPollSchema = zod
       amount: zod
         .string()
         .min(1)
-        .refine(value => Number(value) > POLL_MIN_FUNDING_NUMBER, {
-          message: t('create-poll.amount-error', { amount: POLL_MIN_FUNDING_NUMBER }),
+        .refine(value => Number(value) >= Number(POLL_CREATION_MIN_FUNDING), {
+          message: t('create-poll.min-amount-error', {
+            amount: POLL_CREATION_MIN_FUNDING,
+            currency: NATIVE_CURRENCY,
+          }),
         }),
     }),
   })

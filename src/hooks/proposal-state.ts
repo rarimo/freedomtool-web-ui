@@ -1,8 +1,8 @@
-import { BigNumberish } from 'ethers'
+import { BigNumberish, parseUnits } from 'ethers'
 import { useCallback, useMemo } from 'react'
 
 import { config } from '@/config'
-import { POLL_MIN_FUNDING_AMOUNT } from '@/constants'
+import { POLL_CREATION_MIN_FUNDING } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { createContract, extractProposalIdFromTxReceipt } from '@/helpers'
 import { ProposalState__factory } from '@/types/contracts'
@@ -65,7 +65,7 @@ export const useProposalState = () => {
           votingWhitelist: proposalConfig.votingWhitelist,
           votingWhitelistData: proposalConfig.votingWhitelistData,
         },
-        { value: POLL_MIN_FUNDING_AMOUNT },
+        { value: parseUnits(POLL_CREATION_MIN_FUNDING, 18) },
       )
 
       return gasLimit

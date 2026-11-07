@@ -29,11 +29,7 @@ const activeNetwork = defineChain({
   caipNetworkId: `eip155:${network.chainId}`,
   chainNamespace: 'eip155',
   name: network.name,
-  nativeCurrency: {
-    decimals: 18,
-    name: 'ETH',
-    symbol: 'ETH',
-  },
+  nativeCurrency: network.appKitChain.nativeCurrency,
   rpcUrls: {
     default: {
       http: [network.rpcUrl],

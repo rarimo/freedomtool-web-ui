@@ -13,6 +13,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { DotsLoader } from '@/common'
+import { BRIDGE_URL, NATIVE_CURRENCY, NETWORK_DISPLAY_NAME } from '@/constants'
 import { useWeb3Context } from '@/contexts/web3-context'
 import { Icons } from '@/enums'
 import { useProposalBalanceForm } from '@/hooks/proposal-balance-form'
@@ -22,7 +23,7 @@ import UiCheckAmountInput from '@/ui/UiCheckAmountInput'
 
 import { CreatePollSchema } from '../createPollSchema'
 
-const BRIDGE_LINK = 'l2bridge.rarimo.com'
+const BRIDGE_LINK = BRIDGE_URL?.replace(/^https?:\/\//, '') ?? ''
 
 export default function SettingsSection() {
   const {
@@ -73,58 +74,64 @@ export default function SettingsSection() {
               <UiIcon color={palette.text.secondary} size={5} name={Icons.QuestionLine} />
             </Tooltip>
           </Stack>
-          <Stack
-            bgcolor={palette.info.lighter}
-            color={palette.info.darker}
-            borderRadius={4}
-            p={3}
-            spacing={3}
-            direction='row'
-            alignItems='center'
-            role='alert'
-          >
-            {isMdUp && <UiIcon sx={{ ml: 1 }} size={5} name={Icons.InformationLine} />}
-            <Typography
+          {BRIDGE_URL && (
+            <Stack
+              bgcolor={palette.info.lighter}
               color={palette.info.darker}
-              variant='body4'
-              maxWidth={500}
-              alignSelf='start'
+              borderRadius={4}
+              p={3}
+              spacing={3}
+              direction='row'
+              alignItems='center'
+              role='alert'
             >
-              <Trans
-                i18nKey='create-poll.bridge-alert'
-                values={{ link: BRIDGE_LINK }}
-                components={{
-                  Link: (
-                    <Typography
-                      variant='body4'
-                      component='a'
-                      target='_blank'
-                      rel='noopener'
-                      sx={{
-                        textDecoration: 'underline',
-                        fontWeight: FontWeight.SemiBold,
-                        '&:link': {
-                          color: palette.info.darker,
-                        },
-                        '&:visited': {
-                          color: palette.info.darker,
-                        },
-                        '&:hover': {
-                          color: palette.info.darker,
-                        },
-                        '&:active': {
-                          color: palette.info.dark,
-                        },
-                      }}
-                      href={`https://${BRIDGE_LINK}`}
-                    >
-                      {BRIDGE_LINK}
-                    </Typography>
-                  ),
-                }}
-              />
-            </Typography>
-          </Stack>
+              {isMdUp && <UiIcon sx={{ ml: 1 }} size={5} name={Icons.InformationLine} />}
+              <Typography
+                color={palette.info.darker}
+                variant='body4'
+                maxWidth={500}
+                alignSelf='start'
+              >
+                <Trans
+                  i18nKey='create-poll.bridge-alert'
+                  values={{
+                    link: BRIDGE_LINK,
+                    network: NETWORK_DISPLAY_NAME,
+                    currency: NATIVE_CURRENCY,
+                  }}
+                  components={{
+                    Link: (
+                      <Typography
+                        variant='body4'
+                        component='a'
+                        target='_blank'
+                        rel='noopener'
+                        sx={{
+                          textDecoration: 'underline',
+                          fontWeight: FontWeight.SemiBold,
+                          '&:link': {
+                            color: palette.info.darker,
+                          },
+                          '&:visited': {
+                            color: palette.info.darker,
+                          },
+                          '&:hover': {
+                            color: palette.info.darker,
+                          },
+                          '&:active': {
+                            color: palette.info.dark,
+                          },
+                        }}
+                        href={BRIDGE_URL}
+                      >
+                        {BRIDGE_LINK}
+                      </Typography>
+                    ),
+                  }}
+                />
+              </Typography>
+            </Stack>
+          )}
 
           <Box
             sx={{

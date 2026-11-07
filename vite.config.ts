@@ -32,6 +32,27 @@ export default defineConfig(({ mode }) => {
     server: {
       ...(isLocalDevelopment && { allowedHosts: true }),
       port: Number(env.VITE_PORT || 8000),
+      ...(isLocalDevelopment &&
+        env.VITE_DEV_PROXY === '1' && {
+          proxy: {
+            '/do-rarimo': {
+              target: 'https://do.rarimo.com',
+              changeOrigin: true,
+              rewrite: (p: string) => p.replace(/^\/do-rarimo/, ''),
+            },
+            '/ipfs-upload/add': {
+              target: 'http://127.0.0.1:5001',
+              rewrite: () => '/api/v0/add',
+              configure: proxy => {
+                proxy.on('proxyReq', req => {
+                  req.removeHeader('origin')
+                  req.removeHeader('referer')
+                  req.setHeader('user-agent', 'freedomtool-web-ui')
+                })
+              },
+            },
+          },
+        }),
     },
     base: './',
     plugins: [

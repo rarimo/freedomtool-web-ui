@@ -2,6 +2,8 @@
 
 interface ImportMetaEnv {
   VITE_API_URL: string
+  VITE_VOTING_API_URL?: string
+  VITE_IPFS_UPLOAD_URL?: string
   VITE_PORT: string
   VITE_APP_NAME: string
   VITE_APP_BUILD_VERSION: string

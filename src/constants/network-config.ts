@@ -1,6 +1,7 @@
 import { AppKitNetwork } from '@reown/appkit/networks'
 
 import { config } from '@/config'
+import { Icons } from '@/enums'
 
 export type NetworkName = 'mainnet' | 'testnet'
 
@@ -11,6 +12,9 @@ export interface NetworkConfig {
   rpcUrl: string
   explorerUrl: string
   appKitChain: AppKitNetwork
+  bridgeUrl?: string
+  minPollFunding: string
+  currencyIcon: Icons
 }
 
 const qAppKitChain: AppKitNetwork = {
@@ -33,19 +37,19 @@ const qAppKitChain: AppKitNetwork = {
   },
 }
 
-const rarimoL2AppKitChain: AppKitNetwork = {
-  id: 7368,
-  name: 'Rarimo',
-  caipNetworkId: 'eip155:7368',
+const gnosisAppKitChain: AppKitNetwork = {
+  id: 100,
+  name: 'Gnosis',
+  caipNetworkId: 'eip155:100',
   chainNamespace: 'eip155',
   nativeCurrency: {
     decimals: 18,
-    name: 'Rarimo Ether',
-    symbol: 'ETH',
+    name: 'xDAI',
+    symbol: 'xDAI',
   },
   rpcUrls: {
     default: {
-      http: ['https://l2.rarimo.com/'],
+      http: ['https://rpc.gnosischain.com/'],
     },
   },
   contracts: {
@@ -55,12 +59,15 @@ const rarimoL2AppKitChain: AppKitNetwork = {
 
 export const networkConfigsMap: Record<NetworkName, NetworkConfig> = {
   mainnet: {
-    chainId: 7368,
-    name: 'Rarimo',
+    chainId: 100,
+    name: 'Gnosis',
     networkName: 'mainnet',
-    rpcUrl: 'https://l2.rarimo.com/',
-    explorerUrl: 'https://scan.rarimo.com',
-    appKitChain: rarimoL2AppKitChain,
+    rpcUrl: 'https://rpc.gnosischain.com/',
+    explorerUrl: 'https://gnosisscan.io',
+    appKitChain: gnosisAppKitChain,
+    bridgeUrl: 'https://bridge.gnosischain.com',
+    minPollFunding: '1',
+    currencyIcon: Icons.Xdai,
   },
   testnet: {
     chainId: 35443,
@@ -69,6 +76,8 @@ export const networkConfigsMap: Record<NetworkName, NetworkConfig> = {
     rpcUrl: 'https://rpc.qtestnet.org/',
     explorerUrl: 'https://explorer.qtestnet.org',
     appKitChain: qAppKitChain,
+    minPollFunding: '0.0005',
+    currencyIcon: Icons.Ethereum,
   },
 }
 
@@ -80,3 +89,7 @@ export const NETWORK_NAME: NetworkName = config.ENV === 'development' ? 'testnet
 
 const networkConfig = networkConfigsMap[NETWORK_NAME] ?? networkConfigsMap.mainnet
 export const NATIVE_CURRENCY = networkConfig.appKitChain.nativeCurrency.symbol
+export const NETWORK_DISPLAY_NAME = networkConfig.name
+export const BRIDGE_URL = networkConfig.bridgeUrl
+export const POLL_CREATION_MIN_FUNDING = networkConfig.minPollFunding
+export const NATIVE_CURRENCY_ICON = networkConfig.currencyIcon

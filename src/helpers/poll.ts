@@ -3,7 +3,7 @@ import { time } from '@distributedlab/tools'
 import { ContractTransactionReceipt, toBeHex } from 'ethers'
 import { decodeAbiParameters, encodeAbiParameters, stringToHex } from 'viem'
 
-import { api } from '@/api/clients'
+import { votingApi } from '@/api/clients'
 import { WHITELIST_DATA_ABI_TYPE, ZERO_DATE } from '@/constants'
 import { ApiServicePaths } from '@/enums'
 import { CreatePollSchema } from '@/pages/NewPoll/createPollSchema'
@@ -80,7 +80,7 @@ export const prepareAcceptedOptionsToContract = (
 }
 
 export const getVotesCount = (id: string) => {
-  return api.get<{ vote_count: number }>(
+  return votingApi.get<{ vote_count: number }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/count-remaining-votes/${id}`,
   )
 }
@@ -89,7 +89,7 @@ export const getPredictedVotesCount = async (
   amount: string,
   proposalId?: string,
 ): Promise<{ count_tx_predict: string; amount_predict: string }> => {
-  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
+  const response = await votingApi.post<{ amount_predict: string; count_tx_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
       body: {
@@ -111,7 +111,7 @@ export const getPredictedVotesAmount = async (
   votesCount: string,
   proposalId?: string,
 ): Promise<{ count_tx_predict: string; amount_predict: string }> => {
-  const response = await api.post<{ amount_predict: string; count_tx_predict: string }>(
+  const response = await votingApi.post<{ amount_predict: string; count_tx_predict: string }>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/predict`,
     {
       body: {
@@ -186,7 +186,7 @@ export const prepareVotingWhitelistData = (config: {
     .flatMap(({ codes }) => codes)
     .map(code => stringToHex(code))
 
-  const identityCounterUpperBound = 1
+  const identityCounterUpperBound = 0
 
   const birthDateUpperbound = minAge
     ? stringToHex(time(startTimestamp).utc().subtract(minAge, 'years').format('YYMMDD'))
@@ -226,7 +226,7 @@ export const prepareVotingWhitelistData = (config: {
 }
 
 export const getProposals = async (opts?: Partial<JsonApiClientRequestOpts>) => {
-  const data = await api.get<Proposal[]>(
+  const data = await votingApi.get<Proposal[]>(
     `${ApiServicePaths.ProofVerificationRelayer}/v2/proposals`,
     opts,
   )
